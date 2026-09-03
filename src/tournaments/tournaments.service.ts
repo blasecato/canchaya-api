@@ -1,0 +1,2257 @@
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
+import { Prisma } from '../../generated/prisma/client';
+import sanitizeHtml from 'sanitize-html';
+import {
+  associationTournamentResponseSelect,
+  AVAILABLE_TOURNAMENT_EXCLUDED_PHASES,
+  toAssociationTournamentResponse,
+  toTournamentSponsorResponse,
+  tournamentSponsorResponseSelect,
+  type AssociationTournamentResponseRecord,
+} from '../associations/association-tournament-response.mapper';
+import { AssociationsService } from '../associations/associations.service';
+import { AssociationTournamentResponseDto } from '../associations/dto/association-tournament-response.dto';
+import { TournamentSponsorResponseDto } from '../associations/dto/association-tournament-response.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { ImageStorageService } from '../uploads/image-storage.service';
+import type {
+  StoredImageAsset,
+  StoredImageReference,
+  UploadedImageFile,
+} from '../uploads/image-storage.types';
+import { CreateTournamentDto } from './dto/create-tournament.dto';
+import { ListTournamentsQueryDto } from './dto/list-tournaments-query.dto';
+import {
+  TournamentCatalogFiltersResponseDto,
+  TournamentCatalogItemResponseDto,
+  TournamentDetailResponseDto,
+  TournamentRulesResponseDto,
+  TournamentCatalogPageResponseDto,
+} from './dto/tournament-catalog-response.dto';
+import { UpdateTournamentDto } from './dto/update-tournament.dto';
+import { UpdateTournamentRulesDto } from './dto/update-tournament-rules.dto';
+import { TournamentSponsorInputDto } from './dto/tournament-sponsor-input.dto';
+import type { ReviewTeamRegistrationDto } from './dto/review-team-registration.dto';
+import type {
+  CaptainTeamOptionResponseDto,
+  TeamRegistrationResponseDto,
+} from './dto/register-team.dto';
+import {
+  toTournamentCatalogItemResponse,
+  tournamentCatalogItemSelect,
+} from './tournament-catalog.mapper';
+
+type TournamentDates = {
+  startDate: Date;
+  endDate: Date | null;
+  registrationStartDate: Date | null;
+  registrationEndDate: Date | null;
+};
+
+type TournamentTypePlayerLimits = {
+  id: bigint;
+  name: string;
+  min_players_per_team: number;
+  max_players_per_team: number;
+};
+
+@Injectable()
+export class TournamentsService {
+  private readonly logger = new Logger(TournamentsService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly associationsService: AssociationsService,
+    private readonly imageStorage: ImageStorageService,
+  ) {}
+
+  async findFeaturedActive(): Promise<TournamentCatalogItemResponseDto[]> {
+    const tournaments = await this.prisma.tournaments.findMany({
+      where: {
+        status: 'active',
+        phase: { notIn: [...AVAILABLE_TOURNAMENT_EXCLUDED_PHASES] },
+      },
+      orderBy: [{ start_date: 'desc' }, { id: 'desc' }],
+      take: 6,
+      select: tournamentCatalogItemSelect,
+    });
+
+    return tournaments.map((tournament) =>
+      toTournamentCatalogItemResponse(tournament, false),
+    );
+  }
+
+  async findPublicStats() {
+    const [activeTournaments, associations, activePlayers] =
+      await this.prisma.$transaction([
+        this.prisma.tournaments.count({
+          where: {
+            status: 'active',
+            phase: { notIn: [...AVAILABLE_TOURNAMENT_EXCLUDED_PHASES] },
+          },
+        }),
+        this.prisma.associations.count({ where: { status: 'active' } }),
+        this.prisma.users.count({
+          where: {
+            status: 'active',
+            user_roles: { some: { role_code: 'PLAYER' } },
+          },
+        }),
+      ]);
+    return { activeTournaments, associations, activePlayers };
+  }
+
+  async findCatalog(
+    query: ListTournamentsQueryDto,
+    requestingUserId?: bigint,
+  ): Promise<TournamentCatalogPageResponseDto> {
+    const dateFrom = query.dateFrom ? new Date(query.dateFrom) : undefined;
+    const dateTo = query.dateTo ? new Date(query.dateTo) : undefined;
+
+    if (dateFrom && dateTo && dateFrom > dateTo) {
+      throw new BadRequestException(
+        'La fecha inicial del filtro no puede ser posterior a la fecha final.',
+      );
+    }
+
+    if (query.managedOnly) {
+      if (requestingUserId === undefined) {
+        throw new ForbiddenException(
+          'Este filtro requiere iniciar sesión como administrador de asociación.',
+        );
+      }
+      const isAssociationAdmin = await this.prisma.user_roles.findUnique({
+        where: {
+          user_id_role_code: {
+            user_id: requestingUserId,
+            role_code: 'ASSOCIATION_ADMIN',
+          },
+        },
+        select: { user_id: true },
+      });
+      if (!isAssociationAdmin) {
+        throw new ForbiddenException(
+          'Este filtro solo está disponible para administradores de asociación.',
+        );
+      }
+    }
+
+    const where: Prisma.tournamentsWhereInput = {
+      status: requestingUserId === undefined ? 'active' : undefined,
+      association_id: query.associationId
+        ? BigInt(query.associationId)
+        : undefined,
+      tournament_type_id: query.tournamentTypeId
+        ? BigInt(query.tournamentTypeId)
+        : undefined,
+      phase: query.phase,
+      AND:
+        requestingUserId === undefined
+          ? [
+              {
+                phase: { notIn: [...AVAILABLE_TOURNAMENT_EXCLUDED_PHASES] },
+              },
+            ]
+          : undefined,
+      associations: query.managedOnly
+        ? {
+            OR: [
+              { owner_user_id: requestingUserId },
+              {
+                association_administrators: {
+                  some: {
+                    user_id: requestingUserId,
+                    status: 'active',
+                    permission_level: 'administrator',
+                  },
+                },
+              },
+            ],
+          }
+        : undefined,
+      start_date:
+        dateFrom || dateTo
+          ? {
+              gte: dateFrom,
+              lte: dateTo,
+            }
+          : undefined,
+    };
+    const skip = (query.page - 1) * query.pageSize;
+    const [total, tournaments] = await this.prisma.$transaction([
+      this.prisma.tournaments.count({ where }),
+      this.prisma.tournaments.findMany({
+        where,
+        orderBy: [{ start_date: 'asc' }, { id: 'asc' }],
+        skip,
+        take: query.pageSize,
+        select: tournamentCatalogItemSelect,
+      }),
+    ]);
+
+    const managedAssociationIds =
+      requestingUserId === undefined
+        ? new Set<bigint>()
+        : await this.findManagedAssociationIds(
+            requestingUserId,
+            tournaments.map(({ association_id }) => association_id),
+          );
+
+    return {
+      items: tournaments.map((tournament) =>
+        toTournamentCatalogItemResponse(
+          tournament,
+          managedAssociationIds.has(tournament.association_id),
+        ),
+      ),
+      page: query.page,
+      pageSize: query.pageSize,
+      total,
+      hasNextPage: skip + tournaments.length < total,
+    };
+  }
+
+  async findMine(
+    requestingUserId: bigint,
+  ): Promise<TournamentCatalogItemResponseDto[]> {
+    const userRoles = await this.prisma.user_roles.findMany({
+      where: {
+        user_id: requestingUserId,
+        role_code: { in: ['PLAYER', 'REFEREE'] },
+      },
+      select: { role_code: true },
+    });
+    const roleCodes = new Set(userRoles.map(({ role_code }) => role_code));
+    const participationFilters: Prisma.tournamentsWhereInput[] = [];
+
+    if (roleCodes.has('PLAYER')) {
+      participationFilters.push({
+        tournament_team_registrations: {
+          some: {
+            request_status: 'approved',
+            tournament_team_players: {
+              some: {
+                player_id: requestingUserId,
+                registration_status: 'approved',
+              },
+            },
+          },
+        },
+      });
+    }
+
+    if (roleCodes.has('REFEREE')) {
+      participationFilters.push({
+        tournament_referees: {
+          some: { user_id: requestingUserId, status: 'active' },
+        },
+      });
+    }
+
+    if (participationFilters.length === 0) return [];
+
+    const tournaments = await this.prisma.tournaments.findMany({
+      where: { OR: participationFilters },
+      orderBy: [{ start_date: 'asc' }, { id: 'asc' }],
+      select: tournamentCatalogItemSelect,
+    });
+    const managedAssociationIds = await this.findManagedAssociationIds(
+      requestingUserId,
+      tournaments.map(({ association_id }) => association_id),
+    );
+
+    return tournaments.map((tournament) =>
+      toTournamentCatalogItemResponse(
+        tournament,
+        managedAssociationIds.has(tournament.association_id),
+      ),
+    );
+  }
+
+  async findCaptainTeams(
+    tournamentId: bigint,
+    requestingUserId: bigint,
+  ): Promise<CaptainTeamOptionResponseDto[]> {
+    const tournament = await this.prisma.tournaments.findUnique({
+      where: { id: tournamentId },
+      select: { id: true },
+    });
+    if (!tournament)
+      throw new NotFoundException('El torneo solicitado no existe.');
+
+    const teams = await this.prisma.teams.findMany({
+      where: {
+        status: 'active',
+        OR: [
+          { captain_user_id: requestingUserId },
+          {
+            team_members: {
+              some: { user_id: requestingUserId, status: 'active' },
+            },
+          },
+        ],
+      },
+      orderBy: [{ name: 'asc' }, { id: 'asc' }],
+      select: {
+        id: true,
+        name: true,
+        photo_url: true,
+        _count: {
+          select: { team_members: { where: { status: 'active' } } },
+        },
+        tournament_team_registrations: {
+          where: { tournament_id: tournamentId },
+          select: { request_status: true },
+          take: 1,
+        },
+      },
+    });
+
+    return teams.map((team) => ({
+      id: team.id.toString(),
+      name: team.name,
+      photoUrl: team.photo_url,
+      memberCount: team._count.team_members,
+      registrationStatus:
+        team.tournament_team_registrations[0]?.request_status ?? null,
+    }));
+  }
+
+  async registerTeam(
+    tournamentId: bigint,
+    teamId: bigint,
+    requestingUserId: bigint,
+  ): Promise<TeamRegistrationResponseDto> {
+    const [tournament, team] = await Promise.all([
+      this.prisma.tournaments.findUnique({
+        where: { id: tournamentId },
+        select: {
+          association_id: true,
+          phase: true,
+          status: true,
+          registration_start_date: true,
+          registration_end_date: true,
+          max_teams: true,
+          min_players_per_team: true,
+          max_players_per_team: true,
+          _count: {
+            select: {
+              tournament_team_registrations: {
+                where: { request_status: { in: ['pending', 'approved'] } },
+              },
+            },
+          },
+        },
+      }),
+      this.prisma.teams.findUnique({
+        where: { id: teamId },
+        select: {
+          captain_user_id: true,
+          status: true,
+          team_members: {
+            where: { user_id: requestingUserId, status: 'active' },
+            select: { user_id: true },
+            take: 1,
+          },
+          _count: {
+            select: { team_members: { where: { status: 'active' } } },
+          },
+        },
+      }),
+    ]);
+
+    if (!tournament)
+      throw new NotFoundException('El torneo solicitado no existe.');
+    if (!team || team.status !== 'active')
+      throw new NotFoundException('El equipo seleccionado no existe.');
+    if (
+      team.captain_user_id !== requestingUserId &&
+      team.team_members.length === 0
+    ) {
+      throw new ForbiddenException(
+        'Solo un integrante activo puede inscribir este equipo.',
+      );
+    }
+
+    this.assertTeamRosterWithinTournamentLimits(
+      team._count.team_members,
+      tournament.min_players_per_team,
+      tournament.max_players_per_team,
+    );
+
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    const registrationsAreOpen =
+      tournament.status === 'active' &&
+      tournament.phase === 'registration' &&
+      (!tournament.registration_start_date ||
+        tournament.registration_start_date <= today) &&
+      (!tournament.registration_end_date ||
+        tournament.registration_end_date >= today);
+    if (!registrationsAreOpen) {
+      throw new BadRequestException(
+        'Las inscripciones de este torneo no están abiertas.',
+      );
+    }
+    if (
+      tournament._count.tournament_team_registrations >= tournament.max_teams
+    ) {
+      throw new BadRequestException('El torneo ya no tiene cupos disponibles.');
+    }
+
+    const existing = await this.prisma.tournament_team_registrations.findUnique(
+      {
+        where: {
+          tournament_id_team_id: {
+            tournament_id: tournamentId,
+            team_id: teamId,
+          },
+        },
+        select: { request_status: true },
+      },
+    );
+    if (existing) {
+      throw new BadRequestException(
+        'Este equipo ya tiene una solicitud de inscripción en el torneo.',
+      );
+    }
+
+    const [tournamentInfo, teamInfo, recipients] = await Promise.all([
+      this.prisma.tournaments.findUniqueOrThrow({
+        where: { id: tournamentId },
+        select: { name: true },
+      }),
+      this.prisma.teams.findUniqueOrThrow({
+        where: { id: teamId },
+        select: { name: true },
+      }),
+      this.findRegistrationAdministratorIds(
+        tournamentId,
+        tournament.association_id,
+      ),
+    ]);
+
+    const registration = await this.prisma.$transaction(async (transaction) => {
+      const created = await transaction.tournament_team_registrations.create({
+        data: {
+          tournament_id: tournamentId,
+          association_id: tournament.association_id,
+          team_id: teamId,
+          requested_by: requestingUserId,
+          request_status: 'pending',
+        },
+        select: { tournament_id: true, team_id: true, request_status: true },
+      });
+      await transaction.tournament_registration_events.create({
+        data: {
+          tournament_id: tournamentId,
+          team_id: teamId,
+          actor_user_id: requestingUserId,
+          event_type: 'submitted',
+          message: 'Solicitud de inscripción enviada.',
+        },
+      });
+      if (recipients.length > 0) {
+        await transaction.notifications.createMany({
+          data: recipients.map((userId) => ({
+            user_id: userId,
+            type: 'tournament_registration',
+            title: 'Nueva solicitud de inscripción',
+            message: `${teamInfo.name} quiere inscribirse en ${tournamentInfo.name}.`,
+            entity_type: 'tournament_registration',
+            entity_id: `${tournamentId.toString()}:${teamId.toString()}`,
+            metadata: {
+              audience: 'administrator',
+              tournamentId: tournamentId.toString(),
+              tournamentName: tournamentInfo.name,
+              teamId: teamId.toString(),
+              teamName: teamInfo.name,
+              status: 'pending',
+              actionUrl: `/tournaments/${tournamentId.toString()}`,
+              actionLabel: 'Ver torneo',
+            },
+          })),
+        });
+      }
+      return created;
+    });
+    return {
+      tournamentId: registration.tournament_id.toString(),
+      teamId: registration.team_id.toString(),
+      status: registration.request_status,
+    };
+  }
+
+  async findRegistrationDetail(
+    tournamentId: bigint,
+    teamId: bigint,
+    requestingUserId: bigint,
+  ) {
+    const registration =
+      await this.prisma.tournament_team_registrations.findUnique({
+        where: {
+          tournament_id_team_id: {
+            tournament_id: tournamentId,
+            team_id: teamId,
+          },
+        },
+        select: {
+          tournament_id: true,
+          team_id: true,
+          requested_by: true,
+          request_status: true,
+          review_notes: true,
+          reviewed_at: true,
+          created_at: true,
+          tournaments: { select: { name: true, association_id: true } },
+          teams: {
+            select: {
+              name: true,
+              sport_type: true,
+              modality: true,
+              captain_user_id: true,
+              team_members: {
+                where: { status: 'active' },
+                select: { user_id: true },
+              },
+            },
+          },
+          tournament_registration_events: {
+            orderBy: [{ created_at: 'asc' }, { id: 'asc' }],
+            select: {
+              id: true,
+              event_type: true,
+              message: true,
+              created_at: true,
+            },
+          },
+        },
+      });
+    if (!registration) throw new NotFoundException('La solicitud no existe.');
+
+    const canManage = await this.canReviewRegistration(
+      tournamentId,
+      registration.tournaments.association_id,
+      requestingUserId,
+    );
+    const isCaptain = registration.teams.captain_user_id === requestingUserId;
+    if (
+      !canManage &&
+      !isCaptain &&
+      registration.requested_by !== requestingUserId
+    ) {
+      throw new ForbiddenException('No puedes consultar esta solicitud.');
+    }
+    return {
+      tournamentId: registration.tournament_id.toString(),
+      tournamentName: registration.tournaments.name,
+      teamId: registration.team_id.toString(),
+      teamName: registration.teams.name,
+      sportType: registration.teams.sport_type,
+      modality: registration.teams.modality,
+      memberCount: registration.teams.team_members.length,
+      status: registration.request_status,
+      reviewNotes: registration.review_notes,
+      createdAt: registration.created_at.toISOString(),
+      reviewedAt: registration.reviewed_at?.toISOString() ?? null,
+      canReview: canManage && registration.request_status === 'pending',
+      canResubmit:
+        isCaptain && registration.request_status === 'changes_requested',
+      events: registration.tournament_registration_events.map((event) => ({
+        id: event.id.toString(),
+        type: event.event_type,
+        message: event.message,
+        createdAt: event.created_at.toISOString(),
+      })),
+    };
+  }
+
+  async reviewRegistration(
+    tournamentId: bigint,
+    teamId: bigint,
+    requestingUserId: bigint,
+    dto: ReviewTeamRegistrationDto,
+  ) {
+    const registration =
+      await this.prisma.tournament_team_registrations.findUnique({
+        where: {
+          tournament_id_team_id: {
+            tournament_id: tournamentId,
+            team_id: teamId,
+          },
+        },
+        select: {
+          request_status: true,
+          requested_by: true,
+          tournaments: { select: { name: true, association_id: true } },
+          teams: {
+            select: {
+              name: true,
+              captain_user_id: true,
+              team_members: {
+                where: { status: 'active' },
+                select: { user_id: true },
+              },
+            },
+          },
+        },
+      });
+    if (!registration) throw new NotFoundException('La solicitud no existe.');
+    if (
+      !(await this.canReviewRegistration(
+        tournamentId,
+        registration.tournaments.association_id,
+        requestingUserId,
+      ))
+    ) {
+      throw new ForbiddenException('No puedes revisar esta solicitud.');
+    }
+    if (registration.request_status !== 'pending') {
+      throw new BadRequestException(
+        'Solo se pueden revisar solicitudes pendientes.',
+      );
+    }
+    const message = dto.message?.trim() || null;
+    if (dto.status !== 'approved' && !message) {
+      throw new BadRequestException(
+        'Debes indicar el motivo o los cambios solicitados.',
+      );
+    }
+
+    await this.prisma.$transaction(async (transaction) => {
+      await transaction.tournament_team_registrations.update({
+        where: {
+          tournament_id_team_id: {
+            tournament_id: tournamentId,
+            team_id: teamId,
+          },
+        },
+        data: {
+          request_status: dto.status,
+          reviewed_by: requestingUserId,
+          reviewed_at: new Date(),
+          review_notes: message,
+          updated_at: new Date(),
+        },
+      });
+      await transaction.tournament_registration_events.create({
+        data: {
+          tournament_id: tournamentId,
+          team_id: teamId,
+          actor_user_id: requestingUserId,
+          event_type: dto.status,
+          message,
+        },
+      });
+      if (dto.status === 'approved') {
+        await transaction.tournament_team_players.createMany({
+          data: registration.teams.team_members.map(({ user_id }) => ({
+            tournament_id: tournamentId,
+            team_id: teamId,
+            player_id: user_id,
+            is_captain: user_id === registration.teams.captain_user_id,
+            registration_status: 'approved',
+          })),
+          skipDuplicates: true,
+        });
+      }
+      const recipientIds = [
+        ...new Set([
+          registration.requested_by,
+          registration.teams.captain_user_id,
+        ]),
+      ];
+      const presentation = {
+        approved: { title: 'Inscripción aprobada', text: 'fue aceptado' },
+        rejected: { title: 'Inscripción rechazada', text: 'fue rechazado' },
+        changes_requested: {
+          title: 'Cambios solicitados',
+          text: 'requiere cambios',
+        },
+      }[dto.status];
+      await transaction.notifications.createMany({
+        data: recipientIds.map((userId) => ({
+          user_id: userId,
+          type: 'tournament_registration',
+          title: presentation.title,
+          message: `${registration.teams.name} ${presentation.text} para ${registration.tournaments.name}.${message ? ` ${message}` : ''}`,
+          entity_type: 'tournament_registration',
+          entity_id: `${tournamentId.toString()}:${teamId.toString()}`,
+          metadata: {
+            audience: 'player',
+            tournamentId: tournamentId.toString(),
+            tournamentName: registration.tournaments.name,
+            teamId: teamId.toString(),
+            teamName: registration.teams.name,
+            status: dto.status,
+            reviewNotes: message,
+            actionUrl: `/tournaments/${tournamentId.toString()}`,
+            actionLabel: 'Ver torneo',
+          },
+        })),
+      });
+    });
+    return {
+      tournamentId: tournamentId.toString(),
+      teamId: teamId.toString(),
+      status: dto.status,
+    };
+  }
+
+  async resubmitRegistration(
+    tournamentId: bigint,
+    teamId: bigint,
+    requestingUserId: bigint,
+  ) {
+    const registration =
+      await this.prisma.tournament_team_registrations.findUnique({
+        where: {
+          tournament_id_team_id: {
+            tournament_id: tournamentId,
+            team_id: teamId,
+          },
+        },
+        select: {
+          request_status: true,
+          association_id: true,
+          tournaments: { select: { name: true } },
+          teams: { select: { name: true, captain_user_id: true } },
+        },
+      });
+    if (!registration) throw new NotFoundException('La solicitud no existe.');
+    if (registration.teams.captain_user_id !== requestingUserId) {
+      throw new ForbiddenException(
+        'Solo el capitán puede reenviar la solicitud.',
+      );
+    }
+    if (registration.request_status !== 'changes_requested') {
+      throw new BadRequestException(
+        'Esta solicitud no tiene cambios pendientes.',
+      );
+    }
+    const recipients = await this.findRegistrationAdministratorIds(
+      tournamentId,
+      registration.association_id,
+    );
+    await this.prisma.$transaction(async (transaction) => {
+      await transaction.tournament_team_registrations.update({
+        where: {
+          tournament_id_team_id: {
+            tournament_id: tournamentId,
+            team_id: teamId,
+          },
+        },
+        data: {
+          request_status: 'pending',
+          reviewed_by: null,
+          reviewed_at: null,
+          updated_at: new Date(),
+        },
+      });
+      await transaction.tournament_registration_events.create({
+        data: {
+          tournament_id: tournamentId,
+          team_id: teamId,
+          actor_user_id: requestingUserId,
+          event_type: 'resubmitted',
+          message: 'El capitán informó que realizó los cambios solicitados.',
+        },
+      });
+      if (recipients.length > 0)
+        await transaction.notifications.createMany({
+          data: recipients.map((userId) => ({
+            user_id: userId,
+            type: 'tournament_registration',
+            title: 'Solicitud corregida',
+            message: `${registration.teams.name} reenvió su solicitud para ${registration.tournaments.name}.`,
+            entity_type: 'tournament_registration',
+            entity_id: `${tournamentId}:${teamId}`,
+            metadata: {
+              audience: 'administrator',
+              tournamentId: tournamentId.toString(),
+              tournamentName: registration.tournaments.name,
+              teamId: teamId.toString(),
+              teamName: registration.teams.name,
+              status: 'pending',
+              actionUrl: `/tournaments/${tournamentId.toString()}`,
+              actionLabel: 'Ver torneo',
+            },
+          })),
+        });
+    });
+    return {
+      tournamentId: tournamentId.toString(),
+      teamId: teamId.toString(),
+      status: 'pending',
+    };
+  }
+
+  private async findRegistrationAdministratorIds(
+    tournamentId: bigint,
+    associationId: bigint,
+  ): Promise<bigint[]> {
+    const [tournamentAdmins, association] = await Promise.all([
+      this.prisma.tournament_administrators.findMany({
+        where: { tournament_id: tournamentId, status: 'active' },
+        select: { user_id: true },
+      }),
+      this.prisma.associations.findUnique({
+        where: { id: associationId },
+        select: {
+          owner_user_id: true,
+          association_administrators: {
+            where: { status: 'active', permission_level: { not: 'viewer' } },
+            select: { user_id: true },
+          },
+        },
+      }),
+    ]);
+    return [
+      ...new Set([
+        ...tournamentAdmins.map(({ user_id }) => user_id),
+        ...(association ? [association.owner_user_id] : []),
+        ...(association?.association_administrators.map(
+          ({ user_id }) => user_id,
+        ) ?? []),
+      ]),
+    ];
+  }
+
+  private async canReviewRegistration(
+    tournamentId: bigint,
+    associationId: bigint,
+    userId: bigint,
+  ): Promise<boolean> {
+    const [superAdmin, tournamentAdmin, association] = await Promise.all([
+      this.prisma.user_roles.findUnique({
+        where: {
+          user_id_role_code: { user_id: userId, role_code: 'SUPER_ADMIN' },
+        },
+        select: { user_id: true },
+      }),
+      this.prisma.tournament_administrators.findFirst({
+        where: {
+          tournament_id: tournamentId,
+          user_id: userId,
+          status: 'active',
+          permission_level: { not: 'viewer' },
+        },
+        select: { user_id: true },
+      }),
+      this.prisma.associations.findFirst({
+        where: {
+          id: associationId,
+          OR: [
+            { owner_user_id: userId },
+            {
+              association_administrators: {
+                some: {
+                  user_id: userId,
+                  status: 'active',
+                  permission_level: { not: 'viewer' },
+                },
+              },
+            },
+          ],
+        },
+        select: { id: true },
+      }),
+    ]);
+    return Boolean(superAdmin || tournamentAdmin || association);
+  }
+
+  async findCatalogOne(
+    tournamentId: bigint,
+    requestingUserId: bigint,
+  ): Promise<TournamentDetailResponseDto> {
+    const tournament = await this.prisma.tournaments.findUnique({
+      where: { id: tournamentId },
+      select: tournamentCatalogItemSelect,
+    });
+
+    if (!tournament) {
+      throw new NotFoundException(
+        `El torneo con ID ${tournamentId.toString()} no existe.`,
+      );
+    }
+
+    const [canManage, registrations, players, playedMatches] =
+      await Promise.all([
+        tournament.created_by === requestingUserId
+          ? Promise.resolve(true)
+          : this.canReviewRegistration(
+              tournamentId,
+              tournament.association_id,
+              requestingUserId,
+            ),
+        this.prisma.tournament_team_registrations.findMany({
+          where: { tournament_id: tournamentId, request_status: 'approved' },
+          select: {
+            team_id: true,
+            points: true,
+            teams: {
+              select: { name: true, primary_color: true },
+            },
+          },
+        }),
+        this.prisma.tournament_team_players.findMany({
+          where: {
+            tournament_id: tournamentId,
+            registration_status: 'approved',
+          },
+          select: {
+            player_id: true,
+            team_members: {
+              select: {
+                users: { select: { full_name: true } },
+                teams: { select: { name: true } },
+              },
+            },
+            player_match_stats: { select: { goals: true } },
+          },
+        }),
+        this.prisma.matches.findMany({
+          where: { tournament_id: tournamentId, status: 'played' },
+          select: {
+            home_team_id: true,
+            away_team_id: true,
+            home_score: true,
+            away_score: true,
+          },
+        }),
+      ]);
+
+    const standings = registrations.map((registration) => {
+      let played = 0;
+      let wins = 0;
+      let draws = 0;
+      let losses = 0;
+      let goalsFor = 0;
+      let goalsAgainst = 0;
+
+      for (const match of playedMatches) {
+        const isHome = match.home_team_id === registration.team_id;
+        const isAway = match.away_team_id === registration.team_id;
+        if (!isHome && !isAway) continue;
+
+        const scored = (isHome ? match.home_score : match.away_score) ?? 0;
+        const conceded = (isHome ? match.away_score : match.home_score) ?? 0;
+        played += 1;
+        goalsFor += scored;
+        goalsAgainst += conceded;
+        if (scored > conceded) wins += 1;
+        else if (scored === conceded) draws += 1;
+        else losses += 1;
+      }
+
+      return {
+        teamId: registration.team_id.toString(),
+        teamName: registration.teams.name,
+        primaryColor: registration.teams.primary_color,
+        played,
+        wins,
+        draws,
+        losses,
+        goalsFor,
+        goalsAgainst,
+        points: registration.points,
+      };
+    });
+    standings.sort(
+      (left, right) =>
+        right.points - left.points ||
+        right.goalsFor -
+          right.goalsAgainst -
+          (left.goalsFor - left.goalsAgainst) ||
+        left.teamName.localeCompare(right.teamName, 'es'),
+    );
+
+    const scorers = players
+      .map((player) => ({
+        id: player.player_id.toString(),
+        name: player.team_members.users.full_name,
+        team: player.team_members.teams.name,
+        goals: player.player_match_stats.reduce(
+          (total, statistic) => total + statistic.goals,
+          0,
+        ),
+      }))
+      .sort(
+        (left, right) =>
+          right.goals - left.goals || left.name.localeCompare(right.name, 'es'),
+      );
+
+    return {
+      ...toTournamentCatalogItemResponse(tournament, canManage),
+      standings,
+      scorers,
+      matchesPlayed: playedMatches.length,
+      totalGoals: playedMatches.reduce(
+        (total, match) =>
+          total + (match.home_score ?? 0) + (match.away_score ?? 0),
+        0,
+      ),
+    };
+  }
+
+  async findCatalogFilterOptions(): Promise<TournamentCatalogFiltersResponseDto> {
+    const [associations, categories] = await Promise.all([
+      this.prisma.associations.findMany({
+        orderBy: [{ name: 'asc' }, { id: 'asc' }],
+        select: { id: true, name: true },
+      }),
+      this.prisma.tournament_types.findMany({
+        orderBy: [{ name: 'asc' }, { id: 'asc' }],
+        select: { id: true, name: true },
+      }),
+    ]);
+
+    return {
+      associations: associations.map(({ id, name }) => ({
+        id: id.toString(),
+        name,
+      })),
+      categories: categories.map(({ id, name }) => ({
+        id: id.toString(),
+        name,
+      })),
+    };
+  }
+
+  async updateRules(
+    tournamentId: bigint,
+    requestingUserId: bigint,
+    updateTournamentRulesDto: UpdateTournamentRulesDto,
+  ): Promise<TournamentRulesResponseDto> {
+    const tournament = await this.prisma.tournaments.findUnique({
+      where: { id: tournamentId },
+      select: { id: true, association_id: true },
+    });
+
+    if (!tournament) {
+      throw new NotFoundException(
+        `El torneo con ID ${tournamentId.toString()} no existe.`,
+      );
+    }
+
+    await this.requireManagementPermission(
+      this.prisma,
+      tournament.association_id,
+      requestingUserId,
+    );
+
+    const rulesContent = this.sanitizeRulesContent(
+      updateTournamentRulesDto.rulesContent,
+    );
+    const updatedTournament = await this.prisma.tournaments.update({
+      where: { id: tournamentId },
+      data: { rules_content: rulesContent, updated_at: new Date() },
+      select: { id: true, rules_content: true },
+    });
+
+    return {
+      id: updatedTournament.id.toString(),
+      rulesContent: updatedTournament.rules_content,
+    };
+  }
+
+  async findSponsors(
+    tournamentId: bigint,
+    requestingUserId: bigint,
+  ): Promise<TournamentSponsorResponseDto[]> {
+    await this.requireTournamentManagementPermission(
+      this.prisma,
+      tournamentId,
+      requestingUserId,
+    );
+    const sponsors = await this.prisma.tournament_sponsors.findMany({
+      where: { tournament_id: tournamentId },
+      orderBy: [{ created_at: 'asc' }, { sponsor_id: 'asc' }],
+      select: tournamentSponsorResponseSelect,
+    });
+    return sponsors.map(toTournamentSponsorResponse);
+  }
+
+  async createSponsor(
+    tournamentId: bigint,
+    requestingUserId: bigint,
+    dto: TournamentSponsorInputDto,
+    logo?: UploadedImageFile,
+  ): Promise<TournamentSponsorResponseDto> {
+    this.assertValidSponsorDates(dto);
+    await this.requireTournamentManagementPermission(
+      this.prisma,
+      tournamentId,
+      requestingUserId,
+    );
+    const uploadedLogo = logo
+      ? await this.imageStorage.saveSponsorLogo(logo)
+      : undefined;
+    let previousLogo: StoredImageReference | undefined;
+    try {
+      const response = await this.prisma.$transaction(async (transaction) => {
+        await this.requireTournamentManagementPermission(
+          transaction,
+          tournamentId,
+          requestingUserId,
+        );
+        let sponsorId: bigint;
+        if (dto.sponsorId) {
+          sponsorId = BigInt(dto.sponsorId);
+          const existing = await transaction.sponsors.findUnique({
+            where: { id: sponsorId },
+            select: { id: true, logo_url: true, logo_public_id: true },
+          });
+          if (!existing) {
+            throw new NotFoundException(
+              `El patrocinador con ID ${sponsorId.toString()} no existe.`,
+            );
+          }
+          if (uploadedLogo) {
+            previousLogo = {
+              url: existing.logo_url,
+              publicId: existing.logo_public_id,
+            };
+          }
+          await transaction.sponsors.update({
+            where: { id: sponsorId },
+            data: this.sponsorData(dto, uploadedLogo),
+          });
+        } else {
+          const existing = dto.taxId
+            ? await transaction.sponsors.findUnique({
+                where: { tax_id: dto.taxId },
+                select: { id: true, logo_url: true, logo_public_id: true },
+              })
+            : null;
+          if (existing) {
+            sponsorId = existing.id;
+            if (uploadedLogo) {
+              previousLogo = {
+                url: existing.logo_url,
+                publicId: existing.logo_public_id,
+              };
+            }
+            await transaction.sponsors.update({
+              where: { id: sponsorId },
+              data: this.sponsorData(dto, uploadedLogo),
+            });
+          } else {
+            const created = await transaction.sponsors.create({
+              data: this.sponsorData(dto, uploadedLogo),
+              select: { id: true },
+            });
+            sponsorId = created.id;
+          }
+        }
+
+        const currentRelation =
+          await transaction.tournament_sponsors.findUnique({
+            where: {
+              tournament_id_sponsor_id: {
+                tournament_id: tournamentId,
+                sponsor_id: sponsorId,
+              },
+            },
+            select: { sponsor_id: true },
+          });
+        if (currentRelation) {
+          throw new BadRequestException(
+            `${dto.name} ya está vinculado como patrocinador de este torneo.`,
+          );
+        }
+
+        const relation = await transaction.tournament_sponsors.create({
+          data: {
+            tournament_id: tournamentId,
+            sponsor_id: sponsorId,
+            ...this.tournamentSponsorData(dto),
+          },
+          select: tournamentSponsorResponseSelect,
+        });
+        return toTournamentSponsorResponse(relation);
+      });
+      if (uploadedLogo && previousLogo) {
+        await this.deleteImageIfUnreferenced(previousLogo);
+      }
+      return response;
+    } catch (error) {
+      if (uploadedLogo) await this.deleteImageWithoutMaskingError(uploadedLogo);
+      throw error;
+    }
+  }
+
+  async updateSponsor(
+    tournamentId: bigint,
+    sponsorId: bigint,
+    requestingUserId: bigint,
+    dto: TournamentSponsorInputDto,
+    logo?: UploadedImageFile,
+  ): Promise<TournamentSponsorResponseDto> {
+    this.assertValidSponsorDates(dto);
+    await this.requireTournamentManagementPermission(
+      this.prisma,
+      tournamentId,
+      requestingUserId,
+    );
+    const uploadedLogo = logo
+      ? await this.imageStorage.saveSponsorLogo(logo)
+      : undefined;
+    let previousLogo: StoredImageReference | undefined;
+    try {
+      const response = await this.prisma.$transaction(async (transaction) => {
+        await this.requireTournamentManagementPermission(
+          transaction,
+          tournamentId,
+          requestingUserId,
+        );
+        const relation = await transaction.tournament_sponsors.findUnique({
+          where: {
+            tournament_id_sponsor_id: {
+              tournament_id: tournamentId,
+              sponsor_id: sponsorId,
+            },
+          },
+          select: { sponsor_id: true },
+        });
+        if (!relation) {
+          throw new NotFoundException(
+            'El patrocinador no está vinculado a este torneo.',
+          );
+        }
+        if (dto.taxId) {
+          const taxIdOwner = await transaction.sponsors.findFirst({
+            where: { tax_id: dto.taxId, id: { not: sponsorId } },
+            select: { id: true },
+          });
+          if (taxIdOwner) {
+            throw new BadRequestException(
+              'El NIT o identificación ya pertenece a otro patrocinador.',
+            );
+          }
+        }
+        if (uploadedLogo) {
+          const currentSponsor = await transaction.sponsors.findUniqueOrThrow({
+            where: { id: sponsorId },
+            select: { logo_url: true, logo_public_id: true },
+          });
+          previousLogo = {
+            url: currentSponsor.logo_url,
+            publicId: currentSponsor.logo_public_id,
+          };
+        }
+        await transaction.sponsors.update({
+          where: { id: sponsorId },
+          data: this.sponsorData(dto, uploadedLogo),
+        });
+        const updated = await transaction.tournament_sponsors.update({
+          where: {
+            tournament_id_sponsor_id: {
+              tournament_id: tournamentId,
+              sponsor_id: sponsorId,
+            },
+          },
+          data: this.tournamentSponsorData(dto),
+          select: tournamentSponsorResponseSelect,
+        });
+        return toTournamentSponsorResponse(updated);
+      });
+      if (uploadedLogo && previousLogo) {
+        await this.deleteImageIfUnreferenced(previousLogo);
+      }
+      return response;
+    } catch (error) {
+      if (uploadedLogo) await this.deleteImageWithoutMaskingError(uploadedLogo);
+      throw error;
+    }
+  }
+
+  async removeSponsor(
+    tournamentId: bigint,
+    sponsorId: bigint,
+    requestingUserId: bigint,
+  ): Promise<{ sponsorId: string }> {
+    return this.prisma.$transaction(async (transaction) => {
+      await this.requireTournamentManagementPermission(
+        transaction,
+        tournamentId,
+        requestingUserId,
+      );
+      const deleted = await transaction.tournament_sponsors.deleteMany({
+        where: { tournament_id: tournamentId, sponsor_id: sponsorId },
+      });
+      if (deleted.count === 0) {
+        throw new NotFoundException(
+          'El patrocinador no está vinculado a este torneo.',
+        );
+      }
+      return { sponsorId: sponsorId.toString() };
+    });
+  }
+
+  async create(
+    associationId: bigint,
+    requestingUserId: bigint,
+    createTournamentDto: CreateTournamentDto,
+    photo?: UploadedImageFile,
+    sponsorLogos: UploadedImageFile[] = [],
+  ): Promise<AssociationTournamentResponseDto> {
+    this.assertValidDates({
+      startDate: new Date(createTournamentDto.startDate),
+      endDate: this.toDate(createTournamentDto.endDate) ?? null,
+      registrationStartDate:
+        this.toDate(createTournamentDto.registrationStartDate) ?? null,
+      registrationEndDate:
+        this.toDate(createTournamentDto.registrationEndDate) ?? null,
+    });
+    await this.requireManagementPermission(
+      this.prisma,
+      associationId,
+      requestingUserId,
+    );
+
+    let photoAsset: StoredImageAsset | undefined;
+    let sponsorLogoAssets = new Map<number, StoredImageAsset>();
+    let replacedSponsorImages: StoredImageReference[] = [];
+    let tournament: AssociationTournamentResponseRecord;
+
+    try {
+      if (photo) {
+        photoAsset = await this.imageStorage.saveTournamentPhoto(photo);
+      }
+      sponsorLogoAssets = await this.uploadSponsorLogos(
+        createTournamentDto.sponsors ?? [],
+        sponsorLogos,
+      );
+
+      const createResult = await this.prisma.$transaction(
+        async (transaction) => {
+          await this.requireManagementPermission(
+            transaction,
+            associationId,
+            requestingUserId,
+          );
+          const tournamentType = await this.findTournamentTypePlayerLimits(
+            transaction,
+            BigInt(createTournamentDto.tournamentTypeId),
+          );
+          this.assertTournamentPlayerRangeWithinType(
+            tournamentType,
+            createTournamentDto.minPlayersPerTeam,
+            createTournamentDto.maxPlayersPerTeam,
+          );
+
+          const createdTournament = await transaction.tournaments.create({
+            data: {
+              association_id: associationId,
+              name: createTournamentDto.name,
+              description: createTournamentDto.description,
+              tournament_type_id: BigInt(createTournamentDto.tournamentTypeId),
+              sport_type: createTournamentDto.sportType,
+              modality: createTournamentDto.modality,
+              start_date: new Date(createTournamentDto.startDate),
+              end_date: this.toDate(createTournamentDto.endDate),
+              registration_start_date: this.toDate(
+                createTournamentDto.registrationStartDate,
+              ),
+              registration_end_date: this.toDate(
+                createTournamentDto.registrationEndDate,
+              ),
+              registration_fee: createTournamentDto.registrationFee,
+              currency_code: createTournamentDto.currencyCode,
+              grand_prize: createTournamentDto.grandPrize,
+              second_prize: createTournamentDto.secondPrize,
+              third_prize: createTournamentDto.thirdPrize,
+              max_teams: createTournamentDto.maxTeams,
+              min_players_per_team: createTournamentDto.minPlayersPerTeam,
+              max_players_per_team: createTournamentDto.maxPlayersPerTeam,
+              location_name: createTournamentDto.locationName,
+              location_address: createTournamentDto.locationAddress,
+              rules_url: createTournamentDto.rulesUrl,
+              photo_url: photoAsset?.url,
+              photo_public_id: photoAsset?.publicId,
+              phase: createTournamentDto.phase,
+              status: createTournamentDto.status,
+              created_by: requestingUserId,
+            },
+            select: { id: true },
+          });
+
+          const replacedImages = await this.syncTournamentSponsors(
+            transaction,
+            createdTournament.id,
+            createTournamentDto.sponsors ?? [],
+            sponsorLogoAssets,
+          );
+
+          return {
+            tournament: await this.findTournamentInAssociation(
+              transaction,
+              associationId,
+              createdTournament.id,
+            ),
+            replacedImages,
+          };
+        },
+      );
+      tournament = createResult.tournament;
+      replacedSponsorImages = createResult.replacedImages;
+    } catch (error: unknown) {
+      await this.deleteImagesWithoutMaskingError([
+        photoAsset,
+        ...sponsorLogoAssets.values(),
+      ]);
+      throw error;
+    }
+
+    await this.deleteUnreferencedImages(replacedSponsorImages);
+
+    return toAssociationTournamentResponse(tournament);
+  }
+
+  async findOne(
+    associationId: bigint,
+    tournamentId: bigint,
+    requestingUserId: bigint,
+  ): Promise<AssociationTournamentResponseDto> {
+    const permissions =
+      await this.associationsService.getAssociationPermissions(
+        this.prisma,
+        associationId,
+        requestingUserId,
+      );
+    const tournament = await this.findTournamentInAssociation(
+      this.prisma,
+      associationId,
+      tournamentId,
+    );
+
+    if (!permissions.canManageTournaments && !this.isAvailable(tournament)) {
+      throw this.tournamentNotFound(tournamentId, associationId);
+    }
+
+    return toAssociationTournamentResponse(tournament);
+  }
+
+  async update(
+    associationId: bigint,
+    tournamentId: bigint,
+    requestingUserId: bigint,
+    updateTournamentDto: UpdateTournamentDto,
+    photo?: UploadedImageFile,
+    sponsorLogos: UploadedImageFile[] = [],
+  ): Promise<AssociationTournamentResponseDto> {
+    await this.requireManagementPermission(
+      this.prisma,
+      associationId,
+      requestingUserId,
+    );
+    const currentTournament = await this.findTournamentInAssociation(
+      this.prisma,
+      associationId,
+      tournamentId,
+    );
+
+    this.assertValidDates(
+      this.mergeDates(currentTournament, updateTournamentDto),
+    );
+
+    let newPhoto: StoredImageAsset | undefined;
+    let sponsorLogoAssets = new Map<number, StoredImageAsset>();
+    let replacedSponsorImages: StoredImageReference[] = [];
+    let tournament: AssociationTournamentResponseRecord;
+    let previousPhoto: StoredImageReference = {
+      url: currentTournament.photo_url,
+      publicId: currentTournament.photo_public_id,
+    };
+
+    try {
+      if (photo) {
+        newPhoto = await this.imageStorage.saveTournamentPhoto(photo);
+      }
+      sponsorLogoAssets = await this.uploadSponsorLogos(
+        updateTournamentDto.sponsors ?? [],
+        sponsorLogos,
+      );
+
+      const updateResult = await this.prisma.$transaction(
+        async (transaction) => {
+          await this.requireManagementPermission(
+            transaction,
+            associationId,
+            requestingUserId,
+          );
+          const persistedTournament = await this.findTournamentInAssociation(
+            transaction,
+            associationId,
+            tournamentId,
+          );
+
+          this.assertValidDates(
+            this.mergeDates(persistedTournament, updateTournamentDto),
+          );
+
+          const tournamentType = await this.findTournamentTypePlayerLimits(
+            transaction,
+            updateTournamentDto.tournamentTypeId === undefined
+              ? persistedTournament.tournament_types.id
+              : BigInt(updateTournamentDto.tournamentTypeId),
+          );
+          this.assertTournamentPlayerRangeWithinType(
+            tournamentType,
+            updateTournamentDto.minPlayersPerTeam ??
+              persistedTournament.min_players_per_team,
+            updateTournamentDto.maxPlayersPerTeam ??
+              persistedTournament.max_players_per_team,
+          );
+
+          await transaction.tournaments.update({
+            where: {
+              id_association_id: {
+                id: tournamentId,
+                association_id: associationId,
+              },
+            },
+            data: {
+              name: updateTournamentDto.name,
+              description: updateTournamentDto.description,
+              tournament_type_id:
+                updateTournamentDto.tournamentTypeId === undefined
+                  ? undefined
+                  : BigInt(updateTournamentDto.tournamentTypeId),
+              sport_type: updateTournamentDto.sportType,
+              modality: updateTournamentDto.modality,
+              start_date:
+                updateTournamentDto.startDate === undefined
+                  ? undefined
+                  : new Date(updateTournamentDto.startDate),
+              end_date: this.toDate(updateTournamentDto.endDate),
+              registration_start_date: this.toDate(
+                updateTournamentDto.registrationStartDate,
+              ),
+              registration_end_date: this.toDate(
+                updateTournamentDto.registrationEndDate,
+              ),
+              registration_fee: updateTournamentDto.registrationFee,
+              currency_code: updateTournamentDto.currencyCode,
+              grand_prize: updateTournamentDto.grandPrize,
+              second_prize: updateTournamentDto.secondPrize,
+              third_prize: updateTournamentDto.thirdPrize,
+              max_teams: updateTournamentDto.maxTeams,
+              min_players_per_team: updateTournamentDto.minPlayersPerTeam,
+              max_players_per_team: updateTournamentDto.maxPlayersPerTeam,
+              location_name: updateTournamentDto.locationName,
+              location_address: updateTournamentDto.locationAddress,
+              rules_url: updateTournamentDto.rulesUrl,
+              photo_url: newPhoto?.url,
+              photo_public_id: newPhoto?.publicId,
+              phase: updateTournamentDto.phase,
+              status: updateTournamentDto.status,
+            },
+          });
+
+          if (updateTournamentDto.sponsors !== undefined) {
+            replacedSponsorImages = await this.syncTournamentSponsors(
+              transaction,
+              tournamentId,
+              updateTournamentDto.sponsors,
+              sponsorLogoAssets,
+            );
+          }
+
+          const updatedTournament = await this.findTournamentInAssociation(
+            transaction,
+            associationId,
+            tournamentId,
+          );
+
+          return {
+            previousPhoto: {
+              url: persistedTournament.photo_url,
+              publicId: persistedTournament.photo_public_id,
+            },
+            tournament: updatedTournament,
+          };
+        },
+      );
+
+      tournament = updateResult.tournament;
+      previousPhoto = updateResult.previousPhoto;
+    } catch (error: unknown) {
+      await this.deleteImagesWithoutMaskingError([
+        newPhoto,
+        ...sponsorLogoAssets.values(),
+      ]);
+      throw error;
+    }
+
+    if (newPhoto && previousPhoto.url !== newPhoto.url) {
+      await this.deleteImageIfUnreferenced(previousPhoto);
+    }
+    await this.deleteUnreferencedImages(replacedSponsorImages);
+
+    return toAssociationTournamentResponse(tournament);
+  }
+
+  async remove(
+    associationId: bigint,
+    tournamentId: bigint,
+    requestingUserId: bigint,
+  ): Promise<AssociationTournamentResponseDto> {
+    await this.requireManagementPermission(
+      this.prisma,
+      associationId,
+      requestingUserId,
+    );
+
+    const deletedTournament = await this.prisma.$transaction(
+      async (transaction) => {
+        await this.requireManagementPermission(
+          transaction,
+          associationId,
+          requestingUserId,
+        );
+        const tournament = await this.findTournamentInAssociation(
+          transaction,
+          associationId,
+          tournamentId,
+        );
+
+        if (tournament.phase !== 'draft') {
+          throw new BadRequestException(
+            'Solo se puede eliminar permanentemente un torneo en borrador.',
+          );
+        }
+
+        const registrationCount =
+          await transaction.tournament_team_registrations.count({
+            where: { tournament_id: tournamentId },
+          });
+
+        if (registrationCount > 0) {
+          throw new BadRequestException(
+            'No se puede eliminar un torneo que ya tiene inscripciones.',
+          );
+        }
+
+        await transaction.tournaments.delete({
+          where: {
+            id_association_id: {
+              id: tournamentId,
+              association_id: associationId,
+            },
+          },
+        });
+
+        return tournament;
+      },
+    );
+
+    await this.deleteImageIfUnreferenced({
+      url: deletedTournament.photo_url,
+      publicId: deletedTournament.photo_public_id,
+    });
+
+    return toAssociationTournamentResponse(deletedTournament);
+  }
+
+  private async requireManagementPermission(
+    client: Prisma.TransactionClient,
+    associationId: bigint,
+    requestingUserId: bigint,
+  ): Promise<void> {
+    const permissions =
+      await this.associationsService.getAssociationPermissions(
+        client,
+        associationId,
+        requestingUserId,
+      );
+
+    if (!permissions.canManageTournaments) {
+      throw new ForbiddenException(
+        'No tienes permisos para administrar los torneos de esta asociación.',
+      );
+    }
+  }
+
+  private async requireTournamentManagementPermission(
+    client: Prisma.TransactionClient,
+    tournamentId: bigint,
+    requestingUserId: bigint,
+  ): Promise<void> {
+    const tournament = await client.tournaments.findUnique({
+      where: { id: tournamentId },
+      select: { association_id: true, created_by: true },
+    });
+    if (!tournament) {
+      throw new NotFoundException(
+        `El torneo con ID ${tournamentId.toString()} no existe.`,
+      );
+    }
+    if (tournament.created_by === requestingUserId) return;
+
+    const [superAdmin, tournamentAdmin, associationManager] = await Promise.all(
+      [
+        client.user_roles.findUnique({
+          where: {
+            user_id_role_code: {
+              user_id: requestingUserId,
+              role_code: 'SUPER_ADMIN',
+            },
+          },
+          select: { user_id: true },
+        }),
+        client.tournament_administrators.findFirst({
+          where: {
+            tournament_id: tournamentId,
+            user_id: requestingUserId,
+            status: 'active',
+            permission_level: { not: 'viewer' },
+          },
+          select: { user_id: true },
+        }),
+        client.associations.findFirst({
+          where: {
+            id: tournament.association_id,
+            OR: [
+              { owner_user_id: requestingUserId },
+              {
+                association_administrators: {
+                  some: {
+                    user_id: requestingUserId,
+                    status: 'active',
+                    permission_level: { not: 'viewer' },
+                  },
+                },
+              },
+            ],
+          },
+          select: { id: true },
+        }),
+      ],
+    );
+    if (!superAdmin && !tournamentAdmin && !associationManager) {
+      throw new ForbiddenException(
+        'No tienes permisos para administrar los patrocinadores de este torneo.',
+      );
+    }
+  }
+
+  private assertValidSponsorDates(dto: TournamentSponsorInputDto): void {
+    const startDate = this.toDate(dto.agreementStartDate) ?? null;
+    const endDate = this.toDate(dto.agreementEndDate) ?? null;
+    if (startDate && endDate && endDate < startDate) {
+      throw new BadRequestException(
+        'La fecha final del acuerdo no puede ser anterior a la fecha inicial.',
+      );
+    }
+  }
+
+  private sponsorData(dto: TournamentSponsorInputDto, logo?: StoredImageAsset) {
+    return {
+      name: dto.name,
+      tax_id: dto.taxId ?? null,
+      contact_name: dto.contactName ?? null,
+      email: dto.email ?? null,
+      phone: dto.phone ?? null,
+      website_url: dto.websiteUrl ?? null,
+      logo_url: logo?.url,
+      logo_public_id: logo?.publicId,
+      status: 'active',
+      updated_at: new Date(),
+    };
+  }
+
+  private tournamentSponsorData(dto: TournamentSponsorInputDto) {
+    return {
+      sponsorship_level: dto.sponsorshipLevel ?? null,
+      contribution_type: dto.contributionType ?? 'money',
+      contribution_amount: dto.contributionAmount ?? null,
+      currency_code: dto.contributionCurrencyCode?.toUpperCase() ?? 'COP',
+      contribution_description: dto.contributionDescription ?? null,
+      agreement_start_date: this.toDate(dto.agreementStartDate) ?? null,
+      agreement_end_date: this.toDate(dto.agreementEndDate) ?? null,
+      status: dto.status ?? 'active',
+    };
+  }
+
+  private async findManagedAssociationIds(
+    requestingUserId: bigint,
+    associationIds: bigint[],
+  ): Promise<Set<bigint>> {
+    const uniqueAssociationIds = [...new Set(associationIds)];
+    if (uniqueAssociationIds.length === 0) return new Set();
+
+    const roles = await this.prisma.user_roles.findMany({
+      where: {
+        user_id: requestingUserId,
+        role_code: { in: ['SUPER_ADMIN', 'ASSOCIATION_ADMIN'] },
+      },
+      select: { role_code: true },
+    });
+    const roleCodes = new Set(roles.map(({ role_code }) => role_code));
+
+    if (roleCodes.has('SUPER_ADMIN')) return new Set(uniqueAssociationIds);
+    if (!roleCodes.has('ASSOCIATION_ADMIN')) return new Set();
+
+    const manageableAssociations = await this.prisma.associations.findMany({
+      where: {
+        id: { in: uniqueAssociationIds },
+        OR: [
+          { owner_user_id: requestingUserId },
+          {
+            association_administrators: {
+              some: {
+                user_id: requestingUserId,
+                status: 'active',
+                permission_level: 'administrator',
+              },
+            },
+          },
+        ],
+      },
+      select: { id: true },
+    });
+
+    return new Set(manageableAssociations.map(({ id }) => id));
+  }
+
+  private sanitizeRulesContent(value: string | null): string | null {
+    if (value === null) return null;
+
+    const sanitized = sanitizeHtml(value, {
+      allowedTags: [
+        'h1',
+        'h2',
+        'h3',
+        'p',
+        'strong',
+        'em',
+        's',
+        'blockquote',
+        'ul',
+        'ol',
+        'li',
+        'br',
+        'hr',
+      ],
+      allowedAttributes: {},
+    }).trim();
+
+    return sanitized === '' ? null : sanitized;
+  }
+
+  private async findTournamentTypePlayerLimits(
+    client: Prisma.TransactionClient,
+    tournamentTypeId: bigint,
+  ): Promise<TournamentTypePlayerLimits> {
+    const tournamentType = await client.tournament_types.findUnique({
+      where: { id: tournamentTypeId },
+      select: {
+        id: true,
+        name: true,
+        min_players_per_team: true,
+        max_players_per_team: true,
+      },
+    });
+
+    if (!tournamentType) {
+      throw new NotFoundException(
+        `El tipo de torneo con ID ${tournamentTypeId.toString()} no existe.`,
+      );
+    }
+
+    return tournamentType;
+  }
+
+  private assertTournamentPlayerRangeWithinType(
+    tournamentType: TournamentTypePlayerLimits,
+    minimumPlayers: number,
+    maximumPlayers: number,
+  ): void {
+    if (minimumPlayers > maximumPlayers) {
+      throw new BadRequestException(
+        'El mínimo de jugadores por equipo no puede superar el máximo.',
+      );
+    }
+    if (
+      minimumPlayers < tournamentType.min_players_per_team ||
+      maximumPlayers > tournamentType.max_players_per_team
+    ) {
+      throw new BadRequestException(
+        `El rango de jugadores por equipo para ${tournamentType.name} debe estar dentro de ${tournamentType.min_players_per_team} a ${tournamentType.max_players_per_team}.`,
+      );
+    }
+  }
+
+  private assertTeamRosterWithinTournamentLimits(
+    memberCount: number,
+    minimumPlayers: number,
+    maximumPlayers: number,
+  ): void {
+    if (memberCount < minimumPlayers) {
+      const missingPlayers = minimumPlayers - memberCount;
+      throw new BadRequestException(
+        `El equipo tiene ${memberCount} jugador${memberCount === 1 ? '' : 'es'} activo${memberCount === 1 ? '' : 's'}. El torneo exige entre ${minimumPlayers} y ${maximumPlayers} jugadores por equipo; faltan ${missingPlayers}.`,
+      );
+    }
+    if (memberCount > maximumPlayers) {
+      const extraPlayers = memberCount - maximumPlayers;
+      throw new BadRequestException(
+        `El equipo tiene ${memberCount} jugadores activos. El torneo permite entre ${minimumPlayers} y ${maximumPlayers} jugadores por equipo; debes retirar ${extraPlayers}.`,
+      );
+    }
+  }
+
+  private async uploadSponsorLogos(
+    sponsorInputs: TournamentSponsorInputDto[],
+    files: UploadedImageFile[],
+  ): Promise<Map<number, StoredImageAsset>> {
+    const referencedIndexes = sponsorInputs
+      .map(({ logoFileIndex }) => logoFileIndex)
+      .filter((index): index is number => index !== undefined);
+    const uniqueIndexes = new Set(referencedIndexes);
+    const allFilesReferencedExactlyOnce =
+      referencedIndexes.length === uniqueIndexes.size &&
+      uniqueIndexes.size === files.length &&
+      [...uniqueIndexes].every(
+        (index) =>
+          Number.isInteger(index) && index >= 0 && index < files.length,
+      );
+
+    if (!allFilesReferencedExactlyOnce) {
+      throw new BadRequestException(
+        'Los logos de sponsors no coinciden con la información del formulario.',
+      );
+    }
+
+    const uploaded = new Map<number, StoredImageAsset>();
+    try {
+      for (let index = 0; index < files.length; index += 1) {
+        uploaded.set(
+          index,
+          await this.imageStorage.saveSponsorLogo(files[index]),
+        );
+      }
+      return uploaded;
+    } catch (error) {
+      await this.deleteImagesWithoutMaskingError([...uploaded.values()]);
+      throw error;
+    }
+  }
+
+  private async syncTournamentSponsors(
+    client: Prisma.TransactionClient,
+    tournamentId: bigint,
+    sponsorInputs: TournamentSponsorInputDto[],
+    sponsorLogoAssets: ReadonlyMap<number, StoredImageAsset> = new Map(),
+  ): Promise<StoredImageReference[]> {
+    const retainedSponsorIds: bigint[] = [];
+    const retainedSponsorKeys = new Set<string>();
+    const replacedImages: StoredImageReference[] = [];
+
+    for (const sponsorInput of sponsorInputs) {
+      const startDate = this.toDate(sponsorInput.agreementStartDate) ?? null;
+      const endDate = this.toDate(sponsorInput.agreementEndDate) ?? null;
+      if (startDate && endDate && endDate < startDate) {
+        throw new BadRequestException(
+          `La fecha final del acuerdo de ${sponsorInput.name} no puede ser anterior a la fecha inicial.`,
+        );
+      }
+
+      const logoAsset =
+        sponsorInput.logoFileIndex === undefined
+          ? undefined
+          : sponsorLogoAssets.get(sponsorInput.logoFileIndex);
+      const sponsorData = this.sponsorData(sponsorInput, logoAsset);
+      let sponsorId: bigint;
+
+      if (sponsorInput.sponsorId) {
+        sponsorId = BigInt(sponsorInput.sponsorId);
+        const existingSponsor = await client.sponsors.findUnique({
+          where: { id: sponsorId },
+          select: { id: true, logo_url: true, logo_public_id: true },
+        });
+        if (!existingSponsor) {
+          throw new NotFoundException(
+            `El patrocinador con ID ${sponsorId.toString()} no existe.`,
+          );
+        }
+        if (logoAsset) {
+          replacedImages.push({
+            url: existingSponsor.logo_url,
+            publicId: existingSponsor.logo_public_id,
+          });
+        }
+        await client.sponsors.update({
+          where: { id: sponsorId },
+          data: sponsorData,
+        });
+      } else {
+        const existingSponsor = sponsorInput.taxId
+          ? await client.sponsors.findUnique({
+              where: { tax_id: sponsorInput.taxId },
+              select: { id: true, logo_url: true, logo_public_id: true },
+            })
+          : null;
+
+        if (existingSponsor) {
+          sponsorId = existingSponsor.id;
+          if (logoAsset) {
+            replacedImages.push({
+              url: existingSponsor.logo_url,
+              publicId: existingSponsor.logo_public_id,
+            });
+          }
+          await client.sponsors.update({
+            where: { id: sponsorId },
+            data: sponsorData,
+          });
+        } else {
+          const createdSponsor = await client.sponsors.create({
+            data: sponsorData,
+            select: { id: true },
+          });
+          sponsorId = createdSponsor.id;
+        }
+      }
+
+      const sponsorKey = sponsorId.toString();
+      if (retainedSponsorKeys.has(sponsorKey)) {
+        throw new BadRequestException(
+          `El patrocinador ${sponsorInput.name} está repetido en el torneo.`,
+        );
+      }
+      retainedSponsorKeys.add(sponsorKey);
+      retainedSponsorIds.push(sponsorId);
+
+      await client.tournament_sponsors.upsert({
+        where: {
+          tournament_id_sponsor_id: {
+            tournament_id: tournamentId,
+            sponsor_id: sponsorId,
+          },
+        },
+        create: {
+          tournament_id: tournamentId,
+          sponsor_id: sponsorId,
+          sponsorship_level: sponsorInput.sponsorshipLevel ?? null,
+          contribution_type: sponsorInput.contributionType ?? 'money',
+          contribution_amount: sponsorInput.contributionAmount ?? null,
+          currency_code:
+            sponsorInput.contributionCurrencyCode?.toUpperCase() ?? 'COP',
+          contribution_description:
+            sponsorInput.contributionDescription ?? null,
+          agreement_start_date: startDate,
+          agreement_end_date: endDate,
+          status: sponsorInput.status ?? 'active',
+        },
+        update: {
+          sponsorship_level: sponsorInput.sponsorshipLevel ?? null,
+          contribution_type: sponsorInput.contributionType ?? 'money',
+          contribution_amount: sponsorInput.contributionAmount ?? null,
+          currency_code:
+            sponsorInput.contributionCurrencyCode?.toUpperCase() ?? 'COP',
+          contribution_description:
+            sponsorInput.contributionDescription ?? null,
+          agreement_start_date: startDate,
+          agreement_end_date: endDate,
+          status: sponsorInput.status ?? 'active',
+        },
+      });
+    }
+
+    await client.tournament_sponsors.deleteMany({
+      where: {
+        tournament_id: tournamentId,
+        ...(retainedSponsorIds.length > 0
+          ? { sponsor_id: { notIn: retainedSponsorIds } }
+          : {}),
+      },
+    });
+    return replacedImages;
+  }
+
+  private async findTournamentInAssociation(
+    client: Prisma.TransactionClient,
+    associationId: bigint,
+    tournamentId: bigint,
+  ): Promise<AssociationTournamentResponseRecord> {
+    const tournament = await client.tournaments.findUnique({
+      where: {
+        id_association_id: {
+          id: tournamentId,
+          association_id: associationId,
+        },
+      },
+      select: associationTournamentResponseSelect,
+    });
+
+    if (!tournament) {
+      throw this.tournamentNotFound(tournamentId, associationId);
+    }
+
+    return tournament;
+  }
+
+  private tournamentNotFound(
+    tournamentId: bigint,
+    associationId: bigint,
+  ): NotFoundException {
+    return new NotFoundException(
+      `El torneo con ID ${tournamentId.toString()} no existe en la asociación ${associationId.toString()}.`,
+    );
+  }
+
+  private isAvailable(
+    tournament: AssociationTournamentResponseRecord,
+  ): boolean {
+    return (
+      tournament.status === 'active' &&
+      !AVAILABLE_TOURNAMENT_EXCLUDED_PHASES.includes(
+        tournament.phase as (typeof AVAILABLE_TOURNAMENT_EXCLUDED_PHASES)[number],
+      )
+    );
+  }
+
+  private mergeDates(
+    tournament: AssociationTournamentResponseRecord,
+    updateTournamentDto: UpdateTournamentDto,
+  ): TournamentDates {
+    return {
+      startDate:
+        updateTournamentDto.startDate === undefined
+          ? tournament.start_date
+          : new Date(updateTournamentDto.startDate),
+      endDate:
+        updateTournamentDto.endDate === undefined
+          ? tournament.end_date
+          : (this.toDate(updateTournamentDto.endDate) ?? null),
+      registrationStartDate:
+        updateTournamentDto.registrationStartDate === undefined
+          ? tournament.registration_start_date
+          : (this.toDate(updateTournamentDto.registrationStartDate) ?? null),
+      registrationEndDate:
+        updateTournamentDto.registrationEndDate === undefined
+          ? tournament.registration_end_date
+          : (this.toDate(updateTournamentDto.registrationEndDate) ?? null),
+    };
+  }
+
+  private assertValidDates(dates: TournamentDates): void {
+    if (dates.endDate && dates.endDate < dates.startDate) {
+      throw new BadRequestException(
+        'La fecha de finalización no puede ser anterior a la fecha de inicio.',
+      );
+    }
+
+    if (
+      dates.registrationStartDate &&
+      dates.registrationStartDate > dates.startDate
+    ) {
+      throw new BadRequestException(
+        'La fecha de inicio de inscripciones no puede ser posterior al inicio del torneo.',
+      );
+    }
+
+    if (
+      dates.registrationEndDate &&
+      dates.registrationEndDate > dates.startDate
+    ) {
+      throw new BadRequestException(
+        'La fecha de cierre de inscripciones no puede ser posterior al inicio del torneo.',
+      );
+    }
+
+    if (
+      dates.registrationStartDate &&
+      dates.registrationEndDate &&
+      dates.registrationEndDate < dates.registrationStartDate
+    ) {
+      throw new BadRequestException(
+        'La fecha de cierre de inscripciones no puede ser anterior a su fecha de inicio.',
+      );
+    }
+  }
+
+  private toDate(value: string | null | undefined): Date | null | undefined {
+    return value === null || value === undefined ? value : new Date(value);
+  }
+
+  private async deleteImageIfUnreferenced(
+    image: StoredImageReference,
+  ): Promise<void> {
+    try {
+      if (!image.url || (await this.isImageReferenced(image.url))) {
+        return;
+      }
+
+      await this.imageStorage.delete(image);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+
+      this.logger.error(
+        `No fue posible completar la limpieza post-commit de la foto del torneo: ${message}`,
+      );
+    }
+  }
+
+  private async deleteUnreferencedImages(
+    images: StoredImageReference[],
+  ): Promise<void> {
+    for (const image of images) {
+      await this.deleteImageIfUnreferenced(image);
+    }
+  }
+
+  private async deleteImagesWithoutMaskingError(
+    images: Array<StoredImageReference | null | undefined>,
+  ): Promise<void> {
+    await Promise.all(
+      images.map((image) => this.deleteImageWithoutMaskingError(image)),
+    );
+  }
+
+  private async isImageReferenced(imageUrl: string): Promise<boolean> {
+    const [association, tournament, team, sponsor] = await Promise.all([
+      this.prisma.associations.findFirst({
+        where: { OR: [{ logo_url: imageUrl }, { cover_url: imageUrl }] },
+        select: { id: true },
+      }),
+      this.prisma.tournaments.findFirst({
+        where: { photo_url: imageUrl },
+        select: { id: true },
+      }),
+      this.prisma.teams.findFirst({
+        where: { photo_url: imageUrl },
+        select: { id: true },
+      }),
+      this.prisma.sponsors.findFirst({
+        where: { logo_url: imageUrl },
+        select: { id: true },
+      }),
+    ]);
+
+    return Boolean(association || tournament || team || sponsor);
+  }
+
+  private async deleteImageWithoutMaskingError(
+    image: StoredImageReference | null | undefined,
+  ): Promise<void> {
+    try {
+      if (image) await this.imageStorage.delete(image);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+
+      this.logger.error(
+        `No fue posible eliminar la imagen del torneo: ${message}`,
+      );
+    }
+  }
+}

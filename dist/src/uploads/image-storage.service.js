@@ -1,0 +1,193 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var ImageStorageService_1;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ImageStorageService = void 0;
+const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
+const cloudinary_1 = require("cloudinary");
+const node_crypto_1 = require("node:crypto");
+const local_image_storage_service_1 = require("./local-image-storage.service");
+const uploads_constants_1 = require("./uploads.constants");
+let ImageStorageService = ImageStorageService_1 = class ImageStorageService {
+    localStorage;
+    logger = new common_1.Logger(ImageStorageService_1.name);
+    constructor(config, localStorage) {
+        this.localStorage = localStorage;
+        const cloudName = config.get('CLOUDINARY_CLOUD_NAME')?.trim();
+        const apiKey = config.get('CLOUDINARY_API_KEY')?.trim();
+        const apiSecret = config.get('CLOUDINARY_API_SECRET')?.trim();
+        if (!cloudName || !apiKey || !apiSecret) {
+            throw new Error('Faltan CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY o CLOUDINARY_API_SECRET.');
+        }
+        cloudinary_1.v2.config({
+            cloud_name: cloudName,
+            api_key: apiKey,
+            api_secret: apiSecret,
+            secure: true,
+        });
+    }
+    saveAssociationLogo(file) {
+        return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_ASSOCIATION_LOGO_FOLDER, 'El logo');
+    }
+    saveAssociationCover(file) {
+        return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_ASSOCIATION_COVER_FOLDER, 'La portada');
+    }
+    saveTournamentPhoto(file) {
+        return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_TOURNAMENT_PHOTO_FOLDER, 'La foto del torneo');
+    }
+    saveTeamPhoto(file) {
+        return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_TEAM_PHOTO_FOLDER, 'El escudo del equipo');
+    }
+    saveUserPhoto(file) {
+        return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_USER_PHOTO_FOLDER, 'La foto de perfil');
+    }
+    saveSponsorLogo(file) {
+        return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_SPONSOR_LOGO_FOLDER, 'El logo del sponsor');
+    }
+    saveIdentityDocument(file, side) {
+        return this.upload(file, side === 'front'
+            ? uploads_constants_1.CLOUDINARY_IDENTITY_DOCUMENT_FRONT_FOLDER
+            : uploads_constants_1.CLOUDINARY_IDENTITY_DOCUMENT_BACK_FOLDER, 'El documento', 'authenticated');
+    }
+    async delete(reference) {
+        if (reference.publicId) {
+            try {
+                await cloudinary_1.v2.uploader.destroy(reference.publicId, {
+                    resource_type: 'image',
+                    type: reference.deliveryType ?? 'upload',
+                    invalidate: true,
+                });
+            }
+            catch (error) {
+                this.logger.error(`No fue posible eliminar el recurso ${reference.publicId}: ${this.errorMessage(error)}`);
+                throw new common_1.ServiceUnavailableException('No fue posible eliminar la imagen del almacenamiento.');
+            }
+            return;
+        }
+        if (reference.url?.startsWith(uploads_constants_1.UPLOADS_PUBLIC_PREFIX)) {
+            await this.localStorage.deleteByPublicUrl(reference.url);
+            return;
+        }
+        if (reference.deliveryType === 'authenticated' && reference.url) {
+            await this.localStorage.deletePrivateDocument(reference.url);
+        }
+    }
+    async deleteSafely(reference) {
+        try {
+            await this.delete(reference);
+        }
+        catch {
+        }
+    }
+    createIdentityDocumentDownloadUrl(publicId, format, expiresInSeconds = 300) {
+        return cloudinary_1.v2.utils.private_download_url(publicId, format, {
+            resource_type: 'image',
+            type: 'authenticated',
+            expires_at: Math.floor(Date.now() / 1000) + expiresInSeconds,
+            attachment: false,
+        });
+    }
+    uploadPublic(file, folder, fieldLabel) {
+        return this.upload(file, folder, fieldLabel, 'upload');
+    }
+    async upload(file, folder, fieldLabel, deliveryType) {
+        this.assertValidImage(file, fieldLabel);
+        const options = {
+            resource_type: 'image',
+            type: deliveryType,
+            folder,
+            public_id: (0, node_crypto_1.randomUUID)(),
+            overwrite: false,
+            unique_filename: false,
+            use_filename: false,
+        };
+        try {
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary_1.v2.uploader.upload_stream(options, (error, response) => {
+                    if (error || !response) {
+                        reject(new Error(error
+                            ? this.errorMessage(error)
+                            : 'Cloudinary no devolvió una respuesta.'));
+                        return;
+                    }
+                    resolve(response);
+                });
+                stream.end(file.buffer);
+            });
+            return {
+                url: result.secure_url,
+                publicId: result.public_id,
+                assetId: typeof result.asset_id === 'string'
+                    ? result.asset_id
+                    : result.public_id,
+                format: typeof result.format === 'string' ? result.format : 'jpg',
+                deliveryType,
+            };
+        }
+        catch (error) {
+            this.logger.error(`Falló una carga a Cloudinary: ${this.errorMessage(error)}`);
+            throw new common_1.ServiceUnavailableException('No fue posible cargar la imagen. Intenta nuevamente.');
+        }
+    }
+    assertValidImage(file, fieldLabel) {
+        const detectedMimeType = this.detectMimeType(file.buffer);
+        if (file.buffer.length > uploads_constants_1.MAX_IMAGE_SIZE_BYTES ||
+            !uploads_constants_1.ALLOWED_IMAGE_MIME_TYPES.includes(file.mimetype) ||
+            detectedMimeType !== file.mimetype) {
+            throw new common_1.BadRequestException(`${fieldLabel} debe ser una imagen JPEG, PNG o WebP válida de máximo 2 MB.`);
+        }
+    }
+    detectMimeType(buffer) {
+        if (buffer.length >= 4 &&
+            buffer[0] === 0xff &&
+            buffer[1] === 0xd8 &&
+            buffer[2] === 0xff &&
+            buffer[buffer.length - 2] === 0xff &&
+            buffer[buffer.length - 1] === 0xd9)
+            return 'image/jpeg';
+        const pngStart = Buffer.from([
+            0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
+        ]);
+        const pngEnd = Buffer.from([
+            0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
+        ]);
+        if (buffer.length >= pngStart.length + pngEnd.length &&
+            buffer.subarray(0, pngStart.length).equals(pngStart) &&
+            buffer.subarray(-pngEnd.length).equals(pngEnd))
+            return 'image/png';
+        if (buffer.length >= 16 &&
+            buffer.subarray(0, 4).toString('ascii') === 'RIFF' &&
+            buffer.subarray(8, 12).toString('ascii') === 'WEBP' &&
+            buffer.readUInt32LE(4) + 8 === buffer.length &&
+            ['VP8 ', 'VP8L', 'VP8X'].includes(buffer.subarray(12, 16).toString('ascii')))
+            return 'image/webp';
+        return null;
+    }
+    errorMessage(error) {
+        if (error instanceof Error)
+            return error.message;
+        if (typeof error === 'object' &&
+            error !== null &&
+            'message' in error &&
+            typeof error.message === 'string') {
+            return error.message;
+        }
+        return String(error);
+    }
+};
+exports.ImageStorageService = ImageStorageService;
+exports.ImageStorageService = ImageStorageService = ImageStorageService_1 = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [config_1.ConfigService,
+        local_image_storage_service_1.LocalImageStorageService])
+], ImageStorageService);
+//# sourceMappingURL=image-storage.service.js.map

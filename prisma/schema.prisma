@@ -1,0 +1,510 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../generated/prisma"
+  moduleFormat        = "cjs"
+  importFileExtension = ""
+  previewFeatures     = ["partialIndexes"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Stores revocable JWT sessions. The raw JWT identifier is never persisted;
+/// only its SHA-256 hash is stored.
+/// This table contains check constraints defined in prisma/sql/add_auth_sessions.sql.
+model auth_sessions {
+  id         BigInt    @id @default(autoincrement())
+  user_id    BigInt
+  jti_hash   String    @unique(map: "auth_sessions_jti_hash_uk") @db.Char(64)
+  expires_at DateTime  @db.Timestamptz(6)
+  revoked_at DateTime? @db.Timestamptz(6)
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "auth_sessions_user_fkey")
+
+  @@index([expires_at], map: "auth_sessions_expires_at_idx")
+  @@index([user_id, revoked_at], map: "auth_sessions_user_revoked_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model association_administrators {
+  association_id   BigInt
+  user_id          BigInt
+  permission_level String       @default("administrator")
+  status           String       @default("active")
+  created_at       DateTime     @default(now()) @db.Timestamptz(6)
+  associations     associations @relation(fields: [association_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "association_administrators_association_fkey")
+  users            users        @relation(fields: [user_id], references: [id], onUpdate: NoAction, map: "association_administrators_user_fkey")
+
+  @@id([association_id, user_id])
+  @@index([user_id], map: "association_administrators_user_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model associations {
+  id                         BigInt                       @id @default(autoincrement())
+  name                       String
+  description                String?
+  city                       String
+  address                    String?
+  tax_id                     String?                      @unique(map: "associations_tax_id_uk")
+  email                      String?
+  phone                      String?
+  logo_url                   String?
+  logo_public_id             String?
+  cover_url                  String
+  cover_public_id            String?
+  owner_user_id              BigInt                       @unique
+  status                     String                       @default("active")
+  created_at                 DateTime                     @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime                     @default(now()) @db.Timestamptz(6)
+  association_administrators association_administrators[]
+  users                      users                        @relation(fields: [owner_user_id], references: [id], onUpdate: NoAction, map: "associations_owner_fkey")
+  tournaments                tournaments[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model disciplinary_actions {
+  id                                            BigInt                  @id @default(autoincrement())
+  tournament_id                                 BigInt
+  match_id                                      BigInt?
+  team_id                                       BigInt
+  player_id                                     BigInt
+  card_type                                     String                  @default("none")
+  reason                                        String
+  occurred_at                                   DateTime                @default(now()) @db.Timestamptz(6)
+  reported_by                                   BigInt
+  decision_status                               String                  @default("reported")
+  decided_by                                    BigInt?
+  decided_at                                    DateTime?               @db.Timestamptz(6)
+  decision_notes                                String?
+  created_at                                    DateTime                @default(now()) @db.Timestamptz(6)
+  users_disciplinary_actions_decided_byTousers  users?                  @relation("disciplinary_actions_decided_byTousers", fields: [decided_by], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  matches                                       matches?                @relation(fields: [match_id, tournament_id], references: [id, tournament_id], onUpdate: NoAction, map: "disciplinary_actions_match_fkey")
+  users_disciplinary_actions_reported_byTousers users                   @relation("disciplinary_actions_reported_byTousers", fields: [reported_by], references: [id], onUpdate: NoAction)
+  tournament_team_players                       tournament_team_players @relation(fields: [tournament_id, team_id, player_id], references: [tournament_id, team_id, player_id], onUpdate: NoAction, map: "disciplinary_actions_roster_fkey")
+  fines                                         fines?
+  suspensions                                   suspensions?
+
+  @@index([match_id], map: "disciplinary_actions_match_idx")
+  @@index([decision_status], map: "disciplinary_actions_status_idx")
+  @@index([tournament_id, player_id], map: "disciplinary_actions_tournament_player_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model fines {
+  id                     BigInt               @id @default(autoincrement())
+  disciplinary_action_id BigInt               @unique
+  amount                 Decimal              @db.Decimal(14, 2)
+  currency_code          String               @default("COP") @db.Char(3)
+  due_date               DateTime?            @db.Date
+  payment_status         String               @default("pending")
+  paid_at                DateTime?            @db.Timestamptz(6)
+  payment_reference      String?
+  notes                  String?
+  created_by             BigInt
+  created_at             DateTime             @default(now()) @db.Timestamptz(6)
+  disciplinary_actions   disciplinary_actions @relation(fields: [disciplinary_action_id], references: [id], onUpdate: NoAction, map: "fines_action_fkey")
+  users                  users                @relation(fields: [created_by], references: [id], onUpdate: NoAction)
+
+  @@index([payment_status, due_date], map: "fines_payment_status_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model match_referees {
+  match_id            BigInt              @unique(map: "match_referees_one_main_uk", where: raw("(referee_role = 'main'::text)"))
+  tournament_id       BigInt
+  referee_id          BigInt
+  referee_role        String              @default("main")
+  assignment_status   String              @default("assigned")
+  created_at          DateTime            @default(now()) @db.Timestamptz(6)
+  matches             matches             @relation(fields: [match_id, tournament_id], references: [id, tournament_id], onDelete: Cascade, onUpdate: NoAction, map: "match_referees_match_fkey")
+  tournament_referees tournament_referees @relation(fields: [tournament_id, referee_id], references: [tournament_id, user_id], onUpdate: NoAction, map: "match_referees_tournament_referee_fkey")
+
+  @@id([match_id, referee_id])
+  @@index([referee_id], map: "match_referees_referee_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model matches {
+  id                                                                                              BigInt                        @id @default(autoincrement())
+  tournament_id                                                                                   BigInt
+  home_team_id                                                                                    BigInt
+  away_team_id                                                                                    BigInt
+  match_date                                                                                      DateTime?                     @db.Timestamptz(6)
+  venue                                                                                           String?
+  stage                                                                                           String
+  round_number                                                                                    Int?
+  home_score                                                                                      Int?
+  away_score                                                                                      Int?
+  status                                                                                          String                        @default("scheduled")
+  notes                                                                                           String?
+  created_at                                                                                      DateTime                      @default(now()) @db.Timestamptz(6)
+  updated_at                                                                                      DateTime                      @default(now()) @db.Timestamptz(6)
+  disciplinary_actions                                                                            disciplinary_actions[]
+  // Prisma 7.9.1 infers this as one-to-one during db pull because of the
+  // partial unique index for the main referee. PostgreSQL allows multiple
+  // referees per match, so this relation is intentionally one-to-many.
+  match_referees                                                                                  match_referees[]
+  tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations tournament_team_registrations @relation("matches_tournament_id_away_team_idTotournament_team_registrations", fields: [tournament_id, away_team_id], references: [tournament_id, team_id], onUpdate: NoAction, map: "matches_away_team_fkey")
+  tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations tournament_team_registrations @relation("matches_tournament_id_home_team_idTotournament_team_registrations", fields: [tournament_id, home_team_id], references: [tournament_id, team_id], onUpdate: NoAction, map: "matches_home_team_fkey")
+  player_match_stats                                                                              player_match_stats[]
+
+  @@unique([id, tournament_id], map: "matches_id_tournament_uk")
+  @@index([away_team_id], map: "matches_away_team_idx")
+  @@index([home_team_id], map: "matches_home_team_idx")
+  @@index([tournament_id, match_date], map: "matches_tournament_date_idx")
+  @@index([tournament_id, status], map: "matches_tournament_status_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model player_match_stats {
+  id                      BigInt                  @id @default(autoincrement())
+  match_id                BigInt
+  tournament_id           BigInt
+  team_id                 BigInt
+  player_id               BigInt
+  goals                   Int                     @default(0)
+  assists                 Int                     @default(0)
+  yellow_cards            Int                     @default(0)
+  red_cards               Int                     @default(0)
+  minutes_played          Int                     @default(0)
+  created_at              DateTime                @default(now()) @db.Timestamptz(6)
+  matches                 matches                 @relation(fields: [match_id, tournament_id], references: [id, tournament_id], onDelete: Cascade, onUpdate: NoAction, map: "player_match_stats_match_fkey")
+  tournament_team_players tournament_team_players @relation(fields: [tournament_id, team_id, player_id], references: [tournament_id, team_id, player_id], onUpdate: NoAction, map: "player_match_stats_roster_fkey")
+
+  @@unique([match_id, player_id], map: "player_match_stats_match_player_uk")
+  @@index([player_id], map: "player_match_stats_player_idx")
+}
+
+model roles {
+  code        String       @id
+  name        String       @unique
+  description String?
+  created_at  DateTime     @default(now()) @db.Timestamptz(6)
+  user_roles  user_roles[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model sponsors {
+  id                  BigInt                @id @default(autoincrement())
+  name                String
+  tax_id              String?               @unique(map: "sponsors_tax_id_uk")
+  contact_name        String?
+  email               String?
+  phone               String?
+  website_url         String?
+  logo_url            String?
+  logo_public_id      String?
+  status              String                @default("active")
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime              @default(now()) @db.Timestamptz(6)
+  tournament_sponsors tournament_sponsors[]
+
+  @@index([name])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model suspensions {
+  id                     BigInt               @id @default(autoincrement())
+  disciplinary_action_id BigInt               @unique
+  matches_count          Int?
+  start_date             DateTime?            @db.Date
+  end_date               DateTime?            @db.Date
+  reason                 String?
+  status                 String               @default("active")
+  created_by             BigInt
+  created_at             DateTime             @default(now()) @db.Timestamptz(6)
+  disciplinary_actions   disciplinary_actions @relation(fields: [disciplinary_action_id], references: [id], onUpdate: NoAction, map: "suspensions_action_fkey")
+  users                  users                @relation(fields: [created_by], references: [id], onUpdate: NoAction)
+
+  @@index([status])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model team_members {
+  team_id                 BigInt
+  user_id                 BigInt
+  member_role             String                    @default("player")
+  status                  String                    @default("active")
+  created_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  teams                   teams                     @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "team_members_team_fkey")
+  users                   users                     @relation(fields: [user_id], references: [id], onUpdate: NoAction, map: "team_members_user_fkey")
+  tournament_team_players tournament_team_players[]
+
+  @@id([team_id, user_id])
+  @@index([user_id], map: "team_members_user_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model teams {
+  id                                 BigInt                          @id @default(autoincrement())
+  name                               String
+  sport_type                         String
+  modality                           String
+  primary_color                      String?
+  secondary_color                    String?
+  captain_user_id                    BigInt
+  created_by                         BigInt
+  photo_url                          String?
+  photo_public_id                    String?
+  status                             String                          @default("active")
+  created_at                         DateTime                        @default(now()) @db.Timestamptz(6)
+  updated_at                         DateTime                        @default(now()) @db.Timestamptz(6)
+  team_members                       team_members[]
+  users_teams_captain_user_idTousers users                           @relation("teams_captain_user_idTousers", fields: [captain_user_id], references: [id], onUpdate: NoAction, map: "teams_captain_fkey")
+  users_teams_created_byTousers      users                           @relation("teams_created_byTousers", fields: [created_by], references: [id], onUpdate: NoAction)
+  tournament_team_registrations      tournament_team_registrations[]
+
+  @@index([captain_user_id], map: "teams_captain_idx")
+  @@index([created_by], map: "teams_creator_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tournament_administrators {
+  tournament_id    BigInt
+  user_id          BigInt
+  permission_level String      @default("editor")
+  status           String      @default("active")
+  created_at       DateTime    @default(now()) @db.Timestamptz(6)
+  tournaments      tournaments @relation(fields: [tournament_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tournament_administrators_tournament_fkey")
+  users            users       @relation(fields: [user_id], references: [id], onUpdate: NoAction, map: "tournament_administrators_user_fkey")
+
+  @@id([tournament_id, user_id])
+  @@index([user_id], map: "tournament_administrators_user_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tournament_referees {
+  tournament_id        BigInt
+  user_id              BigInt
+  certification_number String?
+  category             String?
+  status               String           @default("active")
+  created_at           DateTime         @default(now()) @db.Timestamptz(6)
+  match_referees       match_referees[]
+  tournaments          tournaments      @relation(fields: [tournament_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tournament_referees_tournament_fkey")
+  users                users            @relation(fields: [user_id], references: [id], onUpdate: NoAction, map: "tournament_referees_user_fkey")
+
+  @@id([tournament_id, user_id])
+  @@index([user_id], map: "tournament_referees_user_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tournament_sponsors {
+  tournament_id            BigInt
+  sponsor_id               BigInt
+  sponsorship_level        String?
+  contribution_type        String      @default("money")
+  contribution_amount      Decimal?    @db.Decimal(14, 2)
+  currency_code            String      @default("COP") @db.Char(3)
+  contribution_description String?
+  agreement_start_date     DateTime?   @db.Date
+  agreement_end_date       DateTime?   @db.Date
+  status                   String      @default("active")
+  created_at               DateTime    @default(now()) @db.Timestamptz(6)
+  sponsors                 sponsors    @relation(fields: [sponsor_id], references: [id], onUpdate: NoAction, map: "tournament_sponsors_sponsor_fkey")
+  tournaments              tournaments @relation(fields: [tournament_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tournament_sponsors_tournament_fkey")
+
+  @@id([tournament_id, sponsor_id])
+  @@index([sponsor_id], map: "tournament_sponsors_sponsor_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tournament_team_players {
+  tournament_id                 BigInt
+  team_id                       BigInt
+  player_id                     BigInt
+  jersey_number                 Int?
+  position                      String?
+  is_captain                    Boolean                       @default(false)
+  registration_status           String                        @default("pending")
+  created_at                    DateTime                      @default(now()) @db.Timestamptz(6)
+  disciplinary_actions          disciplinary_actions[]
+  player_match_stats            player_match_stats[]
+  team_members                  team_members                  @relation(fields: [team_id, player_id], references: [team_id, user_id], onUpdate: NoAction, map: "tournament_team_players_member_fkey")
+  tournament_team_registrations tournament_team_registrations @relation(fields: [tournament_id, team_id], references: [tournament_id, team_id], onDelete: Cascade, onUpdate: NoAction, map: "tournament_team_players_registration_fkey")
+
+  @@id([tournament_id, team_id, player_id])
+  @@unique([tournament_id, team_id, jersey_number], map: "tournament_team_players_jersey_uk")
+  @@unique([tournament_id, player_id], map: "tournament_team_players_one_team_uk")
+  @@index([player_id], map: "tournament_team_players_player_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tournament_team_registrations {
+  tournament_id                                                             BigInt
+  association_id                                                            BigInt
+  team_id                                                                   BigInt
+  requested_by                                                              BigInt
+  request_status                                                            String                           @default("pending")
+  reviewed_by                                                               BigInt?
+  review_notes                                                              String?
+  reviewed_at                                                               DateTime?                        @db.Timestamptz(6)
+  group_name                                                                String?
+  seed                                                                      Int?
+  points                                                                    Int                              @default(0)
+  created_at                                                                DateTime                         @default(now()) @db.Timestamptz(6)
+  updated_at                                                                DateTime                         @default(now()) @db.Timestamptz(6)
+  matches_matches_tournament_id_away_team_idTotournament_team_registrations matches[]                        @relation("matches_tournament_id_away_team_idTotournament_team_registrations")
+  matches_matches_tournament_id_home_team_idTotournament_team_registrations matches[]                        @relation("matches_tournament_id_home_team_idTotournament_team_registrations")
+  tournament_team_players                                                   tournament_team_players[]
+  tournament_registration_events                                            tournament_registration_events[]
+  users_tournament_team_registrations_requested_byTousers                   users                            @relation("tournament_team_registrations_requested_byTousers", fields: [requested_by], references: [id], onUpdate: NoAction)
+  users_tournament_team_registrations_reviewed_byTousers                    users?                           @relation("tournament_team_registrations_reviewed_byTousers", fields: [reviewed_by], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  teams                                                                     teams                            @relation(fields: [team_id], references: [id], onUpdate: NoAction, map: "tournament_team_registrations_team_fkey")
+  tournaments                                                               tournaments                      @relation(fields: [tournament_id, association_id], references: [id, association_id], onDelete: Cascade, onUpdate: NoAction, map: "tournament_team_registrations_tournament_fkey")
+
+  @@id([tournament_id, team_id])
+  @@index([association_id, request_status], map: "tournament_team_registrations_association_idx")
+  @@index([reviewed_by], map: "tournament_team_registrations_reviewer_idx")
+  @@index([team_id], map: "tournament_team_registrations_team_idx")
+}
+
+model notifications {
+  id          BigInt    @id @default(autoincrement())
+  user_id     BigInt
+  type        String
+  title       String
+  message     String
+  entity_type String?
+  entity_id   String?
+  metadata    Json?
+  read_at     DateTime? @db.Timestamptz(6)
+  created_at  DateTime  @default(now()) @db.Timestamptz(6)
+  users       users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id, created_at(sort: Desc)], map: "notifications_user_created_idx")
+  @@index([user_id, read_at, created_at(sort: Desc)], map: "notifications_user_unread_idx")
+}
+
+model tournament_registration_events {
+  id            BigInt                        @id @default(autoincrement())
+  tournament_id BigInt
+  team_id       BigInt
+  actor_user_id BigInt
+  event_type    String
+  message       String?
+  created_at    DateTime                      @default(now()) @db.Timestamptz(6)
+  registration  tournament_team_registrations @relation(fields: [tournament_id, team_id], references: [tournament_id, team_id], onDelete: Cascade, onUpdate: NoAction)
+  actor         users                         @relation(fields: [actor_user_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+
+  @@index([tournament_id, team_id, created_at], map: "tournament_registration_events_registration_idx")
+}
+
+model tournament_types {
+  id                   BigInt        @id @default(autoincrement())
+  name                 String        @unique
+  description          String?
+  min_players_per_team Int           @default(1)
+  max_players_per_team Int           @default(25)
+  instructions         String?       @db.Text
+  created_at           DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime      @default(now()) @db.Timestamptz(6)
+  tournaments          tournaments[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tournaments {
+  id                            BigInt                          @id @default(autoincrement())
+  association_id                BigInt
+  name                          String
+  description                   String?
+  tournament_type_id            BigInt
+  sport_type                    String
+  modality                      String
+  start_date                    DateTime                        @db.Date
+  end_date                      DateTime?                       @db.Date
+  registration_start_date       DateTime?                       @db.Date
+  registration_end_date         DateTime?                       @db.Date
+  registration_fee              Decimal                         @default(0) @db.Decimal(14, 2)
+  currency_code                 String                          @default("COP") @db.Char(3)
+  grand_prize                   Decimal                         @default(0) @db.Decimal(14, 2)
+  second_prize                  Decimal                         @default(0) @db.Decimal(14, 2)
+  third_prize                   Decimal                         @default(0) @db.Decimal(14, 2)
+  max_teams                     Int
+  min_players_per_team          Int                             @default(1)
+  max_players_per_team          Int
+  location_name                 String?
+  location_address              String?
+  rules_url                     String?
+  rules_content                 String?                         @db.Text
+  photo_url                     String?
+  photo_public_id               String?
+  phase                         String                          @default("draft")
+  status                        String                          @default("active")
+  created_by                    BigInt
+  created_at                    DateTime                        @default(now()) @db.Timestamptz(6)
+  updated_at                    DateTime                        @default(now()) @db.Timestamptz(6)
+  tournament_administrators     tournament_administrators[]
+  tournament_referees           tournament_referees[]
+  tournament_sponsors           tournament_sponsors[]
+  tournament_team_registrations tournament_team_registrations[]
+  associations                  associations                    @relation(fields: [association_id], references: [id], onUpdate: NoAction, map: "tournaments_association_fkey")
+  users                         users                           @relation(fields: [created_by], references: [id], onUpdate: NoAction)
+  tournament_types              tournament_types                @relation(fields: [tournament_type_id], references: [id], onUpdate: NoAction, map: "tournaments_type_fkey")
+
+  @@unique([id, association_id], map: "tournaments_id_association_uk")
+  @@index([association_id, status, phase], map: "tournaments_association_idx")
+  @@index([start_date, end_date], map: "tournaments_dates_idx")
+}
+
+model user_roles {
+  user_id    BigInt
+  role_code  String
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  roles      roles    @relation(fields: [role_code], references: [code], onUpdate: NoAction, map: "user_roles_role_fkey")
+  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_roles_user_fkey")
+
+  @@id([user_id, role_code])
+  @@index([role_code], map: "user_roles_role_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model users {
+  id                                                                              BigInt                           @id @default(autoincrement())
+  id_number                                                                       String                           @unique(map: "users_id_number_uk")
+  document_type                                                                   String
+  full_name                                                                       String
+  birth_date                                                                      DateTime                         @db.Date
+  birth_city                                                                      String?
+  email                                                                           String
+  phone                                                                           String?
+  photo_url                                                                       String?
+  photo_public_id                                                                 String?
+  document_front_url                                                              String?
+  document_front_public_id                                                        String?
+  document_front_format                                                           String?
+  document_back_url                                                               String?
+  document_back_public_id                                                         String?
+  document_back_format                                                            String?
+  identity_verified_at                                                            DateTime?                        @db.Timestamptz(6)
+  password_hash                                                                   String
+  status                                                                          String                           @default("active")
+  blocked_until                                                                   DateTime?                        @db.Timestamptz(6)
+  block_reason                                                                    String?                          @db.Text
+  blocked_by                                                                      BigInt?
+  created_at                                                                      DateTime                         @default(now()) @db.Timestamptz(6)
+  updated_at                                                                      DateTime                         @default(now()) @db.Timestamptz(6)
+  auth_sessions                                                                   auth_sessions[]
+  notifications                                                                   notifications[]
+  tournament_registration_events                                                  tournament_registration_events[]
+  association_administrators                                                      association_administrators[]
+  associations                                                                    associations?
+  disciplinary_actions_disciplinary_actions_decided_byTousers                     disciplinary_actions[]           @relation("disciplinary_actions_decided_byTousers")
+  disciplinary_actions_disciplinary_actions_reported_byTousers                    disciplinary_actions[]           @relation("disciplinary_actions_reported_byTousers")
+  fines                                                                           fines[]
+  suspensions                                                                     suspensions[]
+  team_members                                                                    team_members[]
+  teams_teams_captain_user_idTousers                                              teams[]                          @relation("teams_captain_user_idTousers")
+  teams_teams_created_byTousers                                                   teams[]                          @relation("teams_created_byTousers")
+  tournament_administrators                                                       tournament_administrators[]
+  tournament_referees                                                             tournament_referees[]
+  tournament_team_registrations_tournament_team_registrations_requested_byTousers tournament_team_registrations[]  @relation("tournament_team_registrations_requested_byTousers")
+  tournament_team_registrations_tournament_team_registrations_reviewed_byTousers  tournament_team_registrations[]  @relation("tournament_team_registrations_reviewed_byTousers")
+  tournaments                                                                     tournaments[]
+  user_roles                                                                      user_roles[]
+
+}

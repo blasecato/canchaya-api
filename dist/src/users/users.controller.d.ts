@@ -1,0 +1,108 @@
+import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-request.interface';
+import type { UploadedImageFile } from '../uploads/image-storage.types';
+import { CreateUserDto } from './dto/create-user.dto';
+import { ListAdministratorsQueryDto } from './dto/list-administrators-query.dto';
+import { RegisterPlayerDto } from './dto/register-player.dto';
+import { PublicUserResponseDto } from './dto/public-user-response.dto';
+import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
+import { UsersService } from './users.service';
+export declare class UsersController {
+    private readonly usersService;
+    constructor(usersService: UsersService);
+    create(createUserDto: CreateUserDto): Promise<{
+        id: bigint;
+        created_at: Date;
+        status: string;
+        email: string;
+        phone: string | null;
+        updated_at: Date;
+        photo_url: string | null;
+        photo_public_id: string | null;
+        id_number: string;
+        document_type: string;
+        full_name: string;
+        birth_date: Date;
+        birth_city: string | null;
+        document_front_url: string | null;
+        document_front_public_id: string | null;
+        document_front_format: string | null;
+        document_back_url: string | null;
+        document_back_public_id: string | null;
+        document_back_format: string | null;
+        identity_verified_at: Date | null;
+        blocked_until: Date | null;
+        block_reason: string | null;
+        blocked_by: bigint | null;
+    }>;
+    register(dto: RegisterPlayerDto, uploadedFiles: {
+        photo?: UploadedImageFile[];
+        documentFront?: UploadedImageFile[];
+        documentBack?: UploadedImageFile[];
+    }): Promise<PublicUserResponseDto>;
+    findAll(): Promise<PublicUserResponseDto[]>;
+    findAdministrators(query: ListAdministratorsQueryDto): Promise<{
+        items: {
+            id: string;
+            idNumber: string;
+            documentType: string;
+            fullName: string;
+            birthDate: string;
+            birthCity: string | null;
+            email: string;
+            phone: string | null;
+            photoUrl: string | null;
+            status: string;
+            roles: string[];
+            associations: {
+                id: string;
+                name: string;
+                permissionLevel: string;
+            }[];
+            createdAt: string;
+            updatedAt: string;
+        }[];
+        metrics: {
+            total: number;
+            active: number;
+            superAdmins: number;
+            associationAdmins: number;
+        };
+        page: number;
+        pageSize: number;
+        total: number;
+        hasNextPage: boolean;
+    }>;
+    findMe(request: AuthenticatedRequest): Promise<PublicUserResponseDto>;
+    updateMe(request: AuthenticatedRequest, dto: UpdateUserProfileDto, photo?: UploadedImageFile): Promise<PublicUserResponseDto>;
+    getIdentityDocument(id: bigint, side: string, request: AuthenticatedRequest): Promise<{
+        url: string;
+        expiresAt: string;
+    }>;
+    findOne(id: bigint, request: AuthenticatedRequest): Promise<PublicUserResponseDto>;
+    update(id: bigint, request: AuthenticatedRequest, dto: UpdateUserProfileDto, photo?: UploadedImageFile): Promise<PublicUserResponseDto>;
+    remove(id: bigint): Promise<{
+        id: bigint;
+        created_at: Date;
+        status: string;
+        email: string;
+        phone: string | null;
+        updated_at: Date;
+        photo_url: string | null;
+        photo_public_id: string | null;
+        id_number: string;
+        document_type: string;
+        full_name: string;
+        birth_date: Date;
+        birth_city: string | null;
+        document_front_url: string | null;
+        document_front_public_id: string | null;
+        document_front_format: string | null;
+        document_back_url: string | null;
+        document_back_public_id: string | null;
+        document_back_format: string | null;
+        identity_verified_at: Date | null;
+        blocked_until: Date | null;
+        block_reason: string | null;
+        blocked_by: bigint | null;
+    }>;
+}

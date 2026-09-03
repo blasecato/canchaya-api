@@ -1,0 +1,1906 @@
+import type * as runtime from "@prisma/client/runtime/client";
+import type * as Prisma from "../internal/prismaNamespace";
+export type tournament_team_registrationsModel = runtime.Types.Result.DefaultSelection<Prisma.$tournament_team_registrationsPayload>;
+export type AggregateTournament_team_registrations = {
+    _count: Tournament_team_registrationsCountAggregateOutputType | null;
+    _avg: Tournament_team_registrationsAvgAggregateOutputType | null;
+    _sum: Tournament_team_registrationsSumAggregateOutputType | null;
+    _min: Tournament_team_registrationsMinAggregateOutputType | null;
+    _max: Tournament_team_registrationsMaxAggregateOutputType | null;
+};
+export type Tournament_team_registrationsAvgAggregateOutputType = {
+    tournament_id: number | null;
+    association_id: number | null;
+    team_id: number | null;
+    requested_by: number | null;
+    reviewed_by: number | null;
+    seed: number | null;
+    points: number | null;
+};
+export type Tournament_team_registrationsSumAggregateOutputType = {
+    tournament_id: bigint | null;
+    association_id: bigint | null;
+    team_id: bigint | null;
+    requested_by: bigint | null;
+    reviewed_by: bigint | null;
+    seed: number | null;
+    points: number | null;
+};
+export type Tournament_team_registrationsMinAggregateOutputType = {
+    tournament_id: bigint | null;
+    association_id: bigint | null;
+    team_id: bigint | null;
+    requested_by: bigint | null;
+    request_status: string | null;
+    reviewed_by: bigint | null;
+    review_notes: string | null;
+    reviewed_at: Date | null;
+    group_name: string | null;
+    seed: number | null;
+    points: number | null;
+    created_at: Date | null;
+    updated_at: Date | null;
+};
+export type Tournament_team_registrationsMaxAggregateOutputType = {
+    tournament_id: bigint | null;
+    association_id: bigint | null;
+    team_id: bigint | null;
+    requested_by: bigint | null;
+    request_status: string | null;
+    reviewed_by: bigint | null;
+    review_notes: string | null;
+    reviewed_at: Date | null;
+    group_name: string | null;
+    seed: number | null;
+    points: number | null;
+    created_at: Date | null;
+    updated_at: Date | null;
+};
+export type Tournament_team_registrationsCountAggregateOutputType = {
+    tournament_id: number;
+    association_id: number;
+    team_id: number;
+    requested_by: number;
+    request_status: number;
+    reviewed_by: number;
+    review_notes: number;
+    reviewed_at: number;
+    group_name: number;
+    seed: number;
+    points: number;
+    created_at: number;
+    updated_at: number;
+    _all: number;
+};
+export type Tournament_team_registrationsAvgAggregateInputType = {
+    tournament_id?: true;
+    association_id?: true;
+    team_id?: true;
+    requested_by?: true;
+    reviewed_by?: true;
+    seed?: true;
+    points?: true;
+};
+export type Tournament_team_registrationsSumAggregateInputType = {
+    tournament_id?: true;
+    association_id?: true;
+    team_id?: true;
+    requested_by?: true;
+    reviewed_by?: true;
+    seed?: true;
+    points?: true;
+};
+export type Tournament_team_registrationsMinAggregateInputType = {
+    tournament_id?: true;
+    association_id?: true;
+    team_id?: true;
+    requested_by?: true;
+    request_status?: true;
+    reviewed_by?: true;
+    review_notes?: true;
+    reviewed_at?: true;
+    group_name?: true;
+    seed?: true;
+    points?: true;
+    created_at?: true;
+    updated_at?: true;
+};
+export type Tournament_team_registrationsMaxAggregateInputType = {
+    tournament_id?: true;
+    association_id?: true;
+    team_id?: true;
+    requested_by?: true;
+    request_status?: true;
+    reviewed_by?: true;
+    review_notes?: true;
+    reviewed_at?: true;
+    group_name?: true;
+    seed?: true;
+    points?: true;
+    created_at?: true;
+    updated_at?: true;
+};
+export type Tournament_team_registrationsCountAggregateInputType = {
+    tournament_id?: true;
+    association_id?: true;
+    team_id?: true;
+    requested_by?: true;
+    request_status?: true;
+    reviewed_by?: true;
+    review_notes?: true;
+    reviewed_at?: true;
+    group_name?: true;
+    seed?: true;
+    points?: true;
+    created_at?: true;
+    updated_at?: true;
+    _all?: true;
+};
+export type Tournament_team_registrationsAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    orderBy?: Prisma.tournament_team_registrationsOrderByWithRelationInput | Prisma.tournament_team_registrationsOrderByWithRelationInput[];
+    cursor?: Prisma.tournament_team_registrationsWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    _count?: true | Tournament_team_registrationsCountAggregateInputType;
+    _avg?: Tournament_team_registrationsAvgAggregateInputType;
+    _sum?: Tournament_team_registrationsSumAggregateInputType;
+    _min?: Tournament_team_registrationsMinAggregateInputType;
+    _max?: Tournament_team_registrationsMaxAggregateInputType;
+};
+export type GetTournament_team_registrationsAggregateType<T extends Tournament_team_registrationsAggregateArgs> = {
+    [P in keyof T & keyof AggregateTournament_team_registrations]: P extends '_count' | 'count' ? T[P] extends true ? number : Prisma.GetScalarType<T[P], AggregateTournament_team_registrations[P]> : Prisma.GetScalarType<T[P], AggregateTournament_team_registrations[P]>;
+};
+export type tournament_team_registrationsGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    orderBy?: Prisma.tournament_team_registrationsOrderByWithAggregationInput | Prisma.tournament_team_registrationsOrderByWithAggregationInput[];
+    by: Prisma.Tournament_team_registrationsScalarFieldEnum[] | Prisma.Tournament_team_registrationsScalarFieldEnum;
+    having?: Prisma.tournament_team_registrationsScalarWhereWithAggregatesInput;
+    take?: number;
+    skip?: number;
+    _count?: Tournament_team_registrationsCountAggregateInputType | true;
+    _avg?: Tournament_team_registrationsAvgAggregateInputType;
+    _sum?: Tournament_team_registrationsSumAggregateInputType;
+    _min?: Tournament_team_registrationsMinAggregateInputType;
+    _max?: Tournament_team_registrationsMaxAggregateInputType;
+};
+export type Tournament_team_registrationsGroupByOutputType = {
+    tournament_id: bigint;
+    association_id: bigint;
+    team_id: bigint;
+    requested_by: bigint;
+    request_status: string;
+    reviewed_by: bigint | null;
+    review_notes: string | null;
+    reviewed_at: Date | null;
+    group_name: string | null;
+    seed: number | null;
+    points: number;
+    created_at: Date;
+    updated_at: Date;
+    _count: Tournament_team_registrationsCountAggregateOutputType | null;
+    _avg: Tournament_team_registrationsAvgAggregateOutputType | null;
+    _sum: Tournament_team_registrationsSumAggregateOutputType | null;
+    _min: Tournament_team_registrationsMinAggregateOutputType | null;
+    _max: Tournament_team_registrationsMaxAggregateOutputType | null;
+};
+export type GetTournament_team_registrationsGroupByPayload<T extends tournament_team_registrationsGroupByArgs> = Prisma.PrismaPromise<Array<Prisma.PickEnumerable<Tournament_team_registrationsGroupByOutputType, T['by']> & {
+    [P in ((keyof T) & (keyof Tournament_team_registrationsGroupByOutputType))]: P extends '_count' ? T[P] extends boolean ? number : Prisma.GetScalarType<T[P], Tournament_team_registrationsGroupByOutputType[P]> : Prisma.GetScalarType<T[P], Tournament_team_registrationsGroupByOutputType[P]>;
+}>>;
+export type tournament_team_registrationsWhereInput = {
+    AND?: Prisma.tournament_team_registrationsWhereInput | Prisma.tournament_team_registrationsWhereInput[];
+    OR?: Prisma.tournament_team_registrationsWhereInput[];
+    NOT?: Prisma.tournament_team_registrationsWhereInput | Prisma.tournament_team_registrationsWhereInput[];
+    tournament_id?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    association_id?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    team_id?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    requested_by?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    request_status?: Prisma.StringFilter<"tournament_team_registrations"> | string;
+    reviewed_by?: Prisma.BigIntNullableFilter<"tournament_team_registrations"> | bigint | number | null;
+    review_notes?: Prisma.StringNullableFilter<"tournament_team_registrations"> | string | null;
+    reviewed_at?: Prisma.DateTimeNullableFilter<"tournament_team_registrations"> | Date | string | null;
+    group_name?: Prisma.StringNullableFilter<"tournament_team_registrations"> | string | null;
+    seed?: Prisma.IntNullableFilter<"tournament_team_registrations"> | number | null;
+    points?: Prisma.IntFilter<"tournament_team_registrations"> | number;
+    created_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.MatchesListRelationFilter;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.MatchesListRelationFilter;
+    tournament_team_players?: Prisma.Tournament_team_playersListRelationFilter;
+    tournament_registration_events?: Prisma.Tournament_registration_eventsListRelationFilter;
+    users_tournament_team_registrations_requested_byTousers?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null;
+    teams?: Prisma.XOR<Prisma.TeamsScalarRelationFilter, Prisma.teamsWhereInput>;
+    tournaments?: Prisma.XOR<Prisma.TournamentsScalarRelationFilter, Prisma.tournamentsWhereInput>;
+};
+export type tournament_team_registrationsOrderByWithRelationInput = {
+    tournament_id?: Prisma.SortOrder;
+    association_id?: Prisma.SortOrder;
+    team_id?: Prisma.SortOrder;
+    requested_by?: Prisma.SortOrder;
+    request_status?: Prisma.SortOrder;
+    reviewed_by?: Prisma.SortOrderInput | Prisma.SortOrder;
+    review_notes?: Prisma.SortOrderInput | Prisma.SortOrder;
+    reviewed_at?: Prisma.SortOrderInput | Prisma.SortOrder;
+    group_name?: Prisma.SortOrderInput | Prisma.SortOrder;
+    seed?: Prisma.SortOrderInput | Prisma.SortOrder;
+    points?: Prisma.SortOrder;
+    created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesOrderByRelationAggregateInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesOrderByRelationAggregateInput;
+    tournament_team_players?: Prisma.tournament_team_playersOrderByRelationAggregateInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsOrderByRelationAggregateInput;
+    users_tournament_team_registrations_requested_byTousers?: Prisma.usersOrderByWithRelationInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersOrderByWithRelationInput;
+    teams?: Prisma.teamsOrderByWithRelationInput;
+    tournaments?: Prisma.tournamentsOrderByWithRelationInput;
+};
+export type tournament_team_registrationsWhereUniqueInput = Prisma.AtLeast<{
+    tournament_id_team_id?: Prisma.tournament_team_registrationsTournament_idTeam_idCompoundUniqueInput;
+    AND?: Prisma.tournament_team_registrationsWhereInput | Prisma.tournament_team_registrationsWhereInput[];
+    OR?: Prisma.tournament_team_registrationsWhereInput[];
+    NOT?: Prisma.tournament_team_registrationsWhereInput | Prisma.tournament_team_registrationsWhereInput[];
+    tournament_id?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    association_id?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    team_id?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    requested_by?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    request_status?: Prisma.StringFilter<"tournament_team_registrations"> | string;
+    reviewed_by?: Prisma.BigIntNullableFilter<"tournament_team_registrations"> | bigint | number | null;
+    review_notes?: Prisma.StringNullableFilter<"tournament_team_registrations"> | string | null;
+    reviewed_at?: Prisma.DateTimeNullableFilter<"tournament_team_registrations"> | Date | string | null;
+    group_name?: Prisma.StringNullableFilter<"tournament_team_registrations"> | string | null;
+    seed?: Prisma.IntNullableFilter<"tournament_team_registrations"> | number | null;
+    points?: Prisma.IntFilter<"tournament_team_registrations"> | number;
+    created_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.MatchesListRelationFilter;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.MatchesListRelationFilter;
+    tournament_team_players?: Prisma.Tournament_team_playersListRelationFilter;
+    tournament_registration_events?: Prisma.Tournament_registration_eventsListRelationFilter;
+    users_tournament_team_registrations_requested_byTousers?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null;
+    teams?: Prisma.XOR<Prisma.TeamsScalarRelationFilter, Prisma.teamsWhereInput>;
+    tournaments?: Prisma.XOR<Prisma.TournamentsScalarRelationFilter, Prisma.tournamentsWhereInput>;
+}, "tournament_id_team_id">;
+export type tournament_team_registrationsOrderByWithAggregationInput = {
+    tournament_id?: Prisma.SortOrder;
+    association_id?: Prisma.SortOrder;
+    team_id?: Prisma.SortOrder;
+    requested_by?: Prisma.SortOrder;
+    request_status?: Prisma.SortOrder;
+    reviewed_by?: Prisma.SortOrderInput | Prisma.SortOrder;
+    review_notes?: Prisma.SortOrderInput | Prisma.SortOrder;
+    reviewed_at?: Prisma.SortOrderInput | Prisma.SortOrder;
+    group_name?: Prisma.SortOrderInput | Prisma.SortOrder;
+    seed?: Prisma.SortOrderInput | Prisma.SortOrder;
+    points?: Prisma.SortOrder;
+    created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
+    _count?: Prisma.tournament_team_registrationsCountOrderByAggregateInput;
+    _avg?: Prisma.tournament_team_registrationsAvgOrderByAggregateInput;
+    _max?: Prisma.tournament_team_registrationsMaxOrderByAggregateInput;
+    _min?: Prisma.tournament_team_registrationsMinOrderByAggregateInput;
+    _sum?: Prisma.tournament_team_registrationsSumOrderByAggregateInput;
+};
+export type tournament_team_registrationsScalarWhereWithAggregatesInput = {
+    AND?: Prisma.tournament_team_registrationsScalarWhereWithAggregatesInput | Prisma.tournament_team_registrationsScalarWhereWithAggregatesInput[];
+    OR?: Prisma.tournament_team_registrationsScalarWhereWithAggregatesInput[];
+    NOT?: Prisma.tournament_team_registrationsScalarWhereWithAggregatesInput | Prisma.tournament_team_registrationsScalarWhereWithAggregatesInput[];
+    tournament_id?: Prisma.BigIntWithAggregatesFilter<"tournament_team_registrations"> | bigint | number;
+    association_id?: Prisma.BigIntWithAggregatesFilter<"tournament_team_registrations"> | bigint | number;
+    team_id?: Prisma.BigIntWithAggregatesFilter<"tournament_team_registrations"> | bigint | number;
+    requested_by?: Prisma.BigIntWithAggregatesFilter<"tournament_team_registrations"> | bigint | number;
+    request_status?: Prisma.StringWithAggregatesFilter<"tournament_team_registrations"> | string;
+    reviewed_by?: Prisma.BigIntNullableWithAggregatesFilter<"tournament_team_registrations"> | bigint | number | null;
+    review_notes?: Prisma.StringNullableWithAggregatesFilter<"tournament_team_registrations"> | string | null;
+    reviewed_at?: Prisma.DateTimeNullableWithAggregatesFilter<"tournament_team_registrations"> | Date | string | null;
+    group_name?: Prisma.StringNullableWithAggregatesFilter<"tournament_team_registrations"> | string | null;
+    seed?: Prisma.IntNullableWithAggregatesFilter<"tournament_team_registrations"> | number | null;
+    points?: Prisma.IntWithAggregatesFilter<"tournament_team_registrations"> | number;
+    created_at?: Prisma.DateTimeWithAggregatesFilter<"tournament_team_registrations"> | Date | string;
+    updated_at?: Prisma.DateTimeWithAggregatesFilter<"tournament_team_registrations"> | Date | string;
+};
+export type tournament_team_registrationsCreateInput = {
+    request_status?: string;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutRegistrationInput;
+    users_tournament_team_registrations_requested_byTousers: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersInput;
+    teams: Prisma.teamsCreateNestedOneWithoutTournament_team_registrationsInput;
+    tournaments: Prisma.tournamentsCreateNestedOneWithoutTournament_team_registrationsInput;
+};
+export type tournament_team_registrationsUncheckedCreateInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    team_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutRegistrationInput;
+};
+export type tournament_team_registrationsUpdateInput = {
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutRegistrationNestedInput;
+    users_tournament_team_registrations_requested_byTousers?: Prisma.usersUpdateOneRequiredWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersNestedInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersUpdateOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersNestedInput;
+    teams?: Prisma.teamsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+    tournaments?: Prisma.tournamentsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutRegistrationNestedInput;
+};
+export type tournament_team_registrationsCreateManyInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    team_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+};
+export type tournament_team_registrationsUpdateManyMutationInput = {
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type tournament_team_registrationsUncheckedUpdateManyInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type Tournament_team_registrationsScalarRelationFilter = {
+    is?: Prisma.tournament_team_registrationsWhereInput;
+    isNot?: Prisma.tournament_team_registrationsWhereInput;
+};
+export type Tournament_team_registrationsListRelationFilter = {
+    every?: Prisma.tournament_team_registrationsWhereInput;
+    some?: Prisma.tournament_team_registrationsWhereInput;
+    none?: Prisma.tournament_team_registrationsWhereInput;
+};
+export type tournament_team_registrationsOrderByRelationAggregateInput = {
+    _count?: Prisma.SortOrder;
+};
+export type tournament_team_registrationsTournament_idTeam_idCompoundUniqueInput = {
+    tournament_id: bigint | number;
+    team_id: bigint | number;
+};
+export type tournament_team_registrationsCountOrderByAggregateInput = {
+    tournament_id?: Prisma.SortOrder;
+    association_id?: Prisma.SortOrder;
+    team_id?: Prisma.SortOrder;
+    requested_by?: Prisma.SortOrder;
+    request_status?: Prisma.SortOrder;
+    reviewed_by?: Prisma.SortOrder;
+    review_notes?: Prisma.SortOrder;
+    reviewed_at?: Prisma.SortOrder;
+    group_name?: Prisma.SortOrder;
+    seed?: Prisma.SortOrder;
+    points?: Prisma.SortOrder;
+    created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
+};
+export type tournament_team_registrationsAvgOrderByAggregateInput = {
+    tournament_id?: Prisma.SortOrder;
+    association_id?: Prisma.SortOrder;
+    team_id?: Prisma.SortOrder;
+    requested_by?: Prisma.SortOrder;
+    reviewed_by?: Prisma.SortOrder;
+    seed?: Prisma.SortOrder;
+    points?: Prisma.SortOrder;
+};
+export type tournament_team_registrationsMaxOrderByAggregateInput = {
+    tournament_id?: Prisma.SortOrder;
+    association_id?: Prisma.SortOrder;
+    team_id?: Prisma.SortOrder;
+    requested_by?: Prisma.SortOrder;
+    request_status?: Prisma.SortOrder;
+    reviewed_by?: Prisma.SortOrder;
+    review_notes?: Prisma.SortOrder;
+    reviewed_at?: Prisma.SortOrder;
+    group_name?: Prisma.SortOrder;
+    seed?: Prisma.SortOrder;
+    points?: Prisma.SortOrder;
+    created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
+};
+export type tournament_team_registrationsMinOrderByAggregateInput = {
+    tournament_id?: Prisma.SortOrder;
+    association_id?: Prisma.SortOrder;
+    team_id?: Prisma.SortOrder;
+    requested_by?: Prisma.SortOrder;
+    request_status?: Prisma.SortOrder;
+    reviewed_by?: Prisma.SortOrder;
+    review_notes?: Prisma.SortOrder;
+    reviewed_at?: Prisma.SortOrder;
+    group_name?: Prisma.SortOrder;
+    seed?: Prisma.SortOrder;
+    points?: Prisma.SortOrder;
+    created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
+};
+export type tournament_team_registrationsSumOrderByAggregateInput = {
+    tournament_id?: Prisma.SortOrder;
+    association_id?: Prisma.SortOrder;
+    team_id?: Prisma.SortOrder;
+    requested_by?: Prisma.SortOrder;
+    reviewed_by?: Prisma.SortOrder;
+    seed?: Prisma.SortOrder;
+    points?: Prisma.SortOrder;
+};
+export type tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput>;
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput;
+};
+export type tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput>;
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput;
+};
+export type tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput>;
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    upsert?: Prisma.tournament_team_registrationsUpsertWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.tournament_team_registrationsUpdateToOneWithWhereWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUpdateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput>, Prisma.tournament_team_registrationsUncheckedUpdateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput>;
+};
+export type tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput>;
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    upsert?: Prisma.tournament_team_registrationsUpsertWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.tournament_team_registrationsUpdateToOneWithWhereWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUpdateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput>, Prisma.tournament_team_registrationsUncheckedUpdateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput>;
+};
+export type tournament_team_registrationsCreateNestedManyWithoutTeamsInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTeamsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTeamsInput> | Prisma.tournament_team_registrationsCreateWithoutTeamsInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutTeamsInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTeamsInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutTeamsInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyTeamsInputEnvelope;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+};
+export type tournament_team_registrationsUncheckedCreateNestedManyWithoutTeamsInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTeamsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTeamsInput> | Prisma.tournament_team_registrationsCreateWithoutTeamsInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutTeamsInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTeamsInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutTeamsInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyTeamsInputEnvelope;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+};
+export type tournament_team_registrationsUpdateManyWithoutTeamsNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTeamsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTeamsInput> | Prisma.tournament_team_registrationsCreateWithoutTeamsInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutTeamsInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTeamsInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutTeamsInput[];
+    upsert?: Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutTeamsInput | Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutTeamsInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyTeamsInputEnvelope;
+    set?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    disconnect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    delete?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    update?: Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutTeamsInput | Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutTeamsInput[];
+    updateMany?: Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutTeamsInput | Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutTeamsInput[];
+    deleteMany?: Prisma.tournament_team_registrationsScalarWhereInput | Prisma.tournament_team_registrationsScalarWhereInput[];
+};
+export type tournament_team_registrationsUncheckedUpdateManyWithoutTeamsNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTeamsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTeamsInput> | Prisma.tournament_team_registrationsCreateWithoutTeamsInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutTeamsInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTeamsInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutTeamsInput[];
+    upsert?: Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutTeamsInput | Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutTeamsInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyTeamsInputEnvelope;
+    set?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    disconnect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    delete?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    update?: Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutTeamsInput | Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutTeamsInput[];
+    updateMany?: Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutTeamsInput | Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutTeamsInput[];
+    deleteMany?: Prisma.tournament_team_registrationsScalarWhereInput | Prisma.tournament_team_registrationsScalarWhereInput[];
+};
+export type tournament_team_registrationsCreateNestedOneWithoutTournament_team_playersInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournament_team_playersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournament_team_playersInput>;
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTournament_team_playersInput;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput;
+};
+export type tournament_team_registrationsUpdateOneRequiredWithoutTournament_team_playersNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournament_team_playersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournament_team_playersInput>;
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTournament_team_playersInput;
+    upsert?: Prisma.tournament_team_registrationsUpsertWithoutTournament_team_playersInput;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.tournament_team_registrationsUpdateToOneWithWhereWithoutTournament_team_playersInput, Prisma.tournament_team_registrationsUpdateWithoutTournament_team_playersInput>, Prisma.tournament_team_registrationsUncheckedUpdateWithoutTournament_team_playersInput>;
+};
+export type tournament_team_registrationsCreateNestedOneWithoutTournament_registration_eventsInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournament_registration_eventsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournament_registration_eventsInput>;
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTournament_registration_eventsInput;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput;
+};
+export type tournament_team_registrationsUpdateOneRequiredWithoutTournament_registration_eventsNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournament_registration_eventsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournament_registration_eventsInput>;
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTournament_registration_eventsInput;
+    upsert?: Prisma.tournament_team_registrationsUpsertWithoutTournament_registration_eventsInput;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.tournament_team_registrationsUpdateToOneWithWhereWithoutTournament_registration_eventsInput, Prisma.tournament_team_registrationsUpdateWithoutTournament_registration_eventsInput>, Prisma.tournament_team_registrationsUncheckedUpdateWithoutTournament_registration_eventsInput>;
+};
+export type tournament_team_registrationsCreateNestedManyWithoutTournamentsInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournamentsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournamentsInput> | Prisma.tournament_team_registrationsCreateWithoutTournamentsInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutTournamentsInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTournamentsInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutTournamentsInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyTournamentsInputEnvelope;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+};
+export type tournament_team_registrationsUncheckedCreateNestedManyWithoutTournamentsInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournamentsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournamentsInput> | Prisma.tournament_team_registrationsCreateWithoutTournamentsInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutTournamentsInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTournamentsInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutTournamentsInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyTournamentsInputEnvelope;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+};
+export type tournament_team_registrationsUpdateManyWithoutTournamentsNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournamentsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournamentsInput> | Prisma.tournament_team_registrationsCreateWithoutTournamentsInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutTournamentsInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTournamentsInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutTournamentsInput[];
+    upsert?: Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutTournamentsInput | Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutTournamentsInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyTournamentsInputEnvelope;
+    set?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    disconnect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    delete?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    update?: Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutTournamentsInput | Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutTournamentsInput[];
+    updateMany?: Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutTournamentsInput | Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutTournamentsInput[];
+    deleteMany?: Prisma.tournament_team_registrationsScalarWhereInput | Prisma.tournament_team_registrationsScalarWhereInput[];
+};
+export type tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournamentsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournamentsInput> | Prisma.tournament_team_registrationsCreateWithoutTournamentsInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutTournamentsInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutTournamentsInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutTournamentsInput[];
+    upsert?: Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutTournamentsInput | Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutTournamentsInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyTournamentsInputEnvelope;
+    set?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    disconnect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    delete?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    update?: Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutTournamentsInput | Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutTournamentsInput[];
+    updateMany?: Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutTournamentsInput | Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutTournamentsInput[];
+    deleteMany?: Prisma.tournament_team_registrationsScalarWhereInput | Prisma.tournament_team_registrationsScalarWhereInput[];
+};
+export type tournament_team_registrationsCreateNestedManyWithoutUsers_tournament_team_registrations_requested_byTousersInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput> | Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_requested_byTousersInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_requested_byTousersInputEnvelope;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+};
+export type tournament_team_registrationsCreateNestedManyWithoutUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput> | Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_reviewed_byTousersInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_reviewed_byTousersInputEnvelope;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+};
+export type tournament_team_registrationsUncheckedCreateNestedManyWithoutUsers_tournament_team_registrations_requested_byTousersInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput> | Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_requested_byTousersInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_requested_byTousersInputEnvelope;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+};
+export type tournament_team_registrationsUncheckedCreateNestedManyWithoutUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput> | Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_reviewed_byTousersInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_reviewed_byTousersInputEnvelope;
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+};
+export type tournament_team_registrationsUpdateManyWithoutUsers_tournament_team_registrations_requested_byTousersNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput> | Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_requested_byTousersInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    upsert?: Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutUsers_tournament_team_registrations_requested_byTousersInput | Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_requested_byTousersInputEnvelope;
+    set?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    disconnect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    delete?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    update?: Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutUsers_tournament_team_registrations_requested_byTousersInput | Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    updateMany?: Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutUsers_tournament_team_registrations_requested_byTousersInput | Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    deleteMany?: Prisma.tournament_team_registrationsScalarWhereInput | Prisma.tournament_team_registrationsScalarWhereInput[];
+};
+export type tournament_team_registrationsUpdateManyWithoutUsers_tournament_team_registrations_reviewed_byTousersNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput> | Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_reviewed_byTousersInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    upsert?: Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutUsers_tournament_team_registrations_reviewed_byTousersInput | Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_reviewed_byTousersInputEnvelope;
+    set?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    disconnect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    delete?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    update?: Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutUsers_tournament_team_registrations_reviewed_byTousersInput | Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    updateMany?: Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutUsers_tournament_team_registrations_reviewed_byTousersInput | Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    deleteMany?: Prisma.tournament_team_registrationsScalarWhereInput | Prisma.tournament_team_registrationsScalarWhereInput[];
+};
+export type tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_requested_byTousersNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput> | Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_requested_byTousersInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    upsert?: Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutUsers_tournament_team_registrations_requested_byTousersInput | Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_requested_byTousersInputEnvelope;
+    set?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    disconnect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    delete?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    update?: Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutUsers_tournament_team_registrations_requested_byTousersInput | Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    updateMany?: Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutUsers_tournament_team_registrations_requested_byTousersInput | Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutUsers_tournament_team_registrations_requested_byTousersInput[];
+    deleteMany?: Prisma.tournament_team_registrationsScalarWhereInput | Prisma.tournament_team_registrationsScalarWhereInput[];
+};
+export type tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_reviewed_byTousersNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput> | Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[] | Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    connectOrCreate?: Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_reviewed_byTousersInput | Prisma.tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    upsert?: Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutUsers_tournament_team_registrations_reviewed_byTousersInput | Prisma.tournament_team_registrationsUpsertWithWhereUniqueWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    createMany?: Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_reviewed_byTousersInputEnvelope;
+    set?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    disconnect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    delete?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    connect?: Prisma.tournament_team_registrationsWhereUniqueInput | Prisma.tournament_team_registrationsWhereUniqueInput[];
+    update?: Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutUsers_tournament_team_registrations_reviewed_byTousersInput | Prisma.tournament_team_registrationsUpdateWithWhereUniqueWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    updateMany?: Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutUsers_tournament_team_registrations_reviewed_byTousersInput | Prisma.tournament_team_registrationsUpdateManyWithWhereWithoutUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    deleteMany?: Prisma.tournament_team_registrationsScalarWhereInput | Prisma.tournament_team_registrationsScalarWhereInput[];
+};
+export type tournament_team_registrationsCreateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
+    request_status?: string;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutRegistrationInput;
+    users_tournament_team_registrations_requested_byTousers: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersInput;
+    teams: Prisma.teamsCreateNestedOneWithoutTournament_team_registrationsInput;
+    tournaments: Prisma.tournamentsCreateNestedOneWithoutTournament_team_registrationsInput;
+};
+export type tournament_team_registrationsUncheckedCreateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    team_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutRegistrationInput;
+};
+export type tournament_team_registrationsCreateOrConnectWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput>;
+};
+export type tournament_team_registrationsCreateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
+    request_status?: string;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutRegistrationInput;
+    users_tournament_team_registrations_requested_byTousers: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersInput;
+    teams: Prisma.teamsCreateNestedOneWithoutTournament_team_registrationsInput;
+    tournaments: Prisma.tournamentsCreateNestedOneWithoutTournament_team_registrationsInput;
+};
+export type tournament_team_registrationsUncheckedCreateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    team_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutRegistrationInput;
+};
+export type tournament_team_registrationsCreateOrConnectWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput>;
+};
+export type tournament_team_registrationsUpsertWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
+    update: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput>;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput>;
+    where?: Prisma.tournament_team_registrationsWhereInput;
+};
+export type tournament_team_registrationsUpdateToOneWithWhereWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput>;
+};
+export type tournament_team_registrationsUpdateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutRegistrationNestedInput;
+    users_tournament_team_registrations_requested_byTousers?: Prisma.usersUpdateOneRequiredWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersNestedInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersUpdateOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersNestedInput;
+    teams?: Prisma.teamsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+    tournaments?: Prisma.tournamentsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutRegistrationNestedInput;
+};
+export type tournament_team_registrationsUpsertWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
+    update: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput>;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput>;
+    where?: Prisma.tournament_team_registrationsWhereInput;
+};
+export type tournament_team_registrationsUpdateToOneWithWhereWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput>;
+};
+export type tournament_team_registrationsUpdateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutRegistrationNestedInput;
+    users_tournament_team_registrations_requested_byTousers?: Prisma.usersUpdateOneRequiredWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersNestedInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersUpdateOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersNestedInput;
+    teams?: Prisma.teamsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+    tournaments?: Prisma.tournamentsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutRegistrationNestedInput;
+};
+export type tournament_team_registrationsCreateWithoutTeamsInput = {
+    request_status?: string;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutRegistrationInput;
+    users_tournament_team_registrations_requested_byTousers: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersInput;
+    tournaments: Prisma.tournamentsCreateNestedOneWithoutTournament_team_registrationsInput;
+};
+export type tournament_team_registrationsUncheckedCreateWithoutTeamsInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutRegistrationInput;
+};
+export type tournament_team_registrationsCreateOrConnectWithoutTeamsInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTeamsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTeamsInput>;
+};
+export type tournament_team_registrationsCreateManyTeamsInputEnvelope = {
+    data: Prisma.tournament_team_registrationsCreateManyTeamsInput | Prisma.tournament_team_registrationsCreateManyTeamsInput[];
+    skipDuplicates?: boolean;
+};
+export type tournament_team_registrationsUpsertWithWhereUniqueWithoutTeamsInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    update: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutTeamsInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutTeamsInput>;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTeamsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTeamsInput>;
+};
+export type tournament_team_registrationsUpdateWithWhereUniqueWithoutTeamsInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutTeamsInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutTeamsInput>;
+};
+export type tournament_team_registrationsUpdateManyWithWhereWithoutTeamsInput = {
+    where: Prisma.tournament_team_registrationsScalarWhereInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateManyMutationInput, Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutTeamsInput>;
+};
+export type tournament_team_registrationsScalarWhereInput = {
+    AND?: Prisma.tournament_team_registrationsScalarWhereInput | Prisma.tournament_team_registrationsScalarWhereInput[];
+    OR?: Prisma.tournament_team_registrationsScalarWhereInput[];
+    NOT?: Prisma.tournament_team_registrationsScalarWhereInput | Prisma.tournament_team_registrationsScalarWhereInput[];
+    tournament_id?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    association_id?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    team_id?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    requested_by?: Prisma.BigIntFilter<"tournament_team_registrations"> | bigint | number;
+    request_status?: Prisma.StringFilter<"tournament_team_registrations"> | string;
+    reviewed_by?: Prisma.BigIntNullableFilter<"tournament_team_registrations"> | bigint | number | null;
+    review_notes?: Prisma.StringNullableFilter<"tournament_team_registrations"> | string | null;
+    reviewed_at?: Prisma.DateTimeNullableFilter<"tournament_team_registrations"> | Date | string | null;
+    group_name?: Prisma.StringNullableFilter<"tournament_team_registrations"> | string | null;
+    seed?: Prisma.IntNullableFilter<"tournament_team_registrations"> | number | null;
+    points?: Prisma.IntFilter<"tournament_team_registrations"> | number;
+    created_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
+};
+export type tournament_team_registrationsCreateWithoutTournament_team_playersInput = {
+    request_status?: string;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutRegistrationInput;
+    users_tournament_team_registrations_requested_byTousers: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersInput;
+    teams: Prisma.teamsCreateNestedOneWithoutTournament_team_registrationsInput;
+    tournaments: Prisma.tournamentsCreateNestedOneWithoutTournament_team_registrationsInput;
+};
+export type tournament_team_registrationsUncheckedCreateWithoutTournament_team_playersInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    team_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutRegistrationInput;
+};
+export type tournament_team_registrationsCreateOrConnectWithoutTournament_team_playersInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournament_team_playersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournament_team_playersInput>;
+};
+export type tournament_team_registrationsUpsertWithoutTournament_team_playersInput = {
+    update: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutTournament_team_playersInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutTournament_team_playersInput>;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournament_team_playersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournament_team_playersInput>;
+    where?: Prisma.tournament_team_registrationsWhereInput;
+};
+export type tournament_team_registrationsUpdateToOneWithWhereWithoutTournament_team_playersInput = {
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutTournament_team_playersInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutTournament_team_playersInput>;
+};
+export type tournament_team_registrationsUpdateWithoutTournament_team_playersInput = {
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutRegistrationNestedInput;
+    users_tournament_team_registrations_requested_byTousers?: Prisma.usersUpdateOneRequiredWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersNestedInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersUpdateOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersNestedInput;
+    teams?: Prisma.teamsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+    tournaments?: Prisma.tournamentsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateWithoutTournament_team_playersInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutRegistrationNestedInput;
+};
+export type tournament_team_registrationsCreateWithoutTournament_registration_eventsInput = {
+    request_status?: string;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersCreateNestedManyWithoutTournament_team_registrationsInput;
+    users_tournament_team_registrations_requested_byTousers: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersInput;
+    teams: Prisma.teamsCreateNestedOneWithoutTournament_team_registrationsInput;
+    tournaments: Prisma.tournamentsCreateNestedOneWithoutTournament_team_registrationsInput;
+};
+export type tournament_team_registrationsUncheckedCreateWithoutTournament_registration_eventsInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    team_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedCreateNestedManyWithoutTournament_team_registrationsInput;
+};
+export type tournament_team_registrationsCreateOrConnectWithoutTournament_registration_eventsInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournament_registration_eventsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournament_registration_eventsInput>;
+};
+export type tournament_team_registrationsUpsertWithoutTournament_registration_eventsInput = {
+    update: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutTournament_registration_eventsInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutTournament_registration_eventsInput>;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournament_registration_eventsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournament_registration_eventsInput>;
+    where?: Prisma.tournament_team_registrationsWhereInput;
+};
+export type tournament_team_registrationsUpdateToOneWithWhereWithoutTournament_registration_eventsInput = {
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutTournament_registration_eventsInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutTournament_registration_eventsInput>;
+};
+export type tournament_team_registrationsUpdateWithoutTournament_registration_eventsInput = {
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateManyWithoutTournament_team_registrationsNestedInput;
+    users_tournament_team_registrations_requested_byTousers?: Prisma.usersUpdateOneRequiredWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersNestedInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersUpdateOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersNestedInput;
+    teams?: Prisma.teamsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+    tournaments?: Prisma.tournamentsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateWithoutTournament_registration_eventsInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedUpdateManyWithoutTournament_team_registrationsNestedInput;
+};
+export type tournament_team_registrationsCreateWithoutTournamentsInput = {
+    request_status?: string;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutRegistrationInput;
+    users_tournament_team_registrations_requested_byTousers: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersInput;
+    teams: Prisma.teamsCreateNestedOneWithoutTournament_team_registrationsInput;
+};
+export type tournament_team_registrationsUncheckedCreateWithoutTournamentsInput = {
+    team_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutRegistrationInput;
+};
+export type tournament_team_registrationsCreateOrConnectWithoutTournamentsInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournamentsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournamentsInput>;
+};
+export type tournament_team_registrationsCreateManyTournamentsInputEnvelope = {
+    data: Prisma.tournament_team_registrationsCreateManyTournamentsInput | Prisma.tournament_team_registrationsCreateManyTournamentsInput[];
+    skipDuplicates?: boolean;
+};
+export type tournament_team_registrationsUpsertWithWhereUniqueWithoutTournamentsInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    update: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutTournamentsInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutTournamentsInput>;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutTournamentsInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutTournamentsInput>;
+};
+export type tournament_team_registrationsUpdateWithWhereUniqueWithoutTournamentsInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutTournamentsInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutTournamentsInput>;
+};
+export type tournament_team_registrationsUpdateManyWithWhereWithoutTournamentsInput = {
+    where: Prisma.tournament_team_registrationsScalarWhereInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateManyMutationInput, Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsInput>;
+};
+export type tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput = {
+    request_status?: string;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutRegistrationInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersInput;
+    teams: Prisma.teamsCreateNestedOneWithoutTournament_team_registrationsInput;
+    tournaments: Prisma.tournamentsCreateNestedOneWithoutTournament_team_registrationsInput;
+};
+export type tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    team_id: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutRegistrationInput;
+};
+export type tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_requested_byTousersInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput>;
+};
+export type tournament_team_registrationsCreateManyUsers_tournament_team_registrations_requested_byTousersInputEnvelope = {
+    data: Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_requested_byTousersInput | Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_requested_byTousersInput[];
+    skipDuplicates?: boolean;
+};
+export type tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    request_status?: string;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutRegistrationInput;
+    users_tournament_team_registrations_requested_byTousers: Prisma.usersCreateNestedOneWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersInput;
+    teams: Prisma.teamsCreateNestedOneWithoutTournament_team_registrationsInput;
+    tournaments: Prisma.tournamentsCreateNestedOneWithoutTournament_team_registrationsInput;
+};
+export type tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    team_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedCreateNestedManyWithoutTournament_team_registrationsInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutRegistrationInput;
+};
+export type tournament_team_registrationsCreateOrConnectWithoutUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput>;
+};
+export type tournament_team_registrationsCreateManyUsers_tournament_team_registrations_reviewed_byTousersInputEnvelope = {
+    data: Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_reviewed_byTousersInput | Prisma.tournament_team_registrationsCreateManyUsers_tournament_team_registrations_reviewed_byTousersInput[];
+    skipDuplicates?: boolean;
+};
+export type tournament_team_registrationsUpsertWithWhereUniqueWithoutUsers_tournament_team_registrations_requested_byTousersInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    update: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutUsers_tournament_team_registrations_requested_byTousersInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutUsers_tournament_team_registrations_requested_byTousersInput>;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_requested_byTousersInput>;
+};
+export type tournament_team_registrationsUpdateWithWhereUniqueWithoutUsers_tournament_team_registrations_requested_byTousersInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutUsers_tournament_team_registrations_requested_byTousersInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutUsers_tournament_team_registrations_requested_byTousersInput>;
+};
+export type tournament_team_registrationsUpdateManyWithWhereWithoutUsers_tournament_team_registrations_requested_byTousersInput = {
+    where: Prisma.tournament_team_registrationsScalarWhereInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateManyMutationInput, Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_requested_byTousersInput>;
+};
+export type tournament_team_registrationsUpsertWithWhereUniqueWithoutUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    update: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput>;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput, Prisma.tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput>;
+};
+export type tournament_team_registrationsUpdateWithWhereUniqueWithoutUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput, Prisma.tournament_team_registrationsUncheckedUpdateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput>;
+};
+export type tournament_team_registrationsUpdateManyWithWhereWithoutUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    where: Prisma.tournament_team_registrationsScalarWhereInput;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateManyMutationInput, Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_reviewed_byTousersInput>;
+};
+export type tournament_team_registrationsCreateManyTeamsInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+};
+export type tournament_team_registrationsUpdateWithoutTeamsInput = {
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutRegistrationNestedInput;
+    users_tournament_team_registrations_requested_byTousers?: Prisma.usersUpdateOneRequiredWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersNestedInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersUpdateOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersNestedInput;
+    tournaments?: Prisma.tournamentsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateWithoutTeamsInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutRegistrationNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateManyWithoutTeamsInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type tournament_team_registrationsCreateManyTournamentsInput = {
+    team_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+};
+export type tournament_team_registrationsUpdateWithoutTournamentsInput = {
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutRegistrationNestedInput;
+    users_tournament_team_registrations_requested_byTousers?: Prisma.usersUpdateOneRequiredWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersNestedInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersUpdateOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersNestedInput;
+    teams?: Prisma.teamsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateWithoutTournamentsInput = {
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutRegistrationNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsInput = {
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type tournament_team_registrationsCreateManyUsers_tournament_team_registrations_requested_byTousersInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    team_id: bigint | number;
+    request_status?: string;
+    reviewed_by?: bigint | number | null;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+};
+export type tournament_team_registrationsCreateManyUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    tournament_id: bigint | number;
+    association_id: bigint | number;
+    team_id: bigint | number;
+    requested_by: bigint | number;
+    request_status?: string;
+    review_notes?: string | null;
+    reviewed_at?: Date | string | null;
+    group_name?: string | null;
+    seed?: number | null;
+    points?: number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+};
+export type tournament_team_registrationsUpdateWithoutUsers_tournament_team_registrations_requested_byTousersInput = {
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutRegistrationNestedInput;
+    users_tournament_team_registrations_reviewed_byTousers?: Prisma.usersUpdateOneWithoutTournament_team_registrations_tournament_team_registrations_reviewed_byTousersNestedInput;
+    teams?: Prisma.teamsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+    tournaments?: Prisma.tournamentsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateWithoutUsers_tournament_team_registrations_requested_byTousersInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutRegistrationNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_requested_byTousersInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    reviewed_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type tournament_team_registrationsUpdateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutRegistrationNestedInput;
+    users_tournament_team_registrations_requested_byTousers?: Prisma.usersUpdateOneRequiredWithoutTournament_team_registrations_tournament_team_registrations_requested_byTousersNestedInput;
+    teams?: Prisma.teamsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+    tournaments?: Prisma.tournamentsUpdateOneRequiredWithoutTournament_team_registrationsNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateWithoutUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUncheckedUpdateManyWithoutTournament_team_registrationsNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutRegistrationNestedInput;
+};
+export type tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_reviewed_byTousersInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    requested_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    request_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    points?: Prisma.IntFieldUpdateOperationsInput | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type Tournament_team_registrationsCountOutputType = {
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations: number;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations: number;
+    tournament_team_players: number;
+    tournament_registration_events: number;
+};
+export type Tournament_team_registrationsCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: boolean | Tournament_team_registrationsCountOutputTypeCountMatches_matches_tournament_id_away_team_idTotournament_team_registrationsArgs;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: boolean | Tournament_team_registrationsCountOutputTypeCountMatches_matches_tournament_id_home_team_idTotournament_team_registrationsArgs;
+    tournament_team_players?: boolean | Tournament_team_registrationsCountOutputTypeCountTournament_team_playersArgs;
+    tournament_registration_events?: boolean | Tournament_team_registrationsCountOutputTypeCountTournament_registration_eventsArgs;
+};
+export type Tournament_team_registrationsCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.Tournament_team_registrationsCountOutputTypeSelect<ExtArgs> | null;
+};
+export type Tournament_team_registrationsCountOutputTypeCountMatches_matches_tournament_id_away_team_idTotournament_team_registrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.matchesWhereInput;
+};
+export type Tournament_team_registrationsCountOutputTypeCountMatches_matches_tournament_id_home_team_idTotournament_team_registrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.matchesWhereInput;
+};
+export type Tournament_team_registrationsCountOutputTypeCountTournament_team_playersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.tournament_team_playersWhereInput;
+};
+export type Tournament_team_registrationsCountOutputTypeCountTournament_registration_eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.tournament_registration_eventsWhereInput;
+};
+export type tournament_team_registrationsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+    tournament_id?: boolean;
+    association_id?: boolean;
+    team_id?: boolean;
+    requested_by?: boolean;
+    request_status?: boolean;
+    reviewed_by?: boolean;
+    review_notes?: boolean;
+    reviewed_at?: boolean;
+    group_name?: boolean;
+    seed?: boolean;
+    points?: boolean;
+    created_at?: boolean;
+    updated_at?: boolean;
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: boolean | Prisma.tournament_team_registrations$matches_matches_tournament_id_away_team_idTotournament_team_registrationsArgs<ExtArgs>;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: boolean | Prisma.tournament_team_registrations$matches_matches_tournament_id_home_team_idTotournament_team_registrationsArgs<ExtArgs>;
+    tournament_team_players?: boolean | Prisma.tournament_team_registrations$tournament_team_playersArgs<ExtArgs>;
+    tournament_registration_events?: boolean | Prisma.tournament_team_registrations$tournament_registration_eventsArgs<ExtArgs>;
+    users_tournament_team_registrations_requested_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
+    users_tournament_team_registrations_reviewed_byTousers?: boolean | Prisma.tournament_team_registrations$users_tournament_team_registrations_reviewed_byTousersArgs<ExtArgs>;
+    teams?: boolean | Prisma.teamsDefaultArgs<ExtArgs>;
+    tournaments?: boolean | Prisma.tournamentsDefaultArgs<ExtArgs>;
+    _count?: boolean | Prisma.Tournament_team_registrationsCountOutputTypeDefaultArgs<ExtArgs>;
+}, ExtArgs["result"]["tournament_team_registrations"]>;
+export type tournament_team_registrationsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+    tournament_id?: boolean;
+    association_id?: boolean;
+    team_id?: boolean;
+    requested_by?: boolean;
+    request_status?: boolean;
+    reviewed_by?: boolean;
+    review_notes?: boolean;
+    reviewed_at?: boolean;
+    group_name?: boolean;
+    seed?: boolean;
+    points?: boolean;
+    created_at?: boolean;
+    updated_at?: boolean;
+    users_tournament_team_registrations_requested_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
+    users_tournament_team_registrations_reviewed_byTousers?: boolean | Prisma.tournament_team_registrations$users_tournament_team_registrations_reviewed_byTousersArgs<ExtArgs>;
+    teams?: boolean | Prisma.teamsDefaultArgs<ExtArgs>;
+    tournaments?: boolean | Prisma.tournamentsDefaultArgs<ExtArgs>;
+}, ExtArgs["result"]["tournament_team_registrations"]>;
+export type tournament_team_registrationsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+    tournament_id?: boolean;
+    association_id?: boolean;
+    team_id?: boolean;
+    requested_by?: boolean;
+    request_status?: boolean;
+    reviewed_by?: boolean;
+    review_notes?: boolean;
+    reviewed_at?: boolean;
+    group_name?: boolean;
+    seed?: boolean;
+    points?: boolean;
+    created_at?: boolean;
+    updated_at?: boolean;
+    users_tournament_team_registrations_requested_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
+    users_tournament_team_registrations_reviewed_byTousers?: boolean | Prisma.tournament_team_registrations$users_tournament_team_registrations_reviewed_byTousersArgs<ExtArgs>;
+    teams?: boolean | Prisma.teamsDefaultArgs<ExtArgs>;
+    tournaments?: boolean | Prisma.tournamentsDefaultArgs<ExtArgs>;
+}, ExtArgs["result"]["tournament_team_registrations"]>;
+export type tournament_team_registrationsSelectScalar = {
+    tournament_id?: boolean;
+    association_id?: boolean;
+    team_id?: boolean;
+    requested_by?: boolean;
+    request_status?: boolean;
+    reviewed_by?: boolean;
+    review_notes?: boolean;
+    reviewed_at?: boolean;
+    group_name?: boolean;
+    seed?: boolean;
+    points?: boolean;
+    created_at?: boolean;
+    updated_at?: boolean;
+};
+export type tournament_team_registrationsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"tournament_id" | "association_id" | "team_id" | "requested_by" | "request_status" | "reviewed_by" | "review_notes" | "reviewed_at" | "group_name" | "seed" | "points" | "created_at" | "updated_at", ExtArgs["result"]["tournament_team_registrations"]>;
+export type tournament_team_registrationsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations?: boolean | Prisma.tournament_team_registrations$matches_matches_tournament_id_away_team_idTotournament_team_registrationsArgs<ExtArgs>;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations?: boolean | Prisma.tournament_team_registrations$matches_matches_tournament_id_home_team_idTotournament_team_registrationsArgs<ExtArgs>;
+    tournament_team_players?: boolean | Prisma.tournament_team_registrations$tournament_team_playersArgs<ExtArgs>;
+    tournament_registration_events?: boolean | Prisma.tournament_team_registrations$tournament_registration_eventsArgs<ExtArgs>;
+    users_tournament_team_registrations_requested_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
+    users_tournament_team_registrations_reviewed_byTousers?: boolean | Prisma.tournament_team_registrations$users_tournament_team_registrations_reviewed_byTousersArgs<ExtArgs>;
+    teams?: boolean | Prisma.teamsDefaultArgs<ExtArgs>;
+    tournaments?: boolean | Prisma.tournamentsDefaultArgs<ExtArgs>;
+    _count?: boolean | Prisma.Tournament_team_registrationsCountOutputTypeDefaultArgs<ExtArgs>;
+};
+export type tournament_team_registrationsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    users_tournament_team_registrations_requested_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
+    users_tournament_team_registrations_reviewed_byTousers?: boolean | Prisma.tournament_team_registrations$users_tournament_team_registrations_reviewed_byTousersArgs<ExtArgs>;
+    teams?: boolean | Prisma.teamsDefaultArgs<ExtArgs>;
+    tournaments?: boolean | Prisma.tournamentsDefaultArgs<ExtArgs>;
+};
+export type tournament_team_registrationsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    users_tournament_team_registrations_requested_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
+    users_tournament_team_registrations_reviewed_byTousers?: boolean | Prisma.tournament_team_registrations$users_tournament_team_registrations_reviewed_byTousersArgs<ExtArgs>;
+    teams?: boolean | Prisma.teamsDefaultArgs<ExtArgs>;
+    tournaments?: boolean | Prisma.tournamentsDefaultArgs<ExtArgs>;
+};
+export type $tournament_team_registrationsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    name: "tournament_team_registrations";
+    objects: {
+        matches_matches_tournament_id_away_team_idTotournament_team_registrations: Prisma.$matchesPayload<ExtArgs>[];
+        matches_matches_tournament_id_home_team_idTotournament_team_registrations: Prisma.$matchesPayload<ExtArgs>[];
+        tournament_team_players: Prisma.$tournament_team_playersPayload<ExtArgs>[];
+        tournament_registration_events: Prisma.$tournament_registration_eventsPayload<ExtArgs>[];
+        users_tournament_team_registrations_requested_byTousers: Prisma.$usersPayload<ExtArgs>;
+        users_tournament_team_registrations_reviewed_byTousers: Prisma.$usersPayload<ExtArgs> | null;
+        teams: Prisma.$teamsPayload<ExtArgs>;
+        tournaments: Prisma.$tournamentsPayload<ExtArgs>;
+    };
+    scalars: runtime.Types.Extensions.GetPayloadResult<{
+        tournament_id: bigint;
+        association_id: bigint;
+        team_id: bigint;
+        requested_by: bigint;
+        request_status: string;
+        reviewed_by: bigint | null;
+        review_notes: string | null;
+        reviewed_at: Date | null;
+        group_name: string | null;
+        seed: number | null;
+        points: number;
+        created_at: Date;
+        updated_at: Date;
+    }, ExtArgs["result"]["tournament_team_registrations"]>;
+    composites: {};
+};
+export type tournament_team_registrationsGetPayload<S extends boolean | null | undefined | tournament_team_registrationsDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload, S>;
+export type tournament_team_registrationsCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = Omit<tournament_team_registrationsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    select?: Tournament_team_registrationsCountAggregateInputType | true;
+};
+export interface tournament_team_registrationsDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: {
+        types: Prisma.TypeMap<ExtArgs>['model']['tournament_team_registrations'];
+        meta: {
+            name: 'tournament_team_registrations';
+        };
+    };
+    findUnique<T extends tournament_team_registrationsFindUniqueArgs>(args: Prisma.SelectSubset<T, tournament_team_registrationsFindUniqueArgs<ExtArgs>>): Prisma.Prisma__tournament_team_registrationsClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
+    findUniqueOrThrow<T extends tournament_team_registrationsFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, tournament_team_registrationsFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__tournament_team_registrationsClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    findFirst<T extends tournament_team_registrationsFindFirstArgs>(args?: Prisma.SelectSubset<T, tournament_team_registrationsFindFirstArgs<ExtArgs>>): Prisma.Prisma__tournament_team_registrationsClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
+    findFirstOrThrow<T extends tournament_team_registrationsFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, tournament_team_registrationsFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__tournament_team_registrationsClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    findMany<T extends tournament_team_registrationsFindManyArgs>(args?: Prisma.SelectSubset<T, tournament_team_registrationsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>;
+    create<T extends tournament_team_registrationsCreateArgs>(args: Prisma.SelectSubset<T, tournament_team_registrationsCreateArgs<ExtArgs>>): Prisma.Prisma__tournament_team_registrationsClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    createMany<T extends tournament_team_registrationsCreateManyArgs>(args?: Prisma.SelectSubset<T, tournament_team_registrationsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>;
+    createManyAndReturn<T extends tournament_team_registrationsCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, tournament_team_registrationsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>;
+    delete<T extends tournament_team_registrationsDeleteArgs>(args: Prisma.SelectSubset<T, tournament_team_registrationsDeleteArgs<ExtArgs>>): Prisma.Prisma__tournament_team_registrationsClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    update<T extends tournament_team_registrationsUpdateArgs>(args: Prisma.SelectSubset<T, tournament_team_registrationsUpdateArgs<ExtArgs>>): Prisma.Prisma__tournament_team_registrationsClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    deleteMany<T extends tournament_team_registrationsDeleteManyArgs>(args?: Prisma.SelectSubset<T, tournament_team_registrationsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>;
+    updateMany<T extends tournament_team_registrationsUpdateManyArgs>(args: Prisma.SelectSubset<T, tournament_team_registrationsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>;
+    updateManyAndReturn<T extends tournament_team_registrationsUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, tournament_team_registrationsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>;
+    upsert<T extends tournament_team_registrationsUpsertArgs>(args: Prisma.SelectSubset<T, tournament_team_registrationsUpsertArgs<ExtArgs>>): Prisma.Prisma__tournament_team_registrationsClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>;
+    count<T extends tournament_team_registrationsCountArgs>(args?: Prisma.Subset<T, tournament_team_registrationsCountArgs>): Prisma.PrismaPromise<T extends runtime.Types.Utils.Record<'select', any> ? T['select'] extends true ? number : Prisma.GetScalarType<T['select'], Tournament_team_registrationsCountAggregateOutputType> : number>;
+    aggregate<T extends Tournament_team_registrationsAggregateArgs>(args: Prisma.Subset<T, Tournament_team_registrationsAggregateArgs>): Prisma.PrismaPromise<GetTournament_team_registrationsAggregateType<T>>;
+    groupBy<T extends tournament_team_registrationsGroupByArgs, HasSelectOrTake extends Prisma.Or<Prisma.Extends<'skip', Prisma.Keys<T>>, Prisma.Extends<'take', Prisma.Keys<T>>>, OrderByArg extends Prisma.True extends HasSelectOrTake ? {
+        orderBy: tournament_team_registrationsGroupByArgs['orderBy'];
+    } : {
+        orderBy?: tournament_team_registrationsGroupByArgs['orderBy'];
+    }, OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>, ByFields extends Prisma.MaybeTupleToUnion<T['by']>, ByValid extends Prisma.Has<ByFields, OrderFields>, HavingFields extends Prisma.GetHavingFields<T['having']>, HavingValid extends Prisma.Has<ByFields, HavingFields>, ByEmpty extends T['by'] extends never[] ? Prisma.True : Prisma.False, InputErrors extends ByEmpty extends Prisma.True ? `Error: "by" must not be empty.` : HavingValid extends Prisma.False ? {
+        [P in HavingFields]: P extends ByFields ? never : P extends string ? `Error: Field "${P}" used in "having" needs to be provided in "by".` : [
+            Error,
+            'Field ',
+            P,
+            ` in "having" needs to be provided in "by"`
+        ];
+    }[HavingFields] : 'take' extends Prisma.Keys<T> ? 'orderBy' extends Prisma.Keys<T> ? ByValid extends Prisma.True ? {} : {
+        [P in OrderFields]: P extends ByFields ? never : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+    }[OrderFields] : 'Error: If you provide "take", you also need to provide "orderBy"' : 'skip' extends Prisma.Keys<T> ? 'orderBy' extends Prisma.Keys<T> ? ByValid extends Prisma.True ? {} : {
+        [P in OrderFields]: P extends ByFields ? never : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+    }[OrderFields] : 'Error: If you provide "skip", you also need to provide "orderBy"' : ByValid extends Prisma.True ? {} : {
+        [P in OrderFields]: P extends ByFields ? never : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`;
+    }[OrderFields]>(args: Prisma.SubsetIntersection<T, tournament_team_registrationsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTournament_team_registrationsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>;
+    readonly fields: tournament_team_registrationsFieldRefs;
+}
+export interface Prisma__tournament_team_registrationsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise";
+    matches_matches_tournament_id_away_team_idTotournament_team_registrations<T extends Prisma.tournament_team_registrations$matches_matches_tournament_id_away_team_idTotournament_team_registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_team_registrations$matches_matches_tournament_id_away_team_idTotournament_team_registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$matchesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    matches_matches_tournament_id_home_team_idTotournament_team_registrations<T extends Prisma.tournament_team_registrations$matches_matches_tournament_id_home_team_idTotournament_team_registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_team_registrations$matches_matches_tournament_id_home_team_idTotournament_team_registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$matchesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    tournament_team_players<T extends Prisma.tournament_team_registrations$tournament_team_playersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_team_registrations$tournament_team_playersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tournament_team_playersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    tournament_registration_events<T extends Prisma.tournament_team_registrations$tournament_registration_eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_team_registrations$tournament_registration_eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tournament_registration_eventsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    users_tournament_team_registrations_requested_byTousers<T extends Prisma.usersDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usersDefaultArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    users_tournament_team_registrations_reviewed_byTousers<T extends Prisma.tournament_team_registrations$users_tournament_team_registrations_reviewed_byTousersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_team_registrations$users_tournament_team_registrations_reviewed_byTousersArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
+    teams<T extends Prisma.teamsDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.teamsDefaultArgs<ExtArgs>>): Prisma.Prisma__teamsClient<runtime.Types.Result.GetResult<Prisma.$teamsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    tournaments<T extends Prisma.tournamentsDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournamentsDefaultArgs<ExtArgs>>): Prisma.Prisma__tournamentsClient<runtime.Types.Result.GetResult<Prisma.$tournamentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
+    finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;
+}
+export interface tournament_team_registrationsFieldRefs {
+    readonly tournament_id: Prisma.FieldRef<"tournament_team_registrations", 'BigInt'>;
+    readonly association_id: Prisma.FieldRef<"tournament_team_registrations", 'BigInt'>;
+    readonly team_id: Prisma.FieldRef<"tournament_team_registrations", 'BigInt'>;
+    readonly requested_by: Prisma.FieldRef<"tournament_team_registrations", 'BigInt'>;
+    readonly request_status: Prisma.FieldRef<"tournament_team_registrations", 'String'>;
+    readonly reviewed_by: Prisma.FieldRef<"tournament_team_registrations", 'BigInt'>;
+    readonly review_notes: Prisma.FieldRef<"tournament_team_registrations", 'String'>;
+    readonly reviewed_at: Prisma.FieldRef<"tournament_team_registrations", 'DateTime'>;
+    readonly group_name: Prisma.FieldRef<"tournament_team_registrations", 'String'>;
+    readonly seed: Prisma.FieldRef<"tournament_team_registrations", 'Int'>;
+    readonly points: Prisma.FieldRef<"tournament_team_registrations", 'Int'>;
+    readonly created_at: Prisma.FieldRef<"tournament_team_registrations", 'DateTime'>;
+    readonly updated_at: Prisma.FieldRef<"tournament_team_registrations", 'DateTime'>;
+}
+export type tournament_team_registrationsFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_team_registrationsInclude<ExtArgs> | null;
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+};
+export type tournament_team_registrationsFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_team_registrationsInclude<ExtArgs> | null;
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+};
+export type tournament_team_registrationsFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_team_registrationsInclude<ExtArgs> | null;
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    orderBy?: Prisma.tournament_team_registrationsOrderByWithRelationInput | Prisma.tournament_team_registrationsOrderByWithRelationInput[];
+    cursor?: Prisma.tournament_team_registrationsWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Tournament_team_registrationsScalarFieldEnum | Prisma.Tournament_team_registrationsScalarFieldEnum[];
+};
+export type tournament_team_registrationsFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_team_registrationsInclude<ExtArgs> | null;
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    orderBy?: Prisma.tournament_team_registrationsOrderByWithRelationInput | Prisma.tournament_team_registrationsOrderByWithRelationInput[];
+    cursor?: Prisma.tournament_team_registrationsWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Tournament_team_registrationsScalarFieldEnum | Prisma.Tournament_team_registrationsScalarFieldEnum[];
+};
+export type tournament_team_registrationsFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_team_registrationsInclude<ExtArgs> | null;
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    orderBy?: Prisma.tournament_team_registrationsOrderByWithRelationInput | Prisma.tournament_team_registrationsOrderByWithRelationInput[];
+    cursor?: Prisma.tournament_team_registrationsWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Tournament_team_registrationsScalarFieldEnum | Prisma.Tournament_team_registrationsScalarFieldEnum[];
+};
+export type tournament_team_registrationsCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_team_registrationsInclude<ExtArgs> | null;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsCreateInput, Prisma.tournament_team_registrationsUncheckedCreateInput>;
+};
+export type tournament_team_registrationsCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    data: Prisma.tournament_team_registrationsCreateManyInput | Prisma.tournament_team_registrationsCreateManyInput[];
+    skipDuplicates?: boolean;
+};
+export type tournament_team_registrationsCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelectCreateManyAndReturn<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    data: Prisma.tournament_team_registrationsCreateManyInput | Prisma.tournament_team_registrationsCreateManyInput[];
+    skipDuplicates?: boolean;
+    include?: Prisma.tournament_team_registrationsIncludeCreateManyAndReturn<ExtArgs> | null;
+};
+export type tournament_team_registrationsUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_team_registrationsInclude<ExtArgs> | null;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateInput, Prisma.tournament_team_registrationsUncheckedUpdateInput>;
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+};
+export type tournament_team_registrationsUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateManyMutationInput, Prisma.tournament_team_registrationsUncheckedUpdateManyInput>;
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    limit?: number;
+};
+export type tournament_team_registrationsUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelectUpdateManyAndReturn<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    data: Prisma.XOR<Prisma.tournament_team_registrationsUpdateManyMutationInput, Prisma.tournament_team_registrationsUncheckedUpdateManyInput>;
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    limit?: number;
+    include?: Prisma.tournament_team_registrationsIncludeUpdateManyAndReturn<ExtArgs> | null;
+};
+export type tournament_team_registrationsUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_team_registrationsInclude<ExtArgs> | null;
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.tournament_team_registrationsCreateInput, Prisma.tournament_team_registrationsUncheckedCreateInput>;
+    update: Prisma.XOR<Prisma.tournament_team_registrationsUpdateInput, Prisma.tournament_team_registrationsUncheckedUpdateInput>;
+};
+export type tournament_team_registrationsDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_team_registrationsInclude<ExtArgs> | null;
+    where: Prisma.tournament_team_registrationsWhereUniqueInput;
+};
+export type tournament_team_registrationsDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.tournament_team_registrationsWhereInput;
+    limit?: number;
+};
+export type tournament_team_registrations$matches_matches_tournament_id_away_team_idTotournament_team_registrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.matchesSelect<ExtArgs> | null;
+    omit?: Prisma.matchesOmit<ExtArgs> | null;
+    include?: Prisma.matchesInclude<ExtArgs> | null;
+    where?: Prisma.matchesWhereInput;
+    orderBy?: Prisma.matchesOrderByWithRelationInput | Prisma.matchesOrderByWithRelationInput[];
+    cursor?: Prisma.matchesWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.MatchesScalarFieldEnum | Prisma.MatchesScalarFieldEnum[];
+};
+export type tournament_team_registrations$matches_matches_tournament_id_home_team_idTotournament_team_registrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.matchesSelect<ExtArgs> | null;
+    omit?: Prisma.matchesOmit<ExtArgs> | null;
+    include?: Prisma.matchesInclude<ExtArgs> | null;
+    where?: Prisma.matchesWhereInput;
+    orderBy?: Prisma.matchesOrderByWithRelationInput | Prisma.matchesOrderByWithRelationInput[];
+    cursor?: Prisma.matchesWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.MatchesScalarFieldEnum | Prisma.MatchesScalarFieldEnum[];
+};
+export type tournament_team_registrations$tournament_team_playersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_playersSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_team_playersOmit<ExtArgs> | null;
+    include?: Prisma.tournament_team_playersInclude<ExtArgs> | null;
+    where?: Prisma.tournament_team_playersWhereInput;
+    orderBy?: Prisma.tournament_team_playersOrderByWithRelationInput | Prisma.tournament_team_playersOrderByWithRelationInput[];
+    cursor?: Prisma.tournament_team_playersWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Tournament_team_playersScalarFieldEnum | Prisma.Tournament_team_playersScalarFieldEnum[];
+};
+export type tournament_team_registrations$tournament_registration_eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_registration_eventsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_registration_eventsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_registration_eventsInclude<ExtArgs> | null;
+    where?: Prisma.tournament_registration_eventsWhereInput;
+    orderBy?: Prisma.tournament_registration_eventsOrderByWithRelationInput | Prisma.tournament_registration_eventsOrderByWithRelationInput[];
+    cursor?: Prisma.tournament_registration_eventsWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Tournament_registration_eventsScalarFieldEnum | Prisma.Tournament_registration_eventsScalarFieldEnum[];
+};
+export type tournament_team_registrations$users_tournament_team_registrations_reviewed_byTousersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.usersSelect<ExtArgs> | null;
+    omit?: Prisma.usersOmit<ExtArgs> | null;
+    include?: Prisma.usersInclude<ExtArgs> | null;
+    where?: Prisma.usersWhereInput;
+};
+export type tournament_team_registrationsDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_team_registrationsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_team_registrationsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_team_registrationsInclude<ExtArgs> | null;
+};
