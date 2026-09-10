@@ -157,7 +157,6 @@ describe('TournamentsService', () => {
     locationName: 'Estadio Municipal',
     locationAddress: 'Carrera 5 # 10-20',
     rulesUrl: 'https://example.com/reglamento.pdf',
-    phase: 'draft',
     status: 'active',
   };
 
@@ -252,7 +251,7 @@ describe('TournamentsService', () => {
           rules_url: createDto.rulesUrl,
           photo_url: '/uploads/tournaments/new-photo.png',
           photo_public_id: 'public:/uploads/tournaments/new-photo.png',
-          phase: createDto.phase,
+          phase: 'draft',
           status: createDto.status,
           created_by: requestingUserId,
         },
