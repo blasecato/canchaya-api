@@ -35,7 +35,7 @@ const tournamentImageUploadOptions = {
     limits: {
         files: 21,
         fileSize: uploads_constants_1.MAX_IMAGE_SIZE_BYTES,
-        fields: 23,
+        fields: 26,
         parts: 48,
     },
     fileFilter: (_request, file, callback) => {

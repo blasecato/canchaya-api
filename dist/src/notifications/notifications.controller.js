@@ -19,6 +19,7 @@ const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 const allow_blocked_user_decorator_1 = require("../auth/decorators/allow-blocked-user.decorator");
 const parse_big_int_pipe_1 = require("../common/pipes/parse-big-int.pipe");
 const update_notification_dto_1 = require("./dto/update-notification.dto");
+const update_notification_preferences_dto_1 = require("./dto/update-notification-preferences.dto");
 const notifications_service_1 = require("./notifications.service");
 let NotificationsController = class NotificationsController {
     notificationsService;
@@ -33,6 +34,12 @@ let NotificationsController = class NotificationsController {
     }
     unreadCount(request) {
         return this.notificationsService.unreadCount(request.auth.userId);
+    }
+    getPreferences(request) {
+        return this.notificationsService.getPreferences(request.auth.userId);
+    }
+    updatePreferences(request, dto) {
+        return this.notificationsService.updatePreferences(request.auth.userId, dto);
     }
     markRead(id, request, dto) {
         return this.notificationsService.markRead(id, request.auth.userId, dto.read);
@@ -63,6 +70,23 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], NotificationsController.prototype, "unreadCount", null);
+__decorate([
+    (0, common_1.Get)('preferences'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], NotificationsController.prototype, "getPreferences", null);
+__decorate([
+    (0, common_1.Patch)('preferences'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, update_notification_preferences_dto_1.UpdateNotificationPreferencesDto]),
+    __metadata("design:returntype", void 0)
+], NotificationsController.prototype, "updatePreferences", null);
 __decorate([
     (0, common_1.Patch)(':id'),
     openapi.ApiResponse({ status: 200 }),

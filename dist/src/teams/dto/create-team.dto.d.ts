@@ -1,7 +1,8 @@
+import { FOOTBALL_SPORT_TYPE, type FootballModality } from '../../common/constants/football.constants';
 export declare class CreateTeamDto {
     name: string;
-    sportType: string;
-    modality: string;
+    sportType: typeof FOOTBALL_SPORT_TYPE;
+    modality: FootballModality;
     primaryColor?: string | null;
     secondaryColor?: string | null;
     captainUserId?: string;

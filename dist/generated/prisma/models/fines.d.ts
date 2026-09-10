@@ -32,6 +32,7 @@ export type FinesMinAggregateOutputType = {
     notes: string | null;
     created_by: bigint | null;
     created_at: Date | null;
+    updated_at: Date | null;
 };
 export type FinesMaxAggregateOutputType = {
     id: bigint | null;
@@ -45,6 +46,7 @@ export type FinesMaxAggregateOutputType = {
     notes: string | null;
     created_by: bigint | null;
     created_at: Date | null;
+    updated_at: Date | null;
 };
 export type FinesCountAggregateOutputType = {
     id: number;
@@ -58,6 +60,7 @@ export type FinesCountAggregateOutputType = {
     notes: number;
     created_by: number;
     created_at: number;
+    updated_at: number;
     _all: number;
 };
 export type FinesAvgAggregateInputType = {
@@ -84,6 +87,7 @@ export type FinesMinAggregateInputType = {
     notes?: true;
     created_by?: true;
     created_at?: true;
+    updated_at?: true;
 };
 export type FinesMaxAggregateInputType = {
     id?: true;
@@ -97,6 +101,7 @@ export type FinesMaxAggregateInputType = {
     notes?: true;
     created_by?: true;
     created_at?: true;
+    updated_at?: true;
 };
 export type FinesCountAggregateInputType = {
     id?: true;
@@ -110,6 +115,7 @@ export type FinesCountAggregateInputType = {
     notes?: true;
     created_by?: true;
     created_at?: true;
+    updated_at?: true;
     _all?: true;
 };
 export type FinesAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -152,6 +158,7 @@ export type FinesGroupByOutputType = {
     notes: string | null;
     created_by: bigint;
     created_at: Date;
+    updated_at: Date;
     _count: FinesCountAggregateOutputType | null;
     _avg: FinesAvgAggregateOutputType | null;
     _sum: FinesSumAggregateOutputType | null;
@@ -176,6 +183,7 @@ export type finesWhereInput = {
     notes?: Prisma.StringNullableFilter<"fines"> | string | null;
     created_by?: Prisma.BigIntFilter<"fines"> | bigint | number;
     created_at?: Prisma.DateTimeFilter<"fines"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"fines"> | Date | string;
     disciplinary_actions?: Prisma.XOR<Prisma.Disciplinary_actionsScalarRelationFilter, Prisma.disciplinary_actionsWhereInput>;
     users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
 };
@@ -191,6 +199,7 @@ export type finesOrderByWithRelationInput = {
     notes?: Prisma.SortOrderInput | Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
     disciplinary_actions?: Prisma.disciplinary_actionsOrderByWithRelationInput;
     users?: Prisma.usersOrderByWithRelationInput;
 };
@@ -209,6 +218,7 @@ export type finesWhereUniqueInput = Prisma.AtLeast<{
     notes?: Prisma.StringNullableFilter<"fines"> | string | null;
     created_by?: Prisma.BigIntFilter<"fines"> | bigint | number;
     created_at?: Prisma.DateTimeFilter<"fines"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"fines"> | Date | string;
     disciplinary_actions?: Prisma.XOR<Prisma.Disciplinary_actionsScalarRelationFilter, Prisma.disciplinary_actionsWhereInput>;
     users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
 }, "id" | "disciplinary_action_id">;
@@ -224,6 +234,7 @@ export type finesOrderByWithAggregationInput = {
     notes?: Prisma.SortOrderInput | Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
     _count?: Prisma.finesCountOrderByAggregateInput;
     _avg?: Prisma.finesAvgOrderByAggregateInput;
     _max?: Prisma.finesMaxOrderByAggregateInput;
@@ -245,6 +256,7 @@ export type finesScalarWhereWithAggregatesInput = {
     notes?: Prisma.StringNullableWithAggregatesFilter<"fines"> | string | null;
     created_by?: Prisma.BigIntWithAggregatesFilter<"fines"> | bigint | number;
     created_at?: Prisma.DateTimeWithAggregatesFilter<"fines"> | Date | string;
+    updated_at?: Prisma.DateTimeWithAggregatesFilter<"fines"> | Date | string;
 };
 export type finesCreateInput = {
     id?: bigint | number;
@@ -256,6 +268,7 @@ export type finesCreateInput = {
     payment_reference?: string | null;
     notes?: string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     disciplinary_actions: Prisma.disciplinary_actionsCreateNestedOneWithoutFinesInput;
     users: Prisma.usersCreateNestedOneWithoutFinesInput;
 };
@@ -271,6 +284,7 @@ export type finesUncheckedCreateInput = {
     notes?: string | null;
     created_by: bigint | number;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type finesUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -282,6 +296,7 @@ export type finesUpdateInput = {
     payment_reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUpdateOneRequiredWithoutFinesNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutFinesNestedInput;
 };
@@ -297,6 +312,7 @@ export type finesUncheckedUpdateInput = {
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type finesCreateManyInput = {
     id?: bigint | number;
@@ -310,6 +326,7 @@ export type finesCreateManyInput = {
     notes?: string | null;
     created_by: bigint | number;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type finesUpdateManyMutationInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -321,6 +338,7 @@ export type finesUpdateManyMutationInput = {
     payment_reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type finesUncheckedUpdateManyInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -334,6 +352,7 @@ export type finesUncheckedUpdateManyInput = {
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type FinesNullableScalarRelationFilter = {
     is?: Prisma.finesWhereInput | null;
@@ -351,6 +370,7 @@ export type finesCountOrderByAggregateInput = {
     notes?: Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
 };
 export type finesAvgOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -370,6 +390,7 @@ export type finesMaxOrderByAggregateInput = {
     notes?: Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
 };
 export type finesMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -383,6 +404,7 @@ export type finesMinOrderByAggregateInput = {
     notes?: Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
 };
 export type finesSumOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -481,6 +503,7 @@ export type finesCreateWithoutDisciplinary_actionsInput = {
     payment_reference?: string | null;
     notes?: string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     users: Prisma.usersCreateNestedOneWithoutFinesInput;
 };
 export type finesUncheckedCreateWithoutDisciplinary_actionsInput = {
@@ -494,6 +517,7 @@ export type finesUncheckedCreateWithoutDisciplinary_actionsInput = {
     notes?: string | null;
     created_by: bigint | number;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type finesCreateOrConnectWithoutDisciplinary_actionsInput = {
     where: Prisma.finesWhereUniqueInput;
@@ -518,6 +542,7 @@ export type finesUpdateWithoutDisciplinary_actionsInput = {
     payment_reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     users?: Prisma.usersUpdateOneRequiredWithoutFinesNestedInput;
 };
 export type finesUncheckedUpdateWithoutDisciplinary_actionsInput = {
@@ -531,6 +556,7 @@ export type finesUncheckedUpdateWithoutDisciplinary_actionsInput = {
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type finesCreateWithoutUsersInput = {
     id?: bigint | number;
@@ -542,6 +568,7 @@ export type finesCreateWithoutUsersInput = {
     payment_reference?: string | null;
     notes?: string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     disciplinary_actions: Prisma.disciplinary_actionsCreateNestedOneWithoutFinesInput;
 };
 export type finesUncheckedCreateWithoutUsersInput = {
@@ -555,6 +582,7 @@ export type finesUncheckedCreateWithoutUsersInput = {
     payment_reference?: string | null;
     notes?: string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type finesCreateOrConnectWithoutUsersInput = {
     where: Prisma.finesWhereUniqueInput;
@@ -592,6 +620,7 @@ export type finesScalarWhereInput = {
     notes?: Prisma.StringNullableFilter<"fines"> | string | null;
     created_by?: Prisma.BigIntFilter<"fines"> | bigint | number;
     created_at?: Prisma.DateTimeFilter<"fines"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"fines"> | Date | string;
 };
 export type finesCreateManyUsersInput = {
     id?: bigint | number;
@@ -604,6 +633,7 @@ export type finesCreateManyUsersInput = {
     payment_reference?: string | null;
     notes?: string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type finesUpdateWithoutUsersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -615,6 +645,7 @@ export type finesUpdateWithoutUsersInput = {
     payment_reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUpdateOneRequiredWithoutFinesNestedInput;
 };
 export type finesUncheckedUpdateWithoutUsersInput = {
@@ -628,6 +659,7 @@ export type finesUncheckedUpdateWithoutUsersInput = {
     payment_reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type finesUncheckedUpdateManyWithoutUsersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -640,6 +672,7 @@ export type finesUncheckedUpdateManyWithoutUsersInput = {
     payment_reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type finesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -653,6 +686,7 @@ export type finesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     notes?: boolean;
     created_by?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
     disciplinary_actions?: boolean | Prisma.disciplinary_actionsDefaultArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["fines"]>;
@@ -668,6 +702,7 @@ export type finesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
     notes?: boolean;
     created_by?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
     disciplinary_actions?: boolean | Prisma.disciplinary_actionsDefaultArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["fines"]>;
@@ -683,6 +718,7 @@ export type finesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
     notes?: boolean;
     created_by?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
     disciplinary_actions?: boolean | Prisma.disciplinary_actionsDefaultArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["fines"]>;
@@ -698,8 +734,9 @@ export type finesSelectScalar = {
     notes?: boolean;
     created_by?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
 };
-export type finesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "disciplinary_action_id" | "amount" | "currency_code" | "due_date" | "payment_status" | "paid_at" | "payment_reference" | "notes" | "created_by" | "created_at", ExtArgs["result"]["fines"]>;
+export type finesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "disciplinary_action_id" | "amount" | "currency_code" | "due_date" | "payment_status" | "paid_at" | "payment_reference" | "notes" | "created_by" | "created_at" | "updated_at", ExtArgs["result"]["fines"]>;
 export type finesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     disciplinary_actions?: boolean | Prisma.disciplinary_actionsDefaultArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
@@ -730,6 +767,7 @@ export type $finesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
         notes: string | null;
         created_by: bigint;
         created_at: Date;
+        updated_at: Date;
     }, ExtArgs["result"]["fines"]>;
     composites: {};
 };
@@ -800,6 +838,7 @@ export interface finesFieldRefs {
     readonly notes: Prisma.FieldRef<"fines", 'String'>;
     readonly created_by: Prisma.FieldRef<"fines", 'BigInt'>;
     readonly created_at: Prisma.FieldRef<"fines", 'DateTime'>;
+    readonly updated_at: Prisma.FieldRef<"fines", 'DateTime'>;
 }
 export type finesFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.finesSelect<ExtArgs> | null;

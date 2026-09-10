@@ -11,80 +11,176 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SuspensionsService = void 0;
 const common_1 = require("@nestjs/common");
+const competition_access_service_1 = require("../authorization/competition-access.service");
 const prisma_service_1 = require("../prisma/prisma.service");
 let SuspensionsService = class SuspensionsService {
     prisma;
-    constructor(prisma) {
+    access;
+    constructor(prisma, access) {
         this.prisma = prisma;
+        this.access = access;
     }
-    create(createSuspensionDto) {
+    async create(requestingUserId, dto) {
+        await this.access.assertHasAnyRole(requestingUserId, ['SUPER_ADMIN']);
+        const action = await this.findDisciplinaryAction(BigInt(dto.disciplinaryActionId));
+        this.assertApprovedAction(action);
+        await this.access.assertTournamentInPhases(action.tournament_id, ['in_progress', 'finished'], 'Las suspensiones solo se pueden gestionar durante el torneo o su cierre.');
+        this.assertValidPeriod(dto.matchesCount, dto.startDate, dto.endDate);
         return this.prisma.suspensions.create({
             data: {
-                disciplinary_action_id: BigInt(createSuspensionDto.disciplinaryActionId),
-                matches_count: createSuspensionDto.matchesCount,
-                start_date: createSuspensionDto.startDate === null
+                disciplinary_action_id: action.id,
+                matches_count: dto.matchesCount,
+                start_date: dto.startDate === null
                     ? null
-                    : createSuspensionDto.startDate !== undefined
-                        ? new Date(createSuspensionDto.startDate)
+                    : dto.startDate !== undefined
+                        ? new Date(dto.startDate)
                         : undefined,
-                end_date: createSuspensionDto.endDate === null
+                end_date: dto.endDate === null
                     ? null
-                    : createSuspensionDto.endDate !== undefined
-                        ? new Date(createSuspensionDto.endDate)
+                    : dto.endDate !== undefined
+                        ? new Date(dto.endDate)
                         : undefined,
-                reason: createSuspensionDto.reason,
-                status: createSuspensionDto.status,
-                created_by: BigInt(createSuspensionDto.createdBy),
+                reason: dto.reason,
+                status: dto.status,
+                created_by: requestingUserId,
             },
         });
     }
-    findAll() {
-        return this.prisma.suspensions.findMany({ orderBy: { id: 'asc' } });
-    }
-    async findOne(id) {
-        const suspension = await this.prisma.suspensions.findUnique({
-            where: { id },
+    async findAll(requestingUserId) {
+        const roles = await this.access.findRoleCodes(requestingUserId);
+        const where = await this.buildVisibleWhere(requestingUserId, roles);
+        return this.prisma.suspensions.findMany({
+            where,
+            orderBy: { id: 'asc' },
         });
-        if (!suspension) {
-            throw new common_1.NotFoundException(`No se encontró la suspensión con ID ${id}.`);
-        }
+    }
+    async findOne(id, requestingUserId) {
+        const suspension = await this.findExisting(id);
+        await this.assertCanViewSuspension(suspension.disciplinary_actions, requestingUserId);
         return suspension;
     }
-    async update(id, updateSuspensionDto) {
-        await this.findOne(id);
+    async update(id, requestingUserId, dto) {
+        await this.access.assertHasAnyRole(requestingUserId, ['SUPER_ADMIN']);
+        const current = await this.findExisting(id);
+        await this.access.assertTournamentInPhases(current.disciplinary_actions.tournament_id, ['in_progress', 'finished'], 'Las suspensiones ya están cerradas para este estado del torneo.');
+        const action = dto.disciplinaryActionId !== undefined
+            ? await this.findDisciplinaryAction(BigInt(dto.disciplinaryActionId))
+            : current.disciplinary_actions;
+        this.assertApprovedAction(action);
+        if (action.id !== current.disciplinary_action_id) {
+            await this.access.assertTournamentInPhases(action.tournament_id, ['in_progress', 'finished'], 'No puedes mover la suspensión a un torneo con su gestión disciplinaria cerrada.');
+        }
+        const matchesCount = dto.matchesCount !== undefined ? dto.matchesCount : current.matches_count;
+        const startDate = dto.startDate !== undefined
+            ? dto.startDate
+            : (current.start_date?.toISOString().slice(0, 10) ?? null);
+        const endDate = dto.endDate !== undefined
+            ? dto.endDate
+            : (current.end_date?.toISOString().slice(0, 10) ?? null);
+        this.assertValidPeriod(matchesCount, startDate, endDate);
         return this.prisma.suspensions.update({
             where: { id },
             data: {
-                disciplinary_action_id: updateSuspensionDto.disciplinaryActionId !== undefined
-                    ? BigInt(updateSuspensionDto.disciplinaryActionId)
-                    : undefined,
-                matches_count: updateSuspensionDto.matchesCount,
-                start_date: updateSuspensionDto.startDate === null
+                disciplinary_action_id: dto.disciplinaryActionId !== undefined ? action.id : undefined,
+                matches_count: dto.matchesCount,
+                start_date: dto.startDate === null
                     ? null
-                    : updateSuspensionDto.startDate !== undefined
-                        ? new Date(updateSuspensionDto.startDate)
+                    : dto.startDate !== undefined
+                        ? new Date(dto.startDate)
                         : undefined,
-                end_date: updateSuspensionDto.endDate === null
+                end_date: dto.endDate === null
                     ? null
-                    : updateSuspensionDto.endDate !== undefined
-                        ? new Date(updateSuspensionDto.endDate)
+                    : dto.endDate !== undefined
+                        ? new Date(dto.endDate)
                         : undefined,
-                reason: updateSuspensionDto.reason,
-                status: updateSuspensionDto.status,
-                created_by: updateSuspensionDto.createdBy !== undefined
-                    ? BigInt(updateSuspensionDto.createdBy)
-                    : undefined,
+                reason: dto.reason,
+                status: dto.status,
             },
         });
     }
-    async remove(id) {
-        await this.findOne(id);
+    async remove(id, requestingUserId) {
+        await this.access.assertHasAnyRole(requestingUserId, ['SUPER_ADMIN']);
+        await this.findExisting(id);
         return this.prisma.suspensions.delete({ where: { id } });
+    }
+    async findExisting(id) {
+        const suspension = await this.prisma.suspensions.findUnique({
+            where: { id },
+            include: {
+                disciplinary_actions: {
+                    select: {
+                        id: true,
+                        tournament_id: true,
+                        player_id: true,
+                        decision_status: true,
+                    },
+                },
+            },
+        });
+        if (!suspension) {
+            throw new common_1.NotFoundException(`No se encontró la suspensión con ID ${id.toString()}.`);
+        }
+        return suspension;
+    }
+    async findDisciplinaryAction(id) {
+        const action = await this.prisma.disciplinary_actions.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                tournament_id: true,
+                player_id: true,
+                decision_status: true,
+            },
+        });
+        if (!action) {
+            throw new common_1.NotFoundException(`No se encontró la acción disciplinaria con ID ${id.toString()}.`);
+        }
+        return action;
+    }
+    async buildVisibleWhere(requestingUserId, roles) {
+        if (roles.has('SUPER_ADMIN'))
+            return undefined;
+        const visibility = [];
+        if (roles.has('ASSOCIATION_ADMIN')) {
+            const tournamentIds = await this.access.findManageableTournamentIds(requestingUserId);
+            visibility.push({ tournament_id: { in: tournamentIds ?? [] } });
+        }
+        if (roles.has('PLAYER')) {
+            visibility.push({ player_id: requestingUserId });
+        }
+        return { disciplinary_actions: { OR: visibility } };
+    }
+    async assertCanViewSuspension(action, requestingUserId) {
+        const roles = await this.access.findRoleCodes(requestingUserId);
+        if (roles.has('SUPER_ADMIN') ||
+            (roles.has('PLAYER') && action.player_id === requestingUserId)) {
+            return;
+        }
+        if (roles.has('ASSOCIATION_ADMIN')) {
+            const tournamentIds = await this.access.findManageableTournamentIds(requestingUserId);
+            if (tournamentIds?.some((id) => id === action.tournament_id))
+                return;
+        }
+        throw new common_1.ForbiddenException('No tienes permisos para consultar esta suspensión.');
+    }
+    assertValidPeriod(matchesCount, startDate, endDate) {
+        if (matchesCount == null && !startDate) {
+            throw new common_1.BadRequestException('La suspensión debe indicar una cantidad de partidos o una fecha de inicio.');
+        }
+        if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+            throw new common_1.BadRequestException('La fecha final no puede ser anterior a la fecha inicial de la suspensión.');
+        }
+    }
+    assertApprovedAction(action) {
+        if (action.decision_status !== 'approved') {
+            throw new common_1.BadRequestException('La suspensión solo puede asociarse a un informe aprobado.');
+        }
     }
 };
 exports.SuspensionsService = SuspensionsService;
 exports.SuspensionsService = SuspensionsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        competition_access_service_1.CompetitionAccessService])
 ], SuspensionsService);
 //# sourceMappingURL=suspensions.service.js.map

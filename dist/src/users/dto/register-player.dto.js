@@ -15,6 +15,7 @@ const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const is_bcrypt_password_decorator_1 = require("../../common/decorators/is-bcrypt-password.decorator");
+const user_gender_constants_1 = require("../user-gender.constants");
 const trim = ({ value }) => typeof value === 'string' ? value.trim() : value;
 const normalizeEmail = ({ value }) => typeof value === 'string' ? value.trim().toLowerCase() : value;
 class RegisterPlayerDto {
@@ -25,9 +26,10 @@ class RegisterPlayerDto {
     phone;
     birthDate;
     birthCity;
+    gender;
     password;
     static _OPENAPI_METADATA_FACTORY() {
-        return { idNumber: { required: true, type: () => String, maxLength: 40 }, fullName: { required: true, type: () => String, maxLength: 160 }, email: { required: true, type: () => String, maxLength: 254, format: "email" }, age: { required: true, type: () => Number, minimum: 1, maximum: 120 }, phone: { required: false, type: () => String, maxLength: 40 }, birthDate: { required: true, type: () => String, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, birthCity: { required: true, type: () => String, maxLength: 120 }, password: { required: true, type: () => String, minLength: 8 } };
+        return { idNumber: { required: true, type: () => String, maxLength: 40 }, fullName: { required: true, type: () => String, maxLength: 160 }, email: { required: true, type: () => String, maxLength: 254, format: "email" }, age: { required: true, type: () => Number, minimum: 1, maximum: 120 }, phone: { required: false, type: () => String, maxLength: 40 }, birthDate: { required: true, type: () => String, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, birthCity: { required: true, type: () => String, maxLength: 120 }, gender: { required: true, enum: ["male", "female", "non_binary", "prefer_not_to_say"], enum: user_gender_constants_1.USER_GENDERS }, password: { required: true, type: () => String, minLength: 8 } };
     }
 }
 exports.RegisterPlayerDto = RegisterPlayerDto;
@@ -84,6 +86,11 @@ __decorate([
     (0, class_validator_1.MaxLength)(120),
     __metadata("design:type", String)
 ], RegisterPlayerDto.prototype, "birthCity", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ enum: user_gender_constants_1.USER_GENDERS, example: 'male' }),
+    (0, class_validator_1.IsIn)(user_gender_constants_1.USER_GENDERS),
+    __metadata("design:type", String)
+], RegisterPlayerDto.prototype, "gender", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ minLength: 8, writeOnly: true }),
     (0, class_validator_1.IsString)(),

@@ -12,6 +12,8 @@ export type TournamentsAvgAggregateOutputType = {
     id: number | null;
     association_id: number | null;
     tournament_type_id: number | null;
+    category_min_age: number | null;
+    category_max_age: number | null;
     registration_fee: runtime.Decimal | null;
     grand_prize: runtime.Decimal | null;
     second_prize: runtime.Decimal | null;
@@ -25,6 +27,8 @@ export type TournamentsSumAggregateOutputType = {
     id: bigint | null;
     association_id: bigint | null;
     tournament_type_id: bigint | null;
+    category_min_age: number | null;
+    category_max_age: number | null;
     registration_fee: runtime.Decimal | null;
     grand_prize: runtime.Decimal | null;
     second_prize: runtime.Decimal | null;
@@ -42,6 +46,10 @@ export type TournamentsMinAggregateOutputType = {
     tournament_type_id: bigint | null;
     sport_type: string | null;
     modality: string | null;
+    category_name: string | null;
+    category_min_age: number | null;
+    category_max_age: number | null;
+    category_gender: string | null;
     start_date: Date | null;
     end_date: Date | null;
     registration_start_date: Date | null;
@@ -74,6 +82,10 @@ export type TournamentsMaxAggregateOutputType = {
     tournament_type_id: bigint | null;
     sport_type: string | null;
     modality: string | null;
+    category_name: string | null;
+    category_min_age: number | null;
+    category_max_age: number | null;
+    category_gender: string | null;
     start_date: Date | null;
     end_date: Date | null;
     registration_start_date: Date | null;
@@ -106,6 +118,10 @@ export type TournamentsCountAggregateOutputType = {
     tournament_type_id: number;
     sport_type: number;
     modality: number;
+    category_name: number;
+    category_min_age: number;
+    category_max_age: number;
+    category_gender: number;
     start_date: number;
     end_date: number;
     registration_start_date: number;
@@ -135,6 +151,8 @@ export type TournamentsAvgAggregateInputType = {
     id?: true;
     association_id?: true;
     tournament_type_id?: true;
+    category_min_age?: true;
+    category_max_age?: true;
     registration_fee?: true;
     grand_prize?: true;
     second_prize?: true;
@@ -148,6 +166,8 @@ export type TournamentsSumAggregateInputType = {
     id?: true;
     association_id?: true;
     tournament_type_id?: true;
+    category_min_age?: true;
+    category_max_age?: true;
     registration_fee?: true;
     grand_prize?: true;
     second_prize?: true;
@@ -165,6 +185,10 @@ export type TournamentsMinAggregateInputType = {
     tournament_type_id?: true;
     sport_type?: true;
     modality?: true;
+    category_name?: true;
+    category_min_age?: true;
+    category_max_age?: true;
+    category_gender?: true;
     start_date?: true;
     end_date?: true;
     registration_start_date?: true;
@@ -197,6 +221,10 @@ export type TournamentsMaxAggregateInputType = {
     tournament_type_id?: true;
     sport_type?: true;
     modality?: true;
+    category_name?: true;
+    category_min_age?: true;
+    category_max_age?: true;
+    category_gender?: true;
     start_date?: true;
     end_date?: true;
     registration_start_date?: true;
@@ -229,6 +257,10 @@ export type TournamentsCountAggregateInputType = {
     tournament_type_id?: true;
     sport_type?: true;
     modality?: true;
+    category_name?: true;
+    category_min_age?: true;
+    category_max_age?: true;
+    category_gender?: true;
     start_date?: true;
     end_date?: true;
     registration_start_date?: true;
@@ -290,6 +322,10 @@ export type TournamentsGroupByOutputType = {
     tournament_type_id: bigint;
     sport_type: string;
     modality: string;
+    category_name: string;
+    category_min_age: number | null;
+    category_max_age: number | null;
+    category_gender: string;
     start_date: Date;
     end_date: Date | null;
     registration_start_date: Date | null;
@@ -333,6 +369,10 @@ export type tournamentsWhereInput = {
     tournament_type_id?: Prisma.BigIntFilter<"tournaments"> | bigint | number;
     sport_type?: Prisma.StringFilter<"tournaments"> | string;
     modality?: Prisma.StringFilter<"tournaments"> | string;
+    category_name?: Prisma.StringFilter<"tournaments"> | string;
+    category_min_age?: Prisma.IntNullableFilter<"tournaments"> | number | null;
+    category_max_age?: Prisma.IntNullableFilter<"tournaments"> | number | null;
+    category_gender?: Prisma.StringFilter<"tournaments"> | string;
     start_date?: Prisma.DateTimeFilter<"tournaments"> | Date | string;
     end_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
     registration_start_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
@@ -360,6 +400,7 @@ export type tournamentsWhereInput = {
     tournament_referees?: Prisma.Tournament_refereesListRelationFilter;
     tournament_sponsors?: Prisma.Tournament_sponsorsListRelationFilter;
     tournament_team_registrations?: Prisma.Tournament_team_registrationsListRelationFilter;
+    tournament_lifecycle_events?: Prisma.Tournament_lifecycle_eventsListRelationFilter;
     associations?: Prisma.XOR<Prisma.AssociationsScalarRelationFilter, Prisma.associationsWhereInput>;
     users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
     tournament_types?: Prisma.XOR<Prisma.Tournament_typesScalarRelationFilter, Prisma.tournament_typesWhereInput>;
@@ -372,6 +413,10 @@ export type tournamentsOrderByWithRelationInput = {
     tournament_type_id?: Prisma.SortOrder;
     sport_type?: Prisma.SortOrder;
     modality?: Prisma.SortOrder;
+    category_name?: Prisma.SortOrder;
+    category_min_age?: Prisma.SortOrderInput | Prisma.SortOrder;
+    category_max_age?: Prisma.SortOrderInput | Prisma.SortOrder;
+    category_gender?: Prisma.SortOrder;
     start_date?: Prisma.SortOrder;
     end_date?: Prisma.SortOrderInput | Prisma.SortOrder;
     registration_start_date?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -399,6 +444,7 @@ export type tournamentsOrderByWithRelationInput = {
     tournament_referees?: Prisma.tournament_refereesOrderByRelationAggregateInput;
     tournament_sponsors?: Prisma.tournament_sponsorsOrderByRelationAggregateInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsOrderByRelationAggregateInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsOrderByRelationAggregateInput;
     associations?: Prisma.associationsOrderByWithRelationInput;
     users?: Prisma.usersOrderByWithRelationInput;
     tournament_types?: Prisma.tournament_typesOrderByWithRelationInput;
@@ -415,6 +461,10 @@ export type tournamentsWhereUniqueInput = Prisma.AtLeast<{
     tournament_type_id?: Prisma.BigIntFilter<"tournaments"> | bigint | number;
     sport_type?: Prisma.StringFilter<"tournaments"> | string;
     modality?: Prisma.StringFilter<"tournaments"> | string;
+    category_name?: Prisma.StringFilter<"tournaments"> | string;
+    category_min_age?: Prisma.IntNullableFilter<"tournaments"> | number | null;
+    category_max_age?: Prisma.IntNullableFilter<"tournaments"> | number | null;
+    category_gender?: Prisma.StringFilter<"tournaments"> | string;
     start_date?: Prisma.DateTimeFilter<"tournaments"> | Date | string;
     end_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
     registration_start_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
@@ -442,6 +492,7 @@ export type tournamentsWhereUniqueInput = Prisma.AtLeast<{
     tournament_referees?: Prisma.Tournament_refereesListRelationFilter;
     tournament_sponsors?: Prisma.Tournament_sponsorsListRelationFilter;
     tournament_team_registrations?: Prisma.Tournament_team_registrationsListRelationFilter;
+    tournament_lifecycle_events?: Prisma.Tournament_lifecycle_eventsListRelationFilter;
     associations?: Prisma.XOR<Prisma.AssociationsScalarRelationFilter, Prisma.associationsWhereInput>;
     users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
     tournament_types?: Prisma.XOR<Prisma.Tournament_typesScalarRelationFilter, Prisma.tournament_typesWhereInput>;
@@ -454,6 +505,10 @@ export type tournamentsOrderByWithAggregationInput = {
     tournament_type_id?: Prisma.SortOrder;
     sport_type?: Prisma.SortOrder;
     modality?: Prisma.SortOrder;
+    category_name?: Prisma.SortOrder;
+    category_min_age?: Prisma.SortOrderInput | Prisma.SortOrder;
+    category_max_age?: Prisma.SortOrderInput | Prisma.SortOrder;
+    category_gender?: Prisma.SortOrder;
     start_date?: Prisma.SortOrder;
     end_date?: Prisma.SortOrderInput | Prisma.SortOrder;
     registration_start_date?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -494,6 +549,10 @@ export type tournamentsScalarWhereWithAggregatesInput = {
     tournament_type_id?: Prisma.BigIntWithAggregatesFilter<"tournaments"> | bigint | number;
     sport_type?: Prisma.StringWithAggregatesFilter<"tournaments"> | string;
     modality?: Prisma.StringWithAggregatesFilter<"tournaments"> | string;
+    category_name?: Prisma.StringWithAggregatesFilter<"tournaments"> | string;
+    category_min_age?: Prisma.IntNullableWithAggregatesFilter<"tournaments"> | number | null;
+    category_max_age?: Prisma.IntNullableWithAggregatesFilter<"tournaments"> | number | null;
+    category_gender?: Prisma.StringWithAggregatesFilter<"tournaments"> | string;
     start_date?: Prisma.DateTimeWithAggregatesFilter<"tournaments"> | Date | string;
     end_date?: Prisma.DateTimeNullableWithAggregatesFilter<"tournaments"> | Date | string | null;
     registration_start_date?: Prisma.DateTimeNullableWithAggregatesFilter<"tournaments"> | Date | string | null;
@@ -524,6 +583,10 @@ export type tournamentsCreateInput = {
     description?: string | null;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -550,6 +613,7 @@ export type tournamentsCreateInput = {
     tournament_referees?: Prisma.tournament_refereesCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsCreateNestedManyWithoutTournamentsInput;
     associations: Prisma.associationsCreateNestedOneWithoutTournamentsInput;
     users: Prisma.usersCreateNestedOneWithoutTournamentsInput;
     tournament_types: Prisma.tournament_typesCreateNestedOneWithoutTournamentsInput;
@@ -562,6 +626,10 @@ export type tournamentsUncheckedCreateInput = {
     tournament_type_id: bigint | number;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -589,6 +657,7 @@ export type tournamentsUncheckedCreateInput = {
     tournament_referees?: Prisma.tournament_refereesUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedCreateNestedManyWithoutTournamentsInput;
 };
 export type tournamentsUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -596,6 +665,10 @@ export type tournamentsUpdateInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -622,6 +695,7 @@ export type tournamentsUpdateInput = {
     tournament_referees?: Prisma.tournament_refereesUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUpdateManyWithoutTournamentsNestedInput;
     associations?: Prisma.associationsUpdateOneRequiredWithoutTournamentsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutTournamentsNestedInput;
     tournament_types?: Prisma.tournament_typesUpdateOneRequiredWithoutTournamentsNestedInput;
@@ -634,6 +708,10 @@ export type tournamentsUncheckedUpdateInput = {
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -661,6 +739,7 @@ export type tournamentsUncheckedUpdateInput = {
     tournament_referees?: Prisma.tournament_refereesUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedUpdateManyWithoutTournamentsNestedInput;
 };
 export type tournamentsCreateManyInput = {
     id?: bigint | number;
@@ -670,6 +749,10 @@ export type tournamentsCreateManyInput = {
     tournament_type_id: bigint | number;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -700,6 +783,10 @@ export type tournamentsUpdateManyMutationInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -731,6 +818,10 @@ export type tournamentsUncheckedUpdateManyInput = {
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -779,6 +870,10 @@ export type tournamentsCountOrderByAggregateInput = {
     tournament_type_id?: Prisma.SortOrder;
     sport_type?: Prisma.SortOrder;
     modality?: Prisma.SortOrder;
+    category_name?: Prisma.SortOrder;
+    category_min_age?: Prisma.SortOrder;
+    category_max_age?: Prisma.SortOrder;
+    category_gender?: Prisma.SortOrder;
     start_date?: Prisma.SortOrder;
     end_date?: Prisma.SortOrder;
     registration_start_date?: Prisma.SortOrder;
@@ -807,6 +902,8 @@ export type tournamentsAvgOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     association_id?: Prisma.SortOrder;
     tournament_type_id?: Prisma.SortOrder;
+    category_min_age?: Prisma.SortOrder;
+    category_max_age?: Prisma.SortOrder;
     registration_fee?: Prisma.SortOrder;
     grand_prize?: Prisma.SortOrder;
     second_prize?: Prisma.SortOrder;
@@ -824,6 +921,10 @@ export type tournamentsMaxOrderByAggregateInput = {
     tournament_type_id?: Prisma.SortOrder;
     sport_type?: Prisma.SortOrder;
     modality?: Prisma.SortOrder;
+    category_name?: Prisma.SortOrder;
+    category_min_age?: Prisma.SortOrder;
+    category_max_age?: Prisma.SortOrder;
+    category_gender?: Prisma.SortOrder;
     start_date?: Prisma.SortOrder;
     end_date?: Prisma.SortOrder;
     registration_start_date?: Prisma.SortOrder;
@@ -856,6 +957,10 @@ export type tournamentsMinOrderByAggregateInput = {
     tournament_type_id?: Prisma.SortOrder;
     sport_type?: Prisma.SortOrder;
     modality?: Prisma.SortOrder;
+    category_name?: Prisma.SortOrder;
+    category_min_age?: Prisma.SortOrder;
+    category_max_age?: Prisma.SortOrder;
+    category_gender?: Prisma.SortOrder;
     start_date?: Prisma.SortOrder;
     end_date?: Prisma.SortOrder;
     registration_start_date?: Prisma.SortOrder;
@@ -884,6 +989,8 @@ export type tournamentsSumOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     association_id?: Prisma.SortOrder;
     tournament_type_id?: Prisma.SortOrder;
+    category_min_age?: Prisma.SortOrder;
+    category_max_age?: Prisma.SortOrder;
     registration_fee?: Prisma.SortOrder;
     grand_prize?: Prisma.SortOrder;
     second_prize?: Prisma.SortOrder;
@@ -979,6 +1086,18 @@ export type tournamentsUpdateOneRequiredWithoutTournament_team_registrationsNest
     connect?: Prisma.tournamentsWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.tournamentsUpdateToOneWithWhereWithoutTournament_team_registrationsInput, Prisma.tournamentsUpdateWithoutTournament_team_registrationsInput>, Prisma.tournamentsUncheckedUpdateWithoutTournament_team_registrationsInput>;
 };
+export type tournamentsCreateNestedOneWithoutTournament_lifecycle_eventsInput = {
+    create?: Prisma.XOR<Prisma.tournamentsCreateWithoutTournament_lifecycle_eventsInput, Prisma.tournamentsUncheckedCreateWithoutTournament_lifecycle_eventsInput>;
+    connectOrCreate?: Prisma.tournamentsCreateOrConnectWithoutTournament_lifecycle_eventsInput;
+    connect?: Prisma.tournamentsWhereUniqueInput;
+};
+export type tournamentsUpdateOneRequiredWithoutTournament_lifecycle_eventsNestedInput = {
+    create?: Prisma.XOR<Prisma.tournamentsCreateWithoutTournament_lifecycle_eventsInput, Prisma.tournamentsUncheckedCreateWithoutTournament_lifecycle_eventsInput>;
+    connectOrCreate?: Prisma.tournamentsCreateOrConnectWithoutTournament_lifecycle_eventsInput;
+    upsert?: Prisma.tournamentsUpsertWithoutTournament_lifecycle_eventsInput;
+    connect?: Prisma.tournamentsWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.tournamentsUpdateToOneWithWhereWithoutTournament_lifecycle_eventsInput, Prisma.tournamentsUpdateWithoutTournament_lifecycle_eventsInput>, Prisma.tournamentsUncheckedUpdateWithoutTournament_lifecycle_eventsInput>;
+};
 export type tournamentsCreateNestedManyWithoutTournament_typesInput = {
     create?: Prisma.XOR<Prisma.tournamentsCreateWithoutTournament_typesInput, Prisma.tournamentsUncheckedCreateWithoutTournament_typesInput> | Prisma.tournamentsCreateWithoutTournament_typesInput[] | Prisma.tournamentsUncheckedCreateWithoutTournament_typesInput[];
     connectOrCreate?: Prisma.tournamentsCreateOrConnectWithoutTournament_typesInput | Prisma.tournamentsCreateOrConnectWithoutTournament_typesInput[];
@@ -1061,6 +1180,10 @@ export type tournamentsCreateWithoutAssociationsInput = {
     description?: string | null;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1087,6 +1210,7 @@ export type tournamentsCreateWithoutAssociationsInput = {
     tournament_referees?: Prisma.tournament_refereesCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsCreateNestedManyWithoutTournamentsInput;
     users: Prisma.usersCreateNestedOneWithoutTournamentsInput;
     tournament_types: Prisma.tournament_typesCreateNestedOneWithoutTournamentsInput;
 };
@@ -1097,6 +1221,10 @@ export type tournamentsUncheckedCreateWithoutAssociationsInput = {
     tournament_type_id: bigint | number;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1124,6 +1252,7 @@ export type tournamentsUncheckedCreateWithoutAssociationsInput = {
     tournament_referees?: Prisma.tournament_refereesUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedCreateNestedManyWithoutTournamentsInput;
 };
 export type tournamentsCreateOrConnectWithoutAssociationsInput = {
     where: Prisma.tournamentsWhereUniqueInput;
@@ -1157,6 +1286,10 @@ export type tournamentsScalarWhereInput = {
     tournament_type_id?: Prisma.BigIntFilter<"tournaments"> | bigint | number;
     sport_type?: Prisma.StringFilter<"tournaments"> | string;
     modality?: Prisma.StringFilter<"tournaments"> | string;
+    category_name?: Prisma.StringFilter<"tournaments"> | string;
+    category_min_age?: Prisma.IntNullableFilter<"tournaments"> | number | null;
+    category_max_age?: Prisma.IntNullableFilter<"tournaments"> | number | null;
+    category_gender?: Prisma.StringFilter<"tournaments"> | string;
     start_date?: Prisma.DateTimeFilter<"tournaments"> | Date | string;
     end_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
     registration_start_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
@@ -1187,6 +1320,10 @@ export type tournamentsCreateWithoutTournament_administratorsInput = {
     description?: string | null;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1212,6 +1349,7 @@ export type tournamentsCreateWithoutTournament_administratorsInput = {
     tournament_referees?: Prisma.tournament_refereesCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsCreateNestedManyWithoutTournamentsInput;
     associations: Prisma.associationsCreateNestedOneWithoutTournamentsInput;
     users: Prisma.usersCreateNestedOneWithoutTournamentsInput;
     tournament_types: Prisma.tournament_typesCreateNestedOneWithoutTournamentsInput;
@@ -1224,6 +1362,10 @@ export type tournamentsUncheckedCreateWithoutTournament_administratorsInput = {
     tournament_type_id: bigint | number;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1250,6 +1392,7 @@ export type tournamentsUncheckedCreateWithoutTournament_administratorsInput = {
     tournament_referees?: Prisma.tournament_refereesUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedCreateNestedManyWithoutTournamentsInput;
 };
 export type tournamentsCreateOrConnectWithoutTournament_administratorsInput = {
     where: Prisma.tournamentsWhereUniqueInput;
@@ -1270,6 +1413,10 @@ export type tournamentsUpdateWithoutTournament_administratorsInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1295,6 +1442,7 @@ export type tournamentsUpdateWithoutTournament_administratorsInput = {
     tournament_referees?: Prisma.tournament_refereesUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUpdateManyWithoutTournamentsNestedInput;
     associations?: Prisma.associationsUpdateOneRequiredWithoutTournamentsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutTournamentsNestedInput;
     tournament_types?: Prisma.tournament_typesUpdateOneRequiredWithoutTournamentsNestedInput;
@@ -1307,6 +1455,10 @@ export type tournamentsUncheckedUpdateWithoutTournament_administratorsInput = {
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1333,6 +1485,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_administratorsInput = {
     tournament_referees?: Prisma.tournament_refereesUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedUpdateManyWithoutTournamentsNestedInput;
 };
 export type tournamentsCreateWithoutTournament_refereesInput = {
     id?: bigint | number;
@@ -1340,6 +1493,10 @@ export type tournamentsCreateWithoutTournament_refereesInput = {
     description?: string | null;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1365,6 +1522,7 @@ export type tournamentsCreateWithoutTournament_refereesInput = {
     tournament_administrators?: Prisma.tournament_administratorsCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsCreateNestedManyWithoutTournamentsInput;
     associations: Prisma.associationsCreateNestedOneWithoutTournamentsInput;
     users: Prisma.usersCreateNestedOneWithoutTournamentsInput;
     tournament_types: Prisma.tournament_typesCreateNestedOneWithoutTournamentsInput;
@@ -1377,6 +1535,10 @@ export type tournamentsUncheckedCreateWithoutTournament_refereesInput = {
     tournament_type_id: bigint | number;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1403,6 +1565,7 @@ export type tournamentsUncheckedCreateWithoutTournament_refereesInput = {
     tournament_administrators?: Prisma.tournament_administratorsUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedCreateNestedManyWithoutTournamentsInput;
 };
 export type tournamentsCreateOrConnectWithoutTournament_refereesInput = {
     where: Prisma.tournamentsWhereUniqueInput;
@@ -1423,6 +1586,10 @@ export type tournamentsUpdateWithoutTournament_refereesInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1448,6 +1615,7 @@ export type tournamentsUpdateWithoutTournament_refereesInput = {
     tournament_administrators?: Prisma.tournament_administratorsUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUpdateManyWithoutTournamentsNestedInput;
     associations?: Prisma.associationsUpdateOneRequiredWithoutTournamentsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutTournamentsNestedInput;
     tournament_types?: Prisma.tournament_typesUpdateOneRequiredWithoutTournamentsNestedInput;
@@ -1460,6 +1628,10 @@ export type tournamentsUncheckedUpdateWithoutTournament_refereesInput = {
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1486,6 +1658,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_refereesInput = {
     tournament_administrators?: Prisma.tournament_administratorsUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedUpdateManyWithoutTournamentsNestedInput;
 };
 export type tournamentsCreateWithoutTournament_sponsorsInput = {
     id?: bigint | number;
@@ -1493,6 +1666,10 @@ export type tournamentsCreateWithoutTournament_sponsorsInput = {
     description?: string | null;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1518,6 +1695,7 @@ export type tournamentsCreateWithoutTournament_sponsorsInput = {
     tournament_administrators?: Prisma.tournament_administratorsCreateNestedManyWithoutTournamentsInput;
     tournament_referees?: Prisma.tournament_refereesCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsCreateNestedManyWithoutTournamentsInput;
     associations: Prisma.associationsCreateNestedOneWithoutTournamentsInput;
     users: Prisma.usersCreateNestedOneWithoutTournamentsInput;
     tournament_types: Prisma.tournament_typesCreateNestedOneWithoutTournamentsInput;
@@ -1530,6 +1708,10 @@ export type tournamentsUncheckedCreateWithoutTournament_sponsorsInput = {
     tournament_type_id: bigint | number;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1556,6 +1738,7 @@ export type tournamentsUncheckedCreateWithoutTournament_sponsorsInput = {
     tournament_administrators?: Prisma.tournament_administratorsUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_referees?: Prisma.tournament_refereesUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedCreateNestedManyWithoutTournamentsInput;
 };
 export type tournamentsCreateOrConnectWithoutTournament_sponsorsInput = {
     where: Prisma.tournamentsWhereUniqueInput;
@@ -1576,6 +1759,10 @@ export type tournamentsUpdateWithoutTournament_sponsorsInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1601,6 +1788,7 @@ export type tournamentsUpdateWithoutTournament_sponsorsInput = {
     tournament_administrators?: Prisma.tournament_administratorsUpdateManyWithoutTournamentsNestedInput;
     tournament_referees?: Prisma.tournament_refereesUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUpdateManyWithoutTournamentsNestedInput;
     associations?: Prisma.associationsUpdateOneRequiredWithoutTournamentsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutTournamentsNestedInput;
     tournament_types?: Prisma.tournament_typesUpdateOneRequiredWithoutTournamentsNestedInput;
@@ -1613,6 +1801,10 @@ export type tournamentsUncheckedUpdateWithoutTournament_sponsorsInput = {
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1639,6 +1831,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_sponsorsInput = {
     tournament_administrators?: Prisma.tournament_administratorsUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_referees?: Prisma.tournament_refereesUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedUpdateManyWithoutTournamentsNestedInput;
 };
 export type tournamentsCreateWithoutTournament_team_registrationsInput = {
     id?: bigint | number;
@@ -1646,6 +1839,10 @@ export type tournamentsCreateWithoutTournament_team_registrationsInput = {
     description?: string | null;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1671,6 +1868,7 @@ export type tournamentsCreateWithoutTournament_team_registrationsInput = {
     tournament_administrators?: Prisma.tournament_administratorsCreateNestedManyWithoutTournamentsInput;
     tournament_referees?: Prisma.tournament_refereesCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsCreateNestedManyWithoutTournamentsInput;
     associations: Prisma.associationsCreateNestedOneWithoutTournamentsInput;
     users: Prisma.usersCreateNestedOneWithoutTournamentsInput;
     tournament_types: Prisma.tournament_typesCreateNestedOneWithoutTournamentsInput;
@@ -1683,6 +1881,10 @@ export type tournamentsUncheckedCreateWithoutTournament_team_registrationsInput 
     tournament_type_id: bigint | number;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1709,6 +1911,7 @@ export type tournamentsUncheckedCreateWithoutTournament_team_registrationsInput 
     tournament_administrators?: Prisma.tournament_administratorsUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_referees?: Prisma.tournament_refereesUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedCreateNestedManyWithoutTournamentsInput;
 };
 export type tournamentsCreateOrConnectWithoutTournament_team_registrationsInput = {
     where: Prisma.tournamentsWhereUniqueInput;
@@ -1729,6 +1932,10 @@ export type tournamentsUpdateWithoutTournament_team_registrationsInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1754,6 +1961,7 @@ export type tournamentsUpdateWithoutTournament_team_registrationsInput = {
     tournament_administrators?: Prisma.tournament_administratorsUpdateManyWithoutTournamentsNestedInput;
     tournament_referees?: Prisma.tournament_refereesUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUpdateManyWithoutTournamentsNestedInput;
     associations?: Prisma.associationsUpdateOneRequiredWithoutTournamentsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutTournamentsNestedInput;
     tournament_types?: Prisma.tournament_typesUpdateOneRequiredWithoutTournamentsNestedInput;
@@ -1766,6 +1974,10 @@ export type tournamentsUncheckedUpdateWithoutTournament_team_registrationsInput 
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1792,13 +2004,18 @@ export type tournamentsUncheckedUpdateWithoutTournament_team_registrationsInput 
     tournament_administrators?: Prisma.tournament_administratorsUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_referees?: Prisma.tournament_refereesUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedUpdateManyWithoutTournamentsNestedInput;
 };
-export type tournamentsCreateWithoutTournament_typesInput = {
+export type tournamentsCreateWithoutTournament_lifecycle_eventsInput = {
     id?: bigint | number;
     name: string;
     description?: string | null;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1827,14 +2044,20 @@ export type tournamentsCreateWithoutTournament_typesInput = {
     tournament_team_registrations?: Prisma.tournament_team_registrationsCreateNestedManyWithoutTournamentsInput;
     associations: Prisma.associationsCreateNestedOneWithoutTournamentsInput;
     users: Prisma.usersCreateNestedOneWithoutTournamentsInput;
+    tournament_types: Prisma.tournament_typesCreateNestedOneWithoutTournamentsInput;
 };
-export type tournamentsUncheckedCreateWithoutTournament_typesInput = {
+export type tournamentsUncheckedCreateWithoutTournament_lifecycle_eventsInput = {
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
     description?: string | null;
+    tournament_type_id: bigint | number;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1862,6 +2085,179 @@ export type tournamentsUncheckedCreateWithoutTournament_typesInput = {
     tournament_referees?: Prisma.tournament_refereesUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutTournamentsInput;
+};
+export type tournamentsCreateOrConnectWithoutTournament_lifecycle_eventsInput = {
+    where: Prisma.tournamentsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.tournamentsCreateWithoutTournament_lifecycle_eventsInput, Prisma.tournamentsUncheckedCreateWithoutTournament_lifecycle_eventsInput>;
+};
+export type tournamentsUpsertWithoutTournament_lifecycle_eventsInput = {
+    update: Prisma.XOR<Prisma.tournamentsUpdateWithoutTournament_lifecycle_eventsInput, Prisma.tournamentsUncheckedUpdateWithoutTournament_lifecycle_eventsInput>;
+    create: Prisma.XOR<Prisma.tournamentsCreateWithoutTournament_lifecycle_eventsInput, Prisma.tournamentsUncheckedCreateWithoutTournament_lifecycle_eventsInput>;
+    where?: Prisma.tournamentsWhereInput;
+};
+export type tournamentsUpdateToOneWithWhereWithoutTournament_lifecycle_eventsInput = {
+    where?: Prisma.tournamentsWhereInput;
+    data: Prisma.XOR<Prisma.tournamentsUpdateWithoutTournament_lifecycle_eventsInput, Prisma.tournamentsUncheckedUpdateWithoutTournament_lifecycle_eventsInput>;
+};
+export type tournamentsUpdateWithoutTournament_lifecycle_eventsInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
+    start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
+    grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    third_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    max_teams?: Prisma.IntFieldUpdateOperationsInput | number;
+    min_players_per_team?: Prisma.IntFieldUpdateOperationsInput | number;
+    max_players_per_team?: Prisma.IntFieldUpdateOperationsInput | number;
+    location_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    location_address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rules_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rules_content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    phase?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    tournament_administrators?: Prisma.tournament_administratorsUpdateManyWithoutTournamentsNestedInput;
+    tournament_referees?: Prisma.tournament_refereesUpdateManyWithoutTournamentsNestedInput;
+    tournament_sponsors?: Prisma.tournament_sponsorsUpdateManyWithoutTournamentsNestedInput;
+    tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateManyWithoutTournamentsNestedInput;
+    associations?: Prisma.associationsUpdateOneRequiredWithoutTournamentsNestedInput;
+    users?: Prisma.usersUpdateOneRequiredWithoutTournamentsNestedInput;
+    tournament_types?: Prisma.tournament_typesUpdateOneRequiredWithoutTournamentsNestedInput;
+};
+export type tournamentsUncheckedUpdateWithoutTournament_lifecycle_eventsInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
+    start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
+    grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    third_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    max_teams?: Prisma.IntFieldUpdateOperationsInput | number;
+    min_players_per_team?: Prisma.IntFieldUpdateOperationsInput | number;
+    max_players_per_team?: Prisma.IntFieldUpdateOperationsInput | number;
+    location_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    location_address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rules_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rules_content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    phase?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
+    created_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    tournament_administrators?: Prisma.tournament_administratorsUncheckedUpdateManyWithoutTournamentsNestedInput;
+    tournament_referees?: Prisma.tournament_refereesUncheckedUpdateManyWithoutTournamentsNestedInput;
+    tournament_sponsors?: Prisma.tournament_sponsorsUncheckedUpdateManyWithoutTournamentsNestedInput;
+    tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsNestedInput;
+};
+export type tournamentsCreateWithoutTournament_typesInput = {
+    id?: bigint | number;
+    name: string;
+    description?: string | null;
+    sport_type: string;
+    modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
+    start_date: Date | string;
+    end_date?: Date | string | null;
+    registration_start_date?: Date | string | null;
+    registration_end_date?: Date | string | null;
+    registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    currency_code?: string;
+    grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    third_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    max_teams: number;
+    min_players_per_team?: number;
+    max_players_per_team: number;
+    location_name?: string | null;
+    location_address?: string | null;
+    rules_url?: string | null;
+    rules_content?: string | null;
+    photo_url?: string | null;
+    photo_public_id?: string | null;
+    phase?: string;
+    status?: string;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    tournament_administrators?: Prisma.tournament_administratorsCreateNestedManyWithoutTournamentsInput;
+    tournament_referees?: Prisma.tournament_refereesCreateNestedManyWithoutTournamentsInput;
+    tournament_sponsors?: Prisma.tournament_sponsorsCreateNestedManyWithoutTournamentsInput;
+    tournament_team_registrations?: Prisma.tournament_team_registrationsCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsCreateNestedManyWithoutTournamentsInput;
+    associations: Prisma.associationsCreateNestedOneWithoutTournamentsInput;
+    users: Prisma.usersCreateNestedOneWithoutTournamentsInput;
+};
+export type tournamentsUncheckedCreateWithoutTournament_typesInput = {
+    id?: bigint | number;
+    association_id: bigint | number;
+    name: string;
+    description?: string | null;
+    sport_type: string;
+    modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
+    start_date: Date | string;
+    end_date?: Date | string | null;
+    registration_start_date?: Date | string | null;
+    registration_end_date?: Date | string | null;
+    registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    currency_code?: string;
+    grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    third_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    max_teams: number;
+    min_players_per_team?: number;
+    max_players_per_team: number;
+    location_name?: string | null;
+    location_address?: string | null;
+    rules_url?: string | null;
+    rules_content?: string | null;
+    photo_url?: string | null;
+    photo_public_id?: string | null;
+    phase?: string;
+    status?: string;
+    created_by: bigint | number;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    tournament_administrators?: Prisma.tournament_administratorsUncheckedCreateNestedManyWithoutTournamentsInput;
+    tournament_referees?: Prisma.tournament_refereesUncheckedCreateNestedManyWithoutTournamentsInput;
+    tournament_sponsors?: Prisma.tournament_sponsorsUncheckedCreateNestedManyWithoutTournamentsInput;
+    tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedCreateNestedManyWithoutTournamentsInput;
 };
 export type tournamentsCreateOrConnectWithoutTournament_typesInput = {
     where: Prisma.tournamentsWhereUniqueInput;
@@ -1890,6 +2286,10 @@ export type tournamentsCreateWithoutUsersInput = {
     description?: string | null;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1916,6 +2316,7 @@ export type tournamentsCreateWithoutUsersInput = {
     tournament_referees?: Prisma.tournament_refereesCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsCreateNestedManyWithoutTournamentsInput;
     associations: Prisma.associationsCreateNestedOneWithoutTournamentsInput;
     tournament_types: Prisma.tournament_typesCreateNestedOneWithoutTournamentsInput;
 };
@@ -1927,6 +2328,10 @@ export type tournamentsUncheckedCreateWithoutUsersInput = {
     tournament_type_id: bigint | number;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -1953,6 +2358,7 @@ export type tournamentsUncheckedCreateWithoutUsersInput = {
     tournament_referees?: Prisma.tournament_refereesUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedCreateNestedManyWithoutTournamentsInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutTournamentsInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedCreateNestedManyWithoutTournamentsInput;
 };
 export type tournamentsCreateOrConnectWithoutUsersInput = {
     where: Prisma.tournamentsWhereUniqueInput;
@@ -1982,6 +2388,10 @@ export type tournamentsCreateManyAssociationsInput = {
     tournament_type_id: bigint | number;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -2012,6 +2422,10 @@ export type tournamentsUpdateWithoutAssociationsInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2038,6 +2452,7 @@ export type tournamentsUpdateWithoutAssociationsInput = {
     tournament_referees?: Prisma.tournament_refereesUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUpdateManyWithoutTournamentsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutTournamentsNestedInput;
     tournament_types?: Prisma.tournament_typesUpdateOneRequiredWithoutTournamentsNestedInput;
 };
@@ -2048,6 +2463,10 @@ export type tournamentsUncheckedUpdateWithoutAssociationsInput = {
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2075,6 +2494,7 @@ export type tournamentsUncheckedUpdateWithoutAssociationsInput = {
     tournament_referees?: Prisma.tournament_refereesUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedUpdateManyWithoutTournamentsNestedInput;
 };
 export type tournamentsUncheckedUpdateManyWithoutAssociationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -2083,6 +2503,10 @@ export type tournamentsUncheckedUpdateManyWithoutAssociationsInput = {
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2114,6 +2538,10 @@ export type tournamentsCreateManyTournament_typesInput = {
     description?: string | null;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -2144,6 +2572,10 @@ export type tournamentsUpdateWithoutTournament_typesInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2170,6 +2602,7 @@ export type tournamentsUpdateWithoutTournament_typesInput = {
     tournament_referees?: Prisma.tournament_refereesUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUpdateManyWithoutTournamentsNestedInput;
     associations?: Prisma.associationsUpdateOneRequiredWithoutTournamentsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutTournamentsNestedInput;
 };
@@ -2180,6 +2613,10 @@ export type tournamentsUncheckedUpdateWithoutTournament_typesInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2207,6 +2644,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_typesInput = {
     tournament_referees?: Prisma.tournament_refereesUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedUpdateManyWithoutTournamentsNestedInput;
 };
 export type tournamentsUncheckedUpdateManyWithoutTournament_typesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -2215,6 +2653,10 @@ export type tournamentsUncheckedUpdateManyWithoutTournament_typesInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2247,6 +2689,10 @@ export type tournamentsCreateManyUsersInput = {
     tournament_type_id: bigint | number;
     sport_type: string;
     modality: string;
+    category_name?: string;
+    category_min_age?: number | null;
+    category_max_age?: number | null;
+    category_gender?: string;
     start_date: Date | string;
     end_date?: Date | string | null;
     registration_start_date?: Date | string | null;
@@ -2276,6 +2722,10 @@ export type tournamentsUpdateWithoutUsersInput = {
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2302,6 +2752,7 @@ export type tournamentsUpdateWithoutUsersInput = {
     tournament_referees?: Prisma.tournament_refereesUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUpdateManyWithoutTournamentsNestedInput;
     associations?: Prisma.associationsUpdateOneRequiredWithoutTournamentsNestedInput;
     tournament_types?: Prisma.tournament_typesUpdateOneRequiredWithoutTournamentsNestedInput;
 };
@@ -2313,6 +2764,10 @@ export type tournamentsUncheckedUpdateWithoutUsersInput = {
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2339,6 +2794,7 @@ export type tournamentsUncheckedUpdateWithoutUsersInput = {
     tournament_referees?: Prisma.tournament_refereesUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_sponsors?: Prisma.tournament_sponsorsUncheckedUpdateManyWithoutTournamentsNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedUpdateManyWithoutTournamentsNestedInput;
 };
 export type tournamentsUncheckedUpdateManyWithoutUsersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -2348,6 +2804,10 @@ export type tournamentsUncheckedUpdateManyWithoutUsersInput = {
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    category_min_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_max_age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    category_gender?: Prisma.StringFieldUpdateOperationsInput | string;
     start_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2376,12 +2836,14 @@ export type TournamentsCountOutputType = {
     tournament_referees: number;
     tournament_sponsors: number;
     tournament_team_registrations: number;
+    tournament_lifecycle_events: number;
 };
 export type TournamentsCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     tournament_administrators?: boolean | TournamentsCountOutputTypeCountTournament_administratorsArgs;
     tournament_referees?: boolean | TournamentsCountOutputTypeCountTournament_refereesArgs;
     tournament_sponsors?: boolean | TournamentsCountOutputTypeCountTournament_sponsorsArgs;
     tournament_team_registrations?: boolean | TournamentsCountOutputTypeCountTournament_team_registrationsArgs;
+    tournament_lifecycle_events?: boolean | TournamentsCountOutputTypeCountTournament_lifecycle_eventsArgs;
 };
 export type TournamentsCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.TournamentsCountOutputTypeSelect<ExtArgs> | null;
@@ -2398,6 +2860,9 @@ export type TournamentsCountOutputTypeCountTournament_sponsorsArgs<ExtArgs exten
 export type TournamentsCountOutputTypeCountTournament_team_registrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.tournament_team_registrationsWhereInput;
 };
+export type TournamentsCountOutputTypeCountTournament_lifecycle_eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.tournament_lifecycle_eventsWhereInput;
+};
 export type tournamentsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     association_id?: boolean;
@@ -2406,6 +2871,10 @@ export type tournamentsSelect<ExtArgs extends runtime.Types.Extensions.InternalA
     tournament_type_id?: boolean;
     sport_type?: boolean;
     modality?: boolean;
+    category_name?: boolean;
+    category_min_age?: boolean;
+    category_max_age?: boolean;
+    category_gender?: boolean;
     start_date?: boolean;
     end_date?: boolean;
     registration_start_date?: boolean;
@@ -2433,6 +2902,7 @@ export type tournamentsSelect<ExtArgs extends runtime.Types.Extensions.InternalA
     tournament_referees?: boolean | Prisma.tournaments$tournament_refereesArgs<ExtArgs>;
     tournament_sponsors?: boolean | Prisma.tournaments$tournament_sponsorsArgs<ExtArgs>;
     tournament_team_registrations?: boolean | Prisma.tournaments$tournament_team_registrationsArgs<ExtArgs>;
+    tournament_lifecycle_events?: boolean | Prisma.tournaments$tournament_lifecycle_eventsArgs<ExtArgs>;
     associations?: boolean | Prisma.associationsDefaultArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
     tournament_types?: boolean | Prisma.tournament_typesDefaultArgs<ExtArgs>;
@@ -2446,6 +2916,10 @@ export type tournamentsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
     tournament_type_id?: boolean;
     sport_type?: boolean;
     modality?: boolean;
+    category_name?: boolean;
+    category_min_age?: boolean;
+    category_max_age?: boolean;
+    category_gender?: boolean;
     start_date?: boolean;
     end_date?: boolean;
     registration_start_date?: boolean;
@@ -2481,6 +2955,10 @@ export type tournamentsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
     tournament_type_id?: boolean;
     sport_type?: boolean;
     modality?: boolean;
+    category_name?: boolean;
+    category_min_age?: boolean;
+    category_max_age?: boolean;
+    category_gender?: boolean;
     start_date?: boolean;
     end_date?: boolean;
     registration_start_date?: boolean;
@@ -2516,6 +2994,10 @@ export type tournamentsSelectScalar = {
     tournament_type_id?: boolean;
     sport_type?: boolean;
     modality?: boolean;
+    category_name?: boolean;
+    category_min_age?: boolean;
+    category_max_age?: boolean;
+    category_gender?: boolean;
     start_date?: boolean;
     end_date?: boolean;
     registration_start_date?: boolean;
@@ -2540,12 +3022,13 @@ export type tournamentsSelectScalar = {
     created_at?: boolean;
     updated_at?: boolean;
 };
-export type tournamentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "association_id" | "name" | "description" | "tournament_type_id" | "sport_type" | "modality" | "start_date" | "end_date" | "registration_start_date" | "registration_end_date" | "registration_fee" | "currency_code" | "grand_prize" | "second_prize" | "third_prize" | "max_teams" | "min_players_per_team" | "max_players_per_team" | "location_name" | "location_address" | "rules_url" | "rules_content" | "photo_url" | "photo_public_id" | "phase" | "status" | "created_by" | "created_at" | "updated_at", ExtArgs["result"]["tournaments"]>;
+export type tournamentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "association_id" | "name" | "description" | "tournament_type_id" | "sport_type" | "modality" | "category_name" | "category_min_age" | "category_max_age" | "category_gender" | "start_date" | "end_date" | "registration_start_date" | "registration_end_date" | "registration_fee" | "currency_code" | "grand_prize" | "second_prize" | "third_prize" | "max_teams" | "min_players_per_team" | "max_players_per_team" | "location_name" | "location_address" | "rules_url" | "rules_content" | "photo_url" | "photo_public_id" | "phase" | "status" | "created_by" | "created_at" | "updated_at", ExtArgs["result"]["tournaments"]>;
 export type tournamentsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     tournament_administrators?: boolean | Prisma.tournaments$tournament_administratorsArgs<ExtArgs>;
     tournament_referees?: boolean | Prisma.tournaments$tournament_refereesArgs<ExtArgs>;
     tournament_sponsors?: boolean | Prisma.tournaments$tournament_sponsorsArgs<ExtArgs>;
     tournament_team_registrations?: boolean | Prisma.tournaments$tournament_team_registrationsArgs<ExtArgs>;
+    tournament_lifecycle_events?: boolean | Prisma.tournaments$tournament_lifecycle_eventsArgs<ExtArgs>;
     associations?: boolean | Prisma.associationsDefaultArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
     tournament_types?: boolean | Prisma.tournament_typesDefaultArgs<ExtArgs>;
@@ -2568,6 +3051,7 @@ export type $tournamentsPayload<ExtArgs extends runtime.Types.Extensions.Interna
         tournament_referees: Prisma.$tournament_refereesPayload<ExtArgs>[];
         tournament_sponsors: Prisma.$tournament_sponsorsPayload<ExtArgs>[];
         tournament_team_registrations: Prisma.$tournament_team_registrationsPayload<ExtArgs>[];
+        tournament_lifecycle_events: Prisma.$tournament_lifecycle_eventsPayload<ExtArgs>[];
         associations: Prisma.$associationsPayload<ExtArgs>;
         users: Prisma.$usersPayload<ExtArgs>;
         tournament_types: Prisma.$tournament_typesPayload<ExtArgs>;
@@ -2580,6 +3064,10 @@ export type $tournamentsPayload<ExtArgs extends runtime.Types.Extensions.Interna
         tournament_type_id: bigint;
         sport_type: string;
         modality: string;
+        category_name: string;
+        category_min_age: number | null;
+        category_max_age: number | null;
+        category_gender: string;
         start_date: Date;
         end_date: Date | null;
         registration_start_date: Date | null;
@@ -2659,6 +3147,7 @@ export interface Prisma__tournamentsClient<T, Null = never, ExtArgs extends runt
     tournament_referees<T extends Prisma.tournaments$tournament_refereesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournaments$tournament_refereesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tournament_refereesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     tournament_sponsors<T extends Prisma.tournaments$tournament_sponsorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournaments$tournament_sponsorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tournament_sponsorsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     tournament_team_registrations<T extends Prisma.tournaments$tournament_team_registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournaments$tournament_team_registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    tournament_lifecycle_events<T extends Prisma.tournaments$tournament_lifecycle_eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournaments$tournament_lifecycle_eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tournament_lifecycle_eventsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     associations<T extends Prisma.associationsDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.associationsDefaultArgs<ExtArgs>>): Prisma.Prisma__associationsClient<runtime.Types.Result.GetResult<Prisma.$associationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     users<T extends Prisma.usersDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usersDefaultArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     tournament_types<T extends Prisma.tournament_typesDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_typesDefaultArgs<ExtArgs>>): Prisma.Prisma__tournament_typesClient<runtime.Types.Result.GetResult<Prisma.$tournament_typesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
@@ -2674,6 +3163,10 @@ export interface tournamentsFieldRefs {
     readonly tournament_type_id: Prisma.FieldRef<"tournaments", 'BigInt'>;
     readonly sport_type: Prisma.FieldRef<"tournaments", 'String'>;
     readonly modality: Prisma.FieldRef<"tournaments", 'String'>;
+    readonly category_name: Prisma.FieldRef<"tournaments", 'String'>;
+    readonly category_min_age: Prisma.FieldRef<"tournaments", 'Int'>;
+    readonly category_max_age: Prisma.FieldRef<"tournaments", 'Int'>;
+    readonly category_gender: Prisma.FieldRef<"tournaments", 'String'>;
     readonly start_date: Prisma.FieldRef<"tournaments", 'DateTime'>;
     readonly end_date: Prisma.FieldRef<"tournaments", 'DateTime'>;
     readonly registration_start_date: Prisma.FieldRef<"tournaments", 'DateTime'>;
@@ -2841,6 +3334,17 @@ export type tournaments$tournament_team_registrationsArgs<ExtArgs extends runtim
     take?: number;
     skip?: number;
     distinct?: Prisma.Tournament_team_registrationsScalarFieldEnum | Prisma.Tournament_team_registrationsScalarFieldEnum[];
+};
+export type tournaments$tournament_lifecycle_eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_lifecycle_eventsSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_lifecycle_eventsOmit<ExtArgs> | null;
+    include?: Prisma.tournament_lifecycle_eventsInclude<ExtArgs> | null;
+    where?: Prisma.tournament_lifecycle_eventsWhereInput;
+    orderBy?: Prisma.tournament_lifecycle_eventsOrderByWithRelationInput | Prisma.tournament_lifecycle_eventsOrderByWithRelationInput[];
+    cursor?: Prisma.tournament_lifecycle_eventsWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Tournament_lifecycle_eventsScalarFieldEnum | Prisma.Tournament_lifecycle_eventsScalarFieldEnum[];
 };
 export type tournamentsDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.tournamentsSelect<ExtArgs> | null;

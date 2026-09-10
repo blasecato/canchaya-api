@@ -11,74 +11,137 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PlayerMatchStatsService = void 0;
 const common_1 = require("@nestjs/common");
+const competition_access_service_1 = require("../authorization/competition-access.service");
 const prisma_service_1 = require("../prisma/prisma.service");
 let PlayerMatchStatsService = class PlayerMatchStatsService {
     prisma;
-    constructor(prisma) {
+    access;
+    constructor(prisma, access) {
         this.prisma = prisma;
+        this.access = access;
     }
-    create(createPlayerMatchStatDto) {
+    async create(requestingUserId, dto) {
+        const matchId = BigInt(dto.matchId);
+        const tournamentId = BigInt(dto.tournamentId);
+        const teamId = BigInt(dto.teamId);
+        const playerId = BigInt(dto.playerId);
+        await this.access.resolveMatchWriteAccess(requestingUserId, matchId);
+        await this.access.assertTournamentInPhases(tournamentId, ['in_progress'], 'Las estadísticas solo se pueden registrar mientras el torneo está En curso.');
+        await this.assertValidContext(matchId, tournamentId, teamId, playerId);
         return this.prisma.player_match_stats.create({
             data: {
-                match_id: BigInt(createPlayerMatchStatDto.matchId),
-                tournament_id: BigInt(createPlayerMatchStatDto.tournamentId),
-                team_id: BigInt(createPlayerMatchStatDto.teamId),
-                player_id: BigInt(createPlayerMatchStatDto.playerId),
-                goals: createPlayerMatchStatDto.goals,
-                assists: createPlayerMatchStatDto.assists,
-                yellow_cards: createPlayerMatchStatDto.yellowCards,
-                red_cards: createPlayerMatchStatDto.redCards,
-                minutes_played: createPlayerMatchStatDto.minutesPlayed,
+                match_id: matchId,
+                tournament_id: tournamentId,
+                team_id: teamId,
+                player_id: playerId,
+                goals: dto.goals,
+                assists: dto.assists,
+                yellow_cards: dto.yellowCards,
+                red_cards: dto.redCards,
+                minutes_played: dto.minutesPlayed,
             },
         });
     }
-    findAll() {
+    async findAll(requestingUserId) {
+        const scope = await this.access.findAccessibleTournamentScope(requestingUserId);
         return this.prisma.player_match_stats.findMany({
+            where: scope.tournamentIds === null
+                ? undefined
+                : { tournament_id: { in: scope.tournamentIds } },
             orderBy: { id: 'asc' },
         });
     }
-    async findOne(id) {
-        const playerMatchStat = await this.prisma.player_match_stats.findUnique({
-            where: { id },
-        });
-        if (!playerMatchStat) {
-            throw new common_1.NotFoundException(`No se encontró la estadística de partido con ID ${id}.`);
-        }
-        return playerMatchStat;
+    async findOne(id, requestingUserId) {
+        const stat = await this.findExisting(id);
+        await this.access.assertCanViewTournament(requestingUserId, stat.tournament_id);
+        return stat;
     }
-    async update(id, updatePlayerMatchStatDto) {
-        await this.findOne(id);
+    async update(id, requestingUserId, dto) {
+        const current = await this.findExisting(id);
+        const writeAccess = await this.access.resolveMatchWriteAccess(requestingUserId, current.match_id);
+        await this.access.assertTournamentInPhases(current.tournament_id, ['in_progress'], 'Las estadísticas quedan bloqueadas cuando el torneo no está En curso.');
+        if (writeAccess.access === 'main_referee' &&
+            [dto.matchId, dto.tournamentId, dto.teamId, dto.playerId].some((value) => value !== undefined)) {
+            throw new common_1.ForbiddenException('El árbitro principal no puede reasignar una estadística a otro partido, torneo, equipo o jugador.');
+        }
+        const matchId = dto.matchId !== undefined ? BigInt(dto.matchId) : current.match_id;
+        const tournamentId = dto.tournamentId !== undefined
+            ? BigInt(dto.tournamentId)
+            : current.tournament_id;
+        const teamId = dto.teamId !== undefined ? BigInt(dto.teamId) : current.team_id;
+        const playerId = dto.playerId !== undefined ? BigInt(dto.playerId) : current.player_id;
+        await this.access.assertTournamentInPhases(tournamentId, ['in_progress'], 'Las estadísticas solo se pueden mover a un torneo que esté En curso.');
+        if (matchId !== current.match_id) {
+            await this.access.resolveMatchWriteAccess(requestingUserId, matchId);
+        }
+        await this.assertValidContext(matchId, tournamentId, teamId, playerId);
         return this.prisma.player_match_stats.update({
             where: { id },
             data: {
-                match_id: updatePlayerMatchStatDto.matchId !== undefined
-                    ? BigInt(updatePlayerMatchStatDto.matchId)
-                    : undefined,
-                tournament_id: updatePlayerMatchStatDto.tournamentId !== undefined
-                    ? BigInt(updatePlayerMatchStatDto.tournamentId)
-                    : undefined,
-                team_id: updatePlayerMatchStatDto.teamId !== undefined
-                    ? BigInt(updatePlayerMatchStatDto.teamId)
-                    : undefined,
-                player_id: updatePlayerMatchStatDto.playerId !== undefined
-                    ? BigInt(updatePlayerMatchStatDto.playerId)
-                    : undefined,
-                goals: updatePlayerMatchStatDto.goals,
-                assists: updatePlayerMatchStatDto.assists,
-                yellow_cards: updatePlayerMatchStatDto.yellowCards,
-                red_cards: updatePlayerMatchStatDto.redCards,
-                minutes_played: updatePlayerMatchStatDto.minutesPlayed,
+                match_id: dto.matchId !== undefined ? matchId : undefined,
+                tournament_id: dto.tournamentId !== undefined ? tournamentId : undefined,
+                team_id: dto.teamId !== undefined ? teamId : undefined,
+                player_id: dto.playerId !== undefined ? playerId : undefined,
+                goals: dto.goals,
+                assists: dto.assists,
+                yellow_cards: dto.yellowCards,
+                red_cards: dto.redCards,
+                minutes_played: dto.minutesPlayed,
             },
         });
     }
-    async remove(id) {
-        await this.findOne(id);
+    async remove(id, requestingUserId) {
+        const stat = await this.findExisting(id);
+        await this.access.resolveMatchWriteAccess(requestingUserId, stat.match_id);
+        await this.access.assertTournamentInPhases(stat.tournament_id, ['in_progress'], 'Las estadísticas quedan bloqueadas cuando el torneo no está En curso.');
         return this.prisma.player_match_stats.delete({ where: { id } });
+    }
+    async findExisting(id) {
+        const stat = await this.prisma.player_match_stats.findUnique({
+            where: { id },
+        });
+        if (!stat) {
+            throw new common_1.NotFoundException(`No se encontró la estadística de partido con ID ${id.toString()}.`);
+        }
+        return stat;
+    }
+    async assertValidContext(matchId, tournamentId, teamId, playerId) {
+        const match = await this.prisma.matches.findUnique({
+            where: { id: matchId },
+            select: {
+                tournament_id: true,
+                home_team_id: true,
+                away_team_id: true,
+            },
+        });
+        if (!match) {
+            throw new common_1.NotFoundException(`No se encontró el partido con ID ${matchId.toString()}.`);
+        }
+        if (match.tournament_id !== tournamentId) {
+            throw new common_1.BadRequestException('El partido no pertenece al torneo indicado.');
+        }
+        if (teamId !== match.home_team_id && teamId !== match.away_team_id) {
+            throw new common_1.BadRequestException('El equipo indicado no participa en este partido.');
+        }
+        const rosterPlayer = await this.prisma.tournament_team_players.findUnique({
+            where: {
+                tournament_id_team_id_player_id: {
+                    tournament_id: tournamentId,
+                    team_id: teamId,
+                    player_id: playerId,
+                },
+            },
+            select: { registration_status: true },
+        });
+        if (!rosterPlayer || rosterPlayer.registration_status !== 'approved') {
+            throw new common_1.BadRequestException('El jugador debe estar aprobado en la plantilla del equipo para registrar estadísticas.');
+        }
     }
 };
 exports.PlayerMatchStatsService = PlayerMatchStatsService;
 exports.PlayerMatchStatsService = PlayerMatchStatsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        competition_access_service_1.CompetitionAccessService])
 ], PlayerMatchStatsService);
 //# sourceMappingURL=player-match-stats.service.js.map

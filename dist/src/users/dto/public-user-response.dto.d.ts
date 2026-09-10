@@ -1,3 +1,4 @@
+import { type UserGender } from '../user-gender.constants';
 export declare class PublicUserResponseDto {
     id: string;
     idNumber: string;
@@ -5,6 +6,7 @@ export declare class PublicUserResponseDto {
     fullName: string;
     birthDate: string;
     birthCity: string | null;
+    gender: UserGender | null;
     email: string;
     phone: string | null;
     photoUrl: string | null;

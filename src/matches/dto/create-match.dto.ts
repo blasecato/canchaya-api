@@ -73,6 +73,13 @@ export class CreateMatchDto {
   @IsIn(['scheduled', 'in_progress', 'played', 'postponed', 'cancelled'])
   status?: string;
 
+  @ApiPropertyOptional({ example: 120, minimum: 15, maximum: 1440 })
+  @IsOptionalNonNullable()
+  @IsInt()
+  @Min(15)
+  @Max(1440)
+  durationMinutes?: number;
+
   @ApiPropertyOptional({ example: 'Partido de apertura.', nullable: true })
   @IsOptional()
   @IsString()

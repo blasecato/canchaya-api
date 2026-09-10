@@ -14,6 +14,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { ROLE_CODES } from '../../auth/decorators/require-roles.decorator';
+import { USER_GENDERS, type UserGender } from '../user-gender.constants';
 
 export class UpdateUserProfileDto {
   @ApiPropertyOptional({ example: '1020304050' })
@@ -42,6 +43,11 @@ export class UpdateUserProfileDto {
   @Matches(/^\d{4}-\d{2}-\d{2}$/)
   @IsDateString({ strict: true, strictSeparator: true })
   birthDate?: string;
+
+  @ApiPropertyOptional({ enum: USER_GENDERS })
+  @IsOptional()
+  @IsIn(USER_GENDERS)
+  gender?: UserGender;
 
   @ApiPropertyOptional({ example: 'maria@example.com', format: 'email' })
   @IsOptional()

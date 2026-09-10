@@ -16,6 +16,7 @@ const prisma_service_1 = require("../prisma/prisma.service");
 const image_storage_service_1 = require("../uploads/image-storage.service");
 const association_response_mapper_1 = require("./association-response.mapper");
 const association_tournament_response_mapper_1 = require("./association-tournament-response.mapper");
+const tournament_lifecycle_constants_1 = require("../tournaments/tournament-lifecycle.constants");
 let AssociationsService = AssociationsService_1 = class AssociationsService {
     prisma;
     imageStorage;
@@ -187,7 +188,7 @@ let AssociationsService = AssociationsService_1 = class AssociationsService {
                 ...(scope === 'available'
                     ? {
                         status: 'active',
-                        phase: { notIn: [...association_tournament_response_mapper_1.AVAILABLE_TOURNAMENT_EXCLUDED_PHASES] },
+                        phase: { in: [...tournament_lifecycle_constants_1.PUBLIC_TOURNAMENT_PHASES] },
                     }
                     : {}),
             },
@@ -460,7 +461,9 @@ let AssociationsService = AssociationsService_1 = class AssociationsService {
             client.user_roles.findMany({
                 where: {
                     user_id: requestingUserId,
-                    role_code: { in: ['SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER'] },
+                    role_code: {
+                        in: ['SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER', 'REFEREE'],
+                    },
                 },
                 select: { role_code: true },
             }),
@@ -490,8 +493,7 @@ let AssociationsService = AssociationsService_1 = class AssociationsService {
             };
         }
         const permissionLevel = roleCodes.has('ASSOCIATION_ADMIN')
-            ? association.association_administrators[0]
-                ?.permission_level
+            ? association.association_administrators[0]?.permission_level
             : undefined;
         if (permissionLevel &&
             ['administrator', 'editor', 'viewer'].includes(permissionLevel)) {
@@ -503,7 +505,8 @@ let AssociationsService = AssociationsService_1 = class AssociationsService {
                 permissionLevel,
             };
         }
-        if (roleCodes.has('PLAYER') && association.status === 'active') {
+        if ((roleCodes.has('PLAYER') || roleCodes.has('REFEREE')) &&
+            association.status === 'active') {
             return {
                 canEdit: false,
                 canManageOwner: false,

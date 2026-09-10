@@ -3,6 +3,7 @@ import { Transform, Type, type TransformFnParams } from 'class-transformer';
 import {
   IsDateString,
   IsEmail,
+  IsIn,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -14,6 +15,7 @@ import {
   Matches,
 } from 'class-validator';
 import { IsBcryptPassword } from '../../common/decorators/is-bcrypt-password.decorator';
+import { USER_GENDERS, type UserGender } from '../user-gender.constants';
 
 const trim = ({ value }: TransformFnParams): unknown =>
   typeof value === 'string' ? value.trim() : value;
@@ -67,6 +69,10 @@ export class RegisterPlayerDto {
   @IsNotEmpty()
   @MaxLength(120)
   birthCity!: string;
+
+  @ApiProperty({ enum: USER_GENDERS, example: 'male' })
+  @IsIn(USER_GENDERS)
+  gender!: UserGender;
 
   @ApiProperty({ minLength: 8, writeOnly: true })
   @IsString()

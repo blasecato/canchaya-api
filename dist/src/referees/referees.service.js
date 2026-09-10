@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RefereesService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const ACTIVE_ASSIGNMENT_STATUSES = ['pending', 'accepted'];
 const refereeMatchSelect = {
     referee_role: true,
     assignment_status: true,
@@ -60,7 +61,7 @@ let RefereesService = class RefereesService {
                 ]
                 : undefined,
         };
-        const [referees, allActiveReferees, directedCounts, upcomingCounts, occupiedToday,] = await Promise.all([
+        const [referees, allActiveReferees, directedCounts, upcomingCounts, occupiedToday, availableTodayRows,] = await Promise.all([
             this.prisma.users.findMany({
                 where,
                 orderBy: [{ full_name: 'asc' }, { id: 'asc' }],
@@ -84,7 +85,7 @@ let RefereesService = class RefereesService {
             this.prisma.match_referees.groupBy({
                 by: ['referee_id'],
                 where: {
-                    assignment_status: { not: 'cancelled' },
+                    assignment_status: 'accepted',
                     matches: { status: 'played' },
                 },
                 _count: { _all: true },
@@ -92,7 +93,7 @@ let RefereesService = class RefereesService {
             this.prisma.match_referees.groupBy({
                 by: ['referee_id'],
                 where: {
-                    assignment_status: { not: 'cancelled' },
+                    assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
                     matches: {
                         status: { not: 'played' },
                         match_date: { gte: now },
@@ -102,10 +103,19 @@ let RefereesService = class RefereesService {
             }),
             this.prisma.match_referees.findMany({
                 where: {
-                    assignment_status: { not: 'cancelled' },
+                    assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
                     matches: {
                         match_date: { gte: startOfToday, lt: startOfTomorrow },
                     },
+                },
+                distinct: ['referee_id'],
+                select: { referee_id: true },
+            }),
+            this.prisma.referee_availability.findMany({
+                where: {
+                    status: 'active',
+                    starts_at: { lt: startOfTomorrow },
+                    ends_at: { gt: startOfToday },
                 },
                 distinct: ['referee_id'],
                 select: { referee_id: true },
@@ -120,7 +130,9 @@ let RefereesService = class RefereesService {
             item._count._all,
         ]));
         const occupiedIds = new Set(occupiedToday.map(({ referee_id }) => referee_id.toString()));
-        const availableToday = allActiveReferees.filter(({ id }) => !occupiedIds.has(id.toString())).length;
+        const declaredAvailableIds = new Set(availableTodayRows.map(({ referee_id }) => referee_id.toString()));
+        const availableToday = allActiveReferees.filter(({ id }) => declaredAvailableIds.has(id.toString()) &&
+            !occupiedIds.has(id.toString())).length;
         const items = referees.map((referee) => ({
             id: referee.id.toString(),
             fullName: referee.full_name,
@@ -131,7 +143,8 @@ let RefereesService = class RefereesService {
             photoUrl: referee.photo_url,
             directedMatches: directedByReferee.get(referee.id.toString()) ?? 0,
             upcomingMatches: upcomingByReferee.get(referee.id.toString()) ?? 0,
-            availableToday: !occupiedIds.has(referee.id.toString()),
+            availableToday: declaredAvailableIds.has(referee.id.toString()) &&
+                !occupiedIds.has(referee.id.toString()),
         }));
         return {
             items,
@@ -165,7 +178,9 @@ let RefereesService = class RefereesService {
             };
         const where = {
             referee_id: id,
-            assignment_status: { not: 'cancelled' },
+            assignment_status: query.kind === 'past'
+                ? 'accepted'
+                : { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
             matches: matchWhere,
         };
         const skip = (query.page - 1) * query.pageSize;
@@ -197,7 +212,73 @@ let RefereesService = class RefereesService {
             hasNextPage: skip + assignments.length < total,
         };
     }
-    async removeRole(id) {
+    async findAvailability(id, requestingUserId, query) {
+        const roles = await this.findRoleCodes(requestingUserId);
+        const isManager = roles.has('SUPER_ADMIN') || roles.has('ASSOCIATION_ADMIN');
+        if (id !== requestingUserId && !isManager) {
+            throw new common_1.ForbiddenException('Como árbitro solamente puedes consultar tu propia disponibilidad.');
+        }
+        await this.assertRefereeExists(id);
+        const from = query.from ? new Date(query.from) : new Date();
+        const to = query.to ? new Date(query.to) : undefined;
+        if (to && to <= from) {
+            throw new common_1.BadRequestException('La fecha final del filtro debe ser posterior a la inicial.');
+        }
+        const rows = await this.prisma.referee_availability.findMany({
+            where: {
+                referee_id: id,
+                status: 'active',
+                ends_at: { gte: from },
+                starts_at: to ? { lte: to } : undefined,
+            },
+            orderBy: [{ starts_at: 'asc' }, { id: 'asc' }],
+        });
+        return rows.map((row) => this.toAvailabilityResponse(row));
+    }
+    async createAvailability(refereeId, dto) {
+        await this.assertRefereeExists(refereeId);
+        const startsAt = new Date(dto.startsAt);
+        const endsAt = new Date(dto.endsAt);
+        this.assertValidAvailabilityRange(startsAt, endsAt);
+        await this.assertAvailabilityDoesNotOverlap(refereeId, startsAt, endsAt);
+        const row = await this.prisma.referee_availability.create({
+            data: {
+                referee_id: refereeId,
+                starts_at: startsAt,
+                ends_at: endsAt,
+                notes: dto.notes?.trim() || null,
+            },
+        });
+        return this.toAvailabilityResponse(row);
+    }
+    async updateAvailability(refereeId, availabilityId, dto) {
+        const current = await this.findOwnedAvailability(refereeId, availabilityId);
+        await this.assertAvailabilityNotCommitted(current);
+        const startsAt = dto.startsAt ? new Date(dto.startsAt) : current.starts_at;
+        const endsAt = dto.endsAt ? new Date(dto.endsAt) : current.ends_at;
+        this.assertValidAvailabilityRange(startsAt, endsAt);
+        await this.assertAvailabilityDoesNotOverlap(refereeId, startsAt, endsAt, availabilityId);
+        const row = await this.prisma.referee_availability.update({
+            where: { id: availabilityId },
+            data: {
+                starts_at: dto.startsAt ? startsAt : undefined,
+                ends_at: dto.endsAt ? endsAt : undefined,
+                notes: dto.notes !== undefined ? dto.notes.trim() || null : undefined,
+                updated_at: new Date(),
+            },
+        });
+        return this.toAvailabilityResponse(row);
+    }
+    async removeAvailability(refereeId, availabilityId) {
+        const current = await this.findOwnedAvailability(refereeId, availabilityId);
+        await this.assertAvailabilityNotCommitted(current);
+        await this.prisma.referee_availability.update({
+            where: { id: availabilityId },
+            data: { status: 'cancelled', updated_at: new Date() },
+        });
+        return { message: 'El bloque de disponibilidad fue eliminado.' };
+    }
+    async removeRole(id, actorId) {
         const refereeRole = await this.prisma.user_roles.findUnique({
             where: { user_id_role_code: { user_id: id, role_code: 'REFEREE' } },
             select: { user_id: true },
@@ -206,31 +287,82 @@ let RefereesService = class RefereesService {
             throw new common_1.NotFoundException(`El árbitro con ID ${id.toString()} no existe.`);
         }
         const now = new Date();
-        await this.prisma.$transaction([
-            this.prisma.user_roles.delete({
+        const futureAssignments = await this.prisma.match_referees.findMany({
+            where: {
+                referee_id: id,
+                assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
+                matches: { status: { not: 'played' }, match_date: { gte: now } },
+            },
+            select: {
+                match_id: true,
+                assignment_status: true,
+                assigned_by: true,
+            },
+        });
+        await this.prisma.$transaction(async (transaction) => {
+            await transaction.user_roles.delete({
                 where: { user_id_role_code: { user_id: id, role_code: 'REFEREE' } },
-            }),
-            this.prisma.user_roles.upsert({
+            });
+            await transaction.user_roles.upsert({
                 where: { user_id_role_code: { user_id: id, role_code: 'PLAYER' } },
                 create: { user_id: id, role_code: 'PLAYER' },
                 update: {},
-            }),
-            this.prisma.tournament_referees.updateMany({
+            });
+            await transaction.tournament_referees.updateMany({
                 where: { user_id: id, status: 'active' },
                 data: { status: 'inactive' },
-            }),
-            this.prisma.match_referees.updateMany({
+            });
+            await transaction.match_referees.updateMany({
                 where: {
                     referee_id: id,
-                    assignment_status: { not: 'cancelled' },
+                    assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
                     matches: {
                         status: { not: 'played' },
                         match_date: { gte: now },
                     },
                 },
-                data: { assignment_status: 'cancelled' },
-            }),
-            this.prisma.notifications.create({
+                data: {
+                    assignment_status: 'cancelled',
+                    responded_at: now,
+                    response_notes: 'El rol de árbitro fue retirado.',
+                    updated_at: now,
+                },
+            });
+            if (futureAssignments.length > 0) {
+                await transaction.referee_assignment_events.createMany({
+                    data: futureAssignments.map((assignment) => ({
+                        match_id: assignment.match_id,
+                        referee_id: id,
+                        actor_user_id: actorId,
+                        event_type: 'cancelled',
+                        previous_status: assignment.assignment_status,
+                        new_status: 'cancelled',
+                        reason: 'El rol de árbitro fue retirado.',
+                    })),
+                });
+                const managerIds = new Set(futureAssignments
+                    .map(({ assigned_by }) => assigned_by)
+                    .filter((value) => value !== null));
+                managerIds.delete(actorId);
+                if (managerIds.size > 0) {
+                    await transaction.notifications.createMany({
+                        data: [...managerIds].map((managerId) => ({
+                            user_id: managerId,
+                            type: 'match',
+                            title: 'Asignaciones arbitrales canceladas',
+                            message: `Se retiró el rol del árbitro y se cancelaron ${futureAssignments.length} asignaciones futuras. Debes gestionar sus reemplazos.`,
+                            entity_type: 'user_roles',
+                            entity_id: id.toString(),
+                            metadata: {
+                                refereeId: id.toString(),
+                                actionUrl: '/referees',
+                                actionLabel: 'Gestionar reemplazos',
+                            },
+                        })),
+                    });
+                }
+            }
+            await transaction.notifications.create({
                 data: {
                     user_id: id,
                     type: 'account',
@@ -245,8 +377,8 @@ let RefereesService = class RefereesService {
                         actionLabel: 'Ver mi perfil',
                     },
                 },
-            }),
-        ]);
+            });
+        });
         const roles = await this.prisma.user_roles.findMany({
             where: { user_id: id },
             orderBy: { role_code: 'asc' },
@@ -264,6 +396,79 @@ let RefereesService = class RefereesService {
             select: { role_code: true },
         });
         return new Set(roles.map(({ role_code }) => role_code));
+    }
+    async assertRefereeExists(refereeId) {
+        const referee = await this.prisma.users.findFirst({
+            where: {
+                id: refereeId,
+                status: 'active',
+                user_roles: { some: { role_code: 'REFEREE' } },
+            },
+            select: { id: true },
+        });
+        if (!referee) {
+            throw new common_1.NotFoundException('El árbitro solicitado no existe o no está activo.');
+        }
+    }
+    assertValidAvailabilityRange(startsAt, endsAt) {
+        if (endsAt <= startsAt) {
+            throw new common_1.BadRequestException('La hora final debe ser posterior a la hora inicial.');
+        }
+        if (endsAt <= new Date()) {
+            throw new common_1.BadRequestException('La disponibilidad debe finalizar en una fecha futura.');
+        }
+    }
+    async assertAvailabilityDoesNotOverlap(refereeId, startsAt, endsAt, excludedId) {
+        const overlap = await this.prisma.referee_availability.findFirst({
+            where: {
+                referee_id: refereeId,
+                id: excludedId ? { not: excludedId } : undefined,
+                status: 'active',
+                starts_at: { lt: endsAt },
+                ends_at: { gt: startsAt },
+            },
+            select: { id: true },
+        });
+        if (overlap) {
+            throw new common_1.ConflictException('Este horario se cruza con otro bloque de disponibilidad registrado.');
+        }
+    }
+    async findOwnedAvailability(refereeId, availabilityId) {
+        const row = await this.prisma.referee_availability.findFirst({
+            where: { id: availabilityId, referee_id: refereeId, status: 'active' },
+        });
+        if (!row) {
+            throw new common_1.NotFoundException('El bloque de disponibilidad no existe o ya fue eliminado.');
+        }
+        return row;
+    }
+    async assertAvailabilityNotCommitted(availability) {
+        const assignments = await this.prisma.match_referees.findMany({
+            where: {
+                referee_id: availability.referee_id,
+                assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
+                matches: {
+                    match_date: {
+                        gte: availability.starts_at,
+                        lt: availability.ends_at,
+                    },
+                },
+            },
+            select: { match_id: true, matches: { select: { match_date: true } } },
+        });
+        const committed = assignments.find(({ matches }) => matches.match_date ? matches.match_date < availability.ends_at : false);
+        if (committed) {
+            throw new common_1.BadRequestException(`Este bloque respalda una asignación activa (partido ${committed.match_id.toString()}) y no se puede modificar ni eliminar. Primero reemplaza o cancela la asignación.`);
+        }
+    }
+    toAvailabilityResponse(row) {
+        return {
+            id: row.id.toString(),
+            startsAt: row.starts_at.toISOString(),
+            endsAt: row.ends_at.toISOString(),
+            notes: row.notes,
+            status: row.status,
+        };
     }
     toMatchResponse(assignment) {
         const match = assignment.matches;

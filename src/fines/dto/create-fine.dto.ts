@@ -65,8 +65,4 @@ export class CreateFineDto {
   @IsOptional()
   @IsString()
   notes?: string | null;
-
-  @ApiProperty({ example: '7' })
-  @IsBigIntString()
-  createdBy: string;
 }

@@ -9,5 +9,6 @@ export declare class CreateMatchDto {
     homeScore?: number | null;
     awayScore?: number | null;
     status?: string;
+    durationMinutes?: number;
     notes?: string | null;
 }

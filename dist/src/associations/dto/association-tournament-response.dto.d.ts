@@ -1,3 +1,4 @@
+import { type TournamentCategoryGender } from '../../tournaments/tournament-category.constants';
 export declare class AssociationTournamentTypeResponseDto {
     id: string;
     name: string;
@@ -32,6 +33,10 @@ export declare class AssociationTournamentResponseDto {
     tournamentType: AssociationTournamentTypeResponseDto;
     sportType: string;
     modality: string;
+    categoryName: string;
+    categoryMinAge: number | null;
+    categoryMaxAge: number | null;
+    categoryGender: TournamentCategoryGender;
     startDate: string;
     endDate: string | null;
     registrationStartDate: string | null;
@@ -51,7 +56,7 @@ export declare class AssociationTournamentResponseDto {
     rulesContent: string | null;
     photoUrl: string | null;
     sponsors: TournamentSponsorResponseDto[];
-    phase: 'draft' | 'registration' | 'in_progress' | 'finished' | 'cancelled';
+    phase: 'draft' | 'registration' | 'validation' | 'scheduled' | 'in_progress' | 'finished' | 'archived' | 'cancelled';
     status: 'active' | 'inactive';
     createdAt: string;
     updatedAt: string;

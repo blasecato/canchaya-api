@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const notification_events_1 = require("./notification-events");
 let NotificationsService = class NotificationsService {
     prisma;
     constructor(prisma) {
@@ -26,12 +27,14 @@ let NotificationsService = class NotificationsService {
         return notifications.map((notification) => ({
             id: notification.id.toString(),
             type: notification.type,
+            eventCode: notification.event_code,
             title: notification.title,
             message: notification.message,
             entityType: notification.entity_type,
             entityId: notification.entity_id,
             metadata: notification.metadata,
             readAt: notification.read_at?.toISOString() ?? null,
+            scheduledFor: notification.scheduled_for?.toISOString() ?? null,
             createdAt: notification.created_at.toISOString(),
         }));
     }
@@ -54,6 +57,46 @@ let NotificationsService = class NotificationsService {
             data: { read_at: new Date() },
         });
         return { updatedCount: result.count };
+    }
+    async getPreferences(userId) {
+        const preferences = await this.prisma.notification_preferences.upsert({
+            where: { user_id: userId },
+            create: { user_id: userId },
+            update: {},
+        });
+        return this.toPreferencesResponse(preferences);
+    }
+    async updatePreferences(userId, dto) {
+        const preferences = await this.prisma.notification_preferences.upsert({
+            where: { user_id: userId },
+            create: {
+                user_id: userId,
+                match_scheduled_enabled: dto.matchScheduledEnabled,
+                match_updates_enabled: dto.matchUpdatesEnabled,
+                match_reminders_enabled: dto.matchRemindersEnabled,
+                reminder_hours_before: dto.reminderHoursBefore,
+            },
+            update: {
+                match_scheduled_enabled: dto.matchScheduledEnabled,
+                match_updates_enabled: dto.matchUpdatesEnabled,
+                match_reminders_enabled: dto.matchRemindersEnabled,
+                reminder_hours_before: dto.reminderHoursBefore,
+                updated_at: new Date(),
+            },
+        });
+        return this.toPreferencesResponse(preferences);
+    }
+    toPreferencesResponse(preferences) {
+        return {
+            matchScheduledEnabled: preferences.match_scheduled_enabled,
+            matchUpdatesEnabled: preferences.match_updates_enabled,
+            matchRemindersEnabled: preferences.match_reminders_enabled,
+            reminderHoursBefore: preferences.reminder_hours_before ?? notification_events_1.DEFAULT_MATCH_REMINDER_HOURS,
+            futureChannels: {
+                email: { available: false, enabled: preferences.email_enabled },
+                whatsapp: { available: false, enabled: preferences.whatsapp_enabled },
+            },
+        };
     }
 };
 exports.NotificationsService = NotificationsService;

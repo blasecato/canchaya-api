@@ -16,6 +16,7 @@ export type MatchesAvgAggregateOutputType = {
     round_number: number | null;
     home_score: number | null;
     away_score: number | null;
+    duration_minutes: number | null;
 };
 export type MatchesSumAggregateOutputType = {
     id: bigint | null;
@@ -25,6 +26,7 @@ export type MatchesSumAggregateOutputType = {
     round_number: number | null;
     home_score: number | null;
     away_score: number | null;
+    duration_minutes: number | null;
 };
 export type MatchesMinAggregateOutputType = {
     id: bigint | null;
@@ -38,6 +40,7 @@ export type MatchesMinAggregateOutputType = {
     home_score: number | null;
     away_score: number | null;
     status: string | null;
+    duration_minutes: number | null;
     notes: string | null;
     created_at: Date | null;
     updated_at: Date | null;
@@ -54,6 +57,7 @@ export type MatchesMaxAggregateOutputType = {
     home_score: number | null;
     away_score: number | null;
     status: string | null;
+    duration_minutes: number | null;
     notes: string | null;
     created_at: Date | null;
     updated_at: Date | null;
@@ -70,6 +74,7 @@ export type MatchesCountAggregateOutputType = {
     home_score: number;
     away_score: number;
     status: number;
+    duration_minutes: number;
     notes: number;
     created_at: number;
     updated_at: number;
@@ -83,6 +88,7 @@ export type MatchesAvgAggregateInputType = {
     round_number?: true;
     home_score?: true;
     away_score?: true;
+    duration_minutes?: true;
 };
 export type MatchesSumAggregateInputType = {
     id?: true;
@@ -92,6 +98,7 @@ export type MatchesSumAggregateInputType = {
     round_number?: true;
     home_score?: true;
     away_score?: true;
+    duration_minutes?: true;
 };
 export type MatchesMinAggregateInputType = {
     id?: true;
@@ -105,6 +112,7 @@ export type MatchesMinAggregateInputType = {
     home_score?: true;
     away_score?: true;
     status?: true;
+    duration_minutes?: true;
     notes?: true;
     created_at?: true;
     updated_at?: true;
@@ -121,6 +129,7 @@ export type MatchesMaxAggregateInputType = {
     home_score?: true;
     away_score?: true;
     status?: true;
+    duration_minutes?: true;
     notes?: true;
     created_at?: true;
     updated_at?: true;
@@ -137,6 +146,7 @@ export type MatchesCountAggregateInputType = {
     home_score?: true;
     away_score?: true;
     status?: true;
+    duration_minutes?: true;
     notes?: true;
     created_at?: true;
     updated_at?: true;
@@ -182,6 +192,7 @@ export type MatchesGroupByOutputType = {
     home_score: number | null;
     away_score: number | null;
     status: string;
+    duration_minutes: number;
     notes: string | null;
     created_at: Date;
     updated_at: Date;
@@ -209,6 +220,7 @@ export type matchesWhereInput = {
     home_score?: Prisma.IntNullableFilter<"matches"> | number | null;
     away_score?: Prisma.IntNullableFilter<"matches"> | number | null;
     status?: Prisma.StringFilter<"matches"> | string;
+    duration_minutes?: Prisma.IntFilter<"matches"> | number;
     notes?: Prisma.StringNullableFilter<"matches"> | string | null;
     created_at?: Prisma.DateTimeFilter<"matches"> | Date | string;
     updated_at?: Prisma.DateTimeFilter<"matches"> | Date | string;
@@ -217,6 +229,7 @@ export type matchesWhereInput = {
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.XOR<Prisma.Tournament_team_registrationsScalarRelationFilter, Prisma.tournament_team_registrationsWhereInput>;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.XOR<Prisma.Tournament_team_registrationsScalarRelationFilter, Prisma.tournament_team_registrationsWhereInput>;
     player_match_stats?: Prisma.Player_match_statsListRelationFilter;
+    referee_assignment_events?: Prisma.Referee_assignment_eventsListRelationFilter;
 };
 export type matchesOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -230,6 +243,7 @@ export type matchesOrderByWithRelationInput = {
     home_score?: Prisma.SortOrderInput | Prisma.SortOrder;
     away_score?: Prisma.SortOrderInput | Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    duration_minutes?: Prisma.SortOrder;
     notes?: Prisma.SortOrderInput | Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
     updated_at?: Prisma.SortOrder;
@@ -238,6 +252,7 @@ export type matchesOrderByWithRelationInput = {
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsOrderByWithRelationInput;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsOrderByWithRelationInput;
     player_match_stats?: Prisma.player_match_statsOrderByRelationAggregateInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsOrderByRelationAggregateInput;
 };
 export type matchesWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number;
@@ -255,6 +270,7 @@ export type matchesWhereUniqueInput = Prisma.AtLeast<{
     home_score?: Prisma.IntNullableFilter<"matches"> | number | null;
     away_score?: Prisma.IntNullableFilter<"matches"> | number | null;
     status?: Prisma.StringFilter<"matches"> | string;
+    duration_minutes?: Prisma.IntFilter<"matches"> | number;
     notes?: Prisma.StringNullableFilter<"matches"> | string | null;
     created_at?: Prisma.DateTimeFilter<"matches"> | Date | string;
     updated_at?: Prisma.DateTimeFilter<"matches"> | Date | string;
@@ -263,6 +279,7 @@ export type matchesWhereUniqueInput = Prisma.AtLeast<{
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.XOR<Prisma.Tournament_team_registrationsScalarRelationFilter, Prisma.tournament_team_registrationsWhereInput>;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.XOR<Prisma.Tournament_team_registrationsScalarRelationFilter, Prisma.tournament_team_registrationsWhereInput>;
     player_match_stats?: Prisma.Player_match_statsListRelationFilter;
+    referee_assignment_events?: Prisma.Referee_assignment_eventsListRelationFilter;
 }, "id" | "id_tournament_id">;
 export type matchesOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -276,6 +293,7 @@ export type matchesOrderByWithAggregationInput = {
     home_score?: Prisma.SortOrderInput | Prisma.SortOrder;
     away_score?: Prisma.SortOrderInput | Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    duration_minutes?: Prisma.SortOrder;
     notes?: Prisma.SortOrderInput | Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
     updated_at?: Prisma.SortOrder;
@@ -300,6 +318,7 @@ export type matchesScalarWhereWithAggregatesInput = {
     home_score?: Prisma.IntNullableWithAggregatesFilter<"matches"> | number | null;
     away_score?: Prisma.IntNullableWithAggregatesFilter<"matches"> | number | null;
     status?: Prisma.StringWithAggregatesFilter<"matches"> | string;
+    duration_minutes?: Prisma.IntWithAggregatesFilter<"matches"> | number;
     notes?: Prisma.StringNullableWithAggregatesFilter<"matches"> | string | null;
     created_at?: Prisma.DateTimeWithAggregatesFilter<"matches"> | Date | string;
     updated_at?: Prisma.DateTimeWithAggregatesFilter<"matches"> | Date | string;
@@ -313,6 +332,7 @@ export type matchesCreateInput = {
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
@@ -321,6 +341,7 @@ export type matchesCreateInput = {
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
     player_match_stats?: Prisma.player_match_statsCreateNestedManyWithoutMatchesInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsCreateNestedManyWithoutMatchInput;
 };
 export type matchesUncheckedCreateInput = {
     id?: bigint | number;
@@ -334,12 +355,14 @@ export type matchesUncheckedCreateInput = {
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutMatchesInput;
     match_referees?: Prisma.match_refereesUncheckedCreateNestedManyWithoutMatchesInput;
     player_match_stats?: Prisma.player_match_statsUncheckedCreateNestedManyWithoutMatchesInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedCreateNestedManyWithoutMatchInput;
 };
 export type matchesUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -350,6 +373,7 @@ export type matchesUpdateInput = {
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -358,6 +382,7 @@ export type matchesUpdateInput = {
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
     player_match_stats?: Prisma.player_match_statsUpdateManyWithoutMatchesNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUpdateManyWithoutMatchNestedInput;
 };
 export type matchesUncheckedUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -371,12 +396,14 @@ export type matchesUncheckedUpdateInput = {
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutMatchesNestedInput;
     match_referees?: Prisma.match_refereesUncheckedUpdateManyWithoutMatchesNestedInput;
     player_match_stats?: Prisma.player_match_statsUncheckedUpdateManyWithoutMatchesNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedUpdateManyWithoutMatchNestedInput;
 };
 export type matchesCreateManyInput = {
     id?: bigint | number;
@@ -390,6 +417,7 @@ export type matchesCreateManyInput = {
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
@@ -403,6 +431,7 @@ export type matchesUpdateManyMutationInput = {
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -419,6 +448,7 @@ export type matchesUncheckedUpdateManyInput = {
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -447,6 +477,7 @@ export type matchesCountOrderByAggregateInput = {
     home_score?: Prisma.SortOrder;
     away_score?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    duration_minutes?: Prisma.SortOrder;
     notes?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
     updated_at?: Prisma.SortOrder;
@@ -459,6 +490,7 @@ export type matchesAvgOrderByAggregateInput = {
     round_number?: Prisma.SortOrder;
     home_score?: Prisma.SortOrder;
     away_score?: Prisma.SortOrder;
+    duration_minutes?: Prisma.SortOrder;
 };
 export type matchesMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -472,6 +504,7 @@ export type matchesMaxOrderByAggregateInput = {
     home_score?: Prisma.SortOrder;
     away_score?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    duration_minutes?: Prisma.SortOrder;
     notes?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
     updated_at?: Prisma.SortOrder;
@@ -488,6 +521,7 @@ export type matchesMinOrderByAggregateInput = {
     home_score?: Prisma.SortOrder;
     away_score?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    duration_minutes?: Prisma.SortOrder;
     notes?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
     updated_at?: Prisma.SortOrder;
@@ -500,6 +534,7 @@ export type matchesSumOrderByAggregateInput = {
     round_number?: Prisma.SortOrder;
     home_score?: Prisma.SortOrder;
     away_score?: Prisma.SortOrder;
+    duration_minutes?: Prisma.SortOrder;
 };
 export type MatchesListRelationFilter = {
     every?: Prisma.matchesWhereInput;
@@ -541,6 +576,25 @@ export type NullableIntFieldUpdateOperationsInput = {
     decrement?: number;
     multiply?: number;
     divide?: number;
+};
+export type IntFieldUpdateOperationsInput = {
+    set?: number;
+    increment?: number;
+    decrement?: number;
+    multiply?: number;
+    divide?: number;
+};
+export type matchesCreateNestedOneWithoutReferee_assignment_eventsInput = {
+    create?: Prisma.XOR<Prisma.matchesCreateWithoutReferee_assignment_eventsInput, Prisma.matchesUncheckedCreateWithoutReferee_assignment_eventsInput>;
+    connectOrCreate?: Prisma.matchesCreateOrConnectWithoutReferee_assignment_eventsInput;
+    connect?: Prisma.matchesWhereUniqueInput;
+};
+export type matchesUpdateOneRequiredWithoutReferee_assignment_eventsNestedInput = {
+    create?: Prisma.XOR<Prisma.matchesCreateWithoutReferee_assignment_eventsInput, Prisma.matchesUncheckedCreateWithoutReferee_assignment_eventsInput>;
+    connectOrCreate?: Prisma.matchesCreateOrConnectWithoutReferee_assignment_eventsInput;
+    upsert?: Prisma.matchesUpsertWithoutReferee_assignment_eventsInput;
+    connect?: Prisma.matchesWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.matchesUpdateToOneWithWhereWithoutReferee_assignment_eventsInput, Prisma.matchesUpdateWithoutReferee_assignment_eventsInput>, Prisma.matchesUncheckedUpdateWithoutReferee_assignment_eventsInput>;
 };
 export type matchesCreateNestedOneWithoutPlayer_match_statsInput = {
     create?: Prisma.XOR<Prisma.matchesCreateWithoutPlayer_match_statsInput, Prisma.matchesUncheckedCreateWithoutPlayer_match_statsInput>;
@@ -639,6 +693,7 @@ export type matchesCreateWithoutDisciplinary_actionsInput = {
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
@@ -646,6 +701,7 @@ export type matchesCreateWithoutDisciplinary_actionsInput = {
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
     player_match_stats?: Prisma.player_match_statsCreateNestedManyWithoutMatchesInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsCreateNestedManyWithoutMatchInput;
 };
 export type matchesUncheckedCreateWithoutDisciplinary_actionsInput = {
     id?: bigint | number;
@@ -659,11 +715,13 @@ export type matchesUncheckedCreateWithoutDisciplinary_actionsInput = {
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
     match_referees?: Prisma.match_refereesUncheckedCreateNestedManyWithoutMatchesInput;
     player_match_stats?: Prisma.player_match_statsUncheckedCreateNestedManyWithoutMatchesInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedCreateNestedManyWithoutMatchInput;
 };
 export type matchesCreateOrConnectWithoutDisciplinary_actionsInput = {
     where: Prisma.matchesWhereUniqueInput;
@@ -687,6 +745,7 @@ export type matchesUpdateWithoutDisciplinary_actionsInput = {
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -694,6 +753,7 @@ export type matchesUpdateWithoutDisciplinary_actionsInput = {
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
     player_match_stats?: Prisma.player_match_statsUpdateManyWithoutMatchesNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUpdateManyWithoutMatchNestedInput;
 };
 export type matchesUncheckedUpdateWithoutDisciplinary_actionsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -707,11 +767,13 @@ export type matchesUncheckedUpdateWithoutDisciplinary_actionsInput = {
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     match_referees?: Prisma.match_refereesUncheckedUpdateManyWithoutMatchesNestedInput;
     player_match_stats?: Prisma.player_match_statsUncheckedUpdateManyWithoutMatchesNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedUpdateManyWithoutMatchNestedInput;
 };
 export type matchesCreateWithoutMatch_refereesInput = {
     id?: bigint | number;
@@ -722,6 +784,7 @@ export type matchesCreateWithoutMatch_refereesInput = {
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
@@ -729,6 +792,7 @@ export type matchesCreateWithoutMatch_refereesInput = {
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
     player_match_stats?: Prisma.player_match_statsCreateNestedManyWithoutMatchesInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsCreateNestedManyWithoutMatchInput;
 };
 export type matchesUncheckedCreateWithoutMatch_refereesInput = {
     id?: bigint | number;
@@ -742,11 +806,13 @@ export type matchesUncheckedCreateWithoutMatch_refereesInput = {
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutMatchesInput;
     player_match_stats?: Prisma.player_match_statsUncheckedCreateNestedManyWithoutMatchesInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedCreateNestedManyWithoutMatchInput;
 };
 export type matchesCreateOrConnectWithoutMatch_refereesInput = {
     where: Prisma.matchesWhereUniqueInput;
@@ -770,6 +836,7 @@ export type matchesUpdateWithoutMatch_refereesInput = {
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -777,6 +844,7 @@ export type matchesUpdateWithoutMatch_refereesInput = {
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
     player_match_stats?: Prisma.player_match_statsUpdateManyWithoutMatchesNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUpdateManyWithoutMatchNestedInput;
 };
 export type matchesUncheckedUpdateWithoutMatch_refereesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -790,10 +858,103 @@ export type matchesUncheckedUpdateWithoutMatch_refereesInput = {
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutMatchesNestedInput;
+    player_match_stats?: Prisma.player_match_statsUncheckedUpdateManyWithoutMatchesNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedUpdateManyWithoutMatchNestedInput;
+};
+export type matchesCreateWithoutReferee_assignment_eventsInput = {
+    id?: bigint | number;
+    match_date?: Date | string | null;
+    venue?: string | null;
+    stage: string;
+    round_number?: number | null;
+    home_score?: number | null;
+    away_score?: number | null;
+    status?: string;
+    duration_minutes?: number;
+    notes?: string | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    disciplinary_actions?: Prisma.disciplinary_actionsCreateNestedManyWithoutMatchesInput;
+    match_referees?: Prisma.match_refereesCreateNestedManyWithoutMatchesInput;
+    tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
+    tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    player_match_stats?: Prisma.player_match_statsCreateNestedManyWithoutMatchesInput;
+};
+export type matchesUncheckedCreateWithoutReferee_assignment_eventsInput = {
+    id?: bigint | number;
+    tournament_id: bigint | number;
+    home_team_id: bigint | number;
+    away_team_id: bigint | number;
+    match_date?: Date | string | null;
+    venue?: string | null;
+    stage: string;
+    round_number?: number | null;
+    home_score?: number | null;
+    away_score?: number | null;
+    status?: string;
+    duration_minutes?: number;
+    notes?: string | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    disciplinary_actions?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutMatchesInput;
+    match_referees?: Prisma.match_refereesUncheckedCreateNestedManyWithoutMatchesInput;
+    player_match_stats?: Prisma.player_match_statsUncheckedCreateNestedManyWithoutMatchesInput;
+};
+export type matchesCreateOrConnectWithoutReferee_assignment_eventsInput = {
+    where: Prisma.matchesWhereUniqueInput;
+    create: Prisma.XOR<Prisma.matchesCreateWithoutReferee_assignment_eventsInput, Prisma.matchesUncheckedCreateWithoutReferee_assignment_eventsInput>;
+};
+export type matchesUpsertWithoutReferee_assignment_eventsInput = {
+    update: Prisma.XOR<Prisma.matchesUpdateWithoutReferee_assignment_eventsInput, Prisma.matchesUncheckedUpdateWithoutReferee_assignment_eventsInput>;
+    create: Prisma.XOR<Prisma.matchesCreateWithoutReferee_assignment_eventsInput, Prisma.matchesUncheckedCreateWithoutReferee_assignment_eventsInput>;
+    where?: Prisma.matchesWhereInput;
+};
+export type matchesUpdateToOneWithWhereWithoutReferee_assignment_eventsInput = {
+    where?: Prisma.matchesWhereInput;
+    data: Prisma.XOR<Prisma.matchesUpdateWithoutReferee_assignment_eventsInput, Prisma.matchesUncheckedUpdateWithoutReferee_assignment_eventsInput>;
+};
+export type matchesUpdateWithoutReferee_assignment_eventsInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    stage?: Prisma.StringFieldUpdateOperationsInput | string;
+    round_number?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    disciplinary_actions?: Prisma.disciplinary_actionsUpdateManyWithoutMatchesNestedInput;
+    match_referees?: Prisma.match_refereesUpdateManyWithoutMatchesNestedInput;
+    tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
+    tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    player_match_stats?: Prisma.player_match_statsUpdateManyWithoutMatchesNestedInput;
+};
+export type matchesUncheckedUpdateWithoutReferee_assignment_eventsInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    home_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    away_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    stage?: Prisma.StringFieldUpdateOperationsInput | string;
+    round_number?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
+    notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    disciplinary_actions?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutMatchesNestedInput;
+    match_referees?: Prisma.match_refereesUncheckedUpdateManyWithoutMatchesNestedInput;
     player_match_stats?: Prisma.player_match_statsUncheckedUpdateManyWithoutMatchesNestedInput;
 };
 export type matchesCreateWithoutPlayer_match_statsInput = {
@@ -805,6 +966,7 @@ export type matchesCreateWithoutPlayer_match_statsInput = {
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
@@ -812,6 +974,7 @@ export type matchesCreateWithoutPlayer_match_statsInput = {
     match_referees?: Prisma.match_refereesCreateNestedManyWithoutMatchesInput;
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsCreateNestedManyWithoutMatchInput;
 };
 export type matchesUncheckedCreateWithoutPlayer_match_statsInput = {
     id?: bigint | number;
@@ -825,11 +988,13 @@ export type matchesUncheckedCreateWithoutPlayer_match_statsInput = {
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutMatchesInput;
     match_referees?: Prisma.match_refereesUncheckedCreateNestedManyWithoutMatchesInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedCreateNestedManyWithoutMatchInput;
 };
 export type matchesCreateOrConnectWithoutPlayer_match_statsInput = {
     where: Prisma.matchesWhereUniqueInput;
@@ -853,6 +1018,7 @@ export type matchesUpdateWithoutPlayer_match_statsInput = {
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -860,6 +1026,7 @@ export type matchesUpdateWithoutPlayer_match_statsInput = {
     match_referees?: Prisma.match_refereesUpdateManyWithoutMatchesNestedInput;
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUpdateManyWithoutMatchNestedInput;
 };
 export type matchesUncheckedUpdateWithoutPlayer_match_statsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -873,11 +1040,13 @@ export type matchesUncheckedUpdateWithoutPlayer_match_statsInput = {
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutMatchesNestedInput;
     match_referees?: Prisma.match_refereesUncheckedUpdateManyWithoutMatchesNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedUpdateManyWithoutMatchNestedInput;
 };
 export type matchesCreateWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
     id?: bigint | number;
@@ -888,6 +1057,7 @@ export type matchesCreateWithoutTournament_team_registrations_matches_tournament
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
@@ -895,6 +1065,7 @@ export type matchesCreateWithoutTournament_team_registrations_matches_tournament
     match_referees?: Prisma.match_refereesCreateNestedManyWithoutMatchesInput;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
     player_match_stats?: Prisma.player_match_statsCreateNestedManyWithoutMatchesInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsCreateNestedManyWithoutMatchInput;
 };
 export type matchesUncheckedCreateWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
     id?: bigint | number;
@@ -906,12 +1077,14 @@ export type matchesUncheckedCreateWithoutTournament_team_registrations_matches_t
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutMatchesInput;
     match_referees?: Prisma.match_refereesUncheckedCreateNestedManyWithoutMatchesInput;
     player_match_stats?: Prisma.player_match_statsUncheckedCreateNestedManyWithoutMatchesInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedCreateNestedManyWithoutMatchInput;
 };
 export type matchesCreateOrConnectWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
     where: Prisma.matchesWhereUniqueInput;
@@ -930,6 +1103,7 @@ export type matchesCreateWithoutTournament_team_registrations_matches_tournament
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
@@ -937,6 +1111,7 @@ export type matchesCreateWithoutTournament_team_registrations_matches_tournament
     match_referees?: Prisma.match_refereesCreateNestedManyWithoutMatchesInput;
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
     player_match_stats?: Prisma.player_match_statsCreateNestedManyWithoutMatchesInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsCreateNestedManyWithoutMatchInput;
 };
 export type matchesUncheckedCreateWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
     id?: bigint | number;
@@ -948,12 +1123,14 @@ export type matchesUncheckedCreateWithoutTournament_team_registrations_matches_t
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutMatchesInput;
     match_referees?: Prisma.match_refereesUncheckedCreateNestedManyWithoutMatchesInput;
     player_match_stats?: Prisma.player_match_statsUncheckedCreateNestedManyWithoutMatchesInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedCreateNestedManyWithoutMatchInput;
 };
 export type matchesCreateOrConnectWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
     where: Prisma.matchesWhereUniqueInput;
@@ -991,6 +1168,7 @@ export type matchesScalarWhereInput = {
     home_score?: Prisma.IntNullableFilter<"matches"> | number | null;
     away_score?: Prisma.IntNullableFilter<"matches"> | number | null;
     status?: Prisma.StringFilter<"matches"> | string;
+    duration_minutes?: Prisma.IntFilter<"matches"> | number;
     notes?: Prisma.StringNullableFilter<"matches"> | string | null;
     created_at?: Prisma.DateTimeFilter<"matches"> | Date | string;
     updated_at?: Prisma.DateTimeFilter<"matches"> | Date | string;
@@ -1018,6 +1196,7 @@ export type matchesCreateManyTournament_team_registrations_matches_tournament_id
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
@@ -1032,6 +1211,7 @@ export type matchesCreateManyTournament_team_registrations_matches_tournament_id
     home_score?: number | null;
     away_score?: number | null;
     status?: string;
+    duration_minutes?: number;
     notes?: string | null;
     created_at?: Date | string;
     updated_at?: Date | string;
@@ -1045,6 +1225,7 @@ export type matchesUpdateWithoutTournament_team_registrations_matches_tournament
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1052,6 +1233,7 @@ export type matchesUpdateWithoutTournament_team_registrations_matches_tournament
     match_referees?: Prisma.match_refereesUpdateManyWithoutMatchesNestedInput;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
     player_match_stats?: Prisma.player_match_statsUpdateManyWithoutMatchesNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUpdateManyWithoutMatchNestedInput;
 };
 export type matchesUncheckedUpdateWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1063,12 +1245,14 @@ export type matchesUncheckedUpdateWithoutTournament_team_registrations_matches_t
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutMatchesNestedInput;
     match_referees?: Prisma.match_refereesUncheckedUpdateManyWithoutMatchesNestedInput;
     player_match_stats?: Prisma.player_match_statsUncheckedUpdateManyWithoutMatchesNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedUpdateManyWithoutMatchNestedInput;
 };
 export type matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1080,6 +1264,7 @@ export type matchesUncheckedUpdateManyWithoutTournament_team_registrations_match
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1093,6 +1278,7 @@ export type matchesUpdateWithoutTournament_team_registrations_matches_tournament
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1100,6 +1286,7 @@ export type matchesUpdateWithoutTournament_team_registrations_matches_tournament
     match_referees?: Prisma.match_refereesUpdateManyWithoutMatchesNestedInput;
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutMatches_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
     player_match_stats?: Prisma.player_match_statsUpdateManyWithoutMatchesNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUpdateManyWithoutMatchNestedInput;
 };
 export type matchesUncheckedUpdateWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1111,12 +1298,14 @@ export type matchesUncheckedUpdateWithoutTournament_team_registrations_matches_t
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutMatchesNestedInput;
     match_referees?: Prisma.match_refereesUncheckedUpdateManyWithoutMatchesNestedInput;
     player_match_stats?: Prisma.player_match_statsUncheckedUpdateManyWithoutMatchesNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedUpdateManyWithoutMatchNestedInput;
 };
 export type matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1128,6 +1317,7 @@ export type matchesUncheckedUpdateManyWithoutTournament_team_registrations_match
     home_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    duration_minutes?: Prisma.IntFieldUpdateOperationsInput | number;
     notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -1136,11 +1326,13 @@ export type MatchesCountOutputType = {
     disciplinary_actions: number;
     match_referees: number;
     player_match_stats: number;
+    referee_assignment_events: number;
 };
 export type MatchesCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     disciplinary_actions?: boolean | MatchesCountOutputTypeCountDisciplinary_actionsArgs;
     match_referees?: boolean | MatchesCountOutputTypeCountMatch_refereesArgs;
     player_match_stats?: boolean | MatchesCountOutputTypeCountPlayer_match_statsArgs;
+    referee_assignment_events?: boolean | MatchesCountOutputTypeCountReferee_assignment_eventsArgs;
 };
 export type MatchesCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.MatchesCountOutputTypeSelect<ExtArgs> | null;
@@ -1154,6 +1346,9 @@ export type MatchesCountOutputTypeCountMatch_refereesArgs<ExtArgs extends runtim
 export type MatchesCountOutputTypeCountPlayer_match_statsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.player_match_statsWhereInput;
 };
+export type MatchesCountOutputTypeCountReferee_assignment_eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.referee_assignment_eventsWhereInput;
+};
 export type matchesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     tournament_id?: boolean;
@@ -1166,6 +1361,7 @@ export type matchesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     home_score?: boolean;
     away_score?: boolean;
     status?: boolean;
+    duration_minutes?: boolean;
     notes?: boolean;
     created_at?: boolean;
     updated_at?: boolean;
@@ -1174,6 +1370,7 @@ export type matchesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations?: boolean | Prisma.tournament_team_registrationsDefaultArgs<ExtArgs>;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: boolean | Prisma.tournament_team_registrationsDefaultArgs<ExtArgs>;
     player_match_stats?: boolean | Prisma.matches$player_match_statsArgs<ExtArgs>;
+    referee_assignment_events?: boolean | Prisma.matches$referee_assignment_eventsArgs<ExtArgs>;
     _count?: boolean | Prisma.MatchesCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["matches"]>;
 export type matchesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1188,6 +1385,7 @@ export type matchesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
     home_score?: boolean;
     away_score?: boolean;
     status?: boolean;
+    duration_minutes?: boolean;
     notes?: boolean;
     created_at?: boolean;
     updated_at?: boolean;
@@ -1206,6 +1404,7 @@ export type matchesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
     home_score?: boolean;
     away_score?: boolean;
     status?: boolean;
+    duration_minutes?: boolean;
     notes?: boolean;
     created_at?: boolean;
     updated_at?: boolean;
@@ -1224,17 +1423,19 @@ export type matchesSelectScalar = {
     home_score?: boolean;
     away_score?: boolean;
     status?: boolean;
+    duration_minutes?: boolean;
     notes?: boolean;
     created_at?: boolean;
     updated_at?: boolean;
 };
-export type matchesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tournament_id" | "home_team_id" | "away_team_id" | "match_date" | "venue" | "stage" | "round_number" | "home_score" | "away_score" | "status" | "notes" | "created_at" | "updated_at", ExtArgs["result"]["matches"]>;
+export type matchesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tournament_id" | "home_team_id" | "away_team_id" | "match_date" | "venue" | "stage" | "round_number" | "home_score" | "away_score" | "status" | "duration_minutes" | "notes" | "created_at" | "updated_at", ExtArgs["result"]["matches"]>;
 export type matchesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     disciplinary_actions?: boolean | Prisma.matches$disciplinary_actionsArgs<ExtArgs>;
     match_referees?: boolean | Prisma.matches$match_refereesArgs<ExtArgs>;
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations?: boolean | Prisma.tournament_team_registrationsDefaultArgs<ExtArgs>;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: boolean | Prisma.tournament_team_registrationsDefaultArgs<ExtArgs>;
     player_match_stats?: boolean | Prisma.matches$player_match_statsArgs<ExtArgs>;
+    referee_assignment_events?: boolean | Prisma.matches$referee_assignment_eventsArgs<ExtArgs>;
     _count?: boolean | Prisma.MatchesCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type matchesIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1253,6 +1454,7 @@ export type $matchesPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
         tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations: Prisma.$tournament_team_registrationsPayload<ExtArgs>;
         tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations: Prisma.$tournament_team_registrationsPayload<ExtArgs>;
         player_match_stats: Prisma.$player_match_statsPayload<ExtArgs>[];
+        referee_assignment_events: Prisma.$referee_assignment_eventsPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: bigint;
@@ -1266,6 +1468,7 @@ export type $matchesPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
         home_score: number | null;
         away_score: number | null;
         status: string;
+        duration_minutes: number;
         notes: string | null;
         created_at: Date;
         updated_at: Date;
@@ -1326,6 +1529,7 @@ export interface Prisma__matchesClient<T, Null = never, ExtArgs extends runtime.
     tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations<T extends Prisma.tournament_team_registrationsDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_team_registrationsDefaultArgs<ExtArgs>>): Prisma.Prisma__tournament_team_registrationsClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations<T extends Prisma.tournament_team_registrationsDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_team_registrationsDefaultArgs<ExtArgs>>): Prisma.Prisma__tournament_team_registrationsClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     player_match_stats<T extends Prisma.matches$player_match_statsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.matches$player_match_statsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$player_match_statsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    referee_assignment_events<T extends Prisma.matches$referee_assignment_eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.matches$referee_assignment_eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$referee_assignment_eventsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
     catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
     finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;
@@ -1342,6 +1546,7 @@ export interface matchesFieldRefs {
     readonly home_score: Prisma.FieldRef<"matches", 'Int'>;
     readonly away_score: Prisma.FieldRef<"matches", 'Int'>;
     readonly status: Prisma.FieldRef<"matches", 'String'>;
+    readonly duration_minutes: Prisma.FieldRef<"matches", 'Int'>;
     readonly notes: Prisma.FieldRef<"matches", 'String'>;
     readonly created_at: Prisma.FieldRef<"matches", 'DateTime'>;
     readonly updated_at: Prisma.FieldRef<"matches", 'DateTime'>;
@@ -1478,6 +1683,17 @@ export type matches$player_match_statsArgs<ExtArgs extends runtime.Types.Extensi
     take?: number;
     skip?: number;
     distinct?: Prisma.Player_match_statsScalarFieldEnum | Prisma.Player_match_statsScalarFieldEnum[];
+};
+export type matches$referee_assignment_eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.referee_assignment_eventsSelect<ExtArgs> | null;
+    omit?: Prisma.referee_assignment_eventsOmit<ExtArgs> | null;
+    include?: Prisma.referee_assignment_eventsInclude<ExtArgs> | null;
+    where?: Prisma.referee_assignment_eventsWhereInput;
+    orderBy?: Prisma.referee_assignment_eventsOrderByWithRelationInput | Prisma.referee_assignment_eventsOrderByWithRelationInput[];
+    cursor?: Prisma.referee_assignment_eventsWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Referee_assignment_eventsScalarFieldEnum | Prisma.Referee_assignment_eventsScalarFieldEnum[];
 };
 export type matchesDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.matchesSelect<ExtArgs> | null;

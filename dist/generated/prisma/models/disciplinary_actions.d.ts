@@ -15,6 +15,7 @@ export type Disciplinary_actionsAvgAggregateOutputType = {
     team_id: number | null;
     player_id: number | null;
     reported_by: number | null;
+    review_started_by: number | null;
     decided_by: number | null;
 };
 export type Disciplinary_actionsSumAggregateOutputType = {
@@ -24,6 +25,7 @@ export type Disciplinary_actionsSumAggregateOutputType = {
     team_id: bigint | null;
     player_id: bigint | null;
     reported_by: bigint | null;
+    review_started_by: bigint | null;
     decided_by: bigint | null;
 };
 export type Disciplinary_actionsMinAggregateOutputType = {
@@ -37,10 +39,14 @@ export type Disciplinary_actionsMinAggregateOutputType = {
     occurred_at: Date | null;
     reported_by: bigint | null;
     decision_status: string | null;
+    review_started_by: bigint | null;
+    review_started_at: Date | null;
     decided_by: bigint | null;
     decided_at: Date | null;
     decision_notes: string | null;
+    appeal_deadline: Date | null;
     created_at: Date | null;
+    updated_at: Date | null;
 };
 export type Disciplinary_actionsMaxAggregateOutputType = {
     id: bigint | null;
@@ -53,10 +59,14 @@ export type Disciplinary_actionsMaxAggregateOutputType = {
     occurred_at: Date | null;
     reported_by: bigint | null;
     decision_status: string | null;
+    review_started_by: bigint | null;
+    review_started_at: Date | null;
     decided_by: bigint | null;
     decided_at: Date | null;
     decision_notes: string | null;
+    appeal_deadline: Date | null;
     created_at: Date | null;
+    updated_at: Date | null;
 };
 export type Disciplinary_actionsCountAggregateOutputType = {
     id: number;
@@ -69,10 +79,14 @@ export type Disciplinary_actionsCountAggregateOutputType = {
     occurred_at: number;
     reported_by: number;
     decision_status: number;
+    review_started_by: number;
+    review_started_at: number;
     decided_by: number;
     decided_at: number;
     decision_notes: number;
+    appeal_deadline: number;
     created_at: number;
+    updated_at: number;
     _all: number;
 };
 export type Disciplinary_actionsAvgAggregateInputType = {
@@ -82,6 +96,7 @@ export type Disciplinary_actionsAvgAggregateInputType = {
     team_id?: true;
     player_id?: true;
     reported_by?: true;
+    review_started_by?: true;
     decided_by?: true;
 };
 export type Disciplinary_actionsSumAggregateInputType = {
@@ -91,6 +106,7 @@ export type Disciplinary_actionsSumAggregateInputType = {
     team_id?: true;
     player_id?: true;
     reported_by?: true;
+    review_started_by?: true;
     decided_by?: true;
 };
 export type Disciplinary_actionsMinAggregateInputType = {
@@ -104,10 +120,14 @@ export type Disciplinary_actionsMinAggregateInputType = {
     occurred_at?: true;
     reported_by?: true;
     decision_status?: true;
+    review_started_by?: true;
+    review_started_at?: true;
     decided_by?: true;
     decided_at?: true;
     decision_notes?: true;
+    appeal_deadline?: true;
     created_at?: true;
+    updated_at?: true;
 };
 export type Disciplinary_actionsMaxAggregateInputType = {
     id?: true;
@@ -120,10 +140,14 @@ export type Disciplinary_actionsMaxAggregateInputType = {
     occurred_at?: true;
     reported_by?: true;
     decision_status?: true;
+    review_started_by?: true;
+    review_started_at?: true;
     decided_by?: true;
     decided_at?: true;
     decision_notes?: true;
+    appeal_deadline?: true;
     created_at?: true;
+    updated_at?: true;
 };
 export type Disciplinary_actionsCountAggregateInputType = {
     id?: true;
@@ -136,10 +160,14 @@ export type Disciplinary_actionsCountAggregateInputType = {
     occurred_at?: true;
     reported_by?: true;
     decision_status?: true;
+    review_started_by?: true;
+    review_started_at?: true;
     decided_by?: true;
     decided_at?: true;
     decision_notes?: true;
+    appeal_deadline?: true;
     created_at?: true;
+    updated_at?: true;
     _all?: true;
 };
 export type Disciplinary_actionsAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -181,10 +209,14 @@ export type Disciplinary_actionsGroupByOutputType = {
     occurred_at: Date;
     reported_by: bigint;
     decision_status: string;
+    review_started_by: bigint | null;
+    review_started_at: Date | null;
     decided_by: bigint | null;
     decided_at: Date | null;
     decision_notes: string | null;
+    appeal_deadline: Date | null;
     created_at: Date;
+    updated_at: Date;
     _count: Disciplinary_actionsCountAggregateOutputType | null;
     _avg: Disciplinary_actionsAvgAggregateOutputType | null;
     _sum: Disciplinary_actionsSumAggregateOutputType | null;
@@ -208,16 +240,24 @@ export type disciplinary_actionsWhereInput = {
     occurred_at?: Prisma.DateTimeFilter<"disciplinary_actions"> | Date | string;
     reported_by?: Prisma.BigIntFilter<"disciplinary_actions"> | bigint | number;
     decision_status?: Prisma.StringFilter<"disciplinary_actions"> | string;
+    review_started_by?: Prisma.BigIntNullableFilter<"disciplinary_actions"> | bigint | number | null;
+    review_started_at?: Prisma.DateTimeNullableFilter<"disciplinary_actions"> | Date | string | null;
     decided_by?: Prisma.BigIntNullableFilter<"disciplinary_actions"> | bigint | number | null;
     decided_at?: Prisma.DateTimeNullableFilter<"disciplinary_actions"> | Date | string | null;
     decision_notes?: Prisma.StringNullableFilter<"disciplinary_actions"> | string | null;
+    appeal_deadline?: Prisma.DateTimeNullableFilter<"disciplinary_actions"> | Date | string | null;
     created_at?: Prisma.DateTimeFilter<"disciplinary_actions"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"disciplinary_actions"> | Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null;
+    reviewer?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null;
     matches?: Prisma.XOR<Prisma.MatchesNullableScalarRelationFilter, Prisma.matchesWhereInput> | null;
     users_disciplinary_actions_reported_byTousers?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
     tournament_team_players?: Prisma.XOR<Prisma.Tournament_team_playersScalarRelationFilter, Prisma.tournament_team_playersWhereInput>;
     fines?: Prisma.XOR<Prisma.FinesNullableScalarRelationFilter, Prisma.finesWhereInput> | null;
     suspensions?: Prisma.XOR<Prisma.SuspensionsNullableScalarRelationFilter, Prisma.suspensionsWhereInput> | null;
+    disciplinary_appeals?: Prisma.XOR<Prisma.Disciplinary_appealsNullableScalarRelationFilter, Prisma.disciplinary_appealsWhereInput> | null;
+    disciplinary_events?: Prisma.Disciplinary_eventsListRelationFilter;
+    users_blocked_by_action?: Prisma.UsersListRelationFilter;
 };
 export type disciplinary_actionsOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -230,16 +270,24 @@ export type disciplinary_actionsOrderByWithRelationInput = {
     occurred_at?: Prisma.SortOrder;
     reported_by?: Prisma.SortOrder;
     decision_status?: Prisma.SortOrder;
+    review_started_by?: Prisma.SortOrderInput | Prisma.SortOrder;
+    review_started_at?: Prisma.SortOrderInput | Prisma.SortOrder;
     decided_by?: Prisma.SortOrderInput | Prisma.SortOrder;
     decided_at?: Prisma.SortOrderInput | Prisma.SortOrder;
     decision_notes?: Prisma.SortOrderInput | Prisma.SortOrder;
+    appeal_deadline?: Prisma.SortOrderInput | Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersOrderByWithRelationInput;
+    reviewer?: Prisma.usersOrderByWithRelationInput;
     matches?: Prisma.matchesOrderByWithRelationInput;
     users_disciplinary_actions_reported_byTousers?: Prisma.usersOrderByWithRelationInput;
     tournament_team_players?: Prisma.tournament_team_playersOrderByWithRelationInput;
     fines?: Prisma.finesOrderByWithRelationInput;
     suspensions?: Prisma.suspensionsOrderByWithRelationInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsOrderByWithRelationInput;
+    disciplinary_events?: Prisma.disciplinary_eventsOrderByRelationAggregateInput;
+    users_blocked_by_action?: Prisma.usersOrderByRelationAggregateInput;
 };
 export type disciplinary_actionsWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number;
@@ -255,16 +303,24 @@ export type disciplinary_actionsWhereUniqueInput = Prisma.AtLeast<{
     occurred_at?: Prisma.DateTimeFilter<"disciplinary_actions"> | Date | string;
     reported_by?: Prisma.BigIntFilter<"disciplinary_actions"> | bigint | number;
     decision_status?: Prisma.StringFilter<"disciplinary_actions"> | string;
+    review_started_by?: Prisma.BigIntNullableFilter<"disciplinary_actions"> | bigint | number | null;
+    review_started_at?: Prisma.DateTimeNullableFilter<"disciplinary_actions"> | Date | string | null;
     decided_by?: Prisma.BigIntNullableFilter<"disciplinary_actions"> | bigint | number | null;
     decided_at?: Prisma.DateTimeNullableFilter<"disciplinary_actions"> | Date | string | null;
     decision_notes?: Prisma.StringNullableFilter<"disciplinary_actions"> | string | null;
+    appeal_deadline?: Prisma.DateTimeNullableFilter<"disciplinary_actions"> | Date | string | null;
     created_at?: Prisma.DateTimeFilter<"disciplinary_actions"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"disciplinary_actions"> | Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null;
+    reviewer?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null;
     matches?: Prisma.XOR<Prisma.MatchesNullableScalarRelationFilter, Prisma.matchesWhereInput> | null;
     users_disciplinary_actions_reported_byTousers?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
     tournament_team_players?: Prisma.XOR<Prisma.Tournament_team_playersScalarRelationFilter, Prisma.tournament_team_playersWhereInput>;
     fines?: Prisma.XOR<Prisma.FinesNullableScalarRelationFilter, Prisma.finesWhereInput> | null;
     suspensions?: Prisma.XOR<Prisma.SuspensionsNullableScalarRelationFilter, Prisma.suspensionsWhereInput> | null;
+    disciplinary_appeals?: Prisma.XOR<Prisma.Disciplinary_appealsNullableScalarRelationFilter, Prisma.disciplinary_appealsWhereInput> | null;
+    disciplinary_events?: Prisma.Disciplinary_eventsListRelationFilter;
+    users_blocked_by_action?: Prisma.UsersListRelationFilter;
 }, "id">;
 export type disciplinary_actionsOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -277,10 +333,14 @@ export type disciplinary_actionsOrderByWithAggregationInput = {
     occurred_at?: Prisma.SortOrder;
     reported_by?: Prisma.SortOrder;
     decision_status?: Prisma.SortOrder;
+    review_started_by?: Prisma.SortOrderInput | Prisma.SortOrder;
+    review_started_at?: Prisma.SortOrderInput | Prisma.SortOrder;
     decided_by?: Prisma.SortOrderInput | Prisma.SortOrder;
     decided_at?: Prisma.SortOrderInput | Prisma.SortOrder;
     decision_notes?: Prisma.SortOrderInput | Prisma.SortOrder;
+    appeal_deadline?: Prisma.SortOrderInput | Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
     _count?: Prisma.disciplinary_actionsCountOrderByAggregateInput;
     _avg?: Prisma.disciplinary_actionsAvgOrderByAggregateInput;
     _max?: Prisma.disciplinary_actionsMaxOrderByAggregateInput;
@@ -301,10 +361,14 @@ export type disciplinary_actionsScalarWhereWithAggregatesInput = {
     occurred_at?: Prisma.DateTimeWithAggregatesFilter<"disciplinary_actions"> | Date | string;
     reported_by?: Prisma.BigIntWithAggregatesFilter<"disciplinary_actions"> | bigint | number;
     decision_status?: Prisma.StringWithAggregatesFilter<"disciplinary_actions"> | string;
+    review_started_by?: Prisma.BigIntNullableWithAggregatesFilter<"disciplinary_actions"> | bigint | number | null;
+    review_started_at?: Prisma.DateTimeNullableWithAggregatesFilter<"disciplinary_actions"> | Date | string | null;
     decided_by?: Prisma.BigIntNullableWithAggregatesFilter<"disciplinary_actions"> | bigint | number | null;
     decided_at?: Prisma.DateTimeNullableWithAggregatesFilter<"disciplinary_actions"> | Date | string | null;
     decision_notes?: Prisma.StringNullableWithAggregatesFilter<"disciplinary_actions"> | string | null;
+    appeal_deadline?: Prisma.DateTimeNullableWithAggregatesFilter<"disciplinary_actions"> | Date | string | null;
     created_at?: Prisma.DateTimeWithAggregatesFilter<"disciplinary_actions"> | Date | string;
+    updated_at?: Prisma.DateTimeWithAggregatesFilter<"disciplinary_actions"> | Date | string;
 };
 export type disciplinary_actionsCreateInput = {
     id?: bigint | number;
@@ -312,15 +376,22 @@ export type disciplinary_actionsCreateInput = {
     reason: string;
     occurred_at?: Date | string;
     decision_status?: string;
+    review_started_at?: Date | string | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput;
+    reviewer?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_reviewedInput;
     matches?: Prisma.matchesCreateNestedOneWithoutDisciplinary_actionsInput;
     users_disciplinary_actions_reported_byTousers: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersInput;
     tournament_team_players: Prisma.tournament_team_playersCreateNestedOneWithoutDisciplinary_actionsInput;
     fines?: Prisma.finesCreateNestedOneWithoutDisciplinary_actionsInput;
     suspensions?: Prisma.suspensionsCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsUncheckedCreateInput = {
     id?: bigint | number;
@@ -333,12 +404,19 @@ export type disciplinary_actionsUncheckedCreateInput = {
     occurred_at?: Date | string;
     reported_by: bigint | number;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_by?: bigint | number | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     fines?: Prisma.finesUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
     suspensions?: Prisma.suspensionsUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersUncheckedCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -346,15 +424,22 @@ export type disciplinary_actionsUpdateInput = {
     reason?: Prisma.StringFieldUpdateOperationsInput | string;
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersUpdateOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersNestedInput;
+    reviewer?: Prisma.usersUpdateOneWithoutDisciplinary_actions_reviewedNestedInput;
     matches?: Prisma.matchesUpdateOneWithoutDisciplinary_actionsNestedInput;
     users_disciplinary_actions_reported_byTousers?: Prisma.usersUpdateOneRequiredWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersNestedInput;
     tournament_team_players?: Prisma.tournament_team_playersUpdateOneRequiredWithoutDisciplinary_actionsNestedInput;
     fines?: Prisma.finesUpdateOneWithoutDisciplinary_actionsNestedInput;
     suspensions?: Prisma.suspensionsUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsUncheckedUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -367,12 +452,19 @@ export type disciplinary_actionsUncheckedUpdateInput = {
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     fines?: Prisma.finesUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
     suspensions?: Prisma.suspensionsUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUncheckedUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsCreateManyInput = {
     id?: bigint | number;
@@ -385,10 +477,14 @@ export type disciplinary_actionsCreateManyInput = {
     occurred_at?: Date | string;
     reported_by: bigint | number;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_by?: bigint | number | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type disciplinary_actionsUpdateManyMutationInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -396,9 +492,12 @@ export type disciplinary_actionsUpdateManyMutationInput = {
     reason?: Prisma.StringFieldUpdateOperationsInput | string;
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type disciplinary_actionsUncheckedUpdateManyInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -411,10 +510,14 @@ export type disciplinary_actionsUncheckedUpdateManyInput = {
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type disciplinary_actionsCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -427,10 +530,14 @@ export type disciplinary_actionsCountOrderByAggregateInput = {
     occurred_at?: Prisma.SortOrder;
     reported_by?: Prisma.SortOrder;
     decision_status?: Prisma.SortOrder;
+    review_started_by?: Prisma.SortOrder;
+    review_started_at?: Prisma.SortOrder;
     decided_by?: Prisma.SortOrder;
     decided_at?: Prisma.SortOrder;
     decision_notes?: Prisma.SortOrder;
+    appeal_deadline?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
 };
 export type disciplinary_actionsAvgOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -439,6 +546,7 @@ export type disciplinary_actionsAvgOrderByAggregateInput = {
     team_id?: Prisma.SortOrder;
     player_id?: Prisma.SortOrder;
     reported_by?: Prisma.SortOrder;
+    review_started_by?: Prisma.SortOrder;
     decided_by?: Prisma.SortOrder;
 };
 export type disciplinary_actionsMaxOrderByAggregateInput = {
@@ -452,10 +560,14 @@ export type disciplinary_actionsMaxOrderByAggregateInput = {
     occurred_at?: Prisma.SortOrder;
     reported_by?: Prisma.SortOrder;
     decision_status?: Prisma.SortOrder;
+    review_started_by?: Prisma.SortOrder;
+    review_started_at?: Prisma.SortOrder;
     decided_by?: Prisma.SortOrder;
     decided_at?: Prisma.SortOrder;
     decision_notes?: Prisma.SortOrder;
+    appeal_deadline?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
 };
 export type disciplinary_actionsMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -468,10 +580,14 @@ export type disciplinary_actionsMinOrderByAggregateInput = {
     occurred_at?: Prisma.SortOrder;
     reported_by?: Prisma.SortOrder;
     decision_status?: Prisma.SortOrder;
+    review_started_by?: Prisma.SortOrder;
+    review_started_at?: Prisma.SortOrder;
     decided_by?: Prisma.SortOrder;
     decided_at?: Prisma.SortOrder;
     decision_notes?: Prisma.SortOrder;
+    appeal_deadline?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
 };
 export type disciplinary_actionsSumOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -480,6 +596,7 @@ export type disciplinary_actionsSumOrderByAggregateInput = {
     team_id?: Prisma.SortOrder;
     player_id?: Prisma.SortOrder;
     reported_by?: Prisma.SortOrder;
+    review_started_by?: Prisma.SortOrder;
     decided_by?: Prisma.SortOrder;
 };
 export type Disciplinary_actionsScalarRelationFilter = {
@@ -493,6 +610,10 @@ export type Disciplinary_actionsListRelationFilter = {
 };
 export type disciplinary_actionsOrderByRelationAggregateInput = {
     _count?: Prisma.SortOrder;
+};
+export type Disciplinary_actionsNullableScalarRelationFilter = {
+    is?: Prisma.disciplinary_actionsWhereInput | null;
+    isNot?: Prisma.disciplinary_actionsWhereInput | null;
 };
 export type NullableBigIntFieldUpdateOperationsInput = {
     set?: bigint | number | null;
@@ -563,6 +684,30 @@ export type disciplinary_actionsUpdateOneRequiredWithoutSuspensionsNestedInput =
     connect?: Prisma.disciplinary_actionsWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.disciplinary_actionsUpdateToOneWithWhereWithoutSuspensionsInput, Prisma.disciplinary_actionsUpdateWithoutSuspensionsInput>, Prisma.disciplinary_actionsUncheckedUpdateWithoutSuspensionsInput>;
 };
+export type disciplinary_actionsCreateNestedOneWithoutDisciplinary_appealsInput = {
+    create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutDisciplinary_appealsInput, Prisma.disciplinary_actionsUncheckedCreateWithoutDisciplinary_appealsInput>;
+    connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutDisciplinary_appealsInput;
+    connect?: Prisma.disciplinary_actionsWhereUniqueInput;
+};
+export type disciplinary_actionsUpdateOneRequiredWithoutDisciplinary_appealsNestedInput = {
+    create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutDisciplinary_appealsInput, Prisma.disciplinary_actionsUncheckedCreateWithoutDisciplinary_appealsInput>;
+    connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutDisciplinary_appealsInput;
+    upsert?: Prisma.disciplinary_actionsUpsertWithoutDisciplinary_appealsInput;
+    connect?: Prisma.disciplinary_actionsWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.disciplinary_actionsUpdateToOneWithWhereWithoutDisciplinary_appealsInput, Prisma.disciplinary_actionsUpdateWithoutDisciplinary_appealsInput>, Prisma.disciplinary_actionsUncheckedUpdateWithoutDisciplinary_appealsInput>;
+};
+export type disciplinary_actionsCreateNestedOneWithoutDisciplinary_eventsInput = {
+    create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutDisciplinary_eventsInput, Prisma.disciplinary_actionsUncheckedCreateWithoutDisciplinary_eventsInput>;
+    connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutDisciplinary_eventsInput;
+    connect?: Prisma.disciplinary_actionsWhereUniqueInput;
+};
+export type disciplinary_actionsUpdateOneRequiredWithoutDisciplinary_eventsNestedInput = {
+    create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutDisciplinary_eventsInput, Prisma.disciplinary_actionsUncheckedCreateWithoutDisciplinary_eventsInput>;
+    connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutDisciplinary_eventsInput;
+    upsert?: Prisma.disciplinary_actionsUpsertWithoutDisciplinary_eventsInput;
+    connect?: Prisma.disciplinary_actionsWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.disciplinary_actionsUpdateToOneWithWhereWithoutDisciplinary_eventsInput, Prisma.disciplinary_actionsUpdateWithoutDisciplinary_eventsInput>, Prisma.disciplinary_actionsUncheckedUpdateWithoutDisciplinary_eventsInput>;
+};
 export type disciplinary_actionsCreateNestedManyWithoutTournament_team_playersInput = {
     create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutTournament_team_playersInput, Prisma.disciplinary_actionsUncheckedCreateWithoutTournament_team_playersInput> | Prisma.disciplinary_actionsCreateWithoutTournament_team_playersInput[] | Prisma.disciplinary_actionsUncheckedCreateWithoutTournament_team_playersInput[];
     connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutTournament_team_playersInput | Prisma.disciplinary_actionsCreateOrConnectWithoutTournament_team_playersInput[];
@@ -601,6 +746,17 @@ export type disciplinary_actionsUncheckedUpdateManyWithoutTournament_team_player
     updateMany?: Prisma.disciplinary_actionsUpdateManyWithWhereWithoutTournament_team_playersInput | Prisma.disciplinary_actionsUpdateManyWithWhereWithoutTournament_team_playersInput[];
     deleteMany?: Prisma.disciplinary_actionsScalarWhereInput | Prisma.disciplinary_actionsScalarWhereInput[];
 };
+export type disciplinary_actionsCreateNestedManyWithoutReviewerInput = {
+    create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutReviewerInput, Prisma.disciplinary_actionsUncheckedCreateWithoutReviewerInput> | Prisma.disciplinary_actionsCreateWithoutReviewerInput[] | Prisma.disciplinary_actionsUncheckedCreateWithoutReviewerInput[];
+    connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutReviewerInput | Prisma.disciplinary_actionsCreateOrConnectWithoutReviewerInput[];
+    createMany?: Prisma.disciplinary_actionsCreateManyReviewerInputEnvelope;
+    connect?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
+};
+export type disciplinary_actionsCreateNestedOneWithoutUsers_blocked_by_actionInput = {
+    create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutUsers_blocked_by_actionInput, Prisma.disciplinary_actionsUncheckedCreateWithoutUsers_blocked_by_actionInput>;
+    connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutUsers_blocked_by_actionInput;
+    connect?: Prisma.disciplinary_actionsWhereUniqueInput;
+};
 export type disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput = {
     create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutUsers_disciplinary_actions_decided_byTousersInput, Prisma.disciplinary_actionsUncheckedCreateWithoutUsers_disciplinary_actions_decided_byTousersInput> | Prisma.disciplinary_actionsCreateWithoutUsers_disciplinary_actions_decided_byTousersInput[] | Prisma.disciplinary_actionsUncheckedCreateWithoutUsers_disciplinary_actions_decided_byTousersInput[];
     connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutUsers_disciplinary_actions_decided_byTousersInput | Prisma.disciplinary_actionsCreateOrConnectWithoutUsers_disciplinary_actions_decided_byTousersInput[];
@@ -611,6 +767,12 @@ export type disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_action
     create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutUsers_disciplinary_actions_reported_byTousersInput, Prisma.disciplinary_actionsUncheckedCreateWithoutUsers_disciplinary_actions_reported_byTousersInput> | Prisma.disciplinary_actionsCreateWithoutUsers_disciplinary_actions_reported_byTousersInput[] | Prisma.disciplinary_actionsUncheckedCreateWithoutUsers_disciplinary_actions_reported_byTousersInput[];
     connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutUsers_disciplinary_actions_reported_byTousersInput | Prisma.disciplinary_actionsCreateOrConnectWithoutUsers_disciplinary_actions_reported_byTousersInput[];
     createMany?: Prisma.disciplinary_actionsCreateManyUsers_disciplinary_actions_reported_byTousersInputEnvelope;
+    connect?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
+};
+export type disciplinary_actionsUncheckedCreateNestedManyWithoutReviewerInput = {
+    create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutReviewerInput, Prisma.disciplinary_actionsUncheckedCreateWithoutReviewerInput> | Prisma.disciplinary_actionsCreateWithoutReviewerInput[] | Prisma.disciplinary_actionsUncheckedCreateWithoutReviewerInput[];
+    connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutReviewerInput | Prisma.disciplinary_actionsCreateOrConnectWithoutReviewerInput[];
+    createMany?: Prisma.disciplinary_actionsCreateManyReviewerInputEnvelope;
     connect?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
 };
 export type disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput = {
@@ -624,6 +786,28 @@ export type disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplina
     connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutUsers_disciplinary_actions_reported_byTousersInput | Prisma.disciplinary_actionsCreateOrConnectWithoutUsers_disciplinary_actions_reported_byTousersInput[];
     createMany?: Prisma.disciplinary_actionsCreateManyUsers_disciplinary_actions_reported_byTousersInputEnvelope;
     connect?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
+};
+export type disciplinary_actionsUpdateManyWithoutReviewerNestedInput = {
+    create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutReviewerInput, Prisma.disciplinary_actionsUncheckedCreateWithoutReviewerInput> | Prisma.disciplinary_actionsCreateWithoutReviewerInput[] | Prisma.disciplinary_actionsUncheckedCreateWithoutReviewerInput[];
+    connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutReviewerInput | Prisma.disciplinary_actionsCreateOrConnectWithoutReviewerInput[];
+    upsert?: Prisma.disciplinary_actionsUpsertWithWhereUniqueWithoutReviewerInput | Prisma.disciplinary_actionsUpsertWithWhereUniqueWithoutReviewerInput[];
+    createMany?: Prisma.disciplinary_actionsCreateManyReviewerInputEnvelope;
+    set?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
+    disconnect?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
+    delete?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
+    connect?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
+    update?: Prisma.disciplinary_actionsUpdateWithWhereUniqueWithoutReviewerInput | Prisma.disciplinary_actionsUpdateWithWhereUniqueWithoutReviewerInput[];
+    updateMany?: Prisma.disciplinary_actionsUpdateManyWithWhereWithoutReviewerInput | Prisma.disciplinary_actionsUpdateManyWithWhereWithoutReviewerInput[];
+    deleteMany?: Prisma.disciplinary_actionsScalarWhereInput | Prisma.disciplinary_actionsScalarWhereInput[];
+};
+export type disciplinary_actionsUpdateOneWithoutUsers_blocked_by_actionNestedInput = {
+    create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutUsers_blocked_by_actionInput, Prisma.disciplinary_actionsUncheckedCreateWithoutUsers_blocked_by_actionInput>;
+    connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutUsers_blocked_by_actionInput;
+    upsert?: Prisma.disciplinary_actionsUpsertWithoutUsers_blocked_by_actionInput;
+    disconnect?: Prisma.disciplinary_actionsWhereInput | boolean;
+    delete?: Prisma.disciplinary_actionsWhereInput | boolean;
+    connect?: Prisma.disciplinary_actionsWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.disciplinary_actionsUpdateToOneWithWhereWithoutUsers_blocked_by_actionInput, Prisma.disciplinary_actionsUpdateWithoutUsers_blocked_by_actionInput>, Prisma.disciplinary_actionsUncheckedUpdateWithoutUsers_blocked_by_actionInput>;
 };
 export type disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput = {
     create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutUsers_disciplinary_actions_decided_byTousersInput, Prisma.disciplinary_actionsUncheckedCreateWithoutUsers_disciplinary_actions_decided_byTousersInput> | Prisma.disciplinary_actionsCreateWithoutUsers_disciplinary_actions_decided_byTousersInput[] | Prisma.disciplinary_actionsUncheckedCreateWithoutUsers_disciplinary_actions_decided_byTousersInput[];
@@ -649,6 +833,19 @@ export type disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_repo
     connect?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
     update?: Prisma.disciplinary_actionsUpdateWithWhereUniqueWithoutUsers_disciplinary_actions_reported_byTousersInput | Prisma.disciplinary_actionsUpdateWithWhereUniqueWithoutUsers_disciplinary_actions_reported_byTousersInput[];
     updateMany?: Prisma.disciplinary_actionsUpdateManyWithWhereWithoutUsers_disciplinary_actions_reported_byTousersInput | Prisma.disciplinary_actionsUpdateManyWithWhereWithoutUsers_disciplinary_actions_reported_byTousersInput[];
+    deleteMany?: Prisma.disciplinary_actionsScalarWhereInput | Prisma.disciplinary_actionsScalarWhereInput[];
+};
+export type disciplinary_actionsUncheckedUpdateManyWithoutReviewerNestedInput = {
+    create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutReviewerInput, Prisma.disciplinary_actionsUncheckedCreateWithoutReviewerInput> | Prisma.disciplinary_actionsCreateWithoutReviewerInput[] | Prisma.disciplinary_actionsUncheckedCreateWithoutReviewerInput[];
+    connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutReviewerInput | Prisma.disciplinary_actionsCreateOrConnectWithoutReviewerInput[];
+    upsert?: Prisma.disciplinary_actionsUpsertWithWhereUniqueWithoutReviewerInput | Prisma.disciplinary_actionsUpsertWithWhereUniqueWithoutReviewerInput[];
+    createMany?: Prisma.disciplinary_actionsCreateManyReviewerInputEnvelope;
+    set?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
+    disconnect?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
+    delete?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
+    connect?: Prisma.disciplinary_actionsWhereUniqueInput | Prisma.disciplinary_actionsWhereUniqueInput[];
+    update?: Prisma.disciplinary_actionsUpdateWithWhereUniqueWithoutReviewerInput | Prisma.disciplinary_actionsUpdateWithWhereUniqueWithoutReviewerInput[];
+    updateMany?: Prisma.disciplinary_actionsUpdateManyWithWhereWithoutReviewerInput | Prisma.disciplinary_actionsUpdateManyWithWhereWithoutReviewerInput[];
     deleteMany?: Prisma.disciplinary_actionsScalarWhereInput | Prisma.disciplinary_actionsScalarWhereInput[];
 };
 export type disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput = {
@@ -683,14 +880,21 @@ export type disciplinary_actionsCreateWithoutFinesInput = {
     reason: string;
     occurred_at?: Date | string;
     decision_status?: string;
+    review_started_at?: Date | string | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput;
+    reviewer?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_reviewedInput;
     matches?: Prisma.matchesCreateNestedOneWithoutDisciplinary_actionsInput;
     users_disciplinary_actions_reported_byTousers: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersInput;
     tournament_team_players: Prisma.tournament_team_playersCreateNestedOneWithoutDisciplinary_actionsInput;
     suspensions?: Prisma.suspensionsCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsUncheckedCreateWithoutFinesInput = {
     id?: bigint | number;
@@ -703,11 +907,18 @@ export type disciplinary_actionsUncheckedCreateWithoutFinesInput = {
     occurred_at?: Date | string;
     reported_by: bigint | number;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_by?: bigint | number | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     suspensions?: Prisma.suspensionsUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersUncheckedCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsCreateOrConnectWithoutFinesInput = {
     where: Prisma.disciplinary_actionsWhereUniqueInput;
@@ -728,14 +939,21 @@ export type disciplinary_actionsUpdateWithoutFinesInput = {
     reason?: Prisma.StringFieldUpdateOperationsInput | string;
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersUpdateOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersNestedInput;
+    reviewer?: Prisma.usersUpdateOneWithoutDisciplinary_actions_reviewedNestedInput;
     matches?: Prisma.matchesUpdateOneWithoutDisciplinary_actionsNestedInput;
     users_disciplinary_actions_reported_byTousers?: Prisma.usersUpdateOneRequiredWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersNestedInput;
     tournament_team_players?: Prisma.tournament_team_playersUpdateOneRequiredWithoutDisciplinary_actionsNestedInput;
     suspensions?: Prisma.suspensionsUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsUncheckedUpdateWithoutFinesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -748,11 +966,18 @@ export type disciplinary_actionsUncheckedUpdateWithoutFinesInput = {
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     suspensions?: Prisma.suspensionsUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUncheckedUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsCreateWithoutMatchesInput = {
     id?: bigint | number;
@@ -760,14 +985,21 @@ export type disciplinary_actionsCreateWithoutMatchesInput = {
     reason: string;
     occurred_at?: Date | string;
     decision_status?: string;
+    review_started_at?: Date | string | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput;
+    reviewer?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_reviewedInput;
     users_disciplinary_actions_reported_byTousers: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersInput;
     tournament_team_players: Prisma.tournament_team_playersCreateNestedOneWithoutDisciplinary_actionsInput;
     fines?: Prisma.finesCreateNestedOneWithoutDisciplinary_actionsInput;
     suspensions?: Prisma.suspensionsCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsUncheckedCreateWithoutMatchesInput = {
     id?: bigint | number;
@@ -778,12 +1010,19 @@ export type disciplinary_actionsUncheckedCreateWithoutMatchesInput = {
     occurred_at?: Date | string;
     reported_by: bigint | number;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_by?: bigint | number | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     fines?: Prisma.finesUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
     suspensions?: Prisma.suspensionsUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersUncheckedCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsCreateOrConnectWithoutMatchesInput = {
     where: Prisma.disciplinary_actionsWhereUniqueInput;
@@ -820,10 +1059,14 @@ export type disciplinary_actionsScalarWhereInput = {
     occurred_at?: Prisma.DateTimeFilter<"disciplinary_actions"> | Date | string;
     reported_by?: Prisma.BigIntFilter<"disciplinary_actions"> | bigint | number;
     decision_status?: Prisma.StringFilter<"disciplinary_actions"> | string;
+    review_started_by?: Prisma.BigIntNullableFilter<"disciplinary_actions"> | bigint | number | null;
+    review_started_at?: Prisma.DateTimeNullableFilter<"disciplinary_actions"> | Date | string | null;
     decided_by?: Prisma.BigIntNullableFilter<"disciplinary_actions"> | bigint | number | null;
     decided_at?: Prisma.DateTimeNullableFilter<"disciplinary_actions"> | Date | string | null;
     decision_notes?: Prisma.StringNullableFilter<"disciplinary_actions"> | string | null;
+    appeal_deadline?: Prisma.DateTimeNullableFilter<"disciplinary_actions"> | Date | string | null;
     created_at?: Prisma.DateTimeFilter<"disciplinary_actions"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"disciplinary_actions"> | Date | string;
 };
 export type disciplinary_actionsCreateWithoutSuspensionsInput = {
     id?: bigint | number;
@@ -831,14 +1074,21 @@ export type disciplinary_actionsCreateWithoutSuspensionsInput = {
     reason: string;
     occurred_at?: Date | string;
     decision_status?: string;
+    review_started_at?: Date | string | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput;
+    reviewer?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_reviewedInput;
     matches?: Prisma.matchesCreateNestedOneWithoutDisciplinary_actionsInput;
     users_disciplinary_actions_reported_byTousers: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersInput;
     tournament_team_players: Prisma.tournament_team_playersCreateNestedOneWithoutDisciplinary_actionsInput;
     fines?: Prisma.finesCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsUncheckedCreateWithoutSuspensionsInput = {
     id?: bigint | number;
@@ -851,11 +1101,18 @@ export type disciplinary_actionsUncheckedCreateWithoutSuspensionsInput = {
     occurred_at?: Date | string;
     reported_by: bigint | number;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_by?: bigint | number | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     fines?: Prisma.finesUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersUncheckedCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsCreateOrConnectWithoutSuspensionsInput = {
     where: Prisma.disciplinary_actionsWhereUniqueInput;
@@ -876,14 +1133,21 @@ export type disciplinary_actionsUpdateWithoutSuspensionsInput = {
     reason?: Prisma.StringFieldUpdateOperationsInput | string;
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersUpdateOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersNestedInput;
+    reviewer?: Prisma.usersUpdateOneWithoutDisciplinary_actions_reviewedNestedInput;
     matches?: Prisma.matchesUpdateOneWithoutDisciplinary_actionsNestedInput;
     users_disciplinary_actions_reported_byTousers?: Prisma.usersUpdateOneRequiredWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersNestedInput;
     tournament_team_players?: Prisma.tournament_team_playersUpdateOneRequiredWithoutDisciplinary_actionsNestedInput;
     fines?: Prisma.finesUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsUncheckedUpdateWithoutSuspensionsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -896,11 +1160,228 @@ export type disciplinary_actionsUncheckedUpdateWithoutSuspensionsInput = {
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     fines?: Prisma.finesUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUncheckedUpdateManyWithoutBlock_source_actionNestedInput;
+};
+export type disciplinary_actionsCreateWithoutDisciplinary_appealsInput = {
+    id?: bigint | number;
+    card_type?: string;
+    reason: string;
+    occurred_at?: Date | string;
+    decision_status?: string;
+    review_started_at?: Date | string | null;
+    decided_at?: Date | string | null;
+    decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    users_disciplinary_actions_decided_byTousers?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput;
+    reviewer?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_reviewedInput;
+    matches?: Prisma.matchesCreateNestedOneWithoutDisciplinary_actionsInput;
+    users_disciplinary_actions_reported_byTousers: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersInput;
+    tournament_team_players: Prisma.tournament_team_playersCreateNestedOneWithoutDisciplinary_actionsInput;
+    fines?: Prisma.finesCreateNestedOneWithoutDisciplinary_actionsInput;
+    suspensions?: Prisma.suspensionsCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersCreateNestedManyWithoutBlock_source_actionInput;
+};
+export type disciplinary_actionsUncheckedCreateWithoutDisciplinary_appealsInput = {
+    id?: bigint | number;
+    tournament_id: bigint | number;
+    match_id?: bigint | number | null;
+    team_id: bigint | number;
+    player_id: bigint | number;
+    card_type?: string;
+    reason: string;
+    occurred_at?: Date | string;
+    reported_by: bigint | number;
+    decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
+    decided_by?: bigint | number | null;
+    decided_at?: Date | string | null;
+    decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    fines?: Prisma.finesUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    suspensions?: Prisma.suspensionsUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersUncheckedCreateNestedManyWithoutBlock_source_actionInput;
+};
+export type disciplinary_actionsCreateOrConnectWithoutDisciplinary_appealsInput = {
+    where: Prisma.disciplinary_actionsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutDisciplinary_appealsInput, Prisma.disciplinary_actionsUncheckedCreateWithoutDisciplinary_appealsInput>;
+};
+export type disciplinary_actionsUpsertWithoutDisciplinary_appealsInput = {
+    update: Prisma.XOR<Prisma.disciplinary_actionsUpdateWithoutDisciplinary_appealsInput, Prisma.disciplinary_actionsUncheckedUpdateWithoutDisciplinary_appealsInput>;
+    create: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutDisciplinary_appealsInput, Prisma.disciplinary_actionsUncheckedCreateWithoutDisciplinary_appealsInput>;
+    where?: Prisma.disciplinary_actionsWhereInput;
+};
+export type disciplinary_actionsUpdateToOneWithWhereWithoutDisciplinary_appealsInput = {
+    where?: Prisma.disciplinary_actionsWhereInput;
+    data: Prisma.XOR<Prisma.disciplinary_actionsUpdateWithoutDisciplinary_appealsInput, Prisma.disciplinary_actionsUncheckedUpdateWithoutDisciplinary_appealsInput>;
+};
+export type disciplinary_actionsUpdateWithoutDisciplinary_appealsInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    card_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    reason?: Prisma.StringFieldUpdateOperationsInput | string;
+    occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users_disciplinary_actions_decided_byTousers?: Prisma.usersUpdateOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersNestedInput;
+    reviewer?: Prisma.usersUpdateOneWithoutDisciplinary_actions_reviewedNestedInput;
+    matches?: Prisma.matchesUpdateOneWithoutDisciplinary_actionsNestedInput;
+    users_disciplinary_actions_reported_byTousers?: Prisma.usersUpdateOneRequiredWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateOneRequiredWithoutDisciplinary_actionsNestedInput;
+    fines?: Prisma.finesUpdateOneWithoutDisciplinary_actionsNestedInput;
+    suspensions?: Prisma.suspensionsUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUpdateManyWithoutBlock_source_actionNestedInput;
+};
+export type disciplinary_actionsUncheckedUpdateWithoutDisciplinary_appealsInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    match_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    player_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    card_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    reason?: Prisma.StringFieldUpdateOperationsInput | string;
+    occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    fines?: Prisma.finesUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    suspensions?: Prisma.suspensionsUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUncheckedUpdateManyWithoutBlock_source_actionNestedInput;
+};
+export type disciplinary_actionsCreateWithoutDisciplinary_eventsInput = {
+    id?: bigint | number;
+    card_type?: string;
+    reason: string;
+    occurred_at?: Date | string;
+    decision_status?: string;
+    review_started_at?: Date | string | null;
+    decided_at?: Date | string | null;
+    decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    users_disciplinary_actions_decided_byTousers?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput;
+    reviewer?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_reviewedInput;
+    matches?: Prisma.matchesCreateNestedOneWithoutDisciplinary_actionsInput;
+    users_disciplinary_actions_reported_byTousers: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersInput;
+    tournament_team_players: Prisma.tournament_team_playersCreateNestedOneWithoutDisciplinary_actionsInput;
+    fines?: Prisma.finesCreateNestedOneWithoutDisciplinary_actionsInput;
+    suspensions?: Prisma.suspensionsCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsCreateNestedOneWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersCreateNestedManyWithoutBlock_source_actionInput;
+};
+export type disciplinary_actionsUncheckedCreateWithoutDisciplinary_eventsInput = {
+    id?: bigint | number;
+    tournament_id: bigint | number;
+    match_id?: bigint | number | null;
+    team_id: bigint | number;
+    player_id: bigint | number;
+    card_type?: string;
+    reason: string;
+    occurred_at?: Date | string;
+    reported_by: bigint | number;
+    decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
+    decided_by?: bigint | number | null;
+    decided_at?: Date | string | null;
+    decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    fines?: Prisma.finesUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    suspensions?: Prisma.suspensionsUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedCreateNestedOneWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersUncheckedCreateNestedManyWithoutBlock_source_actionInput;
+};
+export type disciplinary_actionsCreateOrConnectWithoutDisciplinary_eventsInput = {
+    where: Prisma.disciplinary_actionsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutDisciplinary_eventsInput, Prisma.disciplinary_actionsUncheckedCreateWithoutDisciplinary_eventsInput>;
+};
+export type disciplinary_actionsUpsertWithoutDisciplinary_eventsInput = {
+    update: Prisma.XOR<Prisma.disciplinary_actionsUpdateWithoutDisciplinary_eventsInput, Prisma.disciplinary_actionsUncheckedUpdateWithoutDisciplinary_eventsInput>;
+    create: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutDisciplinary_eventsInput, Prisma.disciplinary_actionsUncheckedCreateWithoutDisciplinary_eventsInput>;
+    where?: Prisma.disciplinary_actionsWhereInput;
+};
+export type disciplinary_actionsUpdateToOneWithWhereWithoutDisciplinary_eventsInput = {
+    where?: Prisma.disciplinary_actionsWhereInput;
+    data: Prisma.XOR<Prisma.disciplinary_actionsUpdateWithoutDisciplinary_eventsInput, Prisma.disciplinary_actionsUncheckedUpdateWithoutDisciplinary_eventsInput>;
+};
+export type disciplinary_actionsUpdateWithoutDisciplinary_eventsInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    card_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    reason?: Prisma.StringFieldUpdateOperationsInput | string;
+    occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users_disciplinary_actions_decided_byTousers?: Prisma.usersUpdateOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersNestedInput;
+    reviewer?: Prisma.usersUpdateOneWithoutDisciplinary_actions_reviewedNestedInput;
+    matches?: Prisma.matchesUpdateOneWithoutDisciplinary_actionsNestedInput;
+    users_disciplinary_actions_reported_byTousers?: Prisma.usersUpdateOneRequiredWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateOneRequiredWithoutDisciplinary_actionsNestedInput;
+    fines?: Prisma.finesUpdateOneWithoutDisciplinary_actionsNestedInput;
+    suspensions?: Prisma.suspensionsUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUpdateOneWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUpdateManyWithoutBlock_source_actionNestedInput;
+};
+export type disciplinary_actionsUncheckedUpdateWithoutDisciplinary_eventsInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    match_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    player_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    card_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    reason?: Prisma.StringFieldUpdateOperationsInput | string;
+    occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    fines?: Prisma.finesUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    suspensions?: Prisma.suspensionsUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedUpdateOneWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUncheckedUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsCreateWithoutTournament_team_playersInput = {
     id?: bigint | number;
@@ -908,14 +1389,21 @@ export type disciplinary_actionsCreateWithoutTournament_team_playersInput = {
     reason: string;
     occurred_at?: Date | string;
     decision_status?: string;
+    review_started_at?: Date | string | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput;
+    reviewer?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_reviewedInput;
     matches?: Prisma.matchesCreateNestedOneWithoutDisciplinary_actionsInput;
     users_disciplinary_actions_reported_byTousers: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersInput;
     fines?: Prisma.finesCreateNestedOneWithoutDisciplinary_actionsInput;
     suspensions?: Prisma.suspensionsCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsUncheckedCreateWithoutTournament_team_playersInput = {
     id?: bigint | number;
@@ -925,12 +1413,19 @@ export type disciplinary_actionsUncheckedCreateWithoutTournament_team_playersInp
     occurred_at?: Date | string;
     reported_by: bigint | number;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_by?: bigint | number | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     fines?: Prisma.finesUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
     suspensions?: Prisma.suspensionsUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersUncheckedCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsCreateOrConnectWithoutTournament_team_playersInput = {
     where: Prisma.disciplinary_actionsWhereUniqueInput;
@@ -953,20 +1448,131 @@ export type disciplinary_actionsUpdateManyWithWhereWithoutTournament_team_player
     where: Prisma.disciplinary_actionsScalarWhereInput;
     data: Prisma.XOR<Prisma.disciplinary_actionsUpdateManyMutationInput, Prisma.disciplinary_actionsUncheckedUpdateManyWithoutTournament_team_playersInput>;
 };
+export type disciplinary_actionsCreateWithoutReviewerInput = {
+    id?: bigint | number;
+    card_type?: string;
+    reason: string;
+    occurred_at?: Date | string;
+    decision_status?: string;
+    review_started_at?: Date | string | null;
+    decided_at?: Date | string | null;
+    decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    users_disciplinary_actions_decided_byTousers?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput;
+    matches?: Prisma.matchesCreateNestedOneWithoutDisciplinary_actionsInput;
+    users_disciplinary_actions_reported_byTousers: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersInput;
+    tournament_team_players: Prisma.tournament_team_playersCreateNestedOneWithoutDisciplinary_actionsInput;
+    fines?: Prisma.finesCreateNestedOneWithoutDisciplinary_actionsInput;
+    suspensions?: Prisma.suspensionsCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersCreateNestedManyWithoutBlock_source_actionInput;
+};
+export type disciplinary_actionsUncheckedCreateWithoutReviewerInput = {
+    id?: bigint | number;
+    tournament_id: bigint | number;
+    match_id?: bigint | number | null;
+    team_id: bigint | number;
+    player_id: bigint | number;
+    card_type?: string;
+    reason: string;
+    occurred_at?: Date | string;
+    reported_by: bigint | number;
+    decision_status?: string;
+    review_started_at?: Date | string | null;
+    decided_by?: bigint | number | null;
+    decided_at?: Date | string | null;
+    decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    fines?: Prisma.finesUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    suspensions?: Prisma.suspensionsUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersUncheckedCreateNestedManyWithoutBlock_source_actionInput;
+};
+export type disciplinary_actionsCreateOrConnectWithoutReviewerInput = {
+    where: Prisma.disciplinary_actionsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutReviewerInput, Prisma.disciplinary_actionsUncheckedCreateWithoutReviewerInput>;
+};
+export type disciplinary_actionsCreateManyReviewerInputEnvelope = {
+    data: Prisma.disciplinary_actionsCreateManyReviewerInput | Prisma.disciplinary_actionsCreateManyReviewerInput[];
+    skipDuplicates?: boolean;
+};
+export type disciplinary_actionsCreateWithoutUsers_blocked_by_actionInput = {
+    id?: bigint | number;
+    card_type?: string;
+    reason: string;
+    occurred_at?: Date | string;
+    decision_status?: string;
+    review_started_at?: Date | string | null;
+    decided_at?: Date | string | null;
+    decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    users_disciplinary_actions_decided_byTousers?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput;
+    reviewer?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_reviewedInput;
+    matches?: Prisma.matchesCreateNestedOneWithoutDisciplinary_actionsInput;
+    users_disciplinary_actions_reported_byTousers: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersInput;
+    tournament_team_players: Prisma.tournament_team_playersCreateNestedOneWithoutDisciplinary_actionsInput;
+    fines?: Prisma.finesCreateNestedOneWithoutDisciplinary_actionsInput;
+    suspensions?: Prisma.suspensionsCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutDisciplinary_actionInput;
+};
+export type disciplinary_actionsUncheckedCreateWithoutUsers_blocked_by_actionInput = {
+    id?: bigint | number;
+    tournament_id: bigint | number;
+    match_id?: bigint | number | null;
+    team_id: bigint | number;
+    player_id: bigint | number;
+    card_type?: string;
+    reason: string;
+    occurred_at?: Date | string;
+    reported_by: bigint | number;
+    decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
+    decided_by?: bigint | number | null;
+    decided_at?: Date | string | null;
+    decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    fines?: Prisma.finesUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    suspensions?: Prisma.suspensionsUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutDisciplinary_actionInput;
+};
+export type disciplinary_actionsCreateOrConnectWithoutUsers_blocked_by_actionInput = {
+    where: Prisma.disciplinary_actionsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutUsers_blocked_by_actionInput, Prisma.disciplinary_actionsUncheckedCreateWithoutUsers_blocked_by_actionInput>;
+};
 export type disciplinary_actionsCreateWithoutUsers_disciplinary_actions_decided_byTousersInput = {
     id?: bigint | number;
     card_type?: string;
     reason: string;
     occurred_at?: Date | string;
     decision_status?: string;
+    review_started_at?: Date | string | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
+    reviewer?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_reviewedInput;
     matches?: Prisma.matchesCreateNestedOneWithoutDisciplinary_actionsInput;
     users_disciplinary_actions_reported_byTousers: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersInput;
     tournament_team_players: Prisma.tournament_team_playersCreateNestedOneWithoutDisciplinary_actionsInput;
     fines?: Prisma.finesCreateNestedOneWithoutDisciplinary_actionsInput;
     suspensions?: Prisma.suspensionsCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsUncheckedCreateWithoutUsers_disciplinary_actions_decided_byTousersInput = {
     id?: bigint | number;
@@ -979,11 +1585,18 @@ export type disciplinary_actionsUncheckedCreateWithoutUsers_disciplinary_actions
     occurred_at?: Date | string;
     reported_by: bigint | number;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     fines?: Prisma.finesUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
     suspensions?: Prisma.suspensionsUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersUncheckedCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsCreateOrConnectWithoutUsers_disciplinary_actions_decided_byTousersInput = {
     where: Prisma.disciplinary_actionsWhereUniqueInput;
@@ -999,14 +1612,21 @@ export type disciplinary_actionsCreateWithoutUsers_disciplinary_actions_reported
     reason: string;
     occurred_at?: Date | string;
     decision_status?: string;
+    review_started_at?: Date | string | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput;
+    reviewer?: Prisma.usersCreateNestedOneWithoutDisciplinary_actions_reviewedInput;
     matches?: Prisma.matchesCreateNestedOneWithoutDisciplinary_actionsInput;
     tournament_team_players: Prisma.tournament_team_playersCreateNestedOneWithoutDisciplinary_actionsInput;
     fines?: Prisma.finesCreateNestedOneWithoutDisciplinary_actionsInput;
     suspensions?: Prisma.suspensionsCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsUncheckedCreateWithoutUsers_disciplinary_actions_reported_byTousersInput = {
     id?: bigint | number;
@@ -1018,12 +1638,19 @@ export type disciplinary_actionsUncheckedCreateWithoutUsers_disciplinary_actions
     reason: string;
     occurred_at?: Date | string;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_by?: bigint | number | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     fines?: Prisma.finesUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
     suspensions?: Prisma.suspensionsUncheckedCreateNestedOneWithoutDisciplinary_actionsInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedCreateNestedOneWithoutDisciplinary_actionInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutDisciplinary_actionInput;
+    users_blocked_by_action?: Prisma.usersUncheckedCreateNestedManyWithoutBlock_source_actionInput;
 };
 export type disciplinary_actionsCreateOrConnectWithoutUsers_disciplinary_actions_reported_byTousersInput = {
     where: Prisma.disciplinary_actionsWhereUniqueInput;
@@ -1032,6 +1659,74 @@ export type disciplinary_actionsCreateOrConnectWithoutUsers_disciplinary_actions
 export type disciplinary_actionsCreateManyUsers_disciplinary_actions_reported_byTousersInputEnvelope = {
     data: Prisma.disciplinary_actionsCreateManyUsers_disciplinary_actions_reported_byTousersInput | Prisma.disciplinary_actionsCreateManyUsers_disciplinary_actions_reported_byTousersInput[];
     skipDuplicates?: boolean;
+};
+export type disciplinary_actionsUpsertWithWhereUniqueWithoutReviewerInput = {
+    where: Prisma.disciplinary_actionsWhereUniqueInput;
+    update: Prisma.XOR<Prisma.disciplinary_actionsUpdateWithoutReviewerInput, Prisma.disciplinary_actionsUncheckedUpdateWithoutReviewerInput>;
+    create: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutReviewerInput, Prisma.disciplinary_actionsUncheckedCreateWithoutReviewerInput>;
+};
+export type disciplinary_actionsUpdateWithWhereUniqueWithoutReviewerInput = {
+    where: Prisma.disciplinary_actionsWhereUniqueInput;
+    data: Prisma.XOR<Prisma.disciplinary_actionsUpdateWithoutReviewerInput, Prisma.disciplinary_actionsUncheckedUpdateWithoutReviewerInput>;
+};
+export type disciplinary_actionsUpdateManyWithWhereWithoutReviewerInput = {
+    where: Prisma.disciplinary_actionsScalarWhereInput;
+    data: Prisma.XOR<Prisma.disciplinary_actionsUpdateManyMutationInput, Prisma.disciplinary_actionsUncheckedUpdateManyWithoutReviewerInput>;
+};
+export type disciplinary_actionsUpsertWithoutUsers_blocked_by_actionInput = {
+    update: Prisma.XOR<Prisma.disciplinary_actionsUpdateWithoutUsers_blocked_by_actionInput, Prisma.disciplinary_actionsUncheckedUpdateWithoutUsers_blocked_by_actionInput>;
+    create: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutUsers_blocked_by_actionInput, Prisma.disciplinary_actionsUncheckedCreateWithoutUsers_blocked_by_actionInput>;
+    where?: Prisma.disciplinary_actionsWhereInput;
+};
+export type disciplinary_actionsUpdateToOneWithWhereWithoutUsers_blocked_by_actionInput = {
+    where?: Prisma.disciplinary_actionsWhereInput;
+    data: Prisma.XOR<Prisma.disciplinary_actionsUpdateWithoutUsers_blocked_by_actionInput, Prisma.disciplinary_actionsUncheckedUpdateWithoutUsers_blocked_by_actionInput>;
+};
+export type disciplinary_actionsUpdateWithoutUsers_blocked_by_actionInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    card_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    reason?: Prisma.StringFieldUpdateOperationsInput | string;
+    occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users_disciplinary_actions_decided_byTousers?: Prisma.usersUpdateOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersNestedInput;
+    reviewer?: Prisma.usersUpdateOneWithoutDisciplinary_actions_reviewedNestedInput;
+    matches?: Prisma.matchesUpdateOneWithoutDisciplinary_actionsNestedInput;
+    users_disciplinary_actions_reported_byTousers?: Prisma.usersUpdateOneRequiredWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateOneRequiredWithoutDisciplinary_actionsNestedInput;
+    fines?: Prisma.finesUpdateOneWithoutDisciplinary_actionsNestedInput;
+    suspensions?: Prisma.suspensionsUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutDisciplinary_actionNestedInput;
+};
+export type disciplinary_actionsUncheckedUpdateWithoutUsers_blocked_by_actionInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    match_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    player_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    card_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    reason?: Prisma.StringFieldUpdateOperationsInput | string;
+    occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    fines?: Prisma.finesUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    suspensions?: Prisma.suspensionsUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutDisciplinary_actionNestedInput;
 };
 export type disciplinary_actionsUpsertWithWhereUniqueWithoutUsers_disciplinary_actions_decided_byTousersInput = {
     where: Prisma.disciplinary_actionsWhereUniqueInput;
@@ -1068,10 +1763,14 @@ export type disciplinary_actionsCreateManyMatchesInput = {
     occurred_at?: Date | string;
     reported_by: bigint | number;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_by?: bigint | number | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type disciplinary_actionsUpdateWithoutMatchesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1079,14 +1778,21 @@ export type disciplinary_actionsUpdateWithoutMatchesInput = {
     reason?: Prisma.StringFieldUpdateOperationsInput | string;
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersUpdateOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersNestedInput;
+    reviewer?: Prisma.usersUpdateOneWithoutDisciplinary_actions_reviewedNestedInput;
     users_disciplinary_actions_reported_byTousers?: Prisma.usersUpdateOneRequiredWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersNestedInput;
     tournament_team_players?: Prisma.tournament_team_playersUpdateOneRequiredWithoutDisciplinary_actionsNestedInput;
     fines?: Prisma.finesUpdateOneWithoutDisciplinary_actionsNestedInput;
     suspensions?: Prisma.suspensionsUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsUncheckedUpdateWithoutMatchesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1097,12 +1803,19 @@ export type disciplinary_actionsUncheckedUpdateWithoutMatchesInput = {
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     fines?: Prisma.finesUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
     suspensions?: Prisma.suspensionsUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUncheckedUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsUncheckedUpdateManyWithoutMatchesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1113,10 +1826,14 @@ export type disciplinary_actionsUncheckedUpdateManyWithoutMatchesInput = {
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type disciplinary_actionsCreateManyTournament_team_playersInput = {
     id?: bigint | number;
@@ -1126,10 +1843,14 @@ export type disciplinary_actionsCreateManyTournament_team_playersInput = {
     occurred_at?: Date | string;
     reported_by: bigint | number;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_by?: bigint | number | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type disciplinary_actionsUpdateWithoutTournament_team_playersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1137,14 +1858,21 @@ export type disciplinary_actionsUpdateWithoutTournament_team_playersInput = {
     reason?: Prisma.StringFieldUpdateOperationsInput | string;
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersUpdateOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersNestedInput;
+    reviewer?: Prisma.usersUpdateOneWithoutDisciplinary_actions_reviewedNestedInput;
     matches?: Prisma.matchesUpdateOneWithoutDisciplinary_actionsNestedInput;
     users_disciplinary_actions_reported_byTousers?: Prisma.usersUpdateOneRequiredWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersNestedInput;
     fines?: Prisma.finesUpdateOneWithoutDisciplinary_actionsNestedInput;
     suspensions?: Prisma.suspensionsUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsUncheckedUpdateWithoutTournament_team_playersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1154,12 +1882,19 @@ export type disciplinary_actionsUncheckedUpdateWithoutTournament_team_playersInp
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     fines?: Prisma.finesUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
     suspensions?: Prisma.suspensionsUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUncheckedUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsUncheckedUpdateManyWithoutTournament_team_playersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1169,10 +1904,33 @@ export type disciplinary_actionsUncheckedUpdateManyWithoutTournament_team_player
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type disciplinary_actionsCreateManyReviewerInput = {
+    id?: bigint | number;
+    tournament_id: bigint | number;
+    match_id?: bigint | number | null;
+    team_id: bigint | number;
+    player_id: bigint | number;
+    card_type?: string;
+    reason: string;
+    occurred_at?: Date | string;
+    reported_by: bigint | number;
+    decision_status?: string;
+    review_started_at?: Date | string | null;
+    decided_by?: bigint | number | null;
+    decided_at?: Date | string | null;
+    decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type disciplinary_actionsCreateManyUsers_disciplinary_actions_decided_byTousersInput = {
     id?: bigint | number;
@@ -1185,9 +1943,13 @@ export type disciplinary_actionsCreateManyUsers_disciplinary_actions_decided_byT
     occurred_at?: Date | string;
     reported_by: bigint | number;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type disciplinary_actionsCreateManyUsers_disciplinary_actions_reported_byTousersInput = {
     id?: bigint | number;
@@ -1199,10 +1961,79 @@ export type disciplinary_actionsCreateManyUsers_disciplinary_actions_reported_by
     reason: string;
     occurred_at?: Date | string;
     decision_status?: string;
+    review_started_by?: bigint | number | null;
+    review_started_at?: Date | string | null;
     decided_by?: bigint | number | null;
     decided_at?: Date | string | null;
     decision_notes?: string | null;
+    appeal_deadline?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
+};
+export type disciplinary_actionsUpdateWithoutReviewerInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    card_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    reason?: Prisma.StringFieldUpdateOperationsInput | string;
+    occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    users_disciplinary_actions_decided_byTousers?: Prisma.usersUpdateOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersNestedInput;
+    matches?: Prisma.matchesUpdateOneWithoutDisciplinary_actionsNestedInput;
+    users_disciplinary_actions_reported_byTousers?: Prisma.usersUpdateOneRequiredWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersNestedInput;
+    tournament_team_players?: Prisma.tournament_team_playersUpdateOneRequiredWithoutDisciplinary_actionsNestedInput;
+    fines?: Prisma.finesUpdateOneWithoutDisciplinary_actionsNestedInput;
+    suspensions?: Prisma.suspensionsUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUpdateManyWithoutBlock_source_actionNestedInput;
+};
+export type disciplinary_actionsUncheckedUpdateWithoutReviewerInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    match_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    player_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    card_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    reason?: Prisma.StringFieldUpdateOperationsInput | string;
+    occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    fines?: Prisma.finesUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    suspensions?: Prisma.suspensionsUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUncheckedUpdateManyWithoutBlock_source_actionNestedInput;
+};
+export type disciplinary_actionsUncheckedUpdateManyWithoutReviewerInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    match_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    player_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    card_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    reason?: Prisma.StringFieldUpdateOperationsInput | string;
+    occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type disciplinary_actionsUpdateWithoutUsers_disciplinary_actions_decided_byTousersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1210,14 +2041,21 @@ export type disciplinary_actionsUpdateWithoutUsers_disciplinary_actions_decided_
     reason?: Prisma.StringFieldUpdateOperationsInput | string;
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reviewer?: Prisma.usersUpdateOneWithoutDisciplinary_actions_reviewedNestedInput;
     matches?: Prisma.matchesUpdateOneWithoutDisciplinary_actionsNestedInput;
     users_disciplinary_actions_reported_byTousers?: Prisma.usersUpdateOneRequiredWithoutDisciplinary_actions_disciplinary_actions_reported_byTousersNestedInput;
     tournament_team_players?: Prisma.tournament_team_playersUpdateOneRequiredWithoutDisciplinary_actionsNestedInput;
     fines?: Prisma.finesUpdateOneWithoutDisciplinary_actionsNestedInput;
     suspensions?: Prisma.suspensionsUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsUncheckedUpdateWithoutUsers_disciplinary_actions_decided_byTousersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1230,11 +2068,18 @@ export type disciplinary_actionsUncheckedUpdateWithoutUsers_disciplinary_actions
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     fines?: Prisma.finesUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
     suspensions?: Prisma.suspensionsUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUncheckedUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1247,9 +2092,13 @@ export type disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_act
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reported_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type disciplinary_actionsUpdateWithoutUsers_disciplinary_actions_reported_byTousersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1257,14 +2106,21 @@ export type disciplinary_actionsUpdateWithoutUsers_disciplinary_actions_reported
     reason?: Prisma.StringFieldUpdateOperationsInput | string;
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     users_disciplinary_actions_decided_byTousers?: Prisma.usersUpdateOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersNestedInput;
+    reviewer?: Prisma.usersUpdateOneWithoutDisciplinary_actions_reviewedNestedInput;
     matches?: Prisma.matchesUpdateOneWithoutDisciplinary_actionsNestedInput;
     tournament_team_players?: Prisma.tournament_team_playersUpdateOneRequiredWithoutDisciplinary_actionsNestedInput;
     fines?: Prisma.finesUpdateOneWithoutDisciplinary_actionsNestedInput;
     suspensions?: Prisma.suspensionsUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsUncheckedUpdateWithoutUsers_disciplinary_actions_reported_byTousersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1276,12 +2132,19 @@ export type disciplinary_actionsUncheckedUpdateWithoutUsers_disciplinary_actions
     reason?: Prisma.StringFieldUpdateOperationsInput | string;
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     fines?: Prisma.finesUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
     suspensions?: Prisma.suspensionsUncheckedUpdateOneWithoutDisciplinary_actionsNestedInput;
+    disciplinary_appeals?: Prisma.disciplinary_appealsUncheckedUpdateOneWithoutDisciplinary_actionNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutDisciplinary_actionNestedInput;
+    users_blocked_by_action?: Prisma.usersUncheckedUpdateManyWithoutBlock_source_actionNestedInput;
 };
 export type disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1293,10 +2156,31 @@ export type disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_act
     reason?: Prisma.StringFieldUpdateOperationsInput | string;
     occurred_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     decision_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    review_started_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    review_started_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decided_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     decided_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     decision_notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    appeal_deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type Disciplinary_actionsCountOutputType = {
+    disciplinary_events: number;
+    users_blocked_by_action: number;
+};
+export type Disciplinary_actionsCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    disciplinary_events?: boolean | Disciplinary_actionsCountOutputTypeCountDisciplinary_eventsArgs;
+    users_blocked_by_action?: boolean | Disciplinary_actionsCountOutputTypeCountUsers_blocked_by_actionArgs;
+};
+export type Disciplinary_actionsCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.Disciplinary_actionsCountOutputTypeSelect<ExtArgs> | null;
+};
+export type Disciplinary_actionsCountOutputTypeCountDisciplinary_eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.disciplinary_eventsWhereInput;
+};
+export type Disciplinary_actionsCountOutputTypeCountUsers_blocked_by_actionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.usersWhereInput;
 };
 export type disciplinary_actionsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -1309,16 +2193,25 @@ export type disciplinary_actionsSelect<ExtArgs extends runtime.Types.Extensions.
     occurred_at?: boolean;
     reported_by?: boolean;
     decision_status?: boolean;
+    review_started_by?: boolean;
+    review_started_at?: boolean;
     decided_by?: boolean;
     decided_at?: boolean;
     decision_notes?: boolean;
+    appeal_deadline?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
     users_disciplinary_actions_decided_byTousers?: boolean | Prisma.disciplinary_actions$users_disciplinary_actions_decided_byTousersArgs<ExtArgs>;
+    reviewer?: boolean | Prisma.disciplinary_actions$reviewerArgs<ExtArgs>;
     matches?: boolean | Prisma.disciplinary_actions$matchesArgs<ExtArgs>;
     users_disciplinary_actions_reported_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
     tournament_team_players?: boolean | Prisma.tournament_team_playersDefaultArgs<ExtArgs>;
     fines?: boolean | Prisma.disciplinary_actions$finesArgs<ExtArgs>;
     suspensions?: boolean | Prisma.disciplinary_actions$suspensionsArgs<ExtArgs>;
+    disciplinary_appeals?: boolean | Prisma.disciplinary_actions$disciplinary_appealsArgs<ExtArgs>;
+    disciplinary_events?: boolean | Prisma.disciplinary_actions$disciplinary_eventsArgs<ExtArgs>;
+    users_blocked_by_action?: boolean | Prisma.disciplinary_actions$users_blocked_by_actionArgs<ExtArgs>;
+    _count?: boolean | Prisma.Disciplinary_actionsCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["disciplinary_actions"]>;
 export type disciplinary_actionsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -1331,11 +2224,16 @@ export type disciplinary_actionsSelectCreateManyAndReturn<ExtArgs extends runtim
     occurred_at?: boolean;
     reported_by?: boolean;
     decision_status?: boolean;
+    review_started_by?: boolean;
+    review_started_at?: boolean;
     decided_by?: boolean;
     decided_at?: boolean;
     decision_notes?: boolean;
+    appeal_deadline?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
     users_disciplinary_actions_decided_byTousers?: boolean | Prisma.disciplinary_actions$users_disciplinary_actions_decided_byTousersArgs<ExtArgs>;
+    reviewer?: boolean | Prisma.disciplinary_actions$reviewerArgs<ExtArgs>;
     matches?: boolean | Prisma.disciplinary_actions$matchesArgs<ExtArgs>;
     users_disciplinary_actions_reported_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
     tournament_team_players?: boolean | Prisma.tournament_team_playersDefaultArgs<ExtArgs>;
@@ -1351,11 +2249,16 @@ export type disciplinary_actionsSelectUpdateManyAndReturn<ExtArgs extends runtim
     occurred_at?: boolean;
     reported_by?: boolean;
     decision_status?: boolean;
+    review_started_by?: boolean;
+    review_started_at?: boolean;
     decided_by?: boolean;
     decided_at?: boolean;
     decision_notes?: boolean;
+    appeal_deadline?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
     users_disciplinary_actions_decided_byTousers?: boolean | Prisma.disciplinary_actions$users_disciplinary_actions_decided_byTousersArgs<ExtArgs>;
+    reviewer?: boolean | Prisma.disciplinary_actions$reviewerArgs<ExtArgs>;
     matches?: boolean | Prisma.disciplinary_actions$matchesArgs<ExtArgs>;
     users_disciplinary_actions_reported_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
     tournament_team_players?: boolean | Prisma.tournament_team_playersDefaultArgs<ExtArgs>;
@@ -1371,28 +2274,39 @@ export type disciplinary_actionsSelectScalar = {
     occurred_at?: boolean;
     reported_by?: boolean;
     decision_status?: boolean;
+    review_started_by?: boolean;
+    review_started_at?: boolean;
     decided_by?: boolean;
     decided_at?: boolean;
     decision_notes?: boolean;
+    appeal_deadline?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
 };
-export type disciplinary_actionsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tournament_id" | "match_id" | "team_id" | "player_id" | "card_type" | "reason" | "occurred_at" | "reported_by" | "decision_status" | "decided_by" | "decided_at" | "decision_notes" | "created_at", ExtArgs["result"]["disciplinary_actions"]>;
+export type disciplinary_actionsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tournament_id" | "match_id" | "team_id" | "player_id" | "card_type" | "reason" | "occurred_at" | "reported_by" | "decision_status" | "review_started_by" | "review_started_at" | "decided_by" | "decided_at" | "decision_notes" | "appeal_deadline" | "created_at" | "updated_at", ExtArgs["result"]["disciplinary_actions"]>;
 export type disciplinary_actionsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     users_disciplinary_actions_decided_byTousers?: boolean | Prisma.disciplinary_actions$users_disciplinary_actions_decided_byTousersArgs<ExtArgs>;
+    reviewer?: boolean | Prisma.disciplinary_actions$reviewerArgs<ExtArgs>;
     matches?: boolean | Prisma.disciplinary_actions$matchesArgs<ExtArgs>;
     users_disciplinary_actions_reported_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
     tournament_team_players?: boolean | Prisma.tournament_team_playersDefaultArgs<ExtArgs>;
     fines?: boolean | Prisma.disciplinary_actions$finesArgs<ExtArgs>;
     suspensions?: boolean | Prisma.disciplinary_actions$suspensionsArgs<ExtArgs>;
+    disciplinary_appeals?: boolean | Prisma.disciplinary_actions$disciplinary_appealsArgs<ExtArgs>;
+    disciplinary_events?: boolean | Prisma.disciplinary_actions$disciplinary_eventsArgs<ExtArgs>;
+    users_blocked_by_action?: boolean | Prisma.disciplinary_actions$users_blocked_by_actionArgs<ExtArgs>;
+    _count?: boolean | Prisma.Disciplinary_actionsCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type disciplinary_actionsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     users_disciplinary_actions_decided_byTousers?: boolean | Prisma.disciplinary_actions$users_disciplinary_actions_decided_byTousersArgs<ExtArgs>;
+    reviewer?: boolean | Prisma.disciplinary_actions$reviewerArgs<ExtArgs>;
     matches?: boolean | Prisma.disciplinary_actions$matchesArgs<ExtArgs>;
     users_disciplinary_actions_reported_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
     tournament_team_players?: boolean | Prisma.tournament_team_playersDefaultArgs<ExtArgs>;
 };
 export type disciplinary_actionsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     users_disciplinary_actions_decided_byTousers?: boolean | Prisma.disciplinary_actions$users_disciplinary_actions_decided_byTousersArgs<ExtArgs>;
+    reviewer?: boolean | Prisma.disciplinary_actions$reviewerArgs<ExtArgs>;
     matches?: boolean | Prisma.disciplinary_actions$matchesArgs<ExtArgs>;
     users_disciplinary_actions_reported_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
     tournament_team_players?: boolean | Prisma.tournament_team_playersDefaultArgs<ExtArgs>;
@@ -1401,11 +2315,15 @@ export type $disciplinary_actionsPayload<ExtArgs extends runtime.Types.Extension
     name: "disciplinary_actions";
     objects: {
         users_disciplinary_actions_decided_byTousers: Prisma.$usersPayload<ExtArgs> | null;
+        reviewer: Prisma.$usersPayload<ExtArgs> | null;
         matches: Prisma.$matchesPayload<ExtArgs> | null;
         users_disciplinary_actions_reported_byTousers: Prisma.$usersPayload<ExtArgs>;
         tournament_team_players: Prisma.$tournament_team_playersPayload<ExtArgs>;
         fines: Prisma.$finesPayload<ExtArgs> | null;
         suspensions: Prisma.$suspensionsPayload<ExtArgs> | null;
+        disciplinary_appeals: Prisma.$disciplinary_appealsPayload<ExtArgs> | null;
+        disciplinary_events: Prisma.$disciplinary_eventsPayload<ExtArgs>[];
+        users_blocked_by_action: Prisma.$usersPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: bigint;
@@ -1418,10 +2336,14 @@ export type $disciplinary_actionsPayload<ExtArgs extends runtime.Types.Extension
         occurred_at: Date;
         reported_by: bigint;
         decision_status: string;
+        review_started_by: bigint | null;
+        review_started_at: Date | null;
         decided_by: bigint | null;
         decided_at: Date | null;
         decision_notes: string | null;
+        appeal_deadline: Date | null;
         created_at: Date;
+        updated_at: Date;
     }, ExtArgs["result"]["disciplinary_actions"]>;
     composites: {};
 };
@@ -1475,11 +2397,15 @@ export interface disciplinary_actionsDelegate<ExtArgs extends runtime.Types.Exte
 export interface Prisma__disciplinary_actionsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
     users_disciplinary_actions_decided_byTousers<T extends Prisma.disciplinary_actions$users_disciplinary_actions_decided_byTousersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.disciplinary_actions$users_disciplinary_actions_decided_byTousersArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
+    reviewer<T extends Prisma.disciplinary_actions$reviewerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.disciplinary_actions$reviewerArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     matches<T extends Prisma.disciplinary_actions$matchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.disciplinary_actions$matchesArgs<ExtArgs>>): Prisma.Prisma__matchesClient<runtime.Types.Result.GetResult<Prisma.$matchesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     users_disciplinary_actions_reported_byTousers<T extends Prisma.usersDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usersDefaultArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     tournament_team_players<T extends Prisma.tournament_team_playersDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_team_playersDefaultArgs<ExtArgs>>): Prisma.Prisma__tournament_team_playersClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_playersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     fines<T extends Prisma.disciplinary_actions$finesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.disciplinary_actions$finesArgs<ExtArgs>>): Prisma.Prisma__finesClient<runtime.Types.Result.GetResult<Prisma.$finesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     suspensions<T extends Prisma.disciplinary_actions$suspensionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.disciplinary_actions$suspensionsArgs<ExtArgs>>): Prisma.Prisma__suspensionsClient<runtime.Types.Result.GetResult<Prisma.$suspensionsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
+    disciplinary_appeals<T extends Prisma.disciplinary_actions$disciplinary_appealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.disciplinary_actions$disciplinary_appealsArgs<ExtArgs>>): Prisma.Prisma__disciplinary_appealsClient<runtime.Types.Result.GetResult<Prisma.$disciplinary_appealsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
+    disciplinary_events<T extends Prisma.disciplinary_actions$disciplinary_eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.disciplinary_actions$disciplinary_eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$disciplinary_eventsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    users_blocked_by_action<T extends Prisma.disciplinary_actions$users_blocked_by_actionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.disciplinary_actions$users_blocked_by_actionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
     catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
     finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;
@@ -1495,10 +2421,14 @@ export interface disciplinary_actionsFieldRefs {
     readonly occurred_at: Prisma.FieldRef<"disciplinary_actions", 'DateTime'>;
     readonly reported_by: Prisma.FieldRef<"disciplinary_actions", 'BigInt'>;
     readonly decision_status: Prisma.FieldRef<"disciplinary_actions", 'String'>;
+    readonly review_started_by: Prisma.FieldRef<"disciplinary_actions", 'BigInt'>;
+    readonly review_started_at: Prisma.FieldRef<"disciplinary_actions", 'DateTime'>;
     readonly decided_by: Prisma.FieldRef<"disciplinary_actions", 'BigInt'>;
     readonly decided_at: Prisma.FieldRef<"disciplinary_actions", 'DateTime'>;
     readonly decision_notes: Prisma.FieldRef<"disciplinary_actions", 'String'>;
+    readonly appeal_deadline: Prisma.FieldRef<"disciplinary_actions", 'DateTime'>;
     readonly created_at: Prisma.FieldRef<"disciplinary_actions", 'DateTime'>;
+    readonly updated_at: Prisma.FieldRef<"disciplinary_actions", 'DateTime'>;
 }
 export type disciplinary_actionsFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.disciplinary_actionsSelect<ExtArgs> | null;
@@ -1606,6 +2536,12 @@ export type disciplinary_actions$users_disciplinary_actions_decided_byTousersArg
     include?: Prisma.usersInclude<ExtArgs> | null;
     where?: Prisma.usersWhereInput;
 };
+export type disciplinary_actions$reviewerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.usersSelect<ExtArgs> | null;
+    omit?: Prisma.usersOmit<ExtArgs> | null;
+    include?: Prisma.usersInclude<ExtArgs> | null;
+    where?: Prisma.usersWhereInput;
+};
 export type disciplinary_actions$matchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.matchesSelect<ExtArgs> | null;
     omit?: Prisma.matchesOmit<ExtArgs> | null;
@@ -1623,6 +2559,34 @@ export type disciplinary_actions$suspensionsArgs<ExtArgs extends runtime.Types.E
     omit?: Prisma.suspensionsOmit<ExtArgs> | null;
     include?: Prisma.suspensionsInclude<ExtArgs> | null;
     where?: Prisma.suspensionsWhereInput;
+};
+export type disciplinary_actions$disciplinary_appealsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.disciplinary_appealsSelect<ExtArgs> | null;
+    omit?: Prisma.disciplinary_appealsOmit<ExtArgs> | null;
+    include?: Prisma.disciplinary_appealsInclude<ExtArgs> | null;
+    where?: Prisma.disciplinary_appealsWhereInput;
+};
+export type disciplinary_actions$disciplinary_eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.disciplinary_eventsSelect<ExtArgs> | null;
+    omit?: Prisma.disciplinary_eventsOmit<ExtArgs> | null;
+    include?: Prisma.disciplinary_eventsInclude<ExtArgs> | null;
+    where?: Prisma.disciplinary_eventsWhereInput;
+    orderBy?: Prisma.disciplinary_eventsOrderByWithRelationInput | Prisma.disciplinary_eventsOrderByWithRelationInput[];
+    cursor?: Prisma.disciplinary_eventsWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Disciplinary_eventsScalarFieldEnum | Prisma.Disciplinary_eventsScalarFieldEnum[];
+};
+export type disciplinary_actions$users_blocked_by_actionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.usersSelect<ExtArgs> | null;
+    omit?: Prisma.usersOmit<ExtArgs> | null;
+    include?: Prisma.usersInclude<ExtArgs> | null;
+    where?: Prisma.usersWhereInput;
+    orderBy?: Prisma.usersOrderByWithRelationInput | Prisma.usersOrderByWithRelationInput[];
+    cursor?: Prisma.usersWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.UsersScalarFieldEnum | Prisma.UsersScalarFieldEnum[];
 };
 export type disciplinary_actionsDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.disciplinary_actionsSelect<ExtArgs> | null;

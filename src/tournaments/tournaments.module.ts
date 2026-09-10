@@ -5,6 +5,7 @@ import { UploadsModule } from '../uploads/uploads.module';
 import { TournamentCatalogController } from './tournament-catalog.controller';
 import { PublicTournamentsController } from './public-tournaments.controller';
 import { TournamentsController } from './tournaments.controller';
+import { TournamentLifecycleService } from './tournament-lifecycle.service';
 import { TournamentsService } from './tournaments.service';
 
 @Module({
@@ -14,7 +15,7 @@ import { TournamentsService } from './tournaments.service';
     TournamentCatalogController,
     TournamentsController,
   ],
-  providers: [TournamentsService],
+  providers: [TournamentsService, TournamentLifecycleService],
   exports: [TournamentsService],
 })
 export class TournamentsModule {}

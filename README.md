@@ -22,6 +22,21 @@ portada obligatoria de las asociaciones existentes.
 
 Swagger está disponible en `http://localhost:3000/api/docs`.
 
+## Notificaciones operativas
+
+La API genera notificaciones internas para los jugadores inscritos y los
+árbitros asignados cuando un partido se programa, cambia, se aplaza o se
+cancela. Un proceso programado revisa cada cinco minutos los próximos partidos
+y crea los recordatorios con la anticipación elegida por cada usuario (24 horas
+por defecto).
+
+Las notificaciones utilizan una clave idempotente, por lo que reiniciar la API
+o ejecutar más de una instancia no duplica un mismo aviso. En producción se
+puede desactivar temporalmente el proceso con
+`MATCH_REMINDERS_ENABLED=false`. Las preferencias de correo y WhatsApp quedan
+almacenadas como desactivadas y reservadas para cuando esos proveedores sean
+autorizados y configurados.
+
 ## Autenticación
 
 - `POST /api/users`: registra un usuario y almacena la contraseña con bcrypt.

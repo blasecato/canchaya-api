@@ -16,6 +16,9 @@ exports.RolesController = void 0;
 const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
+const require_roles_decorator_1 = require("../auth/decorators/require-roles.decorator");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const roles_guard_1 = require("../auth/guards/roles.guard");
 const create_role_dto_1 = require("./dto/create-role.dto");
 const update_role_dto_1 = require("./dto/update-role.dto");
 const roles_service_1 = require("./roles.service");
@@ -43,6 +46,7 @@ let RolesController = class RolesController {
 exports.RolesController = RolesController;
 __decorate([
     (0, common_1.Post)(),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN'),
     (0, swagger_1.ApiOperation)({ summary: 'Registrar un rol' }),
     (0, swagger_1.ApiCreatedResponse)({ description: 'Rol registrado correctamente.' }),
     __param(0, (0, common_1.Body)()),
@@ -71,6 +75,7 @@ __decorate([
 ], RolesController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':code'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN'),
     (0, swagger_1.ApiOperation)({ summary: 'Actualizar un rol' }),
     (0, swagger_1.ApiParam)({ name: 'code', example: 'PLAYER' }),
     (0, swagger_1.ApiOkResponse)({ description: 'Rol actualizado correctamente.' }),
@@ -83,6 +88,7 @@ __decorate([
 ], RolesController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':code'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN'),
     (0, swagger_1.ApiOperation)({ summary: 'Eliminar un rol' }),
     (0, swagger_1.ApiParam)({ name: 'code', example: 'PLAYER' }),
     (0, swagger_1.ApiOkResponse)({ description: 'Rol eliminado correctamente.' }),
@@ -94,6 +100,9 @@ __decorate([
 ], RolesController.prototype, "remove", null);
 exports.RolesController = RolesController = __decorate([
     (0, swagger_1.ApiTags)('Roles'),
+    (0, swagger_1.ApiBearerAuth)('access-token'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
     (0, common_1.Controller)('roles'),
     __metadata("design:paramtypes", [roles_service_1.RolesService])
 ], RolesController);

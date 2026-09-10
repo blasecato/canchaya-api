@@ -122,5 +122,11 @@ export class TournamentCatalogFiltersResponseDto {
   associations!: TournamentCatalogFilterOptionDto[];
 
   @ApiProperty({ type: TournamentCatalogFilterOptionDto, isArray: true })
-  categories!: TournamentCatalogFilterOptionDto[];
+  tournamentTypes!: TournamentCatalogFilterOptionDto[];
+
+  @ApiProperty({ type: String, isArray: true, example: ['Libre', 'Sub-15'] })
+  categories!: string[];
+
+  @ApiProperty({ type: String, isArray: true, example: ['open', 'male'] })
+  categoryGenders!: string[];
 }

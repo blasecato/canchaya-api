@@ -48,5 +48,7 @@ export declare class TournamentCatalogFilterOptionDto {
 }
 export declare class TournamentCatalogFiltersResponseDto {
     associations: TournamentCatalogFilterOptionDto[];
-    categories: TournamentCatalogFilterOptionDto[];
+    tournamentTypes: TournamentCatalogFilterOptionDto[];
+    categories: string[];
+    categoryGenders: string[];
 }

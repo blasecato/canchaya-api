@@ -22,9 +22,8 @@ class CreateSuspensionDto {
     endDate;
     reason;
     status;
-    createdBy;
     static _OPENAPI_METADATA_FACTORY() {
-        return { disciplinaryActionId: { required: true, type: () => String }, matchesCount: { required: false, type: () => Number, nullable: true, minimum: 1, maximum: 2147483647 }, startDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, endDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, reason: { required: false, type: () => String, nullable: true }, status: { required: false, type: () => String, enum: ['active', 'served', 'revoked'] }, createdBy: { required: true, type: () => String } };
+        return { disciplinaryActionId: { required: true, type: () => String }, matchesCount: { required: false, type: () => Number, nullable: true, minimum: 1, maximum: 2147483647 }, startDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, endDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, reason: { required: false, type: () => String, nullable: true }, status: { required: false, type: () => String, enum: ['active', 'served', 'revoked'] } };
     }
 }
 exports.CreateSuspensionDto = CreateSuspensionDto;
@@ -80,9 +79,4 @@ __decorate([
     (0, class_validator_1.IsIn)(['active', 'served', 'revoked']),
     __metadata("design:type", String)
 ], CreateSuspensionDto.prototype, "status", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: '7' }),
-    (0, is_big_int_string_decorator_1.IsBigIntString)(),
-    __metadata("design:type", String)
-], CreateSuspensionDto.prototype, "createdBy", void 0);
 //# sourceMappingURL=create-suspension.dto.js.map

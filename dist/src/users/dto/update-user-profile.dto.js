@@ -15,16 +15,18 @@ const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const require_roles_decorator_1 = require("../../auth/decorators/require-roles.decorator");
+const user_gender_constants_1 = require("../user-gender.constants");
 class UpdateUserProfileDto {
     idNumber;
     documentType;
     fullName;
     birthDate;
+    gender;
     email;
     phone;
     roles;
     static _OPENAPI_METADATA_FACTORY() {
-        return { idNumber: { required: false, type: () => String, maxLength: 40 }, documentType: { required: false, type: () => String, maxLength: 20 }, fullName: { required: false, type: () => String, maxLength: 160 }, birthDate: { required: false, type: () => String, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, email: { required: false, type: () => String, maxLength: 254, format: "email" }, phone: { required: false, type: () => String, nullable: true, maxLength: 40 }, roles: { required: false, type: () => [String], enum: require_roles_decorator_1.ROLE_CODES, isArray: true, uniqueItems: true, minItems: 1 } };
+        return { idNumber: { required: false, type: () => String, maxLength: 40 }, documentType: { required: false, type: () => String, maxLength: 20 }, fullName: { required: false, type: () => String, maxLength: 160 }, birthDate: { required: false, type: () => String, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, gender: { required: false, enum: ["male", "female", "non_binary", "prefer_not_to_say"], enum: user_gender_constants_1.USER_GENDERS }, email: { required: false, type: () => String, maxLength: 254, format: "email" }, phone: { required: false, type: () => String, nullable: true, maxLength: 40 }, roles: { required: false, type: () => [String], enum: require_roles_decorator_1.ROLE_CODES, isArray: true, uniqueItems: true, minItems: 1 } };
     }
 }
 exports.UpdateUserProfileDto = UpdateUserProfileDto;
@@ -59,6 +61,12 @@ __decorate([
     (0, class_validator_1.IsDateString)({ strict: true, strictSeparator: true }),
     __metadata("design:type", String)
 ], UpdateUserProfileDto.prototype, "birthDate", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ enum: user_gender_constants_1.USER_GENDERS }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)(user_gender_constants_1.USER_GENDERS),
+    __metadata("design:type", String)
+], UpdateUserProfileDto.prototype, "gender", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 'maria@example.com', format: 'email' }),
     (0, class_validator_1.IsOptional)(),

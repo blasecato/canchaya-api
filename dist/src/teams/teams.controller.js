@@ -28,6 +28,8 @@ const list_team_players_query_dto_1 = require("./dto/list-team-players-query.dto
 const update_team_dto_1 = require("./dto/update-team.dto");
 const team_carnets_response_dto_1 = require("./dto/team-carnets-response.dto");
 const team_carnets_query_dto_1 = require("./dto/team-carnets-query.dto");
+const team_rosters_response_dto_1 = require("./dto/team-rosters-response.dto");
+const update_tournament_roster_player_dto_1 = require("./dto/update-tournament-roster-player.dto");
 const teams_service_1 = require("./teams.service");
 const teamPhotoUploadOptions = {
     limits: { files: 1, fileSize: uploads_constants_1.MAX_IMAGE_SIZE_BYTES, fields: 10, parts: 12 },
@@ -63,6 +65,15 @@ let TeamsController = class TeamsController {
     }
     findCarnets(id, query, request) {
         return this.teamsService.findCarnets(id, request.auth.userId, query.tournamentId ? BigInt(query.tournamentId) : undefined);
+    }
+    findTournamentRosters(id, request) {
+        return this.teamsService.findTournamentRosters(id, request.auth.userId);
+    }
+    updateTournamentRosterPlayer(id, tournamentId, playerId, request, dto) {
+        return this.teamsService.updateTournamentRosterPlayer(id, tournamentId, playerId, request.auth.userId, dto);
+    }
+    removeMember(id, playerId, request) {
+        return this.teamsService.removeMember(id, playerId, request.auth.userId);
     }
     findOne(id, request) {
         return this.teamsService.findOne(id, request.auth.userId);
@@ -148,6 +159,48 @@ __decorate([
     __metadata("design:paramtypes", [BigInt, team_carnets_query_dto_1.TeamCarnetsQueryDto, Object]),
     __metadata("design:returntype", Promise)
 ], TeamsController.prototype, "findCarnets", null);
+__decorate([
+    (0, common_1.Get)(':id/rosters'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Consultar dorsales y posiciones del equipo por torneo',
+    }),
+    (0, swagger_1.ApiOkResponse)({ type: team_rosters_response_dto_1.TeamRostersResponseDto }),
+    __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object]),
+    __metadata("design:returntype", Promise)
+], TeamsController.prototype, "findTournamentRosters", null);
+__decorate([
+    (0, common_1.Patch)(':id/rosters/:tournamentId/players/:playerId'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Actualizar dorsal y posición de un jugador en un torneo',
+    }),
+    (0, swagger_1.ApiOkResponse)({ type: team_rosters_response_dto_1.TeamRosterPlayerResponseDto }),
+    __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Param)('tournamentId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(2, (0, common_1.Param)('playerId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(3, (0, common_1.Req)()),
+    __param(4, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, BigInt, BigInt, Object, update_tournament_roster_player_dto_1.UpdateTournamentRosterPlayerDto]),
+    __metadata("design:returntype", Promise)
+], TeamsController.prototype, "updateTournamentRosterPlayer", null);
+__decorate([
+    (0, common_1.Delete)(':id/members/:playerId'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Retirar un jugador respetando los mínimos de los torneos',
+    }),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Param)('playerId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(2, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, BigInt, Object]),
+    __metadata("design:returntype", void 0)
+], TeamsController.prototype, "removeMember", null);
 __decorate([
     (0, common_1.Get)(':id'),
     (0, swagger_1.ApiOperation)({ summary: 'Consultar un equipo visible por ID' }),

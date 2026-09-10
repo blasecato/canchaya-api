@@ -6,6 +6,8 @@ import { ListTeamsQueryDto } from './dto/list-teams-query.dto';
 import { ListTeamPlayersQueryDto } from './dto/list-team-players-query.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { TeamCarnetsResponseDto } from './dto/team-carnets-response.dto';
+import type { TeamRosterPlayerResponseDto, TeamRostersResponseDto } from './dto/team-rosters-response.dto';
+import type { UpdateTournamentRosterPlayerDto } from './dto/update-tournament-roster-player.dto';
 export declare class TeamsService {
     private readonly prisma;
     private readonly imageStorage;
@@ -41,6 +43,7 @@ export declare class TeamsService {
             isCaptain: boolean;
             canEnter: boolean;
             canEdit: boolean;
+            canRemoveMembers: boolean;
             canLeave: boolean;
             canDelete: boolean;
         };
@@ -79,6 +82,7 @@ export declare class TeamsService {
                 isCaptain: boolean;
                 canEnter: boolean;
                 canEdit: boolean;
+                canRemoveMembers: boolean;
                 canLeave: boolean;
                 canDelete: boolean;
             };
@@ -138,11 +142,19 @@ export declare class TeamsService {
             isCaptain: boolean;
             canEnter: boolean;
             canEdit: boolean;
+            canRemoveMembers: boolean;
             canLeave: boolean;
             canDelete: boolean;
         };
         createdAt: string;
         updatedAt: string;
+    }>;
+    findTournamentRosters(id: bigint, requestingUserId: bigint): Promise<TeamRostersResponseDto>;
+    updateTournamentRosterPlayer(teamId: bigint, tournamentId: bigint, playerId: bigint, requestingUserId: bigint, dto: UpdateTournamentRosterPlayerDto): Promise<TeamRosterPlayerResponseDto>;
+    removeMember(teamId: bigint, playerId: bigint, requestingUserId: bigint): Promise<{
+        teamId: string;
+        playerId: string;
+        message: string;
     }>;
     findCarnets(id: bigint, requestingUserId: bigint, tournamentId?: bigint): Promise<TeamCarnetsResponseDto>;
     update(id: bigint, requestingUserId: bigint, dto: UpdateTeamDto, photo?: UploadedImageFile): Promise<{
@@ -176,6 +188,7 @@ export declare class TeamsService {
             isCaptain: boolean;
             canEnter: boolean;
             canEdit: boolean;
+            canRemoveMembers: boolean;
             canLeave: boolean;
             canDelete: boolean;
         };
@@ -193,5 +206,11 @@ export declare class TeamsService {
     private findRoleCodes;
     private buildVisibleWhere;
     private assertActivePlayers;
+    private findActiveTeamRegistrations;
+    private assertMemberCountWithinTournamentLimits;
+    private assertPlayersAvailableForTournaments;
+    private assertPlayersEligibleForTournaments;
+    private synchronizeApprovedTournamentRosters;
+    private withdrawPlayersFromApprovedRosters;
     private toResponse;
 }

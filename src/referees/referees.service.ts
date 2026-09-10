@@ -1,11 +1,18 @@
 import {
+  BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateRefereeAvailabilityDto } from './dto/create-referee-availability.dto';
+import { ListRefereeAvailabilityQueryDto } from './dto/list-referee-availability-query.dto';
 import { ListRefereeMatchesQueryDto } from './dto/list-referee-matches-query.dto';
+import { UpdateRefereeAvailabilityDto } from './dto/update-referee-availability.dto';
+
+const ACTIVE_ASSIGNMENT_STATUSES = ['pending', 'accepted'] as const;
 
 const refereeMatchSelect = {
   referee_role: true,
@@ -68,6 +75,7 @@ export class RefereesService {
       directedCounts,
       upcomingCounts,
       occupiedToday,
+      availableTodayRows,
     ] = await Promise.all([
       this.prisma.users.findMany({
         where,
@@ -92,7 +100,7 @@ export class RefereesService {
       this.prisma.match_referees.groupBy({
         by: ['referee_id'],
         where: {
-          assignment_status: { not: 'cancelled' },
+          assignment_status: 'accepted',
           matches: { status: 'played' },
         },
         _count: { _all: true },
@@ -100,7 +108,7 @@ export class RefereesService {
       this.prisma.match_referees.groupBy({
         by: ['referee_id'],
         where: {
-          assignment_status: { not: 'cancelled' },
+          assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
           matches: {
             status: { not: 'played' },
             match_date: { gte: now },
@@ -110,10 +118,19 @@ export class RefereesService {
       }),
       this.prisma.match_referees.findMany({
         where: {
-          assignment_status: { not: 'cancelled' },
+          assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
           matches: {
             match_date: { gte: startOfToday, lt: startOfTomorrow },
           },
+        },
+        distinct: ['referee_id'],
+        select: { referee_id: true },
+      }),
+      this.prisma.referee_availability.findMany({
+        where: {
+          status: 'active',
+          starts_at: { lt: startOfTomorrow },
+          ends_at: { gt: startOfToday },
         },
         distinct: ['referee_id'],
         select: { referee_id: true },
@@ -134,8 +151,13 @@ export class RefereesService {
     const occupiedIds = new Set(
       occupiedToday.map(({ referee_id }) => referee_id.toString()),
     );
+    const declaredAvailableIds = new Set(
+      availableTodayRows.map(({ referee_id }) => referee_id.toString()),
+    );
     const availableToday = allActiveReferees.filter(
-      ({ id }) => !occupiedIds.has(id.toString()),
+      ({ id }) =>
+        declaredAvailableIds.has(id.toString()) &&
+        !occupiedIds.has(id.toString()),
     ).length;
     const items = referees.map((referee) => ({
       id: referee.id.toString(),
@@ -147,7 +169,9 @@ export class RefereesService {
       photoUrl: referee.photo_url,
       directedMatches: directedByReferee.get(referee.id.toString()) ?? 0,
       upcomingMatches: upcomingByReferee.get(referee.id.toString()) ?? 0,
-      availableToday: !occupiedIds.has(referee.id.toString()),
+      availableToday:
+        declaredAvailableIds.has(referee.id.toString()) &&
+        !occupiedIds.has(referee.id.toString()),
     }));
 
     return {
@@ -193,7 +217,10 @@ export class RefereesService {
           };
     const where: Prisma.match_refereesWhereInput = {
       referee_id: id,
-      assignment_status: { not: 'cancelled' },
+      assignment_status:
+        query.kind === 'past'
+          ? 'accepted'
+          : { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
       matches: matchWhere,
     };
     const skip = (query.page - 1) * query.pageSize;
@@ -218,9 +245,7 @@ export class RefereesService {
       }),
     ]);
     return {
-      items: assignments.map((assignment) =>
-        this.toMatchResponse(assignment),
-      ),
+      items: assignments.map((assignment) => this.toMatchResponse(assignment)),
       page: query.page,
       pageSize: query.pageSize,
       total,
@@ -228,7 +253,98 @@ export class RefereesService {
     };
   }
 
-  async removeRole(id: bigint) {
+  async findAvailability(
+    id: bigint,
+    requestingUserId: bigint,
+    query: ListRefereeAvailabilityQueryDto,
+  ) {
+    const roles = await this.findRoleCodes(requestingUserId);
+    const isManager =
+      roles.has('SUPER_ADMIN') || roles.has('ASSOCIATION_ADMIN');
+    if (id !== requestingUserId && !isManager) {
+      throw new ForbiddenException(
+        'Como árbitro solamente puedes consultar tu propia disponibilidad.',
+      );
+    }
+    await this.assertRefereeExists(id);
+    const from = query.from ? new Date(query.from) : new Date();
+    const to = query.to ? new Date(query.to) : undefined;
+    if (to && to <= from) {
+      throw new BadRequestException(
+        'La fecha final del filtro debe ser posterior a la inicial.',
+      );
+    }
+    const rows = await this.prisma.referee_availability.findMany({
+      where: {
+        referee_id: id,
+        status: 'active',
+        ends_at: { gte: from },
+        starts_at: to ? { lte: to } : undefined,
+      },
+      orderBy: [{ starts_at: 'asc' }, { id: 'asc' }],
+    });
+    return rows.map((row) => this.toAvailabilityResponse(row));
+  }
+
+  async createAvailability(
+    refereeId: bigint,
+    dto: CreateRefereeAvailabilityDto,
+  ) {
+    await this.assertRefereeExists(refereeId);
+    const startsAt = new Date(dto.startsAt);
+    const endsAt = new Date(dto.endsAt);
+    this.assertValidAvailabilityRange(startsAt, endsAt);
+    await this.assertAvailabilityDoesNotOverlap(refereeId, startsAt, endsAt);
+    const row = await this.prisma.referee_availability.create({
+      data: {
+        referee_id: refereeId,
+        starts_at: startsAt,
+        ends_at: endsAt,
+        notes: dto.notes?.trim() || null,
+      },
+    });
+    return this.toAvailabilityResponse(row);
+  }
+
+  async updateAvailability(
+    refereeId: bigint,
+    availabilityId: bigint,
+    dto: UpdateRefereeAvailabilityDto,
+  ) {
+    const current = await this.findOwnedAvailability(refereeId, availabilityId);
+    await this.assertAvailabilityNotCommitted(current);
+    const startsAt = dto.startsAt ? new Date(dto.startsAt) : current.starts_at;
+    const endsAt = dto.endsAt ? new Date(dto.endsAt) : current.ends_at;
+    this.assertValidAvailabilityRange(startsAt, endsAt);
+    await this.assertAvailabilityDoesNotOverlap(
+      refereeId,
+      startsAt,
+      endsAt,
+      availabilityId,
+    );
+    const row = await this.prisma.referee_availability.update({
+      where: { id: availabilityId },
+      data: {
+        starts_at: dto.startsAt ? startsAt : undefined,
+        ends_at: dto.endsAt ? endsAt : undefined,
+        notes: dto.notes !== undefined ? dto.notes.trim() || null : undefined,
+        updated_at: new Date(),
+      },
+    });
+    return this.toAvailabilityResponse(row);
+  }
+
+  async removeAvailability(refereeId: bigint, availabilityId: bigint) {
+    const current = await this.findOwnedAvailability(refereeId, availabilityId);
+    await this.assertAvailabilityNotCommitted(current);
+    await this.prisma.referee_availability.update({
+      where: { id: availabilityId },
+      data: { status: 'cancelled', updated_at: new Date() },
+    });
+    return { message: 'El bloque de disponibilidad fue eliminado.' };
+  }
+
+  async removeRole(id: bigint, actorId: bigint) {
     const refereeRole = await this.prisma.user_roles.findUnique({
       where: { user_id_role_code: { user_id: id, role_code: 'REFEREE' } },
       select: { user_id: true },
@@ -239,31 +355,84 @@ export class RefereesService {
       );
     }
     const now = new Date();
-    await this.prisma.$transaction([
-      this.prisma.user_roles.delete({
+    const futureAssignments = await this.prisma.match_referees.findMany({
+      where: {
+        referee_id: id,
+        assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
+        matches: { status: { not: 'played' }, match_date: { gte: now } },
+      },
+      select: {
+        match_id: true,
+        assignment_status: true,
+        assigned_by: true,
+      },
+    });
+    await this.prisma.$transaction(async (transaction) => {
+      await transaction.user_roles.delete({
         where: { user_id_role_code: { user_id: id, role_code: 'REFEREE' } },
-      }),
-      this.prisma.user_roles.upsert({
+      });
+      await transaction.user_roles.upsert({
         where: { user_id_role_code: { user_id: id, role_code: 'PLAYER' } },
         create: { user_id: id, role_code: 'PLAYER' },
         update: {},
-      }),
-      this.prisma.tournament_referees.updateMany({
+      });
+      await transaction.tournament_referees.updateMany({
         where: { user_id: id, status: 'active' },
         data: { status: 'inactive' },
-      }),
-      this.prisma.match_referees.updateMany({
+      });
+      await transaction.match_referees.updateMany({
         where: {
           referee_id: id,
-          assignment_status: { not: 'cancelled' },
+          assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
           matches: {
             status: { not: 'played' },
             match_date: { gte: now },
           },
         },
-        data: { assignment_status: 'cancelled' },
-      }),
-      this.prisma.notifications.create({
+        data: {
+          assignment_status: 'cancelled',
+          responded_at: now,
+          response_notes: 'El rol de árbitro fue retirado.',
+          updated_at: now,
+        },
+      });
+      if (futureAssignments.length > 0) {
+        await transaction.referee_assignment_events.createMany({
+          data: futureAssignments.map((assignment) => ({
+            match_id: assignment.match_id,
+            referee_id: id,
+            actor_user_id: actorId,
+            event_type: 'cancelled',
+            previous_status: assignment.assignment_status,
+            new_status: 'cancelled',
+            reason: 'El rol de árbitro fue retirado.',
+          })),
+        });
+        const managerIds = new Set(
+          futureAssignments
+            .map(({ assigned_by }) => assigned_by)
+            .filter((value): value is bigint => value !== null),
+        );
+        managerIds.delete(actorId);
+        if (managerIds.size > 0) {
+          await transaction.notifications.createMany({
+            data: [...managerIds].map((managerId) => ({
+              user_id: managerId,
+              type: 'match',
+              title: 'Asignaciones arbitrales canceladas',
+              message: `Se retiró el rol del árbitro y se cancelaron ${futureAssignments.length} asignaciones futuras. Debes gestionar sus reemplazos.`,
+              entity_type: 'user_roles',
+              entity_id: id.toString(),
+              metadata: {
+                refereeId: id.toString(),
+                actionUrl: '/referees',
+                actionLabel: 'Gestionar reemplazos',
+              },
+            })),
+          });
+        }
+      }
+      await transaction.notifications.create({
         data: {
           user_id: id,
           type: 'account',
@@ -279,8 +448,8 @@ export class RefereesService {
             actionLabel: 'Ver mi perfil',
           },
         },
-      }),
-    ]);
+      });
+    });
     const roles = await this.prisma.user_roles.findMany({
       where: { user_id: id },
       orderBy: { role_code: 'asc' },
@@ -299,6 +468,117 @@ export class RefereesService {
       select: { role_code: true },
     });
     return new Set(roles.map(({ role_code }) => role_code));
+  }
+
+  private async assertRefereeExists(refereeId: bigint) {
+    const referee = await this.prisma.users.findFirst({
+      where: {
+        id: refereeId,
+        status: 'active',
+        user_roles: { some: { role_code: 'REFEREE' } },
+      },
+      select: { id: true },
+    });
+    if (!referee) {
+      throw new NotFoundException(
+        'El árbitro solicitado no existe o no está activo.',
+      );
+    }
+  }
+
+  private assertValidAvailabilityRange(startsAt: Date, endsAt: Date) {
+    if (endsAt <= startsAt) {
+      throw new BadRequestException(
+        'La hora final debe ser posterior a la hora inicial.',
+      );
+    }
+    if (endsAt <= new Date()) {
+      throw new BadRequestException(
+        'La disponibilidad debe finalizar en una fecha futura.',
+      );
+    }
+  }
+
+  private async assertAvailabilityDoesNotOverlap(
+    refereeId: bigint,
+    startsAt: Date,
+    endsAt: Date,
+    excludedId?: bigint,
+  ) {
+    const overlap = await this.prisma.referee_availability.findFirst({
+      where: {
+        referee_id: refereeId,
+        id: excludedId ? { not: excludedId } : undefined,
+        status: 'active',
+        starts_at: { lt: endsAt },
+        ends_at: { gt: startsAt },
+      },
+      select: { id: true },
+    });
+    if (overlap) {
+      throw new ConflictException(
+        'Este horario se cruza con otro bloque de disponibilidad registrado.',
+      );
+    }
+  }
+
+  private async findOwnedAvailability(
+    refereeId: bigint,
+    availabilityId: bigint,
+  ) {
+    const row = await this.prisma.referee_availability.findFirst({
+      where: { id: availabilityId, referee_id: refereeId, status: 'active' },
+    });
+    if (!row) {
+      throw new NotFoundException(
+        'El bloque de disponibilidad no existe o ya fue eliminado.',
+      );
+    }
+    return row;
+  }
+
+  private async assertAvailabilityNotCommitted(availability: {
+    referee_id: bigint;
+    starts_at: Date;
+    ends_at: Date;
+  }) {
+    const assignments = await this.prisma.match_referees.findMany({
+      where: {
+        referee_id: availability.referee_id,
+        assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
+        matches: {
+          match_date: {
+            gte: availability.starts_at,
+            lt: availability.ends_at,
+          },
+        },
+      },
+      select: { match_id: true, matches: { select: { match_date: true } } },
+    });
+    const committed = assignments.find(({ matches }) =>
+      matches.match_date ? matches.match_date < availability.ends_at : false,
+    );
+    if (committed) {
+      throw new BadRequestException(
+        `Este bloque respalda una asignación activa (partido ${committed.match_id.toString()}) y no se puede modificar ni eliminar. Primero reemplaza o cancela la asignación.`,
+      );
+    }
+  }
+
+  private toAvailabilityResponse(row: {
+    id: bigint;
+    starts_at: Date;
+    ends_at: Date;
+    notes: string | null;
+    status: string;
+  }) {
+    return {
+      id: row.id.toString(),
+      startsAt: row.starts_at.toISOString(),
+      endsAt: row.ends_at.toISOString(),
+      notes: row.notes,
+      status: row.status,
+    };
   }
 
   private toMatchResponse(assignment: RefereeMatchRecord) {

@@ -7,6 +7,7 @@ export declare const publicUserSelect: {
     full_name: true;
     birth_date: true;
     birth_city: true;
+    gender: true;
     email: true;
     phone: true;
     photo_url: true;

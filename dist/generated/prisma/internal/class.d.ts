@@ -51,6 +51,12 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get matches(): Prisma.matchesDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    get referee_availability(): Prisma.referee_availabilityDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get referee_assignment_events(): Prisma.referee_assignment_eventsDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
     get player_match_stats(): Prisma.player_match_statsDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
@@ -61,6 +67,12 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
         omit: OmitOpts;
     }>;
     get suspensions(): Prisma.suspensionsDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get disciplinary_appeals(): Prisma.disciplinary_appealsDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get disciplinary_events(): Prisma.disciplinary_eventsDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
     get team_members(): Prisma.team_membersDelegate<ExtArgs, {
@@ -87,7 +99,13 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get notifications(): Prisma.notificationsDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    get notification_preferences(): Prisma.notification_preferencesDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
     get tournament_registration_events(): Prisma.tournament_registration_eventsDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get tournament_lifecycle_events(): Prisma.tournament_lifecycle_eventsDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
     get tournament_types(): Prisma.tournament_typesDelegate<ExtArgs, {

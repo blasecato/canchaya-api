@@ -56,6 +56,7 @@ let UsersService = UsersService_1 = class UsersService {
                         full_name: dto.fullName,
                         birth_date: new Date(dto.birthDate),
                         birth_city: dto.birthCity,
+                        gender: dto.gender,
                         email: dto.email,
                         phone: dto.phone || null,
                         photo_url: persistedPhoto.url,
@@ -120,6 +121,7 @@ let UsersService = UsersService_1 = class UsersService {
             document_type: createUserDto.documentType,
             full_name: createUserDto.fullName,
             birth_date: new Date(createUserDto.birthDate),
+            gender: createUserDto.gender,
             email: createUserDto.email,
             phone: createUserDto.phone,
             password_hash: await (0, bcryptjs_1.hash)(createUserDto.password, 12),
@@ -322,6 +324,7 @@ let UsersService = UsersService_1 = class UsersService {
                         document_type: dto.documentType?.trim(),
                         full_name: dto.fullName?.trim(),
                         birth_date: dto.birthDate ? new Date(dto.birthDate) : undefined,
+                        gender: dto.gender,
                         email: dto.email?.trim().toLowerCase(),
                         phone: dto.phone === undefined ? undefined : dto.phone?.trim() || null,
                         photo_url: photoUrl,
@@ -390,6 +393,7 @@ let UsersService = UsersService_1 = class UsersService {
             birth_date: updateUserDto.birthDate
                 ? new Date(updateUserDto.birthDate)
                 : undefined,
+            gender: updateUserDto.gender,
             email: updateUserDto.email,
             phone: updateUserDto.phone,
             status: updateUserDto.status,

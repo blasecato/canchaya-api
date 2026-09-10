@@ -86,6 +86,7 @@ export class UsersService {
             full_name: dto.fullName,
             birth_date: new Date(dto.birthDate),
             birth_city: dto.birthCity,
+            gender: dto.gender,
             email: dto.email,
             phone: dto.phone || null,
             photo_url: persistedPhoto.url,
@@ -166,6 +167,7 @@ export class UsersService {
       document_type: createUserDto.documentType,
       full_name: createUserDto.fullName,
       birth_date: new Date(createUserDto.birthDate),
+      gender: createUserDto.gender,
       email: createUserDto.email,
       phone: createUserDto.phone,
       password_hash: await hash(createUserDto.password, 12),
@@ -397,8 +399,12 @@ export class UsersService {
     if (dto.roles) await this.assertRoleChangeIsValid(id, dto.roles);
     const previousRoles = current.user_roles.map(({ role_code }) => role_code);
     const nextRoles = dto.roles ? [...new Set(dto.roles)] : previousRoles;
-    const addedRoles = nextRoles.filter((role) => !previousRoles.includes(role));
-    const removedRoles = previousRoles.filter((role) => !nextRoles.includes(role));
+    const addedRoles = nextRoles.filter(
+      (role) => !previousRoles.includes(role),
+    );
+    const removedRoles = previousRoles.filter(
+      (role) => !nextRoles.includes(role),
+    );
     const rolesChanged = addedRoles.length > 0 || removedRoles.length > 0;
 
     const uploadedPhoto = photo
@@ -415,6 +421,7 @@ export class UsersService {
             document_type: dto.documentType?.trim(),
             full_name: dto.fullName?.trim(),
             birth_date: dto.birthDate ? new Date(dto.birthDate) : undefined,
+            gender: dto.gender,
             email: dto.email?.trim().toLowerCase(),
             phone:
               dto.phone === undefined ? undefined : dto.phone?.trim() || null,
@@ -484,6 +491,7 @@ export class UsersService {
       birth_date: updateUserDto.birthDate
         ? new Date(updateUserDto.birthDate)
         : undefined,
+      gender: updateUserDto.gender,
       email: updateUserDto.email,
       phone: updateUserDto.phone,
       status: updateUserDto.status,

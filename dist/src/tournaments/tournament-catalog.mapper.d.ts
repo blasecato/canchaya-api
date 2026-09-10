@@ -14,6 +14,10 @@ export declare const tournamentCatalogItemSelect: {
     description: true;
     sport_type: true;
     modality: true;
+    category_name: true;
+    category_min_age: true;
+    category_max_age: true;
+    category_gender: true;
     start_date: true;
     end_date: true;
     registration_start_date: true;

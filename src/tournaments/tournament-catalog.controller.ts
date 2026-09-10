@@ -41,6 +41,8 @@ import {
   MAX_IMAGE_SIZE_BYTES,
 } from '../uploads/uploads.constants';
 import { ListTournamentsQueryDto } from './dto/list-tournaments-query.dto';
+import { TournamentLifecycleResponseDto } from './dto/tournament-lifecycle-response.dto';
+import { TransitionTournamentDto } from './dto/transition-tournament.dto';
 import {
   TournamentCatalogFiltersResponseDto,
   TournamentCatalogItemResponseDto,
@@ -49,9 +51,15 @@ import {
   TournamentCatalogPageResponseDto,
 } from './dto/tournament-catalog-response.dto';
 import { TournamentsService } from './tournaments.service';
+import { TournamentLifecycleService } from './tournament-lifecycle.service';
 import { UpdateTournamentRulesDto } from './dto/update-tournament-rules.dto';
 import { TournamentSponsorInputDto } from './dto/tournament-sponsor-input.dto';
 import { ReviewTeamRegistrationDto } from './dto/review-team-registration.dto';
+import {
+  TournamentPaymentsResponseDto,
+  TournamentRegistrationPaymentResponseDto,
+  UpdateRegistrationPaymentDto,
+} from './dto/registration-payment.dto';
 import {
   CaptainTeamOptionResponseDto,
   RegisterTeamDto,
@@ -90,7 +98,10 @@ const sponsorLogoUploadOptions = {
 @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'REFEREE', 'PLAYER')
 @Controller('tournaments')
 export class TournamentCatalogController {
-  constructor(private readonly tournamentsService: TournamentsService) {}
+  constructor(
+    private readonly tournamentsService: TournamentsService,
+    private readonly tournamentLifecycleService: TournamentLifecycleService,
+  ) {}
 
   @Get('filters')
   @ApiOperation({ summary: 'Consultar opciones del catálogo de torneos' })
@@ -137,6 +148,36 @@ export class TournamentCatalogController {
     return this.tournamentsService.findCatalogOne(
       tournamentId,
       request.auth.userId,
+    );
+  }
+
+  @Get(':tournamentId/lifecycle')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
+  @ApiOperation({ summary: 'Consultar el ciclo de vida y sus requisitos' })
+  @ApiOkResponse({ type: TournamentLifecycleResponseDto })
+  findLifecycle(
+    @Param('tournamentId', ParseBigIntPipe) tournamentId: bigint,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<TournamentLifecycleResponseDto> {
+    return this.tournamentLifecycleService.findLifecycle(
+      tournamentId,
+      request.auth.userId,
+    );
+  }
+
+  @Patch(':tournamentId/lifecycle')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
+  @ApiOperation({ summary: 'Avanzar o cancelar el ciclo de vida del torneo' })
+  @ApiOkResponse({ type: TournamentLifecycleResponseDto })
+  transitionLifecycle(
+    @Param('tournamentId', ParseBigIntPipe) tournamentId: bigint,
+    @Req() request: AuthenticatedRequest,
+    @Body() dto: TransitionTournamentDto,
+  ): Promise<TournamentLifecycleResponseDto> {
+    return this.tournamentLifecycleService.transition(
+      tournamentId,
+      request.auth.userId,
+      dto,
     );
   }
 
@@ -252,6 +293,43 @@ export class TournamentCatalogController {
       tournamentId,
       BigInt(dto.teamId),
       request.auth.userId,
+    );
+  }
+
+  @Get(':tournamentId/payments')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
+  @ApiOperation({
+    summary: 'Consultar el estado financiero de las inscripciones del torneo',
+  })
+  @ApiOkResponse({ type: TournamentPaymentsResponseDto })
+  findRegistrationPayments(
+    @Param('tournamentId', ParseBigIntPipe) tournamentId: bigint,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<TournamentPaymentsResponseDto> {
+    return this.tournamentsService.findRegistrationPayments(
+      tournamentId,
+      request.auth.userId,
+    );
+  }
+
+  @Patch(':tournamentId/registrations/:teamId/payment')
+  @RequireRoles('ASSOCIATION_ADMIN')
+  @ApiOperation({
+    summary:
+      'Registrar manualmente el estado del pago de una inscripción aprobada',
+  })
+  @ApiOkResponse({ type: TournamentRegistrationPaymentResponseDto })
+  updateRegistrationPayment(
+    @Param('tournamentId', ParseBigIntPipe) tournamentId: bigint,
+    @Param('teamId', ParseBigIntPipe) teamId: bigint,
+    @Req() request: AuthenticatedRequest,
+    @Body() dto: UpdateRegistrationPaymentDto,
+  ): Promise<TournamentRegistrationPaymentResponseDto> {
+    return this.tournamentsService.updateRegistrationPayment(
+      tournamentId,
+      teamId,
+      request.auth.userId,
+      dto,
     );
   }
 

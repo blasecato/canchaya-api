@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RolesModule = void 0;
 const common_1 = require("@nestjs/common");
+const auth_module_1 = require("../auth/auth.module");
 const roles_controller_1 = require("./roles.controller");
 const roles_service_1 = require("./roles.service");
 let RolesModule = class RolesModule {
@@ -15,6 +16,7 @@ let RolesModule = class RolesModule {
 exports.RolesModule = RolesModule;
 exports.RolesModule = RolesModule = __decorate([
     (0, common_1.Module)({
+        imports: [auth_module_1.AuthModule],
         controllers: [roles_controller_1.RolesController],
         providers: [roles_service_1.RolesService],
         exports: [roles_service_1.RolesService],

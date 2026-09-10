@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { AssociationsService } from '../associations/associations.service';
+import { CompetitionAccessService } from '../authorization/competition-access.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { ImageStorageService } from '../uploads/image-storage.service';
 import type { UploadedImageFile } from '../uploads/image-storage.types';
@@ -28,6 +29,7 @@ describe('TournamentsService', () => {
   const transactionTournamentFindUnique = jest.fn();
   const transactionTournamentUpdate = jest.fn();
   const transactionTournamentDelete = jest.fn();
+  const transactionLifecycleEventCreate = jest.fn();
   const transactionRegistrationCount = jest.fn();
   const transactionTournamentSponsorsDeleteMany = jest.fn();
 
@@ -42,6 +44,7 @@ describe('TournamentsService', () => {
     tournament_team_registrations: {
       count: transactionRegistrationCount,
     },
+    tournament_lifecycle_events: { create: transactionLifecycleEventCreate },
     tournament_sponsors: {
       deleteMany: transactionTournamentSponsorsDeleteMany,
     },
@@ -72,14 +75,14 @@ describe('TournamentsService', () => {
     format: 'png',
     deliveryType: 'upload' as const,
   });
-  const deleteImage = jest.fn(
-    async (image: { url?: string | null }) =>
-      deleteByPublicUrl(image.url ?? null),
+  const deleteImage = jest.fn(async (image: { url?: string | null }) =>
+    deleteByPublicUrl(image.url ?? null),
   );
   const imageStorage = {
     saveTournamentPhoto,
     delete: deleteImage,
   } as unknown as ImageStorageService;
+  const competitionAccess = {} as CompetitionAccessService;
 
   const associationId = 14n;
   const tournamentId = 31n;
@@ -167,9 +170,8 @@ describe('TournamentsService', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
-    deleteImage.mockImplementation(
-      async (image: { url?: string | null }) =>
-        deleteByPublicUrl(image.url ?? null),
+    deleteImage.mockImplementation(async (image: { url?: string | null }) =>
+      deleteByPublicUrl(image.url ?? null),
     );
 
     prismaTransaction.mockImplementation(
@@ -188,7 +190,12 @@ describe('TournamentsService', () => {
     teamsFindFirst.mockResolvedValue(null);
     sponsorsFindFirst.mockResolvedValue(null);
 
-    service = new TournamentsService(prisma, associationsService, imageStorage);
+    service = new TournamentsService(
+      prisma,
+      associationsService,
+      imageStorage,
+      competitionAccess,
+    );
   });
 
   describe('create', () => {
@@ -224,6 +231,10 @@ describe('TournamentsService', () => {
           tournament_type_id: 2n,
           sport_type: createDto.sportType,
           modality: createDto.modality,
+          category_name: 'Libre',
+          category_min_age: null,
+          category_max_age: null,
+          category_gender: 'open',
           start_date: new Date('2026-09-15'),
           end_date: new Date('2026-10-15'),
           registration_start_date: new Date('2026-08-01'),

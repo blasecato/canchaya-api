@@ -167,10 +167,14 @@ export declare const ModelName: {
     readonly fines: "fines";
     readonly match_referees: "match_referees";
     readonly matches: "matches";
+    readonly referee_availability: "referee_availability";
+    readonly referee_assignment_events: "referee_assignment_events";
     readonly player_match_stats: "player_match_stats";
     readonly roles: "roles";
     readonly sponsors: "sponsors";
     readonly suspensions: "suspensions";
+    readonly disciplinary_appeals: "disciplinary_appeals";
+    readonly disciplinary_events: "disciplinary_events";
     readonly team_members: "team_members";
     readonly teams: "teams";
     readonly tournament_administrators: "tournament_administrators";
@@ -179,7 +183,9 @@ export declare const ModelName: {
     readonly tournament_team_players: "tournament_team_players";
     readonly tournament_team_registrations: "tournament_team_registrations";
     readonly notifications: "notifications";
+    readonly notification_preferences: "notification_preferences";
     readonly tournament_registration_events: "tournament_registration_events";
+    readonly tournament_lifecycle_events: "tournament_lifecycle_events";
     readonly tournament_types: "tournament_types";
     readonly tournaments: "tournaments";
     readonly user_roles: "user_roles";
@@ -196,7 +202,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "auth_sessions" | "association_administrators" | "associations" | "disciplinary_actions" | "fines" | "match_referees" | "matches" | "player_match_stats" | "roles" | "sponsors" | "suspensions" | "team_members" | "teams" | "tournament_administrators" | "tournament_referees" | "tournament_sponsors" | "tournament_team_players" | "tournament_team_registrations" | "notifications" | "tournament_registration_events" | "tournament_types" | "tournaments" | "user_roles" | "users";
+        modelProps: "auth_sessions" | "association_administrators" | "associations" | "disciplinary_actions" | "fines" | "match_referees" | "matches" | "referee_availability" | "referee_assignment_events" | "player_match_stats" | "roles" | "sponsors" | "suspensions" | "disciplinary_appeals" | "disciplinary_events" | "team_members" | "teams" | "tournament_administrators" | "tournament_referees" | "tournament_sponsors" | "tournament_team_players" | "tournament_team_registrations" | "notifications" | "notification_preferences" | "tournament_registration_events" | "tournament_lifecycle_events" | "tournament_types" | "tournaments" | "user_roles" | "users";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -718,6 +724,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        referee_availability: {
+            payload: Prisma.$referee_availabilityPayload<ExtArgs>;
+            fields: Prisma.referee_availabilityFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.referee_availabilityFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_availabilityPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.referee_availabilityFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_availabilityPayload>;
+                };
+                findFirst: {
+                    args: Prisma.referee_availabilityFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_availabilityPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.referee_availabilityFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_availabilityPayload>;
+                };
+                findMany: {
+                    args: Prisma.referee_availabilityFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_availabilityPayload>[];
+                };
+                create: {
+                    args: Prisma.referee_availabilityCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_availabilityPayload>;
+                };
+                createMany: {
+                    args: Prisma.referee_availabilityCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.referee_availabilityCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_availabilityPayload>[];
+                };
+                delete: {
+                    args: Prisma.referee_availabilityDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_availabilityPayload>;
+                };
+                update: {
+                    args: Prisma.referee_availabilityUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_availabilityPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.referee_availabilityDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.referee_availabilityUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.referee_availabilityUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_availabilityPayload>[];
+                };
+                upsert: {
+                    args: Prisma.referee_availabilityUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_availabilityPayload>;
+                };
+                aggregate: {
+                    args: Prisma.Referee_availabilityAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateReferee_availability>;
+                };
+                groupBy: {
+                    args: Prisma.referee_availabilityGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Referee_availabilityGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.referee_availabilityCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Referee_availabilityCountAggregateOutputType> | number;
+                };
+            };
+        };
+        referee_assignment_events: {
+            payload: Prisma.$referee_assignment_eventsPayload<ExtArgs>;
+            fields: Prisma.referee_assignment_eventsFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.referee_assignment_eventsFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_assignment_eventsPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.referee_assignment_eventsFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_assignment_eventsPayload>;
+                };
+                findFirst: {
+                    args: Prisma.referee_assignment_eventsFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_assignment_eventsPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.referee_assignment_eventsFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_assignment_eventsPayload>;
+                };
+                findMany: {
+                    args: Prisma.referee_assignment_eventsFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_assignment_eventsPayload>[];
+                };
+                create: {
+                    args: Prisma.referee_assignment_eventsCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_assignment_eventsPayload>;
+                };
+                createMany: {
+                    args: Prisma.referee_assignment_eventsCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.referee_assignment_eventsCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_assignment_eventsPayload>[];
+                };
+                delete: {
+                    args: Prisma.referee_assignment_eventsDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_assignment_eventsPayload>;
+                };
+                update: {
+                    args: Prisma.referee_assignment_eventsUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_assignment_eventsPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.referee_assignment_eventsDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.referee_assignment_eventsUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.referee_assignment_eventsUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_assignment_eventsPayload>[];
+                };
+                upsert: {
+                    args: Prisma.referee_assignment_eventsUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$referee_assignment_eventsPayload>;
+                };
+                aggregate: {
+                    args: Prisma.Referee_assignment_eventsAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateReferee_assignment_events>;
+                };
+                groupBy: {
+                    args: Prisma.referee_assignment_eventsGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Referee_assignment_eventsGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.referee_assignment_eventsCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Referee_assignment_eventsCountAggregateOutputType> | number;
+                };
+            };
+        };
         player_match_stats: {
             payload: Prisma.$player_match_statsPayload<ExtArgs>;
             fields: Prisma.player_match_statsFieldRefs;
@@ -1011,6 +1165,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 count: {
                     args: Prisma.suspensionsCountArgs<ExtArgs>;
                     result: runtime.Types.Utils.Optional<Prisma.SuspensionsCountAggregateOutputType> | number;
+                };
+            };
+        };
+        disciplinary_appeals: {
+            payload: Prisma.$disciplinary_appealsPayload<ExtArgs>;
+            fields: Prisma.disciplinary_appealsFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.disciplinary_appealsFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_appealsPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.disciplinary_appealsFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_appealsPayload>;
+                };
+                findFirst: {
+                    args: Prisma.disciplinary_appealsFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_appealsPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.disciplinary_appealsFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_appealsPayload>;
+                };
+                findMany: {
+                    args: Prisma.disciplinary_appealsFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_appealsPayload>[];
+                };
+                create: {
+                    args: Prisma.disciplinary_appealsCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_appealsPayload>;
+                };
+                createMany: {
+                    args: Prisma.disciplinary_appealsCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.disciplinary_appealsCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_appealsPayload>[];
+                };
+                delete: {
+                    args: Prisma.disciplinary_appealsDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_appealsPayload>;
+                };
+                update: {
+                    args: Prisma.disciplinary_appealsUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_appealsPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.disciplinary_appealsDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.disciplinary_appealsUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.disciplinary_appealsUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_appealsPayload>[];
+                };
+                upsert: {
+                    args: Prisma.disciplinary_appealsUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_appealsPayload>;
+                };
+                aggregate: {
+                    args: Prisma.Disciplinary_appealsAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateDisciplinary_appeals>;
+                };
+                groupBy: {
+                    args: Prisma.disciplinary_appealsGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Disciplinary_appealsGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.disciplinary_appealsCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Disciplinary_appealsCountAggregateOutputType> | number;
+                };
+            };
+        };
+        disciplinary_events: {
+            payload: Prisma.$disciplinary_eventsPayload<ExtArgs>;
+            fields: Prisma.disciplinary_eventsFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.disciplinary_eventsFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_eventsPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.disciplinary_eventsFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_eventsPayload>;
+                };
+                findFirst: {
+                    args: Prisma.disciplinary_eventsFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_eventsPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.disciplinary_eventsFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_eventsPayload>;
+                };
+                findMany: {
+                    args: Prisma.disciplinary_eventsFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_eventsPayload>[];
+                };
+                create: {
+                    args: Prisma.disciplinary_eventsCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_eventsPayload>;
+                };
+                createMany: {
+                    args: Prisma.disciplinary_eventsCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.disciplinary_eventsCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_eventsPayload>[];
+                };
+                delete: {
+                    args: Prisma.disciplinary_eventsDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_eventsPayload>;
+                };
+                update: {
+                    args: Prisma.disciplinary_eventsUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_eventsPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.disciplinary_eventsDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.disciplinary_eventsUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.disciplinary_eventsUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_eventsPayload>[];
+                };
+                upsert: {
+                    args: Prisma.disciplinary_eventsUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$disciplinary_eventsPayload>;
+                };
+                aggregate: {
+                    args: Prisma.Disciplinary_eventsAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateDisciplinary_events>;
+                };
+                groupBy: {
+                    args: Prisma.disciplinary_eventsGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Disciplinary_eventsGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.disciplinary_eventsCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Disciplinary_eventsCountAggregateOutputType> | number;
                 };
             };
         };
@@ -1606,6 +1908,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        notification_preferences: {
+            payload: Prisma.$notification_preferencesPayload<ExtArgs>;
+            fields: Prisma.notification_preferencesFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.notification_preferencesFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$notification_preferencesPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.notification_preferencesFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$notification_preferencesPayload>;
+                };
+                findFirst: {
+                    args: Prisma.notification_preferencesFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$notification_preferencesPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.notification_preferencesFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$notification_preferencesPayload>;
+                };
+                findMany: {
+                    args: Prisma.notification_preferencesFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$notification_preferencesPayload>[];
+                };
+                create: {
+                    args: Prisma.notification_preferencesCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$notification_preferencesPayload>;
+                };
+                createMany: {
+                    args: Prisma.notification_preferencesCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.notification_preferencesCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$notification_preferencesPayload>[];
+                };
+                delete: {
+                    args: Prisma.notification_preferencesDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$notification_preferencesPayload>;
+                };
+                update: {
+                    args: Prisma.notification_preferencesUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$notification_preferencesPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.notification_preferencesDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.notification_preferencesUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.notification_preferencesUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$notification_preferencesPayload>[];
+                };
+                upsert: {
+                    args: Prisma.notification_preferencesUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$notification_preferencesPayload>;
+                };
+                aggregate: {
+                    args: Prisma.Notification_preferencesAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateNotification_preferences>;
+                };
+                groupBy: {
+                    args: Prisma.notification_preferencesGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Notification_preferencesGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.notification_preferencesCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Notification_preferencesCountAggregateOutputType> | number;
+                };
+            };
+        };
         tournament_registration_events: {
             payload: Prisma.$tournament_registration_eventsPayload<ExtArgs>;
             fields: Prisma.tournament_registration_eventsFieldRefs;
@@ -1677,6 +2053,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 count: {
                     args: Prisma.tournament_registration_eventsCountArgs<ExtArgs>;
                     result: runtime.Types.Utils.Optional<Prisma.Tournament_registration_eventsCountAggregateOutputType> | number;
+                };
+            };
+        };
+        tournament_lifecycle_events: {
+            payload: Prisma.$tournament_lifecycle_eventsPayload<ExtArgs>;
+            fields: Prisma.tournament_lifecycle_eventsFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.tournament_lifecycle_eventsFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_lifecycle_eventsPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.tournament_lifecycle_eventsFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_lifecycle_eventsPayload>;
+                };
+                findFirst: {
+                    args: Prisma.tournament_lifecycle_eventsFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_lifecycle_eventsPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.tournament_lifecycle_eventsFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_lifecycle_eventsPayload>;
+                };
+                findMany: {
+                    args: Prisma.tournament_lifecycle_eventsFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_lifecycle_eventsPayload>[];
+                };
+                create: {
+                    args: Prisma.tournament_lifecycle_eventsCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_lifecycle_eventsPayload>;
+                };
+                createMany: {
+                    args: Prisma.tournament_lifecycle_eventsCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.tournament_lifecycle_eventsCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_lifecycle_eventsPayload>[];
+                };
+                delete: {
+                    args: Prisma.tournament_lifecycle_eventsDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_lifecycle_eventsPayload>;
+                };
+                update: {
+                    args: Prisma.tournament_lifecycle_eventsUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_lifecycle_eventsPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.tournament_lifecycle_eventsDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.tournament_lifecycle_eventsUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.tournament_lifecycle_eventsUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_lifecycle_eventsPayload>[];
+                };
+                upsert: {
+                    args: Prisma.tournament_lifecycle_eventsUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_lifecycle_eventsPayload>;
+                };
+                aggregate: {
+                    args: Prisma.Tournament_lifecycle_eventsAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateTournament_lifecycle_events>;
+                };
+                groupBy: {
+                    args: Prisma.tournament_lifecycle_eventsGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Tournament_lifecycle_eventsGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.tournament_lifecycle_eventsCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Tournament_lifecycle_eventsCountAggregateOutputType> | number;
                 };
             };
         };
@@ -2054,10 +2504,14 @@ export declare const Disciplinary_actionsScalarFieldEnum: {
     readonly occurred_at: "occurred_at";
     readonly reported_by: "reported_by";
     readonly decision_status: "decision_status";
+    readonly review_started_by: "review_started_by";
+    readonly review_started_at: "review_started_at";
     readonly decided_by: "decided_by";
     readonly decided_at: "decided_at";
     readonly decision_notes: "decision_notes";
+    readonly appeal_deadline: "appeal_deadline";
     readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
 };
 export type Disciplinary_actionsScalarFieldEnum = (typeof Disciplinary_actionsScalarFieldEnum)[keyof typeof Disciplinary_actionsScalarFieldEnum];
 export declare const FinesScalarFieldEnum: {
@@ -2072,6 +2526,7 @@ export declare const FinesScalarFieldEnum: {
     readonly notes: "notes";
     readonly created_by: "created_by";
     readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
 };
 export type FinesScalarFieldEnum = (typeof FinesScalarFieldEnum)[keyof typeof FinesScalarFieldEnum];
 export declare const Match_refereesScalarFieldEnum: {
@@ -2080,7 +2535,13 @@ export declare const Match_refereesScalarFieldEnum: {
     readonly referee_id: "referee_id";
     readonly referee_role: "referee_role";
     readonly assignment_status: "assignment_status";
+    readonly assigned_by: "assigned_by";
+    readonly responded_at: "responded_at";
+    readonly response_notes: "response_notes";
+    readonly replaced_referee_id: "replaced_referee_id";
+    readonly replacement_reason: "replacement_reason";
     readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
 };
 export type Match_refereesScalarFieldEnum = (typeof Match_refereesScalarFieldEnum)[keyof typeof Match_refereesScalarFieldEnum];
 export declare const MatchesScalarFieldEnum: {
@@ -2095,11 +2556,35 @@ export declare const MatchesScalarFieldEnum: {
     readonly home_score: "home_score";
     readonly away_score: "away_score";
     readonly status: "status";
+    readonly duration_minutes: "duration_minutes";
     readonly notes: "notes";
     readonly created_at: "created_at";
     readonly updated_at: "updated_at";
 };
 export type MatchesScalarFieldEnum = (typeof MatchesScalarFieldEnum)[keyof typeof MatchesScalarFieldEnum];
+export declare const Referee_availabilityScalarFieldEnum: {
+    readonly id: "id";
+    readonly referee_id: "referee_id";
+    readonly starts_at: "starts_at";
+    readonly ends_at: "ends_at";
+    readonly notes: "notes";
+    readonly status: "status";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Referee_availabilityScalarFieldEnum = (typeof Referee_availabilityScalarFieldEnum)[keyof typeof Referee_availabilityScalarFieldEnum];
+export declare const Referee_assignment_eventsScalarFieldEnum: {
+    readonly id: "id";
+    readonly match_id: "match_id";
+    readonly referee_id: "referee_id";
+    readonly actor_user_id: "actor_user_id";
+    readonly event_type: "event_type";
+    readonly previous_status: "previous_status";
+    readonly new_status: "new_status";
+    readonly reason: "reason";
+    readonly created_at: "created_at";
+};
+export type Referee_assignment_eventsScalarFieldEnum = (typeof Referee_assignment_eventsScalarFieldEnum)[keyof typeof Referee_assignment_eventsScalarFieldEnum];
 export declare const Player_match_statsScalarFieldEnum: {
     readonly id: "id";
     readonly match_id: "match_id";
@@ -2144,10 +2629,36 @@ export declare const SuspensionsScalarFieldEnum: {
     readonly end_date: "end_date";
     readonly reason: "reason";
     readonly status: "status";
+    readonly served_matches: "served_matches";
+    readonly completed_at: "completed_at";
     readonly created_by: "created_by";
     readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
 };
 export type SuspensionsScalarFieldEnum = (typeof SuspensionsScalarFieldEnum)[keyof typeof SuspensionsScalarFieldEnum];
+export declare const Disciplinary_appealsScalarFieldEnum: {
+    readonly id: "id";
+    readonly disciplinary_action_id: "disciplinary_action_id";
+    readonly player_id: "player_id";
+    readonly message: "message";
+    readonly status: "status";
+    readonly reviewed_by: "reviewed_by";
+    readonly reviewed_at: "reviewed_at";
+    readonly resolution_notes: "resolution_notes";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Disciplinary_appealsScalarFieldEnum = (typeof Disciplinary_appealsScalarFieldEnum)[keyof typeof Disciplinary_appealsScalarFieldEnum];
+export declare const Disciplinary_eventsScalarFieldEnum: {
+    readonly id: "id";
+    readonly disciplinary_action_id: "disciplinary_action_id";
+    readonly actor_user_id: "actor_user_id";
+    readonly event_type: "event_type";
+    readonly message: "message";
+    readonly metadata: "metadata";
+    readonly created_at: "created_at";
+};
+export type Disciplinary_eventsScalarFieldEnum = (typeof Disciplinary_eventsScalarFieldEnum)[keyof typeof Disciplinary_eventsScalarFieldEnum];
 export declare const Team_membersScalarFieldEnum: {
     readonly team_id: "team_id";
     readonly user_id: "user_id";
@@ -2223,6 +2734,11 @@ export declare const Tournament_team_registrationsScalarFieldEnum: {
     readonly reviewed_by: "reviewed_by";
     readonly review_notes: "review_notes";
     readonly reviewed_at: "reviewed_at";
+    readonly payment_status: "payment_status";
+    readonly amount_paid: "amount_paid";
+    readonly payment_notes: "payment_notes";
+    readonly payment_updated_by: "payment_updated_by";
+    readonly payment_updated_at: "payment_updated_at";
     readonly group_name: "group_name";
     readonly seed: "seed";
     readonly points: "points";
@@ -2234,15 +2750,30 @@ export declare const NotificationsScalarFieldEnum: {
     readonly id: "id";
     readonly user_id: "user_id";
     readonly type: "type";
+    readonly event_code: "event_code";
+    readonly deduplication_key: "deduplication_key";
     readonly title: "title";
     readonly message: "message";
     readonly entity_type: "entity_type";
     readonly entity_id: "entity_id";
     readonly metadata: "metadata";
+    readonly scheduled_for: "scheduled_for";
     readonly read_at: "read_at";
     readonly created_at: "created_at";
 };
 export type NotificationsScalarFieldEnum = (typeof NotificationsScalarFieldEnum)[keyof typeof NotificationsScalarFieldEnum];
+export declare const Notification_preferencesScalarFieldEnum: {
+    readonly user_id: "user_id";
+    readonly match_scheduled_enabled: "match_scheduled_enabled";
+    readonly match_updates_enabled: "match_updates_enabled";
+    readonly match_reminders_enabled: "match_reminders_enabled";
+    readonly reminder_hours_before: "reminder_hours_before";
+    readonly email_enabled: "email_enabled";
+    readonly whatsapp_enabled: "whatsapp_enabled";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Notification_preferencesScalarFieldEnum = (typeof Notification_preferencesScalarFieldEnum)[keyof typeof Notification_preferencesScalarFieldEnum];
 export declare const Tournament_registration_eventsScalarFieldEnum: {
     readonly id: "id";
     readonly tournament_id: "tournament_id";
@@ -2253,6 +2784,16 @@ export declare const Tournament_registration_eventsScalarFieldEnum: {
     readonly created_at: "created_at";
 };
 export type Tournament_registration_eventsScalarFieldEnum = (typeof Tournament_registration_eventsScalarFieldEnum)[keyof typeof Tournament_registration_eventsScalarFieldEnum];
+export declare const Tournament_lifecycle_eventsScalarFieldEnum: {
+    readonly id: "id";
+    readonly tournament_id: "tournament_id";
+    readonly actor_user_id: "actor_user_id";
+    readonly from_phase: "from_phase";
+    readonly to_phase: "to_phase";
+    readonly reason: "reason";
+    readonly created_at: "created_at";
+};
+export type Tournament_lifecycle_eventsScalarFieldEnum = (typeof Tournament_lifecycle_eventsScalarFieldEnum)[keyof typeof Tournament_lifecycle_eventsScalarFieldEnum];
 export declare const Tournament_typesScalarFieldEnum: {
     readonly id: "id";
     readonly name: "name";
@@ -2272,6 +2813,10 @@ export declare const TournamentsScalarFieldEnum: {
     readonly tournament_type_id: "tournament_type_id";
     readonly sport_type: "sport_type";
     readonly modality: "modality";
+    readonly category_name: "category_name";
+    readonly category_min_age: "category_min_age";
+    readonly category_max_age: "category_max_age";
+    readonly category_gender: "category_gender";
     readonly start_date: "start_date";
     readonly end_date: "end_date";
     readonly registration_start_date: "registration_start_date";
@@ -2310,6 +2855,7 @@ export declare const UsersScalarFieldEnum: {
     readonly full_name: "full_name";
     readonly birth_date: "birth_date";
     readonly birth_city: "birth_city";
+    readonly gender: "gender";
     readonly email: "email";
     readonly phone: "phone";
     readonly photo_url: "photo_url";
@@ -2326,6 +2872,7 @@ export declare const UsersScalarFieldEnum: {
     readonly blocked_until: "blocked_until";
     readonly block_reason: "block_reason";
     readonly blocked_by: "blocked_by";
+    readonly block_source_action_id: "block_source_action_id";
     readonly created_at: "created_at";
     readonly updated_at: "updated_at";
 };
@@ -2366,9 +2913,9 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>;
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>;
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>;
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>;
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>;
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>;
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>;
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>;
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>;
 export type BatchPayload = {
@@ -2406,10 +2953,14 @@ export type GlobalOmitConfig = {
     fines?: Prisma.finesOmit;
     match_referees?: Prisma.match_refereesOmit;
     matches?: Prisma.matchesOmit;
+    referee_availability?: Prisma.referee_availabilityOmit;
+    referee_assignment_events?: Prisma.referee_assignment_eventsOmit;
     player_match_stats?: Prisma.player_match_statsOmit;
     roles?: Prisma.rolesOmit;
     sponsors?: Prisma.sponsorsOmit;
     suspensions?: Prisma.suspensionsOmit;
+    disciplinary_appeals?: Prisma.disciplinary_appealsOmit;
+    disciplinary_events?: Prisma.disciplinary_eventsOmit;
     team_members?: Prisma.team_membersOmit;
     teams?: Prisma.teamsOmit;
     tournament_administrators?: Prisma.tournament_administratorsOmit;
@@ -2418,7 +2969,9 @@ export type GlobalOmitConfig = {
     tournament_team_players?: Prisma.tournament_team_playersOmit;
     tournament_team_registrations?: Prisma.tournament_team_registrationsOmit;
     notifications?: Prisma.notificationsOmit;
+    notification_preferences?: Prisma.notification_preferencesOmit;
     tournament_registration_events?: Prisma.tournament_registration_eventsOmit;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsOmit;
     tournament_types?: Prisma.tournament_typesOmit;
     tournaments?: Prisma.tournamentsOmit;
     user_roles?: Prisma.user_rolesOmit;

@@ -47,8 +47,10 @@ class TeamCarnetPlayerResponseDto {
     phone;
     email;
     photoUrl;
+    jerseyNumber;
+    position;
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => String }, fullName: { required: true, type: () => String }, idNumber: { required: true, type: () => String }, documentType: { required: true, type: () => String }, birthDate: { required: true, type: () => String }, phone: { required: true, type: () => String, nullable: true }, email: { required: true, type: () => String }, photoUrl: { required: true, type: () => String, nullable: true } };
+        return { id: { required: true, type: () => String }, fullName: { required: true, type: () => String }, idNumber: { required: true, type: () => String }, documentType: { required: true, type: () => String }, birthDate: { required: true, type: () => String }, phone: { required: true, type: () => String, nullable: true }, email: { required: true, type: () => String }, photoUrl: { required: true, type: () => String, nullable: true }, jerseyNumber: { required: true, type: () => Number, nullable: true }, position: { required: true, type: () => String, nullable: true } };
     }
 }
 exports.TeamCarnetPlayerResponseDto = TeamCarnetPlayerResponseDto;
@@ -84,6 +86,14 @@ __decorate([
     (0, swagger_1.ApiProperty)({ example: '/uploads/users/player.webp', nullable: true }),
     __metadata("design:type", Object)
 ], TeamCarnetPlayerResponseDto.prototype, "photoUrl", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 10, nullable: true }),
+    __metadata("design:type", Object)
+], TeamCarnetPlayerResponseDto.prototype, "jerseyNumber", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Delantero', nullable: true }),
+    __metadata("design:type", Object)
+], TeamCarnetPlayerResponseDto.prototype, "position", void 0);
 class TeamCarnetsResponseDto {
     teamId;
     teamName;
@@ -104,11 +114,11 @@ __decorate([
     __metadata("design:type", String)
 ], TeamCarnetsResponseDto.prototype, "teamId", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Amazonas Vóley' }),
+    (0, swagger_1.ApiProperty)({ example: 'Amazonas FC' }),
     __metadata("design:type", String)
 ], TeamCarnetsResponseDto.prototype, "teamName", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Voleibol' }),
+    (0, swagger_1.ApiProperty)({ example: 'Fútbol' }),
     __metadata("design:type", String)
 ], TeamCarnetsResponseDto.prototype, "sportType", void 0);
 __decorate([

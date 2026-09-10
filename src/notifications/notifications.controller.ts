@@ -12,6 +12,7 @@ import { AllowBlockedUser } from '../auth/decorators/allow-blocked-user.decorato
 import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-request.interface';
 import { ParseBigIntPipe } from '../common/pipes/parse-big-int.pipe';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
+import { UpdateNotificationPreferencesDto } from './dto/update-notification-preferences.dto';
 import { NotificationsService } from './notifications.service';
 
 @UseGuards(JwtAuthGuard)
@@ -33,6 +34,22 @@ export class NotificationsController {
   @Get('unread-count')
   unreadCount(@Req() request: AuthenticatedRequest) {
     return this.notificationsService.unreadCount(request.auth.userId);
+  }
+
+  @Get('preferences')
+  getPreferences(@Req() request: AuthenticatedRequest) {
+    return this.notificationsService.getPreferences(request.auth.userId);
+  }
+
+  @Patch('preferences')
+  updatePreferences(
+    @Req() request: AuthenticatedRequest,
+    @Body() dto: UpdateNotificationPreferencesDto,
+  ) {
+    return this.notificationsService.updatePreferences(
+      request.auth.userId,
+      dto,
+    );
   }
 
   @Patch(':id')

@@ -15,19 +15,22 @@ const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const is_big_int_string_decorator_1 = require("../../common/decorators/is-big-int-string.decorator");
-const create_tournament_dto_1 = require("./create-tournament.dto");
+const tournament_lifecycle_constants_1 = require("../tournament-lifecycle.constants");
+const tournament_category_constants_1 = require("../tournament-category.constants");
 const trimString = ({ value }) => typeof value === 'string' ? value.trim() : value;
 class ListTournamentsQueryDto {
     associationId;
     managedOnly;
     tournamentTypeId;
+    category;
+    categoryGender;
     dateFrom;
     dateTo;
     phase;
     page = 1;
     pageSize = 10;
     static _OPENAPI_METADATA_FACTORY() {
-        return { associationId: { required: false, type: () => String }, managedOnly: { required: false, type: () => Boolean }, tournamentTypeId: { required: false, type: () => String }, dateFrom: { required: false, type: () => String }, dateTo: { required: false, type: () => String }, phase: { required: false, enum: ["cancelled", "draft", "registration", "in_progress", "finished"], enum: create_tournament_dto_1.TOURNAMENT_PHASES }, page: { required: true, type: () => Object, default: 1, minimum: 1 }, pageSize: { required: true, type: () => Object, default: 10, minimum: 1, maximum: 10 } };
+        return { associationId: { required: false, type: () => String }, managedOnly: { required: false, type: () => Boolean }, tournamentTypeId: { required: false, type: () => String }, category: { required: false, type: () => String, maxLength: 120 }, categoryGender: { required: false, enum: ["male", "female", "open", "mixed"], enum: tournament_category_constants_1.TOURNAMENT_CATEGORY_GENDERS }, dateFrom: { required: false, type: () => String }, dateTo: { required: false, type: () => String }, phase: { required: false, enum: ["cancelled", "draft", "registration", "validation", "scheduled", "in_progress", "finished", "archived"], enum: tournament_lifecycle_constants_1.TOURNAMENT_PHASES }, page: { required: true, type: () => Object, default: 1, minimum: 1 }, pageSize: { required: true, type: () => Object, default: 10, minimum: 1, maximum: 10 } };
     }
 }
 exports.ListTournamentsQueryDto = ListTournamentsQueryDto;
@@ -53,6 +56,21 @@ __decorate([
     __metadata("design:type", String)
 ], ListTournamentsQueryDto.prototype, "tournamentTypeId", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Sub-15', maxLength: 120 }),
+    (0, class_transformer_1.Transform)(trimString),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(120),
+    __metadata("design:type", String)
+], ListTournamentsQueryDto.prototype, "category", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ enum: tournament_category_constants_1.TOURNAMENT_CATEGORY_GENDERS }),
+    (0, class_transformer_1.Transform)(trimString),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)(tournament_category_constants_1.TOURNAMENT_CATEGORY_GENDERS),
+    __metadata("design:type", String)
+], ListTournamentsQueryDto.prototype, "categoryGender", void 0);
+__decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: '2026-08-01', format: 'date' }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsDateString)({ strict: true, strictSeparator: true }),
@@ -65,10 +83,10 @@ __decorate([
     __metadata("design:type", String)
 ], ListTournamentsQueryDto.prototype, "dateTo", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ enum: create_tournament_dto_1.TOURNAMENT_PHASES }),
+    (0, swagger_1.ApiPropertyOptional)({ enum: tournament_lifecycle_constants_1.TOURNAMENT_PHASES }),
     (0, class_transformer_1.Transform)(trimString),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsIn)(create_tournament_dto_1.TOURNAMENT_PHASES),
+    (0, class_validator_1.IsIn)(tournament_lifecycle_constants_1.TOURNAMENT_PHASES),
     __metadata("design:type", String)
 ], ListTournamentsQueryDto.prototype, "phase", void 0);
 __decorate([

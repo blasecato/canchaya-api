@@ -1,10 +1,16 @@
+import { CompetitionAccessService } from '../authorization/competition-access.service';
+import { MatchOperationalNotificationsService } from '../notifications/match-operational-notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { RefereeAssignmentsService } from '../referees/referee-assignments.service';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 export declare class MatchesService {
     private readonly prisma;
-    constructor(prisma: PrismaService);
-    create(createMatchDto: CreateMatchDto): import("../../generated/prisma/models").Prisma__matchesClient<{
+    private readonly access;
+    private readonly refereeAssignments;
+    private readonly matchNotifications;
+    constructor(prisma: PrismaService, access: CompetitionAccessService, refereeAssignments: RefereeAssignmentsService, matchNotifications: MatchOperationalNotificationsService);
+    create(requestingUserId: bigint, dto: CreateMatchDto): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
@@ -19,10 +25,9 @@ export declare class MatchesService {
         round_number: number | null;
         home_score: number | null;
         away_score: number | null;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, {
-        omit: import("../../generated/prisma/internal/prismaNamespace").GlobalOmitConfig | undefined;
+        duration_minutes: number;
     }>;
-    findAll(): import("../../generated/prisma/internal/prismaNamespace").PrismaPromise<{
+    findAll(requestingUserId: bigint): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
@@ -37,8 +42,9 @@ export declare class MatchesService {
         round_number: number | null;
         home_score: number | null;
         away_score: number | null;
+        duration_minutes: number;
     }[]>;
-    findOne(id: bigint): Promise<{
+    findOne(id: bigint, requestingUserId: bigint): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
@@ -53,8 +59,9 @@ export declare class MatchesService {
         round_number: number | null;
         home_score: number | null;
         away_score: number | null;
+        duration_minutes: number;
     }>;
-    update(id: bigint, updateMatchDto: UpdateMatchDto): Promise<{
+    update(id: bigint, requestingUserId: bigint, dto: UpdateMatchDto): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
@@ -69,8 +76,9 @@ export declare class MatchesService {
         round_number: number | null;
         home_score: number | null;
         away_score: number | null;
+        duration_minutes: number;
     }>;
-    remove(id: bigint): Promise<{
+    remove(id: bigint, requestingUserId: bigint): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
@@ -85,5 +93,12 @@ export declare class MatchesService {
         round_number: number | null;
         home_score: number | null;
         away_score: number | null;
+        duration_minutes: number;
     }>;
+    private findExistingMatch;
+    private assertValidParticipants;
+    private assertMatchUpdateAllowed;
+    private assertTournamentPhase;
+    private assertRefereeUpdate;
+    private assertValidResult;
 }

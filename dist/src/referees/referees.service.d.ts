@@ -1,5 +1,8 @@
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateRefereeAvailabilityDto } from './dto/create-referee-availability.dto';
+import { ListRefereeAvailabilityQueryDto } from './dto/list-referee-availability-query.dto';
 import { ListRefereeMatchesQueryDto } from './dto/list-referee-matches-query.dto';
+import { UpdateRefereeAvailabilityDto } from './dto/update-referee-availability.dto';
 export declare class RefereesService {
     private readonly prisma;
     constructor(prisma: PrismaService);
@@ -51,11 +54,41 @@ export declare class RefereesService {
         total: number;
         hasNextPage: boolean;
     }>;
-    removeRole(id: bigint): Promise<{
+    findAvailability(id: bigint, requestingUserId: bigint, query: ListRefereeAvailabilityQueryDto): Promise<{
+        id: string;
+        startsAt: string;
+        endsAt: string;
+        notes: string | null;
+        status: string;
+    }[]>;
+    createAvailability(refereeId: bigint, dto: CreateRefereeAvailabilityDto): Promise<{
+        id: string;
+        startsAt: string;
+        endsAt: string;
+        notes: string | null;
+        status: string;
+    }>;
+    updateAvailability(refereeId: bigint, availabilityId: bigint, dto: UpdateRefereeAvailabilityDto): Promise<{
+        id: string;
+        startsAt: string;
+        endsAt: string;
+        notes: string | null;
+        status: string;
+    }>;
+    removeAvailability(refereeId: bigint, availabilityId: bigint): Promise<{
+        message: string;
+    }>;
+    removeRole(id: bigint, actorId: bigint): Promise<{
         id: string;
         roles: string[];
         message: string;
     }>;
     private findRoleCodes;
+    private assertRefereeExists;
+    private assertValidAvailabilityRange;
+    private assertAvailabilityDoesNotOverlap;
+    private findOwnedAvailability;
+    private assertAvailabilityNotCommitted;
+    private toAvailabilityResponse;
     private toMatchResponse;
 }

@@ -11,6 +11,7 @@ import {
 } from 'class-validator';
 import { IsBcryptPassword } from '../../common/decorators/is-bcrypt-password.decorator';
 import { IsOptionalNonNullable } from '../../common/decorators/is-optional-non-nullable.decorator';
+import { USER_GENDERS, type UserGender } from '../user-gender.constants';
 
 export class CreateUserDto {
   @ApiProperty({ example: '1020304050' })
@@ -32,6 +33,11 @@ export class CreateUserDto {
   @Matches(/^\d{4}-\d{2}-\d{2}$/)
   @IsDateString({ strict: true, strictSeparator: true })
   birthDate!: string;
+
+  @ApiPropertyOptional({ enum: USER_GENDERS })
+  @IsOptionalNonNullable()
+  @IsIn(USER_GENDERS)
+  gender?: UserGender;
 
   @ApiProperty({ example: 'maria@example.com', format: 'email' })
   @IsEmail()

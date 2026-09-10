@@ -134,10 +134,10 @@ __decorate([
 ], AssociationsController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
-    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'PLAYER'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'PLAYER', 'REFEREE'),
     (0, swagger_1.ApiOperation)({
         summary: 'Listar las asociaciones visibles para el usuario',
-        description: 'SUPER_ADMIN consulta todas las asociaciones; PLAYER consulta únicamente las asociaciones activas.',
+        description: 'SUPER_ADMIN consulta todas las asociaciones; PLAYER y REFEREE consultan únicamente las asociaciones activas.',
     }),
     (0, swagger_1.ApiOkResponse)({
         description: 'Listado de asociaciones con propietario y métricas.',
@@ -185,7 +185,7 @@ __decorate([
 ], AssociationsController.prototype, "findAdministeredBy", null);
 __decorate([
     (0, common_1.Get)(':id/tournaments'),
-    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER', 'REFEREE'),
     (0, swagger_1.ApiOperation)({
         summary: 'Listar los torneos disponibles de una asociación',
     }),
@@ -211,7 +211,7 @@ __decorate([
 ], AssociationsController.prototype, "findAvailableTournaments", null);
 __decorate([
     (0, common_1.Get)(':id'),
-    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER', 'REFEREE'),
     (0, swagger_1.ApiOperation)({ summary: 'Consultar una asociación por ID' }),
     (0, swagger_1.ApiParam)({ name: 'id', example: '1', type: String }),
     (0, swagger_1.ApiOkResponse)({

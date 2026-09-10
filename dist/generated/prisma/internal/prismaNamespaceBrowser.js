@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.UsersScalarFieldEnum = exports.User_rolesScalarFieldEnum = exports.TournamentsScalarFieldEnum = exports.Tournament_typesScalarFieldEnum = exports.Tournament_registration_eventsScalarFieldEnum = exports.NotificationsScalarFieldEnum = exports.Tournament_team_registrationsScalarFieldEnum = exports.Tournament_team_playersScalarFieldEnum = exports.Tournament_sponsorsScalarFieldEnum = exports.Tournament_refereesScalarFieldEnum = exports.Tournament_administratorsScalarFieldEnum = exports.TeamsScalarFieldEnum = exports.Team_membersScalarFieldEnum = exports.SuspensionsScalarFieldEnum = exports.SponsorsScalarFieldEnum = exports.RolesScalarFieldEnum = exports.Player_match_statsScalarFieldEnum = exports.MatchesScalarFieldEnum = exports.Match_refereesScalarFieldEnum = exports.FinesScalarFieldEnum = exports.Disciplinary_actionsScalarFieldEnum = exports.AssociationsScalarFieldEnum = exports.Association_administratorsScalarFieldEnum = exports.Auth_sessionsScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.UsersScalarFieldEnum = exports.User_rolesScalarFieldEnum = exports.TournamentsScalarFieldEnum = exports.Tournament_typesScalarFieldEnum = exports.Tournament_lifecycle_eventsScalarFieldEnum = exports.Tournament_registration_eventsScalarFieldEnum = exports.Notification_preferencesScalarFieldEnum = exports.NotificationsScalarFieldEnum = exports.Tournament_team_registrationsScalarFieldEnum = exports.Tournament_team_playersScalarFieldEnum = exports.Tournament_sponsorsScalarFieldEnum = exports.Tournament_refereesScalarFieldEnum = exports.Tournament_administratorsScalarFieldEnum = exports.TeamsScalarFieldEnum = exports.Team_membersScalarFieldEnum = exports.Disciplinary_eventsScalarFieldEnum = exports.Disciplinary_appealsScalarFieldEnum = exports.SuspensionsScalarFieldEnum = exports.SponsorsScalarFieldEnum = exports.RolesScalarFieldEnum = exports.Player_match_statsScalarFieldEnum = exports.Referee_assignment_eventsScalarFieldEnum = exports.Referee_availabilityScalarFieldEnum = exports.MatchesScalarFieldEnum = exports.Match_refereesScalarFieldEnum = exports.FinesScalarFieldEnum = exports.Disciplinary_actionsScalarFieldEnum = exports.AssociationsScalarFieldEnum = exports.Association_administratorsScalarFieldEnum = exports.Auth_sessionsScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -52,10 +52,14 @@ exports.ModelName = {
     fines: 'fines',
     match_referees: 'match_referees',
     matches: 'matches',
+    referee_availability: 'referee_availability',
+    referee_assignment_events: 'referee_assignment_events',
     player_match_stats: 'player_match_stats',
     roles: 'roles',
     sponsors: 'sponsors',
     suspensions: 'suspensions',
+    disciplinary_appeals: 'disciplinary_appeals',
+    disciplinary_events: 'disciplinary_events',
     team_members: 'team_members',
     teams: 'teams',
     tournament_administrators: 'tournament_administrators',
@@ -64,7 +68,9 @@ exports.ModelName = {
     tournament_team_players: 'tournament_team_players',
     tournament_team_registrations: 'tournament_team_registrations',
     notifications: 'notifications',
+    notification_preferences: 'notification_preferences',
     tournament_registration_events: 'tournament_registration_events',
+    tournament_lifecycle_events: 'tournament_lifecycle_events',
     tournament_types: 'tournament_types',
     tournaments: 'tournaments',
     user_roles: 'user_roles',
@@ -120,10 +126,14 @@ exports.Disciplinary_actionsScalarFieldEnum = {
     occurred_at: 'occurred_at',
     reported_by: 'reported_by',
     decision_status: 'decision_status',
+    review_started_by: 'review_started_by',
+    review_started_at: 'review_started_at',
     decided_by: 'decided_by',
     decided_at: 'decided_at',
     decision_notes: 'decision_notes',
-    created_at: 'created_at'
+    appeal_deadline: 'appeal_deadline',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
 };
 exports.FinesScalarFieldEnum = {
     id: 'id',
@@ -136,7 +146,8 @@ exports.FinesScalarFieldEnum = {
     payment_reference: 'payment_reference',
     notes: 'notes',
     created_by: 'created_by',
-    created_at: 'created_at'
+    created_at: 'created_at',
+    updated_at: 'updated_at'
 };
 exports.Match_refereesScalarFieldEnum = {
     match_id: 'match_id',
@@ -144,7 +155,13 @@ exports.Match_refereesScalarFieldEnum = {
     referee_id: 'referee_id',
     referee_role: 'referee_role',
     assignment_status: 'assignment_status',
-    created_at: 'created_at'
+    assigned_by: 'assigned_by',
+    responded_at: 'responded_at',
+    response_notes: 'response_notes',
+    replaced_referee_id: 'replaced_referee_id',
+    replacement_reason: 'replacement_reason',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
 };
 exports.MatchesScalarFieldEnum = {
     id: 'id',
@@ -158,9 +175,31 @@ exports.MatchesScalarFieldEnum = {
     home_score: 'home_score',
     away_score: 'away_score',
     status: 'status',
+    duration_minutes: 'duration_minutes',
     notes: 'notes',
     created_at: 'created_at',
     updated_at: 'updated_at'
+};
+exports.Referee_availabilityScalarFieldEnum = {
+    id: 'id',
+    referee_id: 'referee_id',
+    starts_at: 'starts_at',
+    ends_at: 'ends_at',
+    notes: 'notes',
+    status: 'status',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+};
+exports.Referee_assignment_eventsScalarFieldEnum = {
+    id: 'id',
+    match_id: 'match_id',
+    referee_id: 'referee_id',
+    actor_user_id: 'actor_user_id',
+    event_type: 'event_type',
+    previous_status: 'previous_status',
+    new_status: 'new_status',
+    reason: 'reason',
+    created_at: 'created_at'
 };
 exports.Player_match_statsScalarFieldEnum = {
     id: 'id',
@@ -203,7 +242,31 @@ exports.SuspensionsScalarFieldEnum = {
     end_date: 'end_date',
     reason: 'reason',
     status: 'status',
+    served_matches: 'served_matches',
+    completed_at: 'completed_at',
     created_by: 'created_by',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+};
+exports.Disciplinary_appealsScalarFieldEnum = {
+    id: 'id',
+    disciplinary_action_id: 'disciplinary_action_id',
+    player_id: 'player_id',
+    message: 'message',
+    status: 'status',
+    reviewed_by: 'reviewed_by',
+    reviewed_at: 'reviewed_at',
+    resolution_notes: 'resolution_notes',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+};
+exports.Disciplinary_eventsScalarFieldEnum = {
+    id: 'id',
+    disciplinary_action_id: 'disciplinary_action_id',
+    actor_user_id: 'actor_user_id',
+    event_type: 'event_type',
+    message: 'message',
+    metadata: 'metadata',
     created_at: 'created_at'
 };
 exports.Team_membersScalarFieldEnum = {
@@ -275,6 +338,11 @@ exports.Tournament_team_registrationsScalarFieldEnum = {
     reviewed_by: 'reviewed_by',
     review_notes: 'review_notes',
     reviewed_at: 'reviewed_at',
+    payment_status: 'payment_status',
+    amount_paid: 'amount_paid',
+    payment_notes: 'payment_notes',
+    payment_updated_by: 'payment_updated_by',
+    payment_updated_at: 'payment_updated_at',
     group_name: 'group_name',
     seed: 'seed',
     points: 'points',
@@ -285,13 +353,27 @@ exports.NotificationsScalarFieldEnum = {
     id: 'id',
     user_id: 'user_id',
     type: 'type',
+    event_code: 'event_code',
+    deduplication_key: 'deduplication_key',
     title: 'title',
     message: 'message',
     entity_type: 'entity_type',
     entity_id: 'entity_id',
     metadata: 'metadata',
+    scheduled_for: 'scheduled_for',
     read_at: 'read_at',
     created_at: 'created_at'
+};
+exports.Notification_preferencesScalarFieldEnum = {
+    user_id: 'user_id',
+    match_scheduled_enabled: 'match_scheduled_enabled',
+    match_updates_enabled: 'match_updates_enabled',
+    match_reminders_enabled: 'match_reminders_enabled',
+    reminder_hours_before: 'reminder_hours_before',
+    email_enabled: 'email_enabled',
+    whatsapp_enabled: 'whatsapp_enabled',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
 };
 exports.Tournament_registration_eventsScalarFieldEnum = {
     id: 'id',
@@ -300,6 +382,15 @@ exports.Tournament_registration_eventsScalarFieldEnum = {
     actor_user_id: 'actor_user_id',
     event_type: 'event_type',
     message: 'message',
+    created_at: 'created_at'
+};
+exports.Tournament_lifecycle_eventsScalarFieldEnum = {
+    id: 'id',
+    tournament_id: 'tournament_id',
+    actor_user_id: 'actor_user_id',
+    from_phase: 'from_phase',
+    to_phase: 'to_phase',
+    reason: 'reason',
     created_at: 'created_at'
 };
 exports.Tournament_typesScalarFieldEnum = {
@@ -320,6 +411,10 @@ exports.TournamentsScalarFieldEnum = {
     tournament_type_id: 'tournament_type_id',
     sport_type: 'sport_type',
     modality: 'modality',
+    category_name: 'category_name',
+    category_min_age: 'category_min_age',
+    category_max_age: 'category_max_age',
+    category_gender: 'category_gender',
     start_date: 'start_date',
     end_date: 'end_date',
     registration_start_date: 'registration_start_date',
@@ -356,6 +451,7 @@ exports.UsersScalarFieldEnum = {
     full_name: 'full_name',
     birth_date: 'birth_date',
     birth_city: 'birth_city',
+    gender: 'gender',
     email: 'email',
     phone: 'phone',
     photo_url: 'photo_url',
@@ -372,6 +468,7 @@ exports.UsersScalarFieldEnum = {
     blocked_until: 'blocked_until',
     block_reason: 'block_reason',
     blocked_by: 'blocked_by',
+    block_source_action_id: 'block_source_action_id',
     created_at: 'created_at',
     updated_at: 'updated_at'
 };

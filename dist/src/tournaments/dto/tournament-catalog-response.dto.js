@@ -224,9 +224,11 @@ __decorate([
 ], TournamentCatalogFilterOptionDto.prototype, "name", void 0);
 class TournamentCatalogFiltersResponseDto {
     associations;
+    tournamentTypes;
     categories;
+    categoryGenders;
     static _OPENAPI_METADATA_FACTORY() {
-        return { associations: { required: true, type: () => [require("./tournament-catalog-response.dto").TournamentCatalogFilterOptionDto] }, categories: { required: true, type: () => [require("./tournament-catalog-response.dto").TournamentCatalogFilterOptionDto] } };
+        return { associations: { required: true, type: () => [require("./tournament-catalog-response.dto").TournamentCatalogFilterOptionDto] }, tournamentTypes: { required: true, type: () => [require("./tournament-catalog-response.dto").TournamentCatalogFilterOptionDto] }, categories: { required: true, type: () => [String] }, categoryGenders: { required: true, type: () => [String] } };
     }
 }
 exports.TournamentCatalogFiltersResponseDto = TournamentCatalogFiltersResponseDto;
@@ -237,5 +239,13 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)({ type: TournamentCatalogFilterOptionDto, isArray: true }),
     __metadata("design:type", Array)
+], TournamentCatalogFiltersResponseDto.prototype, "tournamentTypes", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: String, isArray: true, example: ['Libre', 'Sub-15'] }),
+    __metadata("design:type", Array)
 ], TournamentCatalogFiltersResponseDto.prototype, "categories", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: String, isArray: true, example: ['open', 'male'] }),
+    __metadata("design:type", Array)
+], TournamentCatalogFiltersResponseDto.prototype, "categoryGenders", void 0);
 //# sourceMappingURL=tournament-catalog-response.dto.js.map

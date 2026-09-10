@@ -20,7 +20,6 @@ import {
 } from './association-response.mapper';
 import {
   associationTournamentResponseSelect,
-  AVAILABLE_TOURNAMENT_EXCLUDED_PHASES,
   toAssociationTournamentResponse,
 } from './association-tournament-response.mapper';
 import { AssociationResponseDto } from './dto/association-response.dto';
@@ -33,6 +32,7 @@ import { AssociationTournamentResponseDto } from './dto/association-tournament-r
 import { CreateAssociationDto } from './dto/create-association.dto';
 import { UpdateAssociationDto } from './dto/update-association.dto';
 import type { AssociationTournamentScope } from './dto/list-association-tournaments-query.dto';
+import { PUBLIC_TOURNAMENT_PHASES } from '../tournaments/tournament-lifecycle.constants';
 
 type AssociationCreationAuthorizationClient = Pick<
   Prisma.TransactionClient,
@@ -132,9 +132,7 @@ export class AssociationsService {
     return response;
   }
 
-  async findAll(
-    requestingUserId?: bigint,
-  ): Promise<AssociationResponseDto[]> {
+  async findAll(requestingUserId?: bigint): Promise<AssociationResponseDto[]> {
     const canSeeInactiveAssociations = requestingUserId
       ? Boolean(
           await this.prisma.user_roles.findFirst({
@@ -282,7 +280,7 @@ export class AssociationsService {
         ...(scope === 'available'
           ? {
               status: 'active',
-              phase: { notIn: [...AVAILABLE_TOURNAMENT_EXCLUDED_PHASES] },
+              phase: { in: [...PUBLIC_TOURNAMENT_PHASES] },
             }
           : {}),
       },
@@ -664,7 +662,9 @@ export class AssociationsService {
       client.user_roles.findMany({
         where: {
           user_id: requestingUserId,
-          role_code: { in: ['SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER'] },
+          role_code: {
+            in: ['SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER', 'REFEREE'],
+          },
         },
         select: { role_code: true },
       }),
@@ -701,8 +701,8 @@ export class AssociationsService {
     }
 
     const permissionLevel = roleCodes.has('ASSOCIATION_ADMIN')
-      ? (association.association_administrators[0]
-          ?.permission_level as AssociationPermissionLevel | undefined)
+      ? (association.association_administrators[0]?.permission_level as
+          AssociationPermissionLevel | undefined)
       : undefined;
 
     if (
@@ -720,7 +720,10 @@ export class AssociationsService {
       };
     }
 
-    if (roleCodes.has('PLAYER') && association.status === 'active') {
+    if (
+      (roleCodes.has('PLAYER') || roleCodes.has('REFEREE')) &&
+      association.status === 'active'
+    ) {
       return {
         canEdit: false,
         canManageOwner: false,

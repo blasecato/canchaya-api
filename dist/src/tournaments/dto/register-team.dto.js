@@ -32,8 +32,10 @@ class CaptainTeamOptionResponseDto {
     photoUrl;
     memberCount;
     registrationStatus;
+    eligible;
+    eligibilityMessage;
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => String }, name: { required: true, type: () => String }, photoUrl: { required: true, type: () => String, nullable: true }, memberCount: { required: true, type: () => Number }, registrationStatus: { required: true, type: () => String, nullable: true } };
+        return { id: { required: true, type: () => String }, name: { required: true, type: () => String }, photoUrl: { required: true, type: () => String, nullable: true }, memberCount: { required: true, type: () => Number }, registrationStatus: { required: true, type: () => String, nullable: true }, eligible: { required: true, type: () => Boolean }, eligibilityMessage: { required: true, type: () => String, nullable: true } };
     }
 }
 exports.CaptainTeamOptionResponseDto = CaptainTeamOptionResponseDto;
@@ -57,6 +59,14 @@ __decorate([
     (0, swagger_1.ApiProperty)({ example: null, nullable: true }),
     __metadata("design:type", Object)
 ], CaptainTeamOptionResponseDto.prototype, "registrationStatus", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: true }),
+    __metadata("design:type", Boolean)
+], CaptainTeamOptionResponseDto.prototype, "eligible", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: null, nullable: true }),
+    __metadata("design:type", Object)
+], CaptainTeamOptionResponseDto.prototype, "eligibilityMessage", void 0);
 class TeamRegistrationResponseDto {
     tournamentId;
     teamId;

@@ -1,12 +1,14 @@
+import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-request.interface';
 import { CreateFineDto } from './dto/create-fine.dto';
 import { UpdateFineDto } from './dto/update-fine.dto';
 import { FinesService } from './fines.service';
 export declare class FinesController {
     private readonly finesService;
     constructor(finesService: FinesService);
-    create(createFineDto: CreateFineDto): import("../../generated/prisma/models").Prisma__finesClient<{
+    create(request: AuthenticatedRequest, createFineDto: CreateFineDto): Promise<{
         id: bigint;
         created_at: Date;
+        updated_at: Date;
         disciplinary_action_id: bigint;
         amount: import("@prisma/client-runtime-utils").Decimal;
         currency_code: string;
@@ -16,12 +18,11 @@ export declare class FinesController {
         payment_reference: string | null;
         notes: string | null;
         created_by: bigint;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, {
-        omit: import("../../generated/prisma/internal/prismaNamespace").GlobalOmitConfig | undefined;
     }>;
-    findAll(): import("../../generated/prisma/internal/prismaNamespace").PrismaPromise<{
+    findAll(request: AuthenticatedRequest): Promise<{
         id: bigint;
         created_at: Date;
+        updated_at: Date;
         disciplinary_action_id: bigint;
         amount: import("@prisma/client-runtime-utils").Decimal;
         currency_code: string;
@@ -32,9 +33,17 @@ export declare class FinesController {
         notes: string | null;
         created_by: bigint;
     }[]>;
-    findOne(id: bigint): Promise<{
+    findOne(id: bigint, request: AuthenticatedRequest): Promise<{
+        disciplinary_actions: {
+            id: bigint;
+            tournament_id: bigint;
+            player_id: bigint;
+            decision_status: string;
+        };
+    } & {
         id: bigint;
         created_at: Date;
+        updated_at: Date;
         disciplinary_action_id: bigint;
         amount: import("@prisma/client-runtime-utils").Decimal;
         currency_code: string;
@@ -45,9 +54,10 @@ export declare class FinesController {
         notes: string | null;
         created_by: bigint;
     }>;
-    update(id: bigint, updateFineDto: UpdateFineDto): Promise<{
+    update(id: bigint, request: AuthenticatedRequest, updateFineDto: UpdateFineDto): Promise<{
         id: bigint;
         created_at: Date;
+        updated_at: Date;
         disciplinary_action_id: bigint;
         amount: import("@prisma/client-runtime-utils").Decimal;
         currency_code: string;
@@ -58,9 +68,10 @@ export declare class FinesController {
         notes: string | null;
         created_by: bigint;
     }>;
-    remove(id: bigint): Promise<{
+    remove(id: bigint, request: AuthenticatedRequest): Promise<{
         id: bigint;
         created_at: Date;
+        updated_at: Date;
         disciplinary_action_id: bigint;
         amount: import("@prisma/client-runtime-utils").Decimal;
         currency_code: string;

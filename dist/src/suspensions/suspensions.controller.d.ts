@@ -1,64 +1,85 @@
+import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-request.interface';
 import { CreateSuspensionDto } from './dto/create-suspension.dto';
 import { UpdateSuspensionDto } from './dto/update-suspension.dto';
 import { SuspensionsService } from './suspensions.service';
 export declare class SuspensionsController {
     private readonly suspensionsService;
     constructor(suspensionsService: SuspensionsService);
-    create(createSuspensionDto: CreateSuspensionDto): import("../../generated/prisma/models").Prisma__suspensionsClient<{
+    create(request: AuthenticatedRequest, createSuspensionDto: CreateSuspensionDto): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
+        updated_at: Date;
         reason: string | null;
         disciplinary_action_id: bigint;
         created_by: bigint;
         matches_count: number | null;
         start_date: Date | null;
         end_date: Date | null;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, {
-        omit: import("../../generated/prisma/internal/prismaNamespace").GlobalOmitConfig | undefined;
+        served_matches: number;
+        completed_at: Date | null;
     }>;
-    findAll(): import("../../generated/prisma/internal/prismaNamespace").PrismaPromise<{
+    findAll(request: AuthenticatedRequest): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
+        updated_at: Date;
         reason: string | null;
         disciplinary_action_id: bigint;
         created_by: bigint;
         matches_count: number | null;
         start_date: Date | null;
         end_date: Date | null;
+        served_matches: number;
+        completed_at: Date | null;
     }[]>;
-    findOne(id: bigint): Promise<{
+    findOne(id: bigint, request: AuthenticatedRequest): Promise<{
+        disciplinary_actions: {
+            id: bigint;
+            tournament_id: bigint;
+            player_id: bigint;
+            decision_status: string;
+        };
+    } & {
         id: bigint;
         created_at: Date;
         status: string;
+        updated_at: Date;
         reason: string | null;
         disciplinary_action_id: bigint;
         created_by: bigint;
         matches_count: number | null;
         start_date: Date | null;
         end_date: Date | null;
+        served_matches: number;
+        completed_at: Date | null;
     }>;
-    update(id: bigint, updateSuspensionDto: UpdateSuspensionDto): Promise<{
+    update(id: bigint, request: AuthenticatedRequest, updateSuspensionDto: UpdateSuspensionDto): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
+        updated_at: Date;
         reason: string | null;
         disciplinary_action_id: bigint;
         created_by: bigint;
         matches_count: number | null;
         start_date: Date | null;
         end_date: Date | null;
+        served_matches: number;
+        completed_at: Date | null;
     }>;
-    remove(id: bigint): Promise<{
+    remove(id: bigint, request: AuthenticatedRequest): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
+        updated_at: Date;
         reason: string | null;
         disciplinary_action_id: bigint;
         created_by: bigint;
         matches_count: number | null;
         start_date: Date | null;
         end_date: Date | null;
+        served_matches: number;
+        completed_at: Date | null;
     }>;
 }

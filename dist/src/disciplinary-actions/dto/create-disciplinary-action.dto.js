@@ -23,13 +23,8 @@ class CreateDisciplinaryActionDto {
     cardType;
     reason;
     occurredAt;
-    reportedBy;
-    decisionStatus;
-    decidedBy;
-    decidedAt;
-    decisionNotes;
     static _OPENAPI_METADATA_FACTORY() {
-        return { tournamentId: { required: true, type: () => String }, matchId: { required: false, type: () => String, nullable: true }, teamId: { required: true, type: () => String }, playerId: { required: true, type: () => String }, cardType: { required: false, type: () => String, enum: ['none', 'yellow', 'double_yellow', 'red'] }, reason: { required: true, type: () => String }, occurredAt: { required: false, type: () => String }, reportedBy: { required: true, type: () => String }, decisionStatus: { required: false, type: () => String, enum: ['reported', 'approved', 'dismissed'] }, decidedBy: { required: false, type: () => String, nullable: true }, decidedAt: { required: false, type: () => String, nullable: true }, decisionNotes: { required: false, type: () => String, nullable: true } };
+        return { tournamentId: { required: true, type: () => String }, matchId: { required: false, type: () => String, nullable: true }, teamId: { required: true, type: () => String }, playerId: { required: true, type: () => String }, cardType: { required: false, type: () => String, enum: ['none', 'yellow', 'double_yellow', 'red'] }, reason: { required: true, type: () => String }, occurredAt: { required: false, type: () => String } };
     }
 }
 exports.CreateDisciplinaryActionDto = CreateDisciplinaryActionDto;
@@ -76,40 +71,4 @@ __decorate([
     (0, class_validator_1.IsDateString)({ strict: true, strictSeparator: true }),
     __metadata("design:type", String)
 ], CreateDisciplinaryActionDto.prototype, "occurredAt", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: '7' }),
-    (0, is_big_int_string_decorator_1.IsBigIntString)(),
-    __metadata("design:type", String)
-], CreateDisciplinaryActionDto.prototype, "reportedBy", void 0);
-__decorate([
-    (0, swagger_1.ApiPropertyOptional)({
-        example: 'reported',
-        enum: ['reported', 'approved', 'dismissed'],
-        default: 'reported',
-    }),
-    (0, is_optional_non_nullable_decorator_1.IsOptionalNonNullable)(),
-    (0, class_validator_1.IsIn)(['reported', 'approved', 'dismissed']),
-    __metadata("design:type", String)
-], CreateDisciplinaryActionDto.prototype, "decisionStatus", void 0);
-__decorate([
-    (0, swagger_1.ApiPropertyOptional)({ example: '8', nullable: true }),
-    (0, class_validator_1.IsOptional)(),
-    (0, is_big_int_string_decorator_1.IsBigIntString)(),
-    __metadata("design:type", Object)
-], CreateDisciplinaryActionDto.prototype, "decidedBy", void 0);
-__decorate([
-    (0, swagger_1.ApiPropertyOptional)({
-        example: '2026-09-11T14:00:00.000Z',
-        nullable: true,
-    }),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsDateString)({ strict: true, strictSeparator: true }),
-    __metadata("design:type", Object)
-], CreateDisciplinaryActionDto.prototype, "decidedAt", void 0);
-__decorate([
-    (0, swagger_1.ApiPropertyOptional)({ example: 'Decisión confirmada.', nullable: true }),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", Object)
-], CreateDisciplinaryActionDto.prototype, "decisionNotes", void 0);
 //# sourceMappingURL=create-disciplinary-action.dto.js.map

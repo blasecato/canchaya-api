@@ -13,6 +13,8 @@ export declare class TeamCarnetPlayerResponseDto {
     phone: string | null;
     email: string;
     photoUrl: string | null;
+    jerseyNumber: number | null;
+    position: string | null;
 }
 export declare class TeamCarnetsResponseDto {
     teamId: string;

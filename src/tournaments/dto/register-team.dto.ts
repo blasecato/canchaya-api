@@ -23,6 +23,12 @@ export class CaptainTeamOptionResponseDto {
 
   @ApiProperty({ example: null, nullable: true })
   registrationStatus!: string | null;
+
+  @ApiProperty({ example: true })
+  eligible!: boolean;
+
+  @ApiProperty({ example: null, nullable: true })
+  eligibilityMessage!: string | null;
 }
 
 export class TeamRegistrationResponseDto {

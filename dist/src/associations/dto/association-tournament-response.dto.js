@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AssociationTournamentResponseDto = exports.TournamentSponsorResponseDto = exports.AssociationTournamentTypeResponseDto = void 0;
 const openapi = require("@nestjs/swagger");
 const swagger_1 = require("@nestjs/swagger");
+const tournament_category_constants_1 = require("../../tournaments/tournament-category.constants");
 class AssociationTournamentTypeResponseDto {
     id;
     name;
@@ -72,7 +73,7 @@ class TournamentSponsorResponseDto {
     agreementEndDate;
     status;
     static _OPENAPI_METADATA_FACTORY() {
-        return { sponsorId: { required: true, type: () => String }, name: { required: true, type: () => String }, taxId: { required: true, type: () => String, nullable: true }, contactName: { required: true, type: () => String, nullable: true }, email: { required: true, type: () => String, nullable: true }, phone: { required: true, type: () => String, nullable: true }, websiteUrl: { required: true, type: () => String, nullable: true }, logoUrl: { required: true, type: () => String, nullable: true }, sponsorshipLevel: { required: true, type: () => String, nullable: true }, contributionType: { required: true, enum: ["money", "products", "services", "mixed"] }, contributionAmount: { required: true, type: () => String, nullable: true }, contributionCurrencyCode: { required: true, type: () => String }, contributionDescription: { required: true, type: () => String, nullable: true }, agreementStartDate: { required: true, type: () => String, nullable: true }, agreementEndDate: { required: true, type: () => String, nullable: true }, status: { required: true, enum: ["active", "inactive", "completed", "cancelled"] } };
+        return { sponsorId: { required: true, type: () => String }, name: { required: true, type: () => String }, taxId: { required: true, type: () => String, nullable: true }, contactName: { required: true, type: () => String, nullable: true }, email: { required: true, type: () => String, nullable: true }, phone: { required: true, type: () => String, nullable: true }, websiteUrl: { required: true, type: () => String, nullable: true }, logoUrl: { required: true, type: () => String, nullable: true }, sponsorshipLevel: { required: true, type: () => String, nullable: true }, contributionType: { required: true, enum: ["mixed", "money", "products", "services"] }, contributionAmount: { required: true, type: () => String, nullable: true }, contributionCurrencyCode: { required: true, type: () => String }, contributionDescription: { required: true, type: () => String, nullable: true }, agreementStartDate: { required: true, type: () => String, nullable: true }, agreementEndDate: { required: true, type: () => String, nullable: true }, status: { required: true, enum: ["active", "inactive", "completed", "cancelled"] } };
     }
 }
 exports.TournamentSponsorResponseDto = TournamentSponsorResponseDto;
@@ -148,6 +149,10 @@ class AssociationTournamentResponseDto {
     tournamentType;
     sportType;
     modality;
+    categoryName;
+    categoryMinAge;
+    categoryMaxAge;
+    categoryGender;
     startDate;
     endDate;
     registrationStartDate;
@@ -172,7 +177,7 @@ class AssociationTournamentResponseDto {
     createdAt;
     updatedAt;
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => String }, associationId: { required: true, type: () => String }, name: { required: true, type: () => String }, description: { required: true, type: () => String, nullable: true }, tournamentType: { required: true, type: () => require("./association-tournament-response.dto").AssociationTournamentTypeResponseDto }, sportType: { required: true, type: () => String }, modality: { required: true, type: () => String }, startDate: { required: true, type: () => String }, endDate: { required: true, type: () => String, nullable: true }, registrationStartDate: { required: true, type: () => String, nullable: true }, registrationEndDate: { required: true, type: () => String, nullable: true }, registrationFee: { required: true, type: () => String }, currencyCode: { required: true, type: () => String }, grandPrize: { required: true, type: () => String }, secondPrize: { required: true, type: () => String }, thirdPrize: { required: true, type: () => String }, maxTeams: { required: true, type: () => Number }, minPlayersPerTeam: { required: true, type: () => Number }, maxPlayersPerTeam: { required: true, type: () => Number }, registeredTeamCount: { required: true, type: () => Number }, locationName: { required: true, type: () => String, nullable: true }, locationAddress: { required: true, type: () => String, nullable: true }, rulesUrl: { required: true, type: () => String, nullable: true }, rulesContent: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, sponsors: { required: true, type: () => [require("./association-tournament-response.dto").TournamentSponsorResponseDto] }, phase: { required: true, enum: ["cancelled", "draft", "registration", "in_progress", "finished"] }, status: { required: true, enum: ["active", "inactive"] }, createdAt: { required: true, type: () => String }, updatedAt: { required: true, type: () => String } };
+        return { id: { required: true, type: () => String }, associationId: { required: true, type: () => String }, name: { required: true, type: () => String }, description: { required: true, type: () => String, nullable: true }, tournamentType: { required: true, type: () => require("./association-tournament-response.dto").AssociationTournamentTypeResponseDto }, sportType: { required: true, type: () => String }, modality: { required: true, type: () => String }, categoryName: { required: true, type: () => String }, categoryMinAge: { required: true, type: () => Number, nullable: true }, categoryMaxAge: { required: true, type: () => Number, nullable: true }, categoryGender: { required: true, enum: ["male", "female", "open", "mixed"] }, startDate: { required: true, type: () => String }, endDate: { required: true, type: () => String, nullable: true }, registrationStartDate: { required: true, type: () => String, nullable: true }, registrationEndDate: { required: true, type: () => String, nullable: true }, registrationFee: { required: true, type: () => String }, currencyCode: { required: true, type: () => String }, grandPrize: { required: true, type: () => String }, secondPrize: { required: true, type: () => String }, thirdPrize: { required: true, type: () => String }, maxTeams: { required: true, type: () => Number }, minPlayersPerTeam: { required: true, type: () => Number }, maxPlayersPerTeam: { required: true, type: () => Number }, registeredTeamCount: { required: true, type: () => Number }, locationName: { required: true, type: () => String, nullable: true }, locationAddress: { required: true, type: () => String, nullable: true }, rulesUrl: { required: true, type: () => String, nullable: true }, rulesContent: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, sponsors: { required: true, type: () => [require("./association-tournament-response.dto").TournamentSponsorResponseDto] }, phase: { required: true, enum: ["cancelled", "draft", "registration", "validation", "scheduled", "in_progress", "finished", "archived"] }, status: { required: true, enum: ["active", "inactive"] }, createdAt: { required: true, type: () => String }, updatedAt: { required: true, type: () => String } };
     }
 }
 exports.AssociationTournamentResponseDto = AssociationTournamentResponseDto;
@@ -204,6 +209,22 @@ __decorate([
     (0, swagger_1.ApiProperty)({ example: '11v11' }),
     __metadata("design:type", String)
 ], AssociationTournamentResponseDto.prototype, "modality", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Sub-15' }),
+    __metadata("design:type", String)
+], AssociationTournamentResponseDto.prototype, "categoryName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 12, nullable: true }),
+    __metadata("design:type", Object)
+], AssociationTournamentResponseDto.prototype, "categoryMinAge", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 15, nullable: true }),
+    __metadata("design:type", Object)
+], AssociationTournamentResponseDto.prototype, "categoryMaxAge", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ enum: tournament_category_constants_1.TOURNAMENT_CATEGORY_GENDERS, example: 'male' }),
+    __metadata("design:type", String)
+], AssociationTournamentResponseDto.prototype, "categoryGender", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: '2026-09-01', format: 'date' }),
     __metadata("design:type", String)
@@ -289,7 +310,16 @@ __decorate([
 ], AssociationTournamentResponseDto.prototype, "sponsors", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
-        enum: ['draft', 'registration', 'in_progress', 'finished', 'cancelled'],
+        enum: [
+            'draft',
+            'registration',
+            'validation',
+            'scheduled',
+            'in_progress',
+            'finished',
+            'archived',
+            'cancelled',
+        ],
         example: 'registration',
     }),
     __metadata("design:type", String)

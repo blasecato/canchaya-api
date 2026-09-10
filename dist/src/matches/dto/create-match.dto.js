@@ -26,9 +26,10 @@ class CreateMatchDto {
     homeScore;
     awayScore;
     status;
+    durationMinutes;
     notes;
     static _OPENAPI_METADATA_FACTORY() {
-        return { tournamentId: { required: true, type: () => String }, homeTeamId: { required: true, type: () => String }, awayTeamId: { required: true, type: () => String }, matchDate: { required: false, type: () => String, nullable: true }, venue: { required: false, type: () => String, nullable: true }, stage: { required: true, type: () => String }, roundNumber: { required: false, type: () => Number, nullable: true, minimum: 1, maximum: 2147483647 }, homeScore: { required: false, type: () => Number, nullable: true, minimum: 0, maximum: 2147483647 }, awayScore: { required: false, type: () => Number, nullable: true, minimum: 0, maximum: 2147483647 }, status: { required: false, type: () => String, enum: ['scheduled', 'in_progress', 'played', 'postponed', 'cancelled'] }, notes: { required: false, type: () => String, nullable: true } };
+        return { tournamentId: { required: true, type: () => String }, homeTeamId: { required: true, type: () => String }, awayTeamId: { required: true, type: () => String }, matchDate: { required: false, type: () => String, nullable: true }, venue: { required: false, type: () => String, nullable: true }, stage: { required: true, type: () => String }, roundNumber: { required: false, type: () => Number, nullable: true, minimum: 1, maximum: 2147483647 }, homeScore: { required: false, type: () => Number, nullable: true, minimum: 0, maximum: 2147483647 }, awayScore: { required: false, type: () => Number, nullable: true, minimum: 0, maximum: 2147483647 }, status: { required: false, type: () => String, enum: ['scheduled', 'in_progress', 'played', 'postponed', 'cancelled'] }, durationMinutes: { required: false, type: () => Number, minimum: 15, maximum: 1440 }, notes: { required: false, type: () => String, nullable: true } };
     }
 }
 exports.CreateMatchDto = CreateMatchDto;
@@ -102,6 +103,14 @@ __decorate([
     (0, class_validator_1.IsIn)(['scheduled', 'in_progress', 'played', 'postponed', 'cancelled']),
     __metadata("design:type", String)
 ], CreateMatchDto.prototype, "status", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: 120, minimum: 15, maximum: 1440 }),
+    (0, is_optional_non_nullable_decorator_1.IsOptionalNonNullable)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.Min)(15),
+    (0, class_validator_1.Max)(1440),
+    __metadata("design:type", Number)
+], CreateMatchDto.prototype, "durationMinutes", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 'Partido de apertura.', nullable: true }),
     (0, class_validator_1.IsOptional)(),

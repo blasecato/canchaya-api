@@ -6,8 +6,10 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -15,16 +17,23 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { RequireRoles } from '../auth/decorators/require-roles.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { RolesService } from './roles.service';
 
 @ApiTags('Roles')
+@ApiBearerAuth('access-token')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Post()
+  @RequireRoles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Registrar un rol' })
   @ApiCreatedResponse({ description: 'Rol registrado correctamente.' })
   create(@Body() createRoleDto: CreateRoleDto) {
@@ -48,6 +57,7 @@ export class RolesController {
   }
 
   @Patch(':code')
+  @RequireRoles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Actualizar un rol' })
   @ApiParam({ name: 'code', example: 'PLAYER' })
   @ApiOkResponse({ description: 'Rol actualizado correctamente.' })
@@ -57,6 +67,7 @@ export class RolesController {
   }
 
   @Delete(':code')
+  @RequireRoles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Eliminar un rol' })
   @ApiParam({ name: 'code', example: 'PLAYER' })
   @ApiOkResponse({ description: 'Rol eliminado correctamente.' })

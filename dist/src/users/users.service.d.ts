@@ -35,6 +35,7 @@ export declare class UsersService {
         full_name: string;
         birth_date: Date;
         birth_city: string | null;
+        gender: string | null;
         document_front_url: string | null;
         document_front_public_id: string | null;
         document_front_format: string | null;
@@ -45,6 +46,7 @@ export declare class UsersService {
         blocked_until: Date | null;
         block_reason: string | null;
         blocked_by: bigint | null;
+        block_source_action_id: bigint | null;
     }>;
     findAll(): Promise<PublicUserResponseDto[]>;
     findAdministrators(query: ListAdministratorsQueryDto): Promise<{
@@ -96,6 +98,7 @@ export declare class UsersService {
         full_name: string;
         birth_date: Date;
         birth_city: string | null;
+        gender: string | null;
         document_front_url: string | null;
         document_front_public_id: string | null;
         document_front_format: string | null;
@@ -106,6 +109,7 @@ export declare class UsersService {
         blocked_until: Date | null;
         block_reason: string | null;
         blocked_by: bigint | null;
+        block_source_action_id: bigint | null;
     }>;
     getIdentityDocumentDownload(id: bigint, requestingUserId: bigint, side: 'front' | 'back'): Promise<{
         url: string;
@@ -125,6 +129,7 @@ export declare class UsersService {
         full_name: string;
         birth_date: Date;
         birth_city: string | null;
+        gender: string | null;
         document_front_url: string | null;
         document_front_public_id: string | null;
         document_front_format: string | null;
@@ -135,6 +140,7 @@ export declare class UsersService {
         blocked_until: Date | null;
         block_reason: string | null;
         blocked_by: bigint | null;
+        block_source_action_id: bigint | null;
     }>;
     private assertCanAccessProfile;
     private assertRoleChangeIsValid;

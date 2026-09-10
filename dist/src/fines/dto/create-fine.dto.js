@@ -24,9 +24,8 @@ class CreateFineDto {
     paidAt;
     paymentReference;
     notes;
-    createdBy;
     static _OPENAPI_METADATA_FACTORY() {
-        return { disciplinaryActionId: { required: true, type: () => String }, amount: { required: true, type: () => Number, maximum: 999999999999.99, minimum: 1 }, currencyCode: { required: false, type: () => String, pattern: "^[A-Z]{3}$" }, dueDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, paymentStatus: { required: false, type: () => String, enum: ['pending', 'paid', 'waived', 'cancelled'] }, paidAt: { required: false, type: () => String, nullable: true }, paymentReference: { required: false, type: () => String, nullable: true }, notes: { required: false, type: () => String, nullable: true }, createdBy: { required: true, type: () => String } };
+        return { disciplinaryActionId: { required: true, type: () => String }, amount: { required: true, type: () => Number, maximum: 999999999999.99, minimum: 1 }, currencyCode: { required: false, type: () => String, pattern: "^[A-Z]{3}$" }, dueDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, paymentStatus: { required: false, type: () => String, enum: ['pending', 'paid', 'waived', 'cancelled'] }, paidAt: { required: false, type: () => String, nullable: true }, paymentReference: { required: false, type: () => String, nullable: true }, notes: { required: false, type: () => String, nullable: true } };
     }
 }
 exports.CreateFineDto = CreateFineDto;
@@ -91,9 +90,4 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", Object)
 ], CreateFineDto.prototype, "notes", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: '7' }),
-    (0, is_big_int_string_decorator_1.IsBigIntString)(),
-    __metadata("design:type", String)
-], CreateFineDto.prototype, "createdBy", void 0);
 //# sourceMappingURL=create-fine.dto.js.map

@@ -15,17 +15,19 @@ const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const is_bcrypt_password_decorator_1 = require("../../common/decorators/is-bcrypt-password.decorator");
 const is_optional_non_nullable_decorator_1 = require("../../common/decorators/is-optional-non-nullable.decorator");
+const user_gender_constants_1 = require("../user-gender.constants");
 class CreateUserDto {
     idNumber;
     documentType;
     fullName;
     birthDate;
+    gender;
     email;
     phone;
     password;
     status;
     static _OPENAPI_METADATA_FACTORY() {
-        return { idNumber: { required: true, type: () => String }, documentType: { required: true, type: () => String }, fullName: { required: true, type: () => String }, birthDate: { required: true, type: () => String, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, email: { required: true, type: () => String, format: "email" }, phone: { required: false, type: () => String, nullable: true }, password: { required: true, type: () => String, minLength: 8 }, status: { required: false, type: () => String, enum: ['active', 'inactive'] } };
+        return { idNumber: { required: true, type: () => String }, documentType: { required: true, type: () => String }, fullName: { required: true, type: () => String }, birthDate: { required: true, type: () => String, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, gender: { required: false, enum: ["male", "female", "non_binary", "prefer_not_to_say"], enum: user_gender_constants_1.USER_GENDERS }, email: { required: true, type: () => String, format: "email" }, phone: { required: false, type: () => String, nullable: true }, password: { required: true, type: () => String, minLength: 8 }, status: { required: false, type: () => String, enum: ['active', 'inactive'] } };
     }
 }
 exports.CreateUserDto = CreateUserDto;
@@ -53,6 +55,12 @@ __decorate([
     (0, class_validator_1.IsDateString)({ strict: true, strictSeparator: true }),
     __metadata("design:type", String)
 ], CreateUserDto.prototype, "birthDate", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ enum: user_gender_constants_1.USER_GENDERS }),
+    (0, is_optional_non_nullable_decorator_1.IsOptionalNonNullable)(),
+    (0, class_validator_1.IsIn)(user_gender_constants_1.USER_GENDERS),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "gender", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'maria@example.com', format: 'email' }),
     (0, class_validator_1.IsEmail)(),

@@ -1,89 +1,228 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Prisma } from '../../generated/prisma/client';
+import { CompetitionAccessService } from '../authorization/competition-access.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateFineDto } from './dto/create-fine.dto';
 import { UpdateFineDto } from './dto/update-fine.dto';
 
 @Injectable()
 export class FinesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly access: CompetitionAccessService,
+  ) {}
 
-  create(createFineDto: CreateFineDto) {
+  async create(requestingUserId: bigint, dto: CreateFineDto) {
+    await this.access.assertHasAnyRole(requestingUserId, ['SUPER_ADMIN']);
+    const action = await this.findDisciplinaryAction(
+      BigInt(dto.disciplinaryActionId),
+    );
+    this.assertApprovedAction(action);
+    await this.access.assertTournamentInPhases(
+      action.tournament_id,
+      ['in_progress', 'finished'],
+      'Las multas solo se pueden gestionar durante el torneo o su cierre.',
+    );
+    this.assertPaymentData(dto.paymentStatus, dto.paidAt);
+
     return this.prisma.fines.create({
       data: {
-        disciplinary_action_id: BigInt(createFineDto.disciplinaryActionId),
-        amount: createFineDto.amount,
-        currency_code: createFineDto.currencyCode,
+        disciplinary_action_id: action.id,
+        amount: dto.amount,
+        currency_code: dto.currencyCode,
         due_date:
-          createFineDto.dueDate === null
+          dto.dueDate === null
             ? null
-            : createFineDto.dueDate !== undefined
-              ? new Date(createFineDto.dueDate)
+            : dto.dueDate !== undefined
+              ? new Date(dto.dueDate)
               : undefined,
-        payment_status: createFineDto.paymentStatus,
+        payment_status: dto.paymentStatus,
         paid_at:
-          createFineDto.paidAt === null
+          dto.paidAt === null
             ? null
-            : createFineDto.paidAt !== undefined
-              ? new Date(createFineDto.paidAt)
+            : dto.paidAt !== undefined
+              ? new Date(dto.paidAt)
               : undefined,
-        payment_reference: createFineDto.paymentReference,
-        notes: createFineDto.notes,
-        created_by: BigInt(createFineDto.createdBy),
+        payment_reference: dto.paymentReference,
+        notes: dto.notes,
+        created_by: requestingUserId,
       },
     });
   }
 
-  findAll() {
-    return this.prisma.fines.findMany({ orderBy: { id: 'asc' } });
+  async findAll(requestingUserId: bigint) {
+    const roles = await this.access.findRoleCodes(requestingUserId);
+    const where = await this.buildVisibleWhere(requestingUserId, roles);
+    return this.prisma.fines.findMany({ where, orderBy: { id: 'asc' } });
   }
 
-  async findOne(id: bigint) {
-    const fine = await this.prisma.fines.findUnique({ where: { id } });
-
-    if (!fine) {
-      throw new NotFoundException(`No se encontró la multa con ID ${id}.`);
-    }
-
+  async findOne(id: bigint, requestingUserId: bigint) {
+    const fine = await this.findExisting(id);
+    await this.assertCanViewFine(fine.disciplinary_actions, requestingUserId);
     return fine;
   }
 
-  async update(id: bigint, updateFineDto: UpdateFineDto) {
-    await this.findOne(id);
+  async update(id: bigint, requestingUserId: bigint, dto: UpdateFineDto) {
+    await this.access.assertHasAnyRole(requestingUserId, ['SUPER_ADMIN']);
+    const current = await this.findExisting(id);
+    await this.access.assertTournamentInPhases(
+      current.disciplinary_actions.tournament_id,
+      ['in_progress', 'finished'],
+      'Las multas ya están cerradas para este estado del torneo.',
+    );
+
+    const action =
+      dto.disciplinaryActionId !== undefined
+        ? await this.findDisciplinaryAction(BigInt(dto.disciplinaryActionId))
+        : current.disciplinary_actions;
+    this.assertApprovedAction(action);
+    if (action.id !== current.disciplinary_action_id) {
+      await this.access.assertTournamentInPhases(
+        action.tournament_id,
+        ['in_progress', 'finished'],
+        'No puedes mover la multa a un torneo con su gestión disciplinaria cerrada.',
+      );
+    }
+
+    const paymentStatus = dto.paymentStatus ?? current.payment_status;
+    const paidAt =
+      dto.paidAt !== undefined
+        ? dto.paidAt
+        : (current.paid_at?.toISOString() ?? null);
+    this.assertPaymentData(paymentStatus, paidAt);
 
     return this.prisma.fines.update({
       where: { id },
       data: {
         disciplinary_action_id:
-          updateFineDto.disciplinaryActionId !== undefined
-            ? BigInt(updateFineDto.disciplinaryActionId)
-            : undefined,
-        amount: updateFineDto.amount,
-        currency_code: updateFineDto.currencyCode,
+          dto.disciplinaryActionId !== undefined ? action.id : undefined,
+        amount: dto.amount,
+        currency_code: dto.currencyCode,
         due_date:
-          updateFineDto.dueDate === null
+          dto.dueDate === null
             ? null
-            : updateFineDto.dueDate !== undefined
-              ? new Date(updateFineDto.dueDate)
+            : dto.dueDate !== undefined
+              ? new Date(dto.dueDate)
               : undefined,
-        payment_status: updateFineDto.paymentStatus,
+        payment_status: dto.paymentStatus,
         paid_at:
-          updateFineDto.paidAt === null
+          dto.paidAt === null
             ? null
-            : updateFineDto.paidAt !== undefined
-              ? new Date(updateFineDto.paidAt)
+            : dto.paidAt !== undefined
+              ? new Date(dto.paidAt)
               : undefined,
-        payment_reference: updateFineDto.paymentReference,
-        notes: updateFineDto.notes,
-        created_by:
-          updateFineDto.createdBy !== undefined
-            ? BigInt(updateFineDto.createdBy)
-            : undefined,
+        payment_reference: dto.paymentReference,
+        notes: dto.notes,
       },
     });
   }
 
-  async remove(id: bigint) {
-    await this.findOne(id);
+  async remove(id: bigint, requestingUserId: bigint) {
+    await this.access.assertHasAnyRole(requestingUserId, ['SUPER_ADMIN']);
+    await this.findExisting(id);
     return this.prisma.fines.delete({ where: { id } });
+  }
+
+  private async findExisting(id: bigint) {
+    const fine = await this.prisma.fines.findUnique({
+      where: { id },
+      include: {
+        disciplinary_actions: {
+          select: {
+            id: true,
+            tournament_id: true,
+            player_id: true,
+            decision_status: true,
+          },
+        },
+      },
+    });
+    if (!fine) {
+      throw new NotFoundException(
+        `No se encontró la multa con ID ${id.toString()}.`,
+      );
+    }
+    return fine;
+  }
+
+  private async findDisciplinaryAction(id: bigint) {
+    const action = await this.prisma.disciplinary_actions.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        tournament_id: true,
+        player_id: true,
+        decision_status: true,
+      },
+    });
+    if (!action) {
+      throw new NotFoundException(
+        `No se encontró la acción disciplinaria con ID ${id.toString()}.`,
+      );
+    }
+    return action;
+  }
+
+  private async buildVisibleWhere(
+    requestingUserId: bigint,
+    roles: Set<string>,
+  ): Promise<Prisma.finesWhereInput | undefined> {
+    if (roles.has('SUPER_ADMIN')) return undefined;
+
+    const visibility: Prisma.disciplinary_actionsWhereInput[] = [];
+    if (roles.has('ASSOCIATION_ADMIN')) {
+      const tournamentIds =
+        await this.access.findManageableTournamentIds(requestingUserId);
+      visibility.push({ tournament_id: { in: tournamentIds ?? [] } });
+    }
+    if (roles.has('PLAYER')) {
+      visibility.push({ player_id: requestingUserId });
+    }
+    return { disciplinary_actions: { OR: visibility } };
+  }
+
+  private async assertCanViewFine(
+    action: { tournament_id: bigint; player_id: bigint },
+    requestingUserId: bigint,
+  ): Promise<void> {
+    const roles = await this.access.findRoleCodes(requestingUserId);
+    if (
+      roles.has('SUPER_ADMIN') ||
+      (roles.has('PLAYER') && action.player_id === requestingUserId)
+    ) {
+      return;
+    }
+    if (roles.has('ASSOCIATION_ADMIN')) {
+      const tournamentIds =
+        await this.access.findManageableTournamentIds(requestingUserId);
+      if (tournamentIds?.some((id) => id === action.tournament_id)) return;
+    }
+    throw new ForbiddenException(
+      'No tienes permisos para consultar esta multa.',
+    );
+  }
+
+  private assertPaymentData(
+    paymentStatus?: string,
+    paidAt?: string | null,
+  ): void {
+    if (paymentStatus === 'paid' && !paidAt) {
+      throw new BadRequestException(
+        'Una multa marcada como pagada debe incluir la fecha de pago.',
+      );
+    }
+  }
+
+  private assertApprovedAction(action: { decision_status: string }): void {
+    if (action.decision_status !== 'approved') {
+      throw new BadRequestException(
+        'La multa solo puede asociarse a un informe aprobado.',
+      );
+    }
   }
 }

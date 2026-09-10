@@ -12,6 +12,11 @@ import {
 } from 'class-validator';
 import { IsBigIntString } from '../../common/decorators/is-big-int-string.decorator';
 import { IsOptionalNonNullable } from '../../common/decorators/is-optional-non-nullable.decorator';
+import {
+  FOOTBALL_MODALITIES,
+  FOOTBALL_SPORT_TYPE,
+  type FootballModality,
+} from '../../common/constants/football.constants';
 
 export class CreateTeamDto {
   @ApiProperty({ example: 'Deportivo Central' })
@@ -20,17 +25,21 @@ export class CreateTeamDto {
   @MaxLength(120)
   name!: string;
 
-  @ApiProperty({ example: 'football' })
+  @ApiProperty({ enum: [FOOTBALL_SPORT_TYPE], example: FOOTBALL_SPORT_TYPE })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(50)
-  sportType!: string;
+  @IsIn([FOOTBALL_SPORT_TYPE], {
+    message: 'El único deporte permitido es Fútbol.',
+  })
+  sportType!: typeof FOOTBALL_SPORT_TYPE;
 
-  @ApiProperty({ example: '11v11' })
+  @ApiProperty({ enum: FOOTBALL_MODALITIES, example: 'Fútbol 11' })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(50)
-  modality!: string;
+  @IsIn(FOOTBALL_MODALITIES, {
+    message: 'La modalidad debe ser Fútbol 5, Fútbol 7 o Fútbol 11.',
+  })
+  modality!: FootballModality;
 
   @ApiPropertyOptional({ example: '#0066CC', nullable: true })
   @IsOptional()

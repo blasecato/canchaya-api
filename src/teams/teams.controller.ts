@@ -42,6 +42,11 @@ import { ListTeamPlayersQueryDto } from './dto/list-team-players-query.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { TeamCarnetsResponseDto } from './dto/team-carnets-response.dto';
 import { TeamCarnetsQueryDto } from './dto/team-carnets-query.dto';
+import {
+  TeamRosterPlayerResponseDto,
+  TeamRostersResponseDto,
+} from './dto/team-rosters-response.dto';
+import { UpdateTournamentRosterPlayerDto } from './dto/update-tournament-roster-player.dto';
 import { TeamsService } from './teams.service';
 
 const teamPhotoUploadOptions = {
@@ -147,6 +152,53 @@ export class TeamsController {
       request.auth.userId,
       query.tournamentId ? BigInt(query.tournamentId) : undefined,
     );
+  }
+
+  @Get(':id/rosters')
+  @ApiOperation({
+    summary: 'Consultar dorsales y posiciones del equipo por torneo',
+  })
+  @ApiOkResponse({ type: TeamRostersResponseDto })
+  findTournamentRosters(
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<TeamRostersResponseDto> {
+    return this.teamsService.findTournamentRosters(id, request.auth.userId);
+  }
+
+  @Patch(':id/rosters/:tournamentId/players/:playerId')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER')
+  @ApiOperation({
+    summary: 'Actualizar dorsal y posición de un jugador en un torneo',
+  })
+  @ApiOkResponse({ type: TeamRosterPlayerResponseDto })
+  updateTournamentRosterPlayer(
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Param('tournamentId', ParseBigIntPipe) tournamentId: bigint,
+    @Param('playerId', ParseBigIntPipe) playerId: bigint,
+    @Req() request: AuthenticatedRequest,
+    @Body() dto: UpdateTournamentRosterPlayerDto,
+  ): Promise<TeamRosterPlayerResponseDto> {
+    return this.teamsService.updateTournamentRosterPlayer(
+      id,
+      tournamentId,
+      playerId,
+      request.auth.userId,
+      dto,
+    );
+  }
+
+  @Delete(':id/members/:playerId')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER')
+  @ApiOperation({
+    summary: 'Retirar un jugador respetando los mínimos de los torneos',
+  })
+  removeMember(
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Param('playerId', ParseBigIntPipe) playerId: bigint,
+    @Req() request: AuthenticatedRequest,
+  ) {
+    return this.teamsService.removeMember(id, playerId, request.auth.userId);
   }
 
   @Get(':id')

@@ -12,12 +12,14 @@ export type SuspensionsAvgAggregateOutputType = {
     id: number | null;
     disciplinary_action_id: number | null;
     matches_count: number | null;
+    served_matches: number | null;
     created_by: number | null;
 };
 export type SuspensionsSumAggregateOutputType = {
     id: bigint | null;
     disciplinary_action_id: bigint | null;
     matches_count: number | null;
+    served_matches: number | null;
     created_by: bigint | null;
 };
 export type SuspensionsMinAggregateOutputType = {
@@ -28,8 +30,11 @@ export type SuspensionsMinAggregateOutputType = {
     end_date: Date | null;
     reason: string | null;
     status: string | null;
+    served_matches: number | null;
+    completed_at: Date | null;
     created_by: bigint | null;
     created_at: Date | null;
+    updated_at: Date | null;
 };
 export type SuspensionsMaxAggregateOutputType = {
     id: bigint | null;
@@ -39,8 +44,11 @@ export type SuspensionsMaxAggregateOutputType = {
     end_date: Date | null;
     reason: string | null;
     status: string | null;
+    served_matches: number | null;
+    completed_at: Date | null;
     created_by: bigint | null;
     created_at: Date | null;
+    updated_at: Date | null;
 };
 export type SuspensionsCountAggregateOutputType = {
     id: number;
@@ -50,20 +58,25 @@ export type SuspensionsCountAggregateOutputType = {
     end_date: number;
     reason: number;
     status: number;
+    served_matches: number;
+    completed_at: number;
     created_by: number;
     created_at: number;
+    updated_at: number;
     _all: number;
 };
 export type SuspensionsAvgAggregateInputType = {
     id?: true;
     disciplinary_action_id?: true;
     matches_count?: true;
+    served_matches?: true;
     created_by?: true;
 };
 export type SuspensionsSumAggregateInputType = {
     id?: true;
     disciplinary_action_id?: true;
     matches_count?: true;
+    served_matches?: true;
     created_by?: true;
 };
 export type SuspensionsMinAggregateInputType = {
@@ -74,8 +87,11 @@ export type SuspensionsMinAggregateInputType = {
     end_date?: true;
     reason?: true;
     status?: true;
+    served_matches?: true;
+    completed_at?: true;
     created_by?: true;
     created_at?: true;
+    updated_at?: true;
 };
 export type SuspensionsMaxAggregateInputType = {
     id?: true;
@@ -85,8 +101,11 @@ export type SuspensionsMaxAggregateInputType = {
     end_date?: true;
     reason?: true;
     status?: true;
+    served_matches?: true;
+    completed_at?: true;
     created_by?: true;
     created_at?: true;
+    updated_at?: true;
 };
 export type SuspensionsCountAggregateInputType = {
     id?: true;
@@ -96,8 +115,11 @@ export type SuspensionsCountAggregateInputType = {
     end_date?: true;
     reason?: true;
     status?: true;
+    served_matches?: true;
+    completed_at?: true;
     created_by?: true;
     created_at?: true;
+    updated_at?: true;
     _all?: true;
 };
 export type SuspensionsAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -136,8 +158,11 @@ export type SuspensionsGroupByOutputType = {
     end_date: Date | null;
     reason: string | null;
     status: string;
+    served_matches: number;
+    completed_at: Date | null;
     created_by: bigint;
     created_at: Date;
+    updated_at: Date;
     _count: SuspensionsCountAggregateOutputType | null;
     _avg: SuspensionsAvgAggregateOutputType | null;
     _sum: SuspensionsSumAggregateOutputType | null;
@@ -158,8 +183,11 @@ export type suspensionsWhereInput = {
     end_date?: Prisma.DateTimeNullableFilter<"suspensions"> | Date | string | null;
     reason?: Prisma.StringNullableFilter<"suspensions"> | string | null;
     status?: Prisma.StringFilter<"suspensions"> | string;
+    served_matches?: Prisma.IntFilter<"suspensions"> | number;
+    completed_at?: Prisma.DateTimeNullableFilter<"suspensions"> | Date | string | null;
     created_by?: Prisma.BigIntFilter<"suspensions"> | bigint | number;
     created_at?: Prisma.DateTimeFilter<"suspensions"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"suspensions"> | Date | string;
     disciplinary_actions?: Prisma.XOR<Prisma.Disciplinary_actionsScalarRelationFilter, Prisma.disciplinary_actionsWhereInput>;
     users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
 };
@@ -171,8 +199,11 @@ export type suspensionsOrderByWithRelationInput = {
     end_date?: Prisma.SortOrderInput | Prisma.SortOrder;
     reason?: Prisma.SortOrderInput | Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    served_matches?: Prisma.SortOrder;
+    completed_at?: Prisma.SortOrderInput | Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
     disciplinary_actions?: Prisma.disciplinary_actionsOrderByWithRelationInput;
     users?: Prisma.usersOrderByWithRelationInput;
 };
@@ -187,8 +218,11 @@ export type suspensionsWhereUniqueInput = Prisma.AtLeast<{
     end_date?: Prisma.DateTimeNullableFilter<"suspensions"> | Date | string | null;
     reason?: Prisma.StringNullableFilter<"suspensions"> | string | null;
     status?: Prisma.StringFilter<"suspensions"> | string;
+    served_matches?: Prisma.IntFilter<"suspensions"> | number;
+    completed_at?: Prisma.DateTimeNullableFilter<"suspensions"> | Date | string | null;
     created_by?: Prisma.BigIntFilter<"suspensions"> | bigint | number;
     created_at?: Prisma.DateTimeFilter<"suspensions"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"suspensions"> | Date | string;
     disciplinary_actions?: Prisma.XOR<Prisma.Disciplinary_actionsScalarRelationFilter, Prisma.disciplinary_actionsWhereInput>;
     users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
 }, "id" | "disciplinary_action_id">;
@@ -200,8 +234,11 @@ export type suspensionsOrderByWithAggregationInput = {
     end_date?: Prisma.SortOrderInput | Prisma.SortOrder;
     reason?: Prisma.SortOrderInput | Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    served_matches?: Prisma.SortOrder;
+    completed_at?: Prisma.SortOrderInput | Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
     _count?: Prisma.suspensionsCountOrderByAggregateInput;
     _avg?: Prisma.suspensionsAvgOrderByAggregateInput;
     _max?: Prisma.suspensionsMaxOrderByAggregateInput;
@@ -219,8 +256,11 @@ export type suspensionsScalarWhereWithAggregatesInput = {
     end_date?: Prisma.DateTimeNullableWithAggregatesFilter<"suspensions"> | Date | string | null;
     reason?: Prisma.StringNullableWithAggregatesFilter<"suspensions"> | string | null;
     status?: Prisma.StringWithAggregatesFilter<"suspensions"> | string;
+    served_matches?: Prisma.IntWithAggregatesFilter<"suspensions"> | number;
+    completed_at?: Prisma.DateTimeNullableWithAggregatesFilter<"suspensions"> | Date | string | null;
     created_by?: Prisma.BigIntWithAggregatesFilter<"suspensions"> | bigint | number;
     created_at?: Prisma.DateTimeWithAggregatesFilter<"suspensions"> | Date | string;
+    updated_at?: Prisma.DateTimeWithAggregatesFilter<"suspensions"> | Date | string;
 };
 export type suspensionsCreateInput = {
     id?: bigint | number;
@@ -229,7 +269,10 @@ export type suspensionsCreateInput = {
     end_date?: Date | string | null;
     reason?: string | null;
     status?: string;
+    served_matches?: number;
+    completed_at?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     disciplinary_actions: Prisma.disciplinary_actionsCreateNestedOneWithoutSuspensionsInput;
     users: Prisma.usersCreateNestedOneWithoutSuspensionsInput;
 };
@@ -241,8 +284,11 @@ export type suspensionsUncheckedCreateInput = {
     end_date?: Date | string | null;
     reason?: string | null;
     status?: string;
+    served_matches?: number;
+    completed_at?: Date | string | null;
     created_by: bigint | number;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type suspensionsUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -251,7 +297,10 @@ export type suspensionsUpdateInput = {
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    served_matches?: Prisma.IntFieldUpdateOperationsInput | number;
+    completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUpdateOneRequiredWithoutSuspensionsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutSuspensionsNestedInput;
 };
@@ -263,8 +312,11 @@ export type suspensionsUncheckedUpdateInput = {
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    served_matches?: Prisma.IntFieldUpdateOperationsInput | number;
+    completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type suspensionsCreateManyInput = {
     id?: bigint | number;
@@ -274,8 +326,11 @@ export type suspensionsCreateManyInput = {
     end_date?: Date | string | null;
     reason?: string | null;
     status?: string;
+    served_matches?: number;
+    completed_at?: Date | string | null;
     created_by: bigint | number;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type suspensionsUpdateManyMutationInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -284,7 +339,10 @@ export type suspensionsUpdateManyMutationInput = {
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    served_matches?: Prisma.IntFieldUpdateOperationsInput | number;
+    completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type suspensionsUncheckedUpdateManyInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -294,8 +352,11 @@ export type suspensionsUncheckedUpdateManyInput = {
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    served_matches?: Prisma.IntFieldUpdateOperationsInput | number;
+    completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type SuspensionsNullableScalarRelationFilter = {
     is?: Prisma.suspensionsWhereInput | null;
@@ -309,13 +370,17 @@ export type suspensionsCountOrderByAggregateInput = {
     end_date?: Prisma.SortOrder;
     reason?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    served_matches?: Prisma.SortOrder;
+    completed_at?: Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
 };
 export type suspensionsAvgOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     disciplinary_action_id?: Prisma.SortOrder;
     matches_count?: Prisma.SortOrder;
+    served_matches?: Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
 };
 export type suspensionsMaxOrderByAggregateInput = {
@@ -326,8 +391,11 @@ export type suspensionsMaxOrderByAggregateInput = {
     end_date?: Prisma.SortOrder;
     reason?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    served_matches?: Prisma.SortOrder;
+    completed_at?: Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
 };
 export type suspensionsMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -337,13 +405,17 @@ export type suspensionsMinOrderByAggregateInput = {
     end_date?: Prisma.SortOrder;
     reason?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
+    served_matches?: Prisma.SortOrder;
+    completed_at?: Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
+    updated_at?: Prisma.SortOrder;
 };
 export type suspensionsSumOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     disciplinary_action_id?: Prisma.SortOrder;
     matches_count?: Prisma.SortOrder;
+    served_matches?: Prisma.SortOrder;
     created_by?: Prisma.SortOrder;
 };
 export type SuspensionsListRelationFilter = {
@@ -427,7 +499,10 @@ export type suspensionsCreateWithoutDisciplinary_actionsInput = {
     end_date?: Date | string | null;
     reason?: string | null;
     status?: string;
+    served_matches?: number;
+    completed_at?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     users: Prisma.usersCreateNestedOneWithoutSuspensionsInput;
 };
 export type suspensionsUncheckedCreateWithoutDisciplinary_actionsInput = {
@@ -437,8 +512,11 @@ export type suspensionsUncheckedCreateWithoutDisciplinary_actionsInput = {
     end_date?: Date | string | null;
     reason?: string | null;
     status?: string;
+    served_matches?: number;
+    completed_at?: Date | string | null;
     created_by: bigint | number;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type suspensionsCreateOrConnectWithoutDisciplinary_actionsInput = {
     where: Prisma.suspensionsWhereUniqueInput;
@@ -460,7 +538,10 @@ export type suspensionsUpdateWithoutDisciplinary_actionsInput = {
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    served_matches?: Prisma.IntFieldUpdateOperationsInput | number;
+    completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     users?: Prisma.usersUpdateOneRequiredWithoutSuspensionsNestedInput;
 };
 export type suspensionsUncheckedUpdateWithoutDisciplinary_actionsInput = {
@@ -470,8 +551,11 @@ export type suspensionsUncheckedUpdateWithoutDisciplinary_actionsInput = {
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    served_matches?: Prisma.IntFieldUpdateOperationsInput | number;
+    completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type suspensionsCreateWithoutUsersInput = {
     id?: bigint | number;
@@ -480,7 +564,10 @@ export type suspensionsCreateWithoutUsersInput = {
     end_date?: Date | string | null;
     reason?: string | null;
     status?: string;
+    served_matches?: number;
+    completed_at?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
     disciplinary_actions: Prisma.disciplinary_actionsCreateNestedOneWithoutSuspensionsInput;
 };
 export type suspensionsUncheckedCreateWithoutUsersInput = {
@@ -491,7 +578,10 @@ export type suspensionsUncheckedCreateWithoutUsersInput = {
     end_date?: Date | string | null;
     reason?: string | null;
     status?: string;
+    served_matches?: number;
+    completed_at?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type suspensionsCreateOrConnectWithoutUsersInput = {
     where: Prisma.suspensionsWhereUniqueInput;
@@ -525,8 +615,11 @@ export type suspensionsScalarWhereInput = {
     end_date?: Prisma.DateTimeNullableFilter<"suspensions"> | Date | string | null;
     reason?: Prisma.StringNullableFilter<"suspensions"> | string | null;
     status?: Prisma.StringFilter<"suspensions"> | string;
+    served_matches?: Prisma.IntFilter<"suspensions"> | number;
+    completed_at?: Prisma.DateTimeNullableFilter<"suspensions"> | Date | string | null;
     created_by?: Prisma.BigIntFilter<"suspensions"> | bigint | number;
     created_at?: Prisma.DateTimeFilter<"suspensions"> | Date | string;
+    updated_at?: Prisma.DateTimeFilter<"suspensions"> | Date | string;
 };
 export type suspensionsCreateManyUsersInput = {
     id?: bigint | number;
@@ -536,7 +629,10 @@ export type suspensionsCreateManyUsersInput = {
     end_date?: Date | string | null;
     reason?: string | null;
     status?: string;
+    served_matches?: number;
+    completed_at?: Date | string | null;
     created_at?: Date | string;
+    updated_at?: Date | string;
 };
 export type suspensionsUpdateWithoutUsersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -545,7 +641,10 @@ export type suspensionsUpdateWithoutUsersInput = {
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    served_matches?: Prisma.IntFieldUpdateOperationsInput | number;
+    completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUpdateOneRequiredWithoutSuspensionsNestedInput;
 };
 export type suspensionsUncheckedUpdateWithoutUsersInput = {
@@ -556,7 +655,10 @@ export type suspensionsUncheckedUpdateWithoutUsersInput = {
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    served_matches?: Prisma.IntFieldUpdateOperationsInput | number;
+    completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type suspensionsUncheckedUpdateManyWithoutUsersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -566,7 +668,10 @@ export type suspensionsUncheckedUpdateManyWithoutUsersInput = {
     end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
+    served_matches?: Prisma.IntFieldUpdateOperationsInput | number;
+    completed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type suspensionsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -576,8 +681,11 @@ export type suspensionsSelect<ExtArgs extends runtime.Types.Extensions.InternalA
     end_date?: boolean;
     reason?: boolean;
     status?: boolean;
+    served_matches?: boolean;
+    completed_at?: boolean;
     created_by?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
     disciplinary_actions?: boolean | Prisma.disciplinary_actionsDefaultArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["suspensions"]>;
@@ -589,8 +697,11 @@ export type suspensionsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
     end_date?: boolean;
     reason?: boolean;
     status?: boolean;
+    served_matches?: boolean;
+    completed_at?: boolean;
     created_by?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
     disciplinary_actions?: boolean | Prisma.disciplinary_actionsDefaultArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["suspensions"]>;
@@ -602,8 +713,11 @@ export type suspensionsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
     end_date?: boolean;
     reason?: boolean;
     status?: boolean;
+    served_matches?: boolean;
+    completed_at?: boolean;
     created_by?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
     disciplinary_actions?: boolean | Prisma.disciplinary_actionsDefaultArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["suspensions"]>;
@@ -615,10 +729,13 @@ export type suspensionsSelectScalar = {
     end_date?: boolean;
     reason?: boolean;
     status?: boolean;
+    served_matches?: boolean;
+    completed_at?: boolean;
     created_by?: boolean;
     created_at?: boolean;
+    updated_at?: boolean;
 };
-export type suspensionsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "disciplinary_action_id" | "matches_count" | "start_date" | "end_date" | "reason" | "status" | "created_by" | "created_at", ExtArgs["result"]["suspensions"]>;
+export type suspensionsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "disciplinary_action_id" | "matches_count" | "start_date" | "end_date" | "reason" | "status" | "served_matches" | "completed_at" | "created_by" | "created_at" | "updated_at", ExtArgs["result"]["suspensions"]>;
 export type suspensionsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     disciplinary_actions?: boolean | Prisma.disciplinary_actionsDefaultArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
@@ -645,8 +762,11 @@ export type $suspensionsPayload<ExtArgs extends runtime.Types.Extensions.Interna
         end_date: Date | null;
         reason: string | null;
         status: string;
+        served_matches: number;
+        completed_at: Date | null;
         created_by: bigint;
         created_at: Date;
+        updated_at: Date;
     }, ExtArgs["result"]["suspensions"]>;
     composites: {};
 };
@@ -713,8 +833,11 @@ export interface suspensionsFieldRefs {
     readonly end_date: Prisma.FieldRef<"suspensions", 'DateTime'>;
     readonly reason: Prisma.FieldRef<"suspensions", 'String'>;
     readonly status: Prisma.FieldRef<"suspensions", 'String'>;
+    readonly served_matches: Prisma.FieldRef<"suspensions", 'Int'>;
+    readonly completed_at: Prisma.FieldRef<"suspensions", 'DateTime'>;
     readonly created_by: Prisma.FieldRef<"suspensions", 'BigInt'>;
     readonly created_at: Prisma.FieldRef<"suspensions", 'DateTime'>;
+    readonly updated_at: Prisma.FieldRef<"suspensions", 'DateTime'>;
 }
 export type suspensionsFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.suspensionsSelect<ExtArgs> | null;

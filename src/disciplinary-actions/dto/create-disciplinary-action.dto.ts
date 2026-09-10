@@ -45,35 +45,4 @@ export class CreateDisciplinaryActionDto {
   @IsOptionalNonNullable()
   @IsDateString({ strict: true, strictSeparator: true })
   occurredAt?: string;
-
-  @ApiProperty({ example: '7' })
-  @IsBigIntString()
-  reportedBy: string;
-
-  @ApiPropertyOptional({
-    example: 'reported',
-    enum: ['reported', 'approved', 'dismissed'],
-    default: 'reported',
-  })
-  @IsOptionalNonNullable()
-  @IsIn(['reported', 'approved', 'dismissed'])
-  decisionStatus?: string;
-
-  @ApiPropertyOptional({ example: '8', nullable: true })
-  @IsOptional()
-  @IsBigIntString()
-  decidedBy?: string | null;
-
-  @ApiPropertyOptional({
-    example: '2026-09-11T14:00:00.000Z',
-    nullable: true,
-  })
-  @IsOptional()
-  @IsDateString({ strict: true, strictSeparator: true })
-  decidedAt?: string | null;
-
-  @ApiPropertyOptional({ example: 'Decisión confirmada.', nullable: true })
-  @IsOptional()
-  @IsString()
-  decisionNotes?: string | null;
 }

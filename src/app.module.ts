@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AssociationsModule } from './associations/associations.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { CompetitionAccessModule } from './authorization/competition-access.module';
 import { DisciplinaryActionsModule } from './disciplinary-actions/disciplinary-actions.module';
 import { FinesModule } from './fines/fines.module';
 import { HomeGalleryModule } from './home-gallery/home-gallery.module';
@@ -24,8 +26,10 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ cache: true, isGlobal: true }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     AuthModule,
+    CompetitionAccessModule,
     RolesModule,
     UsersModule,
     AssociationsModule,

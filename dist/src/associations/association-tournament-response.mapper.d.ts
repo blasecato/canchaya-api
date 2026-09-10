@@ -1,6 +1,5 @@
 import { Prisma } from '../../generated/prisma/client';
 import { AssociationTournamentResponseDto } from './dto/association-tournament-response.dto';
-export declare const AVAILABLE_TOURNAMENT_EXCLUDED_PHASES: readonly ["draft", "finished", "cancelled"];
 export declare const tournamentSponsorResponseSelect: {
     sponsor_id: true;
     sponsorship_level: true;
@@ -33,6 +32,10 @@ export declare const associationTournamentResponseSelect: {
     description: true;
     sport_type: true;
     modality: true;
+    category_name: true;
+    category_min_age: true;
+    category_max_age: true;
+    category_gender: true;
     start_date: true;
     end_date: true;
     registration_start_date: true;

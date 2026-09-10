@@ -1,4 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  TOURNAMENT_CATEGORY_GENDERS,
+  type TournamentCategoryGender,
+} from '../../tournaments/tournament-category.constants';
 
 export class AssociationTournamentTypeResponseDto {
   @ApiProperty({ example: '1', type: String })
@@ -98,6 +102,18 @@ export class AssociationTournamentResponseDto {
   @ApiProperty({ example: '11v11' })
   modality!: string;
 
+  @ApiProperty({ example: 'Sub-15' })
+  categoryName!: string;
+
+  @ApiProperty({ example: 12, nullable: true })
+  categoryMinAge!: number | null;
+
+  @ApiProperty({ example: 15, nullable: true })
+  categoryMaxAge!: number | null;
+
+  @ApiProperty({ enum: TOURNAMENT_CATEGORY_GENDERS, example: 'male' })
+  categoryGender!: TournamentCategoryGender;
+
   @ApiProperty({ example: '2026-09-01', format: 'date' })
   startDate!: string;
 
@@ -163,10 +179,27 @@ export class AssociationTournamentResponseDto {
   sponsors!: TournamentSponsorResponseDto[];
 
   @ApiProperty({
-    enum: ['draft', 'registration', 'in_progress', 'finished', 'cancelled'],
+    enum: [
+      'draft',
+      'registration',
+      'validation',
+      'scheduled',
+      'in_progress',
+      'finished',
+      'archived',
+      'cancelled',
+    ],
     example: 'registration',
   })
-  phase!: 'draft' | 'registration' | 'in_progress' | 'finished' | 'cancelled';
+  phase!:
+    | 'draft'
+    | 'registration'
+    | 'validation'
+    | 'scheduled'
+    | 'in_progress'
+    | 'finished'
+    | 'archived'
+    | 'cancelled';
 
   @ApiProperty({ enum: ['active', 'inactive'], example: 'active' })
   status!: 'active' | 'inactive';

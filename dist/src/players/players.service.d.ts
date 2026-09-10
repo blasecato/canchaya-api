@@ -16,6 +16,7 @@ export declare class PlayersService {
             documentType: string;
             fullName: string;
             birthDate: string;
+            gender: string | null;
             age: number;
             email: string;
             phone: string | null;
@@ -62,6 +63,7 @@ export declare class PlayersService {
         documentType: string;
         fullName: string;
         birthDate: string;
+        gender: string | null;
         age: number;
         email: string;
         phone: string | null;
@@ -87,6 +89,7 @@ export declare class PlayersService {
         documentType: string;
         fullName: string;
         birthDate: string;
+        gender: string | null;
         age: number;
         email: string;
         phone: string | null;
@@ -112,6 +115,7 @@ export declare class PlayersService {
         documentType: string;
         fullName: string;
         birthDate: string;
+        gender: string | null;
         age: number;
         email: string;
         phone: string | null;
@@ -137,6 +141,7 @@ export declare class PlayersService {
         documentType: string;
         fullName: string;
         birthDate: string;
+        gender: string | null;
         age: number;
         email: string;
         phone: string | null;

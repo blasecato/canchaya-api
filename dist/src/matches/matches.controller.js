@@ -16,6 +16,9 @@ exports.MatchesController = void 0;
 const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
+const require_roles_decorator_1 = require("../auth/decorators/require-roles.decorator");
+const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const roles_guard_1 = require("../auth/guards/roles.guard");
 const parse_big_int_pipe_1 = require("../common/pipes/parse-big-int.pipe");
 const create_match_dto_1 = require("./dto/create-match.dto");
 const update_match_dto_1 = require("./dto/update-match.dto");
@@ -25,38 +28,41 @@ let MatchesController = class MatchesController {
     constructor(matchesService) {
         this.matchesService = matchesService;
     }
-    create(createMatchDto) {
-        return this.matchesService.create(createMatchDto);
+    create(request, createMatchDto) {
+        return this.matchesService.create(request.auth.userId, createMatchDto);
     }
-    findAll() {
-        return this.matchesService.findAll();
+    findAll(request) {
+        return this.matchesService.findAll(request.auth.userId);
     }
-    findOne(id) {
-        return this.matchesService.findOne(id);
+    findOne(id, request) {
+        return this.matchesService.findOne(id, request.auth.userId);
     }
-    update(id, updateMatchDto) {
-        return this.matchesService.update(id, updateMatchDto);
+    update(id, request, updateMatchDto) {
+        return this.matchesService.update(id, request.auth.userId, updateMatchDto);
     }
-    remove(id) {
-        return this.matchesService.remove(id);
+    remove(id, request) {
+        return this.matchesService.remove(id, request.auth.userId);
     }
 };
 exports.MatchesController = MatchesController;
 __decorate([
     (0, common_1.Post)(),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
     (0, swagger_1.ApiOperation)({ summary: 'Registrar un partido' }),
     (0, swagger_1.ApiCreatedResponse)({ description: 'Partido registrado correctamente.' }),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_match_dto_1.CreateMatchDto]),
+    __metadata("design:paramtypes", [Object, create_match_dto_1.CreateMatchDto]),
     __metadata("design:returntype", void 0)
 ], MatchesController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
     (0, swagger_1.ApiOperation)({ summary: 'Listar todos los partidos' }),
     (0, swagger_1.ApiOkResponse)({ description: 'Listado de partidos.' }),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], MatchesController.prototype, "findAll", null);
 __decorate([
@@ -66,35 +72,43 @@ __decorate([
     (0, swagger_1.ApiOkResponse)({ description: 'Partido encontrado.' }),
     (0, swagger_1.ApiNotFoundResponse)({ description: 'Partido no encontrado.' }),
     __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [BigInt]),
+    __metadata("design:paramtypes", [BigInt, Object]),
     __metadata("design:returntype", void 0)
 ], MatchesController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'REFEREE'),
     (0, swagger_1.ApiParam)({ name: 'id', example: '1', type: String }),
     (0, swagger_1.ApiOperation)({ summary: 'Actualizar un partido' }),
     (0, swagger_1.ApiOkResponse)({ description: 'Partido actualizado correctamente.' }),
     (0, swagger_1.ApiNotFoundResponse)({ description: 'Partido no encontrado.' }),
     __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
-    __param(1, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [BigInt, update_match_dto_1.UpdateMatchDto]),
+    __metadata("design:paramtypes", [BigInt, Object, update_match_dto_1.UpdateMatchDto]),
     __metadata("design:returntype", void 0)
 ], MatchesController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
     (0, swagger_1.ApiParam)({ name: 'id', example: '1', type: String }),
     (0, swagger_1.ApiOperation)({ summary: 'Eliminar un partido' }),
     (0, swagger_1.ApiOkResponse)({ description: 'Partido eliminado correctamente.' }),
     (0, swagger_1.ApiNotFoundResponse)({ description: 'Partido no encontrado.' }),
     __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [BigInt]),
+    __metadata("design:paramtypes", [BigInt, Object]),
     __metadata("design:returntype", void 0)
 ], MatchesController.prototype, "remove", null);
 exports.MatchesController = MatchesController = __decorate([
     (0, swagger_1.ApiTags)('Matches'),
+    (0, swagger_1.ApiBearerAuth)('access-token'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'REFEREE', 'PLAYER'),
     (0, common_1.Controller)('matches'),
     __metadata("design:paramtypes", [matches_service_1.MatchesService])
 ], MatchesController);

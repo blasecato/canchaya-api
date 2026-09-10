@@ -9,10 +9,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const schedule_1 = require("@nestjs/schedule");
 const associations_module_1 = require("./associations/associations.module");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const auth_module_1 = require("./auth/auth.module");
+const competition_access_module_1 = require("./authorization/competition-access.module");
 const disciplinary_actions_module_1 = require("./disciplinary-actions/disciplinary-actions.module");
 const fines_module_1 = require("./fines/fines.module");
 const home_gallery_module_1 = require("./home-gallery/home-gallery.module");
@@ -36,8 +38,10 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({ cache: true, isGlobal: true }),
+            schedule_1.ScheduleModule.forRoot(),
             prisma_module_1.PrismaModule,
             auth_module_1.AuthModule,
+            competition_access_module_1.CompetitionAccessModule,
             roles_module_1.RolesModule,
             users_module_1.UsersModule,
             associations_module_1.AssociationsModule,

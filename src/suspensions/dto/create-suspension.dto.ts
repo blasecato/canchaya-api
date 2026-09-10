@@ -58,8 +58,4 @@ export class CreateSuspensionDto {
   @IsOptionalNonNullable()
   @IsIn(['active', 'served', 'revoked'])
   status?: string;
-
-  @ApiProperty({ example: '7' })
-  @IsBigIntString()
-  createdBy: string;
 }

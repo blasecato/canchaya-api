@@ -1,6 +1,7 @@
 import { AssociationsService } from '../associations/associations.service';
 import { AssociationTournamentResponseDto } from '../associations/dto/association-tournament-response.dto';
 import { TournamentSponsorResponseDto } from '../associations/dto/association-tournament-response.dto';
+import { CompetitionAccessService } from '../authorization/competition-access.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { ImageStorageService } from '../uploads/image-storage.service';
 import type { UploadedImageFile } from '../uploads/image-storage.types';
@@ -11,13 +12,15 @@ import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { UpdateTournamentRulesDto } from './dto/update-tournament-rules.dto';
 import { TournamentSponsorInputDto } from './dto/tournament-sponsor-input.dto';
 import type { ReviewTeamRegistrationDto } from './dto/review-team-registration.dto';
+import type { TournamentPaymentsResponseDto, TournamentRegistrationPaymentResponseDto, UpdateRegistrationPaymentDto } from './dto/registration-payment.dto';
 import type { CaptainTeamOptionResponseDto, TeamRegistrationResponseDto } from './dto/register-team.dto';
 export declare class TournamentsService {
     private readonly prisma;
     private readonly associationsService;
     private readonly imageStorage;
+    private readonly competitionAccess;
     private readonly logger;
-    constructor(prisma: PrismaService, associationsService: AssociationsService, imageStorage: ImageStorageService);
+    constructor(prisma: PrismaService, associationsService: AssociationsService, imageStorage: ImageStorageService, competitionAccess: CompetitionAccessService);
     findFeaturedActive(): Promise<TournamentCatalogItemResponseDto[]>;
     findPublicStats(): Promise<{
         activeTournaments: number;
@@ -28,6 +31,10 @@ export declare class TournamentsService {
     findMine(requestingUserId: bigint): Promise<TournamentCatalogItemResponseDto[]>;
     findCaptainTeams(tournamentId: bigint, requestingUserId: bigint): Promise<CaptainTeamOptionResponseDto[]>;
     registerTeam(tournamentId: bigint, teamId: bigint, requestingUserId: bigint): Promise<TeamRegistrationResponseDto>;
+    findRegistrationPayments(tournamentId: bigint, requestingUserId: bigint): Promise<TournamentPaymentsResponseDto>;
+    updateRegistrationPayment(tournamentId: bigint, teamId: bigint, requestingUserId: bigint, dto: UpdateRegistrationPaymentDto): Promise<TournamentRegistrationPaymentResponseDto>;
+    private resolveRegistrationPaymentAmount;
+    private toRegistrationPaymentResponse;
     findRegistrationDetail(tournamentId: bigint, teamId: bigint, requestingUserId: bigint): Promise<{
         tournamentId: string;
         tournamentName: string;
@@ -76,6 +83,11 @@ export declare class TournamentsService {
     remove(associationId: bigint, tournamentId: bigint, requestingUserId: bigint): Promise<AssociationTournamentResponseDto>;
     private requireManagementPermission;
     private requireTournamentManagementPermission;
+    private assertTournamentUpdateAllowed;
+    private assertValidCategoryAgeRange;
+    private assertRulesEditable;
+    private assertSponsorsEditable;
+    private dateChanged;
     private assertValidSponsorDates;
     private sponsorData;
     private tournamentSponsorData;
@@ -84,6 +96,9 @@ export declare class TournamentsService {
     private findTournamentTypePlayerLimits;
     private assertTournamentPlayerRangeWithinType;
     private assertTeamRosterWithinTournamentLimits;
+    private toEligibilityRules;
+    private toEligibilityPlayer;
+    private assertTeamCategoryEligibility;
     private uploadSponsorLogos;
     private syncTournamentSponsors;
     private findTournamentInAssociation;

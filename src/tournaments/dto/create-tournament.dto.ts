@@ -17,19 +17,19 @@ import {
 } from 'class-validator';
 import { IsBigIntString } from '../../common/decorators/is-big-int-string.decorator';
 import { IsOptionalNonNullable } from '../../common/decorators/is-optional-non-nullable.decorator';
+import {
+  FOOTBALL_MODALITIES,
+  FOOTBALL_SPORT_TYPE,
+  type FootballModality,
+} from '../../common/constants/football.constants';
 import { TournamentSponsorsInputDto } from './tournament-sponsor-input.dto';
-
-export const TOURNAMENT_PHASES = [
-  'draft',
-  'registration',
-  'in_progress',
-  'finished',
-  'cancelled',
-] as const;
+import {
+  TOURNAMENT_CATEGORY_GENDERS,
+  type TournamentCategoryGender,
+} from '../tournament-category.constants';
 
 export const TOURNAMENT_STATUSES = ['active', 'inactive'] as const;
 
-export type TournamentPhase = (typeof TOURNAMENT_PHASES)[number];
 export type TournamentStatus = (typeof TOURNAMENT_STATUSES)[number];
 
 function trimString({ value }: TransformFnParams): unknown {
@@ -80,19 +80,68 @@ export class CreateTournamentDto extends TournamentSponsorsInputDto {
   @IsBigIntString()
   tournamentTypeId!: string;
 
-  @ApiProperty({ example: 'Fútbol', maxLength: 100 })
+  @ApiProperty({ enum: [FOOTBALL_SPORT_TYPE], example: FOOTBALL_SPORT_TYPE })
   @Transform(trimString)
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
-  sportType!: string;
+  @IsIn([FOOTBALL_SPORT_TYPE], {
+    message: 'El único deporte permitido es Fútbol.',
+  })
+  sportType!: typeof FOOTBALL_SPORT_TYPE;
 
-  @ApiProperty({ example: 'Fútbol 11', maxLength: 100 })
+  @ApiProperty({ enum: FOOTBALL_MODALITIES, example: 'Fútbol 11' })
   @Transform(trimString)
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
-  modality!: string;
+  @IsIn(FOOTBALL_MODALITIES, {
+    message: 'La modalidad debe ser Fútbol 5, Fútbol 7 o Fútbol 11.',
+  })
+  modality!: FootballModality;
+
+  @ApiPropertyOptional({ example: 'Sub-15', default: 'Libre', maxLength: 120 })
+  @Transform(trimString)
+  @IsOptionalNonNullable()
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(120)
+  categoryName?: string;
+
+  @ApiPropertyOptional({
+    example: 12,
+    minimum: 1,
+    maximum: 120,
+    nullable: true,
+  })
+  @Transform(emptyStringToNull)
+  @Transform(toNumber)
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(120)
+  categoryMinAge?: number | null;
+
+  @ApiPropertyOptional({
+    example: 15,
+    minimum: 1,
+    maximum: 120,
+    nullable: true,
+  })
+  @Transform(emptyStringToNull)
+  @Transform(toNumber)
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(120)
+  categoryMaxAge?: number | null;
+
+  @ApiPropertyOptional({
+    enum: TOURNAMENT_CATEGORY_GENDERS,
+    default: 'open',
+  })
+  @Transform(trimString)
+  @IsOptionalNonNullable()
+  @IsIn(TOURNAMENT_CATEGORY_GENDERS)
+  categoryGender?: TournamentCategoryGender;
 
   @ApiProperty({ example: '2026-09-01', format: 'date' })
   @Matches(/^\d{4}-\d{2}-\d{2}$/)
@@ -234,12 +283,6 @@ export class CreateTournamentDto extends TournamentSponsorsInputDto {
   })
   @MaxLength(2048)
   rulesUrl?: string | null;
-
-  @ApiPropertyOptional({ enum: TOURNAMENT_PHASES, default: 'draft' })
-  @Transform(trimString)
-  @IsOptionalNonNullable()
-  @IsIn(TOURNAMENT_PHASES)
-  phase?: TournamentPhase;
 
   @ApiPropertyOptional({ enum: TOURNAMENT_STATUSES, default: 'active' })
   @Transform(trimString)

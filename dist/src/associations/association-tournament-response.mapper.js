@@ -1,13 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.associationTournamentResponseSelect = exports.tournamentSponsorResponseSelect = exports.AVAILABLE_TOURNAMENT_EXCLUDED_PHASES = void 0;
+exports.associationTournamentResponseSelect = exports.tournamentSponsorResponseSelect = void 0;
 exports.toAssociationTournamentResponse = toAssociationTournamentResponse;
 exports.toTournamentSponsorResponse = toTournamentSponsorResponse;
-exports.AVAILABLE_TOURNAMENT_EXCLUDED_PHASES = [
-    'draft',
-    'finished',
-    'cancelled',
-];
 exports.tournamentSponsorResponseSelect = {
     sponsor_id: true,
     sponsorship_level: true,
@@ -37,6 +32,10 @@ exports.associationTournamentResponseSelect = {
     description: true,
     sport_type: true,
     modality: true,
+    category_name: true,
+    category_min_age: true,
+    category_max_age: true,
+    category_gender: true,
     start_date: true,
     end_date: true,
     registration_start_date: true,
@@ -97,6 +96,10 @@ function toAssociationTournamentResponse(tournament) {
         },
         sportType: tournament.sport_type,
         modality: tournament.modality,
+        categoryName: tournament.category_name,
+        categoryMinAge: tournament.category_min_age,
+        categoryMaxAge: tournament.category_max_age,
+        categoryGender: tournament.category_gender,
         startDate: toDateOnly(tournament.start_date),
         endDate: toNullableDateOnly(tournament.end_date),
         registrationStartDate: toNullableDateOnly(tournament.registration_start_date),

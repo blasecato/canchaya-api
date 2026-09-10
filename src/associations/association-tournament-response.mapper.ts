@@ -1,12 +1,6 @@
 import { Prisma } from '../../generated/prisma/client';
 import { AssociationTournamentResponseDto } from './dto/association-tournament-response.dto';
 
-export const AVAILABLE_TOURNAMENT_EXCLUDED_PHASES = [
-  'draft',
-  'finished',
-  'cancelled',
-] as const;
-
 export const tournamentSponsorResponseSelect = {
   sponsor_id: true,
   sponsorship_level: true,
@@ -42,6 +36,10 @@ export const associationTournamentResponseSelect = {
   description: true,
   sport_type: true,
   modality: true,
+  category_name: true,
+  category_min_age: true,
+  category_max_age: true,
+  category_gender: true,
   start_date: true,
   end_date: true,
   registration_start_date: true,
@@ -109,6 +107,11 @@ export function toAssociationTournamentResponse(
     },
     sportType: tournament.sport_type,
     modality: tournament.modality,
+    categoryName: tournament.category_name,
+    categoryMinAge: tournament.category_min_age,
+    categoryMaxAge: tournament.category_max_age,
+    categoryGender:
+      tournament.category_gender as AssociationTournamentResponseDto['categoryGender'],
     startDate: toDateOnly(tournament.start_date),
     endDate: toNullableDateOnly(tournament.end_date),
     registrationStartDate: toNullableDateOnly(

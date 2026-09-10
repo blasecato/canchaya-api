@@ -14,16 +14,18 @@ const openapi = require("@nestjs/swagger");
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const is_bcrypt_password_decorator_1 = require("../../common/decorators/is-bcrypt-password.decorator");
+const user_gender_constants_1 = require("../../users/user-gender.constants");
 class CreatePlayerDto {
     idNumber;
     documentType;
     fullName;
     birthDate;
+    gender;
     email;
     phone;
     password;
     static _OPENAPI_METADATA_FACTORY() {
-        return { idNumber: { required: true, type: () => String, maxLength: 40 }, documentType: { required: true, type: () => String, maxLength: 20 }, fullName: { required: true, type: () => String, maxLength: 160 }, birthDate: { required: true, type: () => String, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, email: { required: true, type: () => String, format: "email" }, phone: { required: false, type: () => String, nullable: true, maxLength: 40 }, password: { required: true, type: () => String, minLength: 8 } };
+        return { idNumber: { required: true, type: () => String, maxLength: 40 }, documentType: { required: true, type: () => String, maxLength: 20 }, fullName: { required: true, type: () => String, maxLength: 160 }, birthDate: { required: true, type: () => String, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, gender: { required: true, enum: ["male", "female", "non_binary", "prefer_not_to_say"], enum: user_gender_constants_1.USER_GENDERS }, email: { required: true, type: () => String, format: "email" }, phone: { required: false, type: () => String, nullable: true, maxLength: 40 }, password: { required: true, type: () => String, minLength: 8 } };
     }
 }
 exports.CreatePlayerDto = CreatePlayerDto;
@@ -54,6 +56,11 @@ __decorate([
     (0, class_validator_1.IsDateString)({ strict: true, strictSeparator: true }),
     __metadata("design:type", String)
 ], CreatePlayerDto.prototype, "birthDate", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ enum: user_gender_constants_1.USER_GENDERS, example: 'male' }),
+    (0, class_validator_1.IsIn)(user_gender_constants_1.USER_GENDERS),
+    __metadata("design:type", String)
+], CreatePlayerDto.prototype, "gender", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'maria@example.com' }),
     (0, class_validator_1.IsEmail)(),

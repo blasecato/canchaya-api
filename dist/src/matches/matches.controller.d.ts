@@ -1,10 +1,11 @@
+import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-request.interface';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { MatchesService } from './matches.service';
 export declare class MatchesController {
     private readonly matchesService;
     constructor(matchesService: MatchesService);
-    create(createMatchDto: CreateMatchDto): import("../../generated/prisma/models").Prisma__matchesClient<{
+    create(request: AuthenticatedRequest, createMatchDto: CreateMatchDto): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
@@ -19,10 +20,9 @@ export declare class MatchesController {
         round_number: number | null;
         home_score: number | null;
         away_score: number | null;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, {
-        omit: import("../../generated/prisma/internal/prismaNamespace").GlobalOmitConfig | undefined;
+        duration_minutes: number;
     }>;
-    findAll(): import("../../generated/prisma/internal/prismaNamespace").PrismaPromise<{
+    findAll(request: AuthenticatedRequest): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
@@ -37,8 +37,9 @@ export declare class MatchesController {
         round_number: number | null;
         home_score: number | null;
         away_score: number | null;
+        duration_minutes: number;
     }[]>;
-    findOne(id: bigint): Promise<{
+    findOne(id: bigint, request: AuthenticatedRequest): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
@@ -53,8 +54,9 @@ export declare class MatchesController {
         round_number: number | null;
         home_score: number | null;
         away_score: number | null;
+        duration_minutes: number;
     }>;
-    update(id: bigint, updateMatchDto: UpdateMatchDto): Promise<{
+    update(id: bigint, request: AuthenticatedRequest, updateMatchDto: UpdateMatchDto): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
@@ -69,8 +71,9 @@ export declare class MatchesController {
         round_number: number | null;
         home_score: number | null;
         away_score: number | null;
+        duration_minutes: number;
     }>;
-    remove(id: bigint): Promise<{
+    remove(id: bigint, request: AuthenticatedRequest): Promise<{
         id: bigint;
         created_at: Date;
         status: string;
@@ -85,5 +88,6 @@ export declare class MatchesController {
         round_number: number | null;
         home_score: number | null;
         away_score: number | null;
+        duration_minutes: number;
     }>;
 }

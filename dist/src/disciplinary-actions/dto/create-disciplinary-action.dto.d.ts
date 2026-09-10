@@ -6,9 +6,4 @@ export declare class CreateDisciplinaryActionDto {
     cardType?: string;
     reason: string;
     occurredAt?: string;
-    reportedBy: string;
-    decisionStatus?: string;
-    decidedBy?: string | null;
-    decidedAt?: string | null;
-    decisionNotes?: string | null;
 }

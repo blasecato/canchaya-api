@@ -38,16 +38,22 @@ export class TeamCarnetPlayerResponseDto {
 
   @ApiProperty({ example: '/uploads/users/player.webp', nullable: true })
   photoUrl!: string | null;
+
+  @ApiProperty({ example: 10, nullable: true })
+  jerseyNumber!: number | null;
+
+  @ApiProperty({ example: 'Delantero', nullable: true })
+  position!: string | null;
 }
 
 export class TeamCarnetsResponseDto {
   @ApiProperty({ example: '26', type: String })
   teamId!: string;
 
-  @ApiProperty({ example: 'Amazonas Vóley' })
+  @ApiProperty({ example: 'Amazonas FC' })
   teamName!: string;
 
-  @ApiProperty({ example: 'Voleibol' })
+  @ApiProperty({ example: 'Fútbol' })
   sportType!: string;
 
   @ApiProperty({ example: 'Sala' })

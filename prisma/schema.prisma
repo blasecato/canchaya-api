@@ -76,20 +76,29 @@ model disciplinary_actions {
   occurred_at                                   DateTime                @default(now()) @db.Timestamptz(6)
   reported_by                                   BigInt
   decision_status                               String                  @default("reported")
+  review_started_by                             BigInt?
+  review_started_at                             DateTime?               @db.Timestamptz(6)
   decided_by                                    BigInt?
   decided_at                                    DateTime?               @db.Timestamptz(6)
   decision_notes                                String?
+  appeal_deadline                               DateTime?               @db.Timestamptz(6)
   created_at                                    DateTime                @default(now()) @db.Timestamptz(6)
+  updated_at                                    DateTime                @default(now()) @db.Timestamptz(6)
   users_disciplinary_actions_decided_byTousers  users?                  @relation("disciplinary_actions_decided_byTousers", fields: [decided_by], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  reviewer                                      users?                  @relation("disciplinary_actions_review_started_byTousers", fields: [review_started_by], references: [id], onDelete: Restrict, onUpdate: NoAction)
   matches                                       matches?                @relation(fields: [match_id, tournament_id], references: [id, tournament_id], onUpdate: NoAction, map: "disciplinary_actions_match_fkey")
   users_disciplinary_actions_reported_byTousers users                   @relation("disciplinary_actions_reported_byTousers", fields: [reported_by], references: [id], onUpdate: NoAction)
   tournament_team_players                       tournament_team_players @relation(fields: [tournament_id, team_id, player_id], references: [tournament_id, team_id, player_id], onUpdate: NoAction, map: "disciplinary_actions_roster_fkey")
   fines                                         fines?
   suspensions                                   suspensions?
+  disciplinary_appeals                          disciplinary_appeals?
+  disciplinary_events                           disciplinary_events[]
+  users_blocked_by_action                       users[]                 @relation("users_block_source_action")
 
   @@index([match_id], map: "disciplinary_actions_match_idx")
   @@index([decision_status], map: "disciplinary_actions_status_idx")
   @@index([tournament_id, player_id], map: "disciplinary_actions_tournament_player_idx")
+  @@index([review_started_by], map: "disciplinary_actions_reviewer_idx")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -105,6 +114,7 @@ model fines {
   notes                  String?
   created_by             BigInt
   created_at             DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime             @default(now()) @db.Timestamptz(6)
   disciplinary_actions   disciplinary_actions @relation(fields: [disciplinary_action_id], references: [id], onUpdate: NoAction, map: "fines_action_fkey")
   users                  users                @relation(fields: [created_by], references: [id], onUpdate: NoAction)
 
@@ -113,17 +123,28 @@ model fines {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model match_referees {
-  match_id            BigInt              @unique(map: "match_referees_one_main_uk", where: raw("(referee_role = 'main'::text)"))
-  tournament_id       BigInt
-  referee_id          BigInt
-  referee_role        String              @default("main")
-  assignment_status   String              @default("assigned")
-  created_at          DateTime            @default(now()) @db.Timestamptz(6)
-  matches             matches             @relation(fields: [match_id, tournament_id], references: [id, tournament_id], onDelete: Cascade, onUpdate: NoAction, map: "match_referees_match_fkey")
-  tournament_referees tournament_referees @relation(fields: [tournament_id, referee_id], references: [tournament_id, user_id], onUpdate: NoAction, map: "match_referees_tournament_referee_fkey")
+  match_id                  BigInt                      @unique(map: "match_referees_one_main_uk", where: raw("((referee_role = 'main'::text) AND (assignment_status = ANY (ARRAY['pending'::text, 'accepted'::text])))"))
+  tournament_id             BigInt
+  referee_id                BigInt
+  referee_role              String                      @default("main")
+  assignment_status         String                      @default("pending")
+  assigned_by               BigInt?
+  responded_at              DateTime?                   @db.Timestamptz(6)
+  response_notes            String?                     @db.Text
+  replaced_referee_id       BigInt?
+  replacement_reason        String?                     @db.Text
+  created_at                DateTime                    @default(now()) @db.Timestamptz(6)
+  updated_at                DateTime                    @default(now()) @db.Timestamptz(6)
+  matches                   matches                     @relation(fields: [match_id, tournament_id], references: [id, tournament_id], onDelete: Cascade, onUpdate: NoAction, map: "match_referees_match_fkey")
+  tournament_referees       tournament_referees         @relation(fields: [tournament_id, referee_id], references: [tournament_id, user_id], onUpdate: NoAction, map: "match_referees_tournament_referee_fkey")
+  assigned_by_user          users?                      @relation("match_referees_assigned_by", fields: [assigned_by], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  replaced_referee          users?                      @relation("match_referees_replaced_referee", fields: [replaced_referee_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  referee_assignment_events referee_assignment_events[]
 
   @@id([match_id, referee_id])
   @@index([referee_id], map: "match_referees_referee_idx")
+  @@index([assignment_status], map: "match_referees_status_idx")
+  @@index([assigned_by], map: "match_referees_assigned_by_idx")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -139,6 +160,7 @@ model matches {
   home_score                                                                                      Int?
   away_score                                                                                      Int?
   status                                                                                          String                        @default("scheduled")
+  duration_minutes                                                                                Int                           @default(120)
   notes                                                                                           String?
   created_at                                                                                      DateTime                      @default(now()) @db.Timestamptz(6)
   updated_at                                                                                      DateTime                      @default(now()) @db.Timestamptz(6)
@@ -150,12 +172,47 @@ model matches {
   tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations tournament_team_registrations @relation("matches_tournament_id_away_team_idTotournament_team_registrations", fields: [tournament_id, away_team_id], references: [tournament_id, team_id], onUpdate: NoAction, map: "matches_away_team_fkey")
   tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations tournament_team_registrations @relation("matches_tournament_id_home_team_idTotournament_team_registrations", fields: [tournament_id, home_team_id], references: [tournament_id, team_id], onUpdate: NoAction, map: "matches_home_team_fkey")
   player_match_stats                                                                              player_match_stats[]
+  referee_assignment_events                                                                       referee_assignment_events[]
 
   @@unique([id, tournament_id], map: "matches_id_tournament_uk")
   @@index([away_team_id], map: "matches_away_team_idx")
   @@index([home_team_id], map: "matches_home_team_idx")
   @@index([tournament_id, match_date], map: "matches_tournament_date_idx")
   @@index([tournament_id, status], map: "matches_tournament_status_idx")
+}
+
+model referee_availability {
+  id         BigInt   @id @default(autoincrement())
+  referee_id BigInt
+  starts_at  DateTime @db.Timestamptz(6)
+  ends_at    DateTime @db.Timestamptz(6)
+  notes      String?  @db.Text
+  status     String   @default("active")
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+  referee    users    @relation(fields: [referee_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "referee_availability_referee_fkey")
+
+  @@index([referee_id, starts_at, ends_at], map: "referee_availability_schedule_idx")
+  @@index([status, ends_at], map: "referee_availability_status_idx")
+}
+
+model referee_assignment_events {
+  id              BigInt         @id @default(autoincrement())
+  match_id        BigInt
+  referee_id      BigInt
+  actor_user_id   BigInt
+  event_type      String
+  previous_status String?
+  new_status      String
+  reason          String?        @db.Text
+  created_at      DateTime       @default(now()) @db.Timestamptz(6)
+  assignment      match_referees @relation(fields: [match_id, referee_id], references: [match_id, referee_id], onDelete: Cascade, onUpdate: NoAction, map: "referee_assignment_events_assignment_fkey")
+  match           matches        @relation(fields: [match_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "referee_assignment_events_match_fkey")
+  actor           users          @relation(fields: [actor_user_id], references: [id], onDelete: Restrict, onUpdate: NoAction, map: "referee_assignment_events_actor_fkey")
+
+  @@index([match_id, created_at], map: "referee_assignment_events_match_idx")
+  @@index([referee_id, created_at], map: "referee_assignment_events_referee_idx")
+  @@index([actor_user_id], map: "referee_assignment_events_actor_idx")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -214,12 +271,51 @@ model suspensions {
   end_date               DateTime?            @db.Date
   reason                 String?
   status                 String               @default("active")
+  served_matches         Int                  @default(0)
+  completed_at           DateTime?            @db.Timestamptz(6)
   created_by             BigInt
   created_at             DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime             @default(now()) @db.Timestamptz(6)
   disciplinary_actions   disciplinary_actions @relation(fields: [disciplinary_action_id], references: [id], onUpdate: NoAction, map: "suspensions_action_fkey")
   users                  users                @relation(fields: [created_by], references: [id], onUpdate: NoAction)
 
   @@index([status])
+}
+
+model disciplinary_appeals {
+  id                     BigInt               @id @default(autoincrement())
+  disciplinary_action_id BigInt               @unique
+  player_id              BigInt
+  message                String               @db.Text
+  status                 String               @default("pending")
+  reviewed_by            BigInt?
+  reviewed_at            DateTime?            @db.Timestamptz(6)
+  resolution_notes       String?              @db.Text
+  created_at             DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime             @default(now()) @db.Timestamptz(6)
+  disciplinary_action    disciplinary_actions @relation(fields: [disciplinary_action_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "disciplinary_appeals_action_fkey")
+  player                 users                @relation("disciplinary_appeals_player", fields: [player_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  reviewer               users?               @relation("disciplinary_appeals_reviewer", fields: [reviewed_by], references: [id], onDelete: Restrict, onUpdate: NoAction)
+
+  @@index([player_id, status], map: "disciplinary_appeals_player_status_idx")
+  @@index([status, created_at], map: "disciplinary_appeals_status_idx")
+  @@index([reviewed_by], map: "disciplinary_appeals_reviewer_idx")
+}
+
+model disciplinary_events {
+  id                     BigInt               @id @default(autoincrement())
+  disciplinary_action_id BigInt
+  actor_user_id          BigInt
+  event_type             String
+  message                String?              @db.Text
+  metadata               Json?
+  created_at             DateTime             @default(now()) @db.Timestamptz(6)
+  disciplinary_action    disciplinary_actions @relation(fields: [disciplinary_action_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "disciplinary_events_action_fkey")
+  actor                  users                @relation(fields: [actor_user_id], references: [id], onDelete: Restrict, onUpdate: NoAction, map: "disciplinary_events_actor_fkey")
+
+  @@index([disciplinary_action_id, created_at], map: "disciplinary_events_action_idx")
+  @@index([actor_user_id], map: "disciplinary_events_actor_idx")
+  @@index([event_type, created_at], map: "disciplinary_events_type_idx")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -342,6 +438,11 @@ model tournament_team_registrations {
   reviewed_by                                                               BigInt?
   review_notes                                                              String?
   reviewed_at                                                               DateTime?                        @db.Timestamptz(6)
+  payment_status                                                            String                           @default("unpaid")
+  amount_paid                                                               Decimal                          @default(0) @db.Decimal(14, 2)
+  payment_notes                                                             String?                          @db.Text
+  payment_updated_by                                                        BigInt?
+  payment_updated_at                                                        DateTime?                        @db.Timestamptz(6)
   group_name                                                                String?
   seed                                                                      Int?
   points                                                                    Int                              @default(0)
@@ -353,30 +454,51 @@ model tournament_team_registrations {
   tournament_registration_events                                            tournament_registration_events[]
   users_tournament_team_registrations_requested_byTousers                   users                            @relation("tournament_team_registrations_requested_byTousers", fields: [requested_by], references: [id], onUpdate: NoAction)
   users_tournament_team_registrations_reviewed_byTousers                    users?                           @relation("tournament_team_registrations_reviewed_byTousers", fields: [reviewed_by], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  users_tournament_team_registrations_payment_updated_byTousers             users?                           @relation("tournament_team_registrations_payment_updated_byTousers", fields: [payment_updated_by], references: [id], onDelete: Restrict, onUpdate: NoAction)
   teams                                                                     teams                            @relation(fields: [team_id], references: [id], onUpdate: NoAction, map: "tournament_team_registrations_team_fkey")
   tournaments                                                               tournaments                      @relation(fields: [tournament_id, association_id], references: [id, association_id], onDelete: Cascade, onUpdate: NoAction, map: "tournament_team_registrations_tournament_fkey")
 
   @@id([tournament_id, team_id])
   @@index([association_id, request_status], map: "tournament_team_registrations_association_idx")
   @@index([reviewed_by], map: "tournament_team_registrations_reviewer_idx")
+  @@index([payment_updated_by], map: "tournament_team_registrations_payment_updater_idx")
+  @@index([tournament_id, payment_status], map: "tournament_team_registrations_payment_status_idx")
   @@index([team_id], map: "tournament_team_registrations_team_idx")
 }
 
 model notifications {
-  id          BigInt    @id @default(autoincrement())
-  user_id     BigInt
-  type        String
-  title       String
-  message     String
-  entity_type String?
-  entity_id   String?
-  metadata    Json?
-  read_at     DateTime? @db.Timestamptz(6)
-  created_at  DateTime  @default(now()) @db.Timestamptz(6)
-  users       users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id                BigInt    @id @default(autoincrement())
+  user_id           BigInt
+  type              String
+  event_code        String?
+  deduplication_key String?
+  title             String
+  message           String
+  entity_type       String?
+  entity_id         String?
+  metadata          Json?
+  scheduled_for     DateTime? @db.Timestamptz(6)
+  read_at           DateTime? @db.Timestamptz(6)
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  users             users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
+  @@unique([user_id, deduplication_key], map: "notifications_user_deduplication_uk")
+  @@index([event_code, scheduled_for], map: "notifications_event_schedule_idx")
   @@index([user_id, created_at(sort: Desc)], map: "notifications_user_created_idx")
   @@index([user_id, read_at, created_at(sort: Desc)], map: "notifications_user_unread_idx")
+}
+
+model notification_preferences {
+  user_id                 BigInt   @id
+  match_scheduled_enabled Boolean  @default(true)
+  match_updates_enabled   Boolean  @default(true)
+  match_reminders_enabled Boolean  @default(true)
+  reminder_hours_before   Int      @default(24)
+  email_enabled           Boolean  @default(false)
+  whatsapp_enabled        Boolean  @default(false)
+  created_at              DateTime @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime @default(now()) @db.Timestamptz(6)
+  users                   users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model tournament_registration_events {
@@ -391,6 +513,21 @@ model tournament_registration_events {
   actor         users                         @relation(fields: [actor_user_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
 
   @@index([tournament_id, team_id, created_at], map: "tournament_registration_events_registration_idx")
+}
+
+model tournament_lifecycle_events {
+  id            BigInt      @id @default(autoincrement())
+  tournament_id BigInt
+  actor_user_id BigInt
+  from_phase    String?
+  to_phase      String
+  reason        String?
+  created_at    DateTime    @default(now()) @db.Timestamptz(6)
+  tournaments   tournaments @relation(fields: [tournament_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tournament_lifecycle_events_tournament_fkey")
+  actor         users       @relation(fields: [actor_user_id], references: [id], onDelete: Restrict, onUpdate: NoAction, map: "tournament_lifecycle_events_actor_fkey")
+
+  @@index([tournament_id, created_at], map: "tournament_lifecycle_events_tournament_idx")
+  @@index([actor_user_id], map: "tournament_lifecycle_events_actor_idx")
 }
 
 model tournament_types {
@@ -414,6 +551,10 @@ model tournaments {
   tournament_type_id            BigInt
   sport_type                    String
   modality                      String
+  category_name                 String                          @default("Libre")
+  category_min_age              Int?
+  category_max_age              Int?
+  category_gender               String                          @default("open")
   start_date                    DateTime                        @db.Date
   end_date                      DateTime?                       @db.Date
   registration_start_date       DateTime?                       @db.Date
@@ -441,6 +582,7 @@ model tournaments {
   tournament_referees           tournament_referees[]
   tournament_sponsors           tournament_sponsors[]
   tournament_team_registrations tournament_team_registrations[]
+  tournament_lifecycle_events   tournament_lifecycle_events[]
   associations                  associations                    @relation(fields: [association_id], references: [id], onUpdate: NoAction, map: "tournaments_association_fkey")
   users                         users                           @relation(fields: [created_by], references: [id], onUpdate: NoAction)
   tournament_types              tournament_types                @relation(fields: [tournament_type_id], references: [id], onUpdate: NoAction, map: "tournaments_type_fkey")
@@ -464,47 +606,62 @@ model user_roles {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model users {
-  id                                                                              BigInt                           @id @default(autoincrement())
-  id_number                                                                       String                           @unique(map: "users_id_number_uk")
-  document_type                                                                   String
-  full_name                                                                       String
-  birth_date                                                                      DateTime                         @db.Date
-  birth_city                                                                      String?
-  email                                                                           String
-  phone                                                                           String?
-  photo_url                                                                       String?
-  photo_public_id                                                                 String?
-  document_front_url                                                              String?
-  document_front_public_id                                                        String?
-  document_front_format                                                           String?
-  document_back_url                                                               String?
-  document_back_public_id                                                         String?
-  document_back_format                                                            String?
-  identity_verified_at                                                            DateTime?                        @db.Timestamptz(6)
-  password_hash                                                                   String
-  status                                                                          String                           @default("active")
-  blocked_until                                                                   DateTime?                        @db.Timestamptz(6)
-  block_reason                                                                    String?                          @db.Text
-  blocked_by                                                                      BigInt?
-  created_at                                                                      DateTime                         @default(now()) @db.Timestamptz(6)
-  updated_at                                                                      DateTime                         @default(now()) @db.Timestamptz(6)
-  auth_sessions                                                                   auth_sessions[]
-  notifications                                                                   notifications[]
-  tournament_registration_events                                                  tournament_registration_events[]
-  association_administrators                                                      association_administrators[]
-  associations                                                                    associations?
-  disciplinary_actions_disciplinary_actions_decided_byTousers                     disciplinary_actions[]           @relation("disciplinary_actions_decided_byTousers")
-  disciplinary_actions_disciplinary_actions_reported_byTousers                    disciplinary_actions[]           @relation("disciplinary_actions_reported_byTousers")
-  fines                                                                           fines[]
-  suspensions                                                                     suspensions[]
-  team_members                                                                    team_members[]
-  teams_teams_captain_user_idTousers                                              teams[]                          @relation("teams_captain_user_idTousers")
-  teams_teams_created_byTousers                                                   teams[]                          @relation("teams_created_byTousers")
-  tournament_administrators                                                       tournament_administrators[]
-  tournament_referees                                                             tournament_referees[]
-  tournament_team_registrations_tournament_team_registrations_requested_byTousers tournament_team_registrations[]  @relation("tournament_team_registrations_requested_byTousers")
-  tournament_team_registrations_tournament_team_registrations_reviewed_byTousers  tournament_team_registrations[]  @relation("tournament_team_registrations_reviewed_byTousers")
-  tournaments                                                                     tournaments[]
-  user_roles                                                                      user_roles[]
+  id                                                                                    BigInt                           @id @default(autoincrement())
+  id_number                                                                             String                           @unique(map: "users_id_number_uk")
+  document_type                                                                         String
+  full_name                                                                             String
+  birth_date                                                                            DateTime                         @db.Date
+  birth_city                                                                            String?
+  gender                                                                                String?
+  email                                                                                 String
+  phone                                                                                 String?
+  photo_url                                                                             String?
+  photo_public_id                                                                       String?
+  document_front_url                                                                    String?
+  document_front_public_id                                                              String?
+  document_front_format                                                                 String?
+  document_back_url                                                                     String?
+  document_back_public_id                                                               String?
+  document_back_format                                                                  String?
+  identity_verified_at                                                                  DateTime?                        @db.Timestamptz(6)
+  password_hash                                                                         String
+  status                                                                                String                           @default("active")
+  blocked_until                                                                         DateTime?                        @db.Timestamptz(6)
+  block_reason                                                                          String?                          @db.Text
+  blocked_by                                                                            BigInt?
+  block_source_action_id                                                                BigInt?
+  created_at                                                                            DateTime                         @default(now()) @db.Timestamptz(6)
+  updated_at                                                                            DateTime                         @default(now()) @db.Timestamptz(6)
+  auth_sessions                                                                         auth_sessions[]
+  notifications                                                                         notifications[]
+  notification_preferences                                                              notification_preferences?
+  tournament_registration_events                                                        tournament_registration_events[]
+  tournament_lifecycle_events                                                           tournament_lifecycle_events[]
+  disciplinary_appeals_player                                                           disciplinary_appeals[]           @relation("disciplinary_appeals_player")
+  disciplinary_appeals_reviewer                                                         disciplinary_appeals[]           @relation("disciplinary_appeals_reviewer")
+  disciplinary_events                                                                   disciplinary_events[]
+  disciplinary_actions_reviewed                                                         disciplinary_actions[]           @relation("disciplinary_actions_review_started_byTousers")
+  block_source_action                                                                   disciplinary_actions?            @relation("users_block_source_action", fields: [block_source_action_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  referee_availability                                                                  referee_availability[]
+  referee_assignment_events                                                             referee_assignment_events[]
+  match_referees_assigned_by                                                            match_referees[]                 @relation("match_referees_assigned_by")
+  match_referees_replaced_referee                                                       match_referees[]                 @relation("match_referees_replaced_referee")
+  association_administrators                                                            association_administrators[]
+  associations                                                                          associations?
+  disciplinary_actions_disciplinary_actions_decided_byTousers                           disciplinary_actions[]           @relation("disciplinary_actions_decided_byTousers")
+  disciplinary_actions_disciplinary_actions_reported_byTousers                          disciplinary_actions[]           @relation("disciplinary_actions_reported_byTousers")
+  fines                                                                                 fines[]
+  suspensions                                                                           suspensions[]
+  team_members                                                                          team_members[]
+  teams_teams_captain_user_idTousers                                                    teams[]                          @relation("teams_captain_user_idTousers")
+  teams_teams_created_byTousers                                                         teams[]                          @relation("teams_created_byTousers")
+  tournament_administrators                                                             tournament_administrators[]
+  tournament_referees                                                                   tournament_referees[]
+  tournament_team_registrations_tournament_team_registrations_requested_byTousers       tournament_team_registrations[]  @relation("tournament_team_registrations_requested_byTousers")
+  tournament_team_registrations_tournament_team_registrations_reviewed_byTousers        tournament_team_registrations[]  @relation("tournament_team_registrations_reviewed_byTousers")
+  tournament_team_registrations_tournament_team_registrations_payment_updated_byTousers tournament_team_registrations[]  @relation("tournament_team_registrations_payment_updated_byTousers")
+  tournaments                                                                           tournaments[]
+  user_roles                                                                            user_roles[]
 
+  @@index([block_source_action_id], map: "users_block_source_action_idx")
 }

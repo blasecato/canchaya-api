@@ -165,11 +165,11 @@ export class AssociationsController {
   }
 
   @Get()
-  @RequireRoles('SUPER_ADMIN', 'PLAYER')
+  @RequireRoles('SUPER_ADMIN', 'PLAYER', 'REFEREE')
   @ApiOperation({
     summary: 'Listar las asociaciones visibles para el usuario',
     description:
-      'SUPER_ADMIN consulta todas las asociaciones; PLAYER consulta únicamente las asociaciones activas.',
+      'SUPER_ADMIN consulta todas las asociaciones; PLAYER y REFEREE consultan únicamente las asociaciones activas.',
   })
   @ApiOkResponse({
     description: 'Listado de asociaciones con propietario y métricas.',
@@ -219,7 +219,7 @@ export class AssociationsController {
   }
 
   @Get(':id/tournaments')
-  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER', 'REFEREE')
   @ApiOperation({
     summary: 'Listar los torneos disponibles de una asociación',
   })
@@ -250,7 +250,7 @@ export class AssociationsController {
   }
 
   @Get(':id')
-  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER', 'REFEREE')
   @ApiOperation({ summary: 'Consultar una asociación por ID' })
   @ApiParam({ name: 'id', example: '1', type: String })
   @ApiOkResponse({

@@ -23,6 +23,7 @@ describe('AssociationsService', () => {
   const transactionAssociationsUpdate = jest.fn();
   const transactionUserRolesUpsert = jest.fn();
   const transactionUserRolesFindMany = jest.fn();
+  const transactionNotificationsCreate = jest.fn();
   const transactionClient = {
     associations: {
       create: transactionAssociationsCreate,
@@ -35,6 +36,7 @@ describe('AssociationsService', () => {
       findMany: transactionUserRolesFindMany,
       upsert: transactionUserRolesUpsert,
     },
+    notifications: { create: transactionNotificationsCreate },
   };
   const prismaTransaction = jest.fn();
   const prisma = {
@@ -58,9 +60,8 @@ describe('AssociationsService', () => {
     format: 'png',
     deliveryType: 'upload' as const,
   });
-  const deleteImage = jest.fn(
-    async (image: { url?: string | null }) =>
-      deleteByPublicUrl(image.url ?? null),
+  const deleteImage = jest.fn(async (image: { url?: string | null }) =>
+    deleteByPublicUrl(image.url ?? null),
   );
   const imageStorage = {
     saveAssociationLogo,
@@ -175,8 +176,7 @@ describe('AssociationsService', () => {
           logo_url: '/uploads/associations/logo.png',
           logo_public_id: 'public:/uploads/associations/logo.png',
           cover_url: '/uploads/associations/covers/cover.png',
-          cover_public_id:
-            'public:/uploads/associations/covers/cover.png',
+          cover_public_id: 'public:/uploads/associations/covers/cover.png',
           owner_user_id: 2n,
           status: 'active',
         },
@@ -550,7 +550,9 @@ describe('AssociationsService', () => {
       expect(userRolesFindMany).toHaveBeenCalledWith({
         where: {
           user_id: 1n,
-          role_code: { in: ['SUPER_ADMIN', 'ASSOCIATION_ADMIN'] },
+          role_code: {
+            in: ['SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER', 'REFEREE'],
+          },
         },
         select: { role_code: true },
       });
@@ -558,7 +560,9 @@ describe('AssociationsService', () => {
         where: {
           association_id: 5n,
           status: 'active',
-          phase: { notIn: ['draft', 'finished', 'cancelled'] },
+          phase: {
+            in: ['registration', 'validation', 'scheduled', 'in_progress', 'finished'],
+          },
         },
         orderBy: [{ start_date: 'asc' }, { id: 'asc' }],
         select: associationTournamentResponseSelect,

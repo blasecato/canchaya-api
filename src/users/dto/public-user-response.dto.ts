@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { USER_GENDERS, type UserGender } from '../user-gender.constants';
 
 export class PublicUserResponseDto {
   @ApiProperty({ example: '1', type: String })
@@ -18,6 +19,9 @@ export class PublicUserResponseDto {
 
   @ApiProperty({ example: 'Pitalito', nullable: true })
   birthCity!: string | null;
+
+  @ApiProperty({ enum: USER_GENDERS, nullable: true })
+  gender!: UserGender | null;
 
   @ApiProperty({ example: 'maria@example.com', format: 'email' })
   email!: string;

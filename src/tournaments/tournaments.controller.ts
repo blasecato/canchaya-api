@@ -55,7 +55,9 @@ const tournamentImageUploadOptions = {
   limits: {
     files: 21,
     fileSize: MAX_IMAGE_SIZE_BYTES,
-    fields: 23,
+    // 22 text fields, 3 team limits, and the sponsors JSON field.
+    fields: 26,
+    // All 26 fields plus the tournament photo and up to 20 sponsor logos.
     parts: 48,
   },
   fileFilter: (

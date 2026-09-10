@@ -18,10 +18,14 @@ export declare const ModelName: {
     readonly fines: "fines";
     readonly match_referees: "match_referees";
     readonly matches: "matches";
+    readonly referee_availability: "referee_availability";
+    readonly referee_assignment_events: "referee_assignment_events";
     readonly player_match_stats: "player_match_stats";
     readonly roles: "roles";
     readonly sponsors: "sponsors";
     readonly suspensions: "suspensions";
+    readonly disciplinary_appeals: "disciplinary_appeals";
+    readonly disciplinary_events: "disciplinary_events";
     readonly team_members: "team_members";
     readonly teams: "teams";
     readonly tournament_administrators: "tournament_administrators";
@@ -30,7 +34,9 @@ export declare const ModelName: {
     readonly tournament_team_players: "tournament_team_players";
     readonly tournament_team_registrations: "tournament_team_registrations";
     readonly notifications: "notifications";
+    readonly notification_preferences: "notification_preferences";
     readonly tournament_registration_events: "tournament_registration_events";
+    readonly tournament_lifecycle_events: "tournament_lifecycle_events";
     readonly tournament_types: "tournament_types";
     readonly tournaments: "tournaments";
     readonly user_roles: "user_roles";
@@ -91,10 +97,14 @@ export declare const Disciplinary_actionsScalarFieldEnum: {
     readonly occurred_at: "occurred_at";
     readonly reported_by: "reported_by";
     readonly decision_status: "decision_status";
+    readonly review_started_by: "review_started_by";
+    readonly review_started_at: "review_started_at";
     readonly decided_by: "decided_by";
     readonly decided_at: "decided_at";
     readonly decision_notes: "decision_notes";
+    readonly appeal_deadline: "appeal_deadline";
     readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
 };
 export type Disciplinary_actionsScalarFieldEnum = (typeof Disciplinary_actionsScalarFieldEnum)[keyof typeof Disciplinary_actionsScalarFieldEnum];
 export declare const FinesScalarFieldEnum: {
@@ -109,6 +119,7 @@ export declare const FinesScalarFieldEnum: {
     readonly notes: "notes";
     readonly created_by: "created_by";
     readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
 };
 export type FinesScalarFieldEnum = (typeof FinesScalarFieldEnum)[keyof typeof FinesScalarFieldEnum];
 export declare const Match_refereesScalarFieldEnum: {
@@ -117,7 +128,13 @@ export declare const Match_refereesScalarFieldEnum: {
     readonly referee_id: "referee_id";
     readonly referee_role: "referee_role";
     readonly assignment_status: "assignment_status";
+    readonly assigned_by: "assigned_by";
+    readonly responded_at: "responded_at";
+    readonly response_notes: "response_notes";
+    readonly replaced_referee_id: "replaced_referee_id";
+    readonly replacement_reason: "replacement_reason";
     readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
 };
 export type Match_refereesScalarFieldEnum = (typeof Match_refereesScalarFieldEnum)[keyof typeof Match_refereesScalarFieldEnum];
 export declare const MatchesScalarFieldEnum: {
@@ -132,11 +149,35 @@ export declare const MatchesScalarFieldEnum: {
     readonly home_score: "home_score";
     readonly away_score: "away_score";
     readonly status: "status";
+    readonly duration_minutes: "duration_minutes";
     readonly notes: "notes";
     readonly created_at: "created_at";
     readonly updated_at: "updated_at";
 };
 export type MatchesScalarFieldEnum = (typeof MatchesScalarFieldEnum)[keyof typeof MatchesScalarFieldEnum];
+export declare const Referee_availabilityScalarFieldEnum: {
+    readonly id: "id";
+    readonly referee_id: "referee_id";
+    readonly starts_at: "starts_at";
+    readonly ends_at: "ends_at";
+    readonly notes: "notes";
+    readonly status: "status";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Referee_availabilityScalarFieldEnum = (typeof Referee_availabilityScalarFieldEnum)[keyof typeof Referee_availabilityScalarFieldEnum];
+export declare const Referee_assignment_eventsScalarFieldEnum: {
+    readonly id: "id";
+    readonly match_id: "match_id";
+    readonly referee_id: "referee_id";
+    readonly actor_user_id: "actor_user_id";
+    readonly event_type: "event_type";
+    readonly previous_status: "previous_status";
+    readonly new_status: "new_status";
+    readonly reason: "reason";
+    readonly created_at: "created_at";
+};
+export type Referee_assignment_eventsScalarFieldEnum = (typeof Referee_assignment_eventsScalarFieldEnum)[keyof typeof Referee_assignment_eventsScalarFieldEnum];
 export declare const Player_match_statsScalarFieldEnum: {
     readonly id: "id";
     readonly match_id: "match_id";
@@ -181,10 +222,36 @@ export declare const SuspensionsScalarFieldEnum: {
     readonly end_date: "end_date";
     readonly reason: "reason";
     readonly status: "status";
+    readonly served_matches: "served_matches";
+    readonly completed_at: "completed_at";
     readonly created_by: "created_by";
     readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
 };
 export type SuspensionsScalarFieldEnum = (typeof SuspensionsScalarFieldEnum)[keyof typeof SuspensionsScalarFieldEnum];
+export declare const Disciplinary_appealsScalarFieldEnum: {
+    readonly id: "id";
+    readonly disciplinary_action_id: "disciplinary_action_id";
+    readonly player_id: "player_id";
+    readonly message: "message";
+    readonly status: "status";
+    readonly reviewed_by: "reviewed_by";
+    readonly reviewed_at: "reviewed_at";
+    readonly resolution_notes: "resolution_notes";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Disciplinary_appealsScalarFieldEnum = (typeof Disciplinary_appealsScalarFieldEnum)[keyof typeof Disciplinary_appealsScalarFieldEnum];
+export declare const Disciplinary_eventsScalarFieldEnum: {
+    readonly id: "id";
+    readonly disciplinary_action_id: "disciplinary_action_id";
+    readonly actor_user_id: "actor_user_id";
+    readonly event_type: "event_type";
+    readonly message: "message";
+    readonly metadata: "metadata";
+    readonly created_at: "created_at";
+};
+export type Disciplinary_eventsScalarFieldEnum = (typeof Disciplinary_eventsScalarFieldEnum)[keyof typeof Disciplinary_eventsScalarFieldEnum];
 export declare const Team_membersScalarFieldEnum: {
     readonly team_id: "team_id";
     readonly user_id: "user_id";
@@ -260,6 +327,11 @@ export declare const Tournament_team_registrationsScalarFieldEnum: {
     readonly reviewed_by: "reviewed_by";
     readonly review_notes: "review_notes";
     readonly reviewed_at: "reviewed_at";
+    readonly payment_status: "payment_status";
+    readonly amount_paid: "amount_paid";
+    readonly payment_notes: "payment_notes";
+    readonly payment_updated_by: "payment_updated_by";
+    readonly payment_updated_at: "payment_updated_at";
     readonly group_name: "group_name";
     readonly seed: "seed";
     readonly points: "points";
@@ -271,15 +343,30 @@ export declare const NotificationsScalarFieldEnum: {
     readonly id: "id";
     readonly user_id: "user_id";
     readonly type: "type";
+    readonly event_code: "event_code";
+    readonly deduplication_key: "deduplication_key";
     readonly title: "title";
     readonly message: "message";
     readonly entity_type: "entity_type";
     readonly entity_id: "entity_id";
     readonly metadata: "metadata";
+    readonly scheduled_for: "scheduled_for";
     readonly read_at: "read_at";
     readonly created_at: "created_at";
 };
 export type NotificationsScalarFieldEnum = (typeof NotificationsScalarFieldEnum)[keyof typeof NotificationsScalarFieldEnum];
+export declare const Notification_preferencesScalarFieldEnum: {
+    readonly user_id: "user_id";
+    readonly match_scheduled_enabled: "match_scheduled_enabled";
+    readonly match_updates_enabled: "match_updates_enabled";
+    readonly match_reminders_enabled: "match_reminders_enabled";
+    readonly reminder_hours_before: "reminder_hours_before";
+    readonly email_enabled: "email_enabled";
+    readonly whatsapp_enabled: "whatsapp_enabled";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Notification_preferencesScalarFieldEnum = (typeof Notification_preferencesScalarFieldEnum)[keyof typeof Notification_preferencesScalarFieldEnum];
 export declare const Tournament_registration_eventsScalarFieldEnum: {
     readonly id: "id";
     readonly tournament_id: "tournament_id";
@@ -290,6 +377,16 @@ export declare const Tournament_registration_eventsScalarFieldEnum: {
     readonly created_at: "created_at";
 };
 export type Tournament_registration_eventsScalarFieldEnum = (typeof Tournament_registration_eventsScalarFieldEnum)[keyof typeof Tournament_registration_eventsScalarFieldEnum];
+export declare const Tournament_lifecycle_eventsScalarFieldEnum: {
+    readonly id: "id";
+    readonly tournament_id: "tournament_id";
+    readonly actor_user_id: "actor_user_id";
+    readonly from_phase: "from_phase";
+    readonly to_phase: "to_phase";
+    readonly reason: "reason";
+    readonly created_at: "created_at";
+};
+export type Tournament_lifecycle_eventsScalarFieldEnum = (typeof Tournament_lifecycle_eventsScalarFieldEnum)[keyof typeof Tournament_lifecycle_eventsScalarFieldEnum];
 export declare const Tournament_typesScalarFieldEnum: {
     readonly id: "id";
     readonly name: "name";
@@ -309,6 +406,10 @@ export declare const TournamentsScalarFieldEnum: {
     readonly tournament_type_id: "tournament_type_id";
     readonly sport_type: "sport_type";
     readonly modality: "modality";
+    readonly category_name: "category_name";
+    readonly category_min_age: "category_min_age";
+    readonly category_max_age: "category_max_age";
+    readonly category_gender: "category_gender";
     readonly start_date: "start_date";
     readonly end_date: "end_date";
     readonly registration_start_date: "registration_start_date";
@@ -347,6 +448,7 @@ export declare const UsersScalarFieldEnum: {
     readonly full_name: "full_name";
     readonly birth_date: "birth_date";
     readonly birth_city: "birth_city";
+    readonly gender: "gender";
     readonly email: "email";
     readonly phone: "phone";
     readonly photo_url: "photo_url";
@@ -363,6 +465,7 @@ export declare const UsersScalarFieldEnum: {
     readonly blocked_until: "blocked_until";
     readonly block_reason: "block_reason";
     readonly blocked_by: "blocked_by";
+    readonly block_source_action_id: "block_source_action_id";
     readonly created_at: "created_at";
     readonly updated_at: "updated_at";
 };

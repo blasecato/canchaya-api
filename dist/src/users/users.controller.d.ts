@@ -23,6 +23,7 @@ export declare class UsersController {
         full_name: string;
         birth_date: Date;
         birth_city: string | null;
+        gender: string | null;
         document_front_url: string | null;
         document_front_public_id: string | null;
         document_front_format: string | null;
@@ -33,6 +34,7 @@ export declare class UsersController {
         blocked_until: Date | null;
         block_reason: string | null;
         blocked_by: bigint | null;
+        block_source_action_id: bigint | null;
     }>;
     register(dto: RegisterPlayerDto, uploadedFiles: {
         photo?: UploadedImageFile[];
@@ -94,6 +96,7 @@ export declare class UsersController {
         full_name: string;
         birth_date: Date;
         birth_city: string | null;
+        gender: string | null;
         document_front_url: string | null;
         document_front_public_id: string | null;
         document_front_format: string | null;
@@ -104,5 +107,6 @@ export declare class UsersController {
         blocked_until: Date | null;
         block_reason: string | null;
         blocked_by: bigint | null;
+        block_source_action_id: bigint | null;
     }>;
 }

@@ -24,11 +24,15 @@ const roles_guard_1 = require("../auth/guards/roles.guard");
 const parse_big_int_pipe_1 = require("../common/pipes/parse-big-int.pipe");
 const uploads_constants_1 = require("../uploads/uploads.constants");
 const list_tournaments_query_dto_1 = require("./dto/list-tournaments-query.dto");
+const tournament_lifecycle_response_dto_1 = require("./dto/tournament-lifecycle-response.dto");
+const transition_tournament_dto_1 = require("./dto/transition-tournament.dto");
 const tournament_catalog_response_dto_1 = require("./dto/tournament-catalog-response.dto");
 const tournaments_service_1 = require("./tournaments.service");
+const tournament_lifecycle_service_1 = require("./tournament-lifecycle.service");
 const update_tournament_rules_dto_1 = require("./dto/update-tournament-rules.dto");
 const tournament_sponsor_input_dto_1 = require("./dto/tournament-sponsor-input.dto");
 const review_team_registration_dto_1 = require("./dto/review-team-registration.dto");
+const registration_payment_dto_1 = require("./dto/registration-payment.dto");
 const register_team_dto_1 = require("./dto/register-team.dto");
 const sponsorLogoUploadOptions = {
     limits: { files: 1, fileSize: uploads_constants_1.MAX_IMAGE_SIZE_BYTES, fields: 20, parts: 22 },
@@ -42,8 +46,10 @@ const sponsorLogoUploadOptions = {
 };
 let TournamentCatalogController = class TournamentCatalogController {
     tournamentsService;
-    constructor(tournamentsService) {
+    tournamentLifecycleService;
+    constructor(tournamentsService, tournamentLifecycleService) {
         this.tournamentsService = tournamentsService;
+        this.tournamentLifecycleService = tournamentLifecycleService;
     }
     findFilterOptions() {
         return this.tournamentsService.findCatalogFilterOptions();
@@ -56,6 +62,12 @@ let TournamentCatalogController = class TournamentCatalogController {
     }
     findCatalogOne(tournamentId, request) {
         return this.tournamentsService.findCatalogOne(tournamentId, request.auth.userId);
+    }
+    findLifecycle(tournamentId, request) {
+        return this.tournamentLifecycleService.findLifecycle(tournamentId, request.auth.userId);
+    }
+    transitionLifecycle(tournamentId, request, dto) {
+        return this.tournamentLifecycleService.transition(tournamentId, request.auth.userId, dto);
     }
     findSponsors(tournamentId, request) {
         return this.tournamentsService.findSponsors(tournamentId, request.auth.userId);
@@ -74,6 +86,12 @@ let TournamentCatalogController = class TournamentCatalogController {
     }
     registerTeam(tournamentId, request, dto) {
         return this.tournamentsService.registerTeam(tournamentId, BigInt(dto.teamId), request.auth.userId);
+    }
+    findRegistrationPayments(tournamentId, request) {
+        return this.tournamentsService.findRegistrationPayments(tournamentId, request.auth.userId);
+    }
+    updateRegistrationPayment(tournamentId, teamId, request, dto) {
+        return this.tournamentsService.updateRegistrationPayment(tournamentId, teamId, request.auth.userId, dto);
     }
     findRegistrationDetail(tournamentId, teamId, request) {
         return this.tournamentsService.findRegistrationDetail(tournamentId, teamId, request.auth.userId);
@@ -133,6 +151,29 @@ __decorate([
     __metadata("design:paramtypes", [BigInt, Object]),
     __metadata("design:returntype", Promise)
 ], TournamentCatalogController.prototype, "findCatalogOne", null);
+__decorate([
+    (0, common_1.Get)(':tournamentId/lifecycle'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
+    (0, swagger_1.ApiOperation)({ summary: 'Consultar el ciclo de vida y sus requisitos' }),
+    (0, swagger_1.ApiOkResponse)({ type: tournament_lifecycle_response_dto_1.TournamentLifecycleResponseDto }),
+    __param(0, (0, common_1.Param)('tournamentId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object]),
+    __metadata("design:returntype", Promise)
+], TournamentCatalogController.prototype, "findLifecycle", null);
+__decorate([
+    (0, common_1.Patch)(':tournamentId/lifecycle'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
+    (0, swagger_1.ApiOperation)({ summary: 'Avanzar o cancelar el ciclo de vida del torneo' }),
+    (0, swagger_1.ApiOkResponse)({ type: tournament_lifecycle_response_dto_1.TournamentLifecycleResponseDto }),
+    __param(0, (0, common_1.Param)('tournamentId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object, transition_tournament_dto_1.TransitionTournamentDto]),
+    __metadata("design:returntype", Promise)
+], TournamentCatalogController.prototype, "transitionLifecycle", null);
 __decorate([
     (0, common_1.Get)(':tournamentId/sponsors'),
     (0, swagger_1.ApiOperation)({
@@ -224,6 +265,34 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TournamentCatalogController.prototype, "registerTeam", null);
 __decorate([
+    (0, common_1.Get)(':tournamentId/payments'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Consultar el estado financiero de las inscripciones del torneo',
+    }),
+    (0, swagger_1.ApiOkResponse)({ type: registration_payment_dto_1.TournamentPaymentsResponseDto }),
+    __param(0, (0, common_1.Param)('tournamentId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object]),
+    __metadata("design:returntype", Promise)
+], TournamentCatalogController.prototype, "findRegistrationPayments", null);
+__decorate([
+    (0, common_1.Patch)(':tournamentId/registrations/:teamId/payment'),
+    (0, require_roles_decorator_1.RequireRoles)('ASSOCIATION_ADMIN'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Registrar manualmente el estado del pago de una inscripción aprobada',
+    }),
+    (0, swagger_1.ApiOkResponse)({ type: registration_payment_dto_1.TournamentRegistrationPaymentResponseDto }),
+    __param(0, (0, common_1.Param)('tournamentId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Param)('teamId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(2, (0, common_1.Req)()),
+    __param(3, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, BigInt, Object, registration_payment_dto_1.UpdateRegistrationPaymentDto]),
+    __metadata("design:returntype", Promise)
+], TournamentCatalogController.prototype, "updateRegistrationPayment", null);
+__decorate([
     (0, common_1.Get)(':tournamentId/registrations/:teamId'),
     openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Param)('tournamentId', parse_big_int_pipe_1.ParseBigIntPipe)),
@@ -283,6 +352,7 @@ exports.TournamentCatalogController = TournamentCatalogController = __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'REFEREE', 'PLAYER'),
     (0, common_1.Controller)('tournaments'),
-    __metadata("design:paramtypes", [tournaments_service_1.TournamentsService])
+    __metadata("design:paramtypes", [tournaments_service_1.TournamentsService,
+        tournament_lifecycle_service_1.TournamentLifecycleService])
 ], TournamentCatalogController);
 //# sourceMappingURL=tournament-catalog.controller.js.map

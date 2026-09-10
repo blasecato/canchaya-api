@@ -7,5 +7,4 @@ export declare class CreateFineDto {
     paidAt?: string | null;
     paymentReference?: string | null;
     notes?: string | null;
-    createdBy: string;
 }

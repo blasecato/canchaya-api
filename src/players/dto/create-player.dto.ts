@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsDateString,
   IsEmail,
+  IsIn,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -10,6 +11,10 @@ import {
   MinLength,
 } from 'class-validator';
 import { IsBcryptPassword } from '../../common/decorators/is-bcrypt-password.decorator';
+import {
+  USER_GENDERS,
+  type UserGender,
+} from '../../users/user-gender.constants';
 
 export class CreatePlayerDto {
   @ApiProperty({ example: '1020304050' })
@@ -34,6 +39,10 @@ export class CreatePlayerDto {
   @Matches(/^\d{4}-\d{2}-\d{2}$/)
   @IsDateString({ strict: true, strictSeparator: true })
   birthDate!: string;
+
+  @ApiProperty({ enum: USER_GENDERS, example: 'male' })
+  @IsIn(USER_GENDERS)
+  gender!: UserGender;
 
   @ApiProperty({ example: 'maria@example.com' })
   @IsEmail()

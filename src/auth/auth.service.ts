@@ -47,6 +47,7 @@ export class AuthService {
         blocked_until: null,
         block_reason: null,
         blocked_by: null,
+        block_source_action_id: null,
         updated_at: now,
       },
     });
@@ -67,9 +68,9 @@ export class AuthService {
 
     const hasActiveBlock = Boolean(
       user &&
-        user.status === 'inactive' &&
-        user.block_reason &&
-        (!user.blocked_until || user.blocked_until.getTime() > now.getTime()),
+      user.status === 'inactive' &&
+      user.block_reason &&
+      (!user.blocked_until || user.blocked_until.getTime() > now.getTime()),
     );
 
     if (
@@ -154,9 +155,9 @@ export class AuthService {
     const now = new Date();
     const blockHasExpired = Boolean(
       session.users.status === 'inactive' &&
-        session.users.block_reason &&
-        session.users.blocked_until &&
-        session.users.blocked_until.getTime() <= now.getTime(),
+      session.users.block_reason &&
+      session.users.blocked_until &&
+      session.users.blocked_until.getTime() <= now.getTime(),
     );
 
     if (blockHasExpired) {
@@ -172,6 +173,7 @@ export class AuthService {
           blocked_until: null,
           block_reason: null,
           blocked_by: null,
+          block_source_action_id: null,
           updated_at: now,
         },
       });
@@ -179,10 +181,10 @@ export class AuthService {
 
     const isBlocked = Boolean(
       !blockHasExpired &&
-        session.users.status === 'inactive' &&
-        session.users.block_reason &&
-        (!session.users.blocked_until ||
-          session.users.blocked_until.getTime() > now.getTime()),
+      session.users.status === 'inactive' &&
+      session.users.block_reason &&
+      (!session.users.blocked_until ||
+        session.users.blocked_until.getTime() > now.getTime()),
     );
 
     if (session.users.status !== 'active' && !isBlocked && !blockHasExpired) {

@@ -5,5 +5,4 @@ export declare class CreateSuspensionDto {
     endDate?: string | null;
     reason?: string | null;
     status?: string;
-    createdBy: string;
 }

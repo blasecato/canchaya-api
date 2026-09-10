@@ -6,6 +6,8 @@ import {
   IsIn,
   IsInt,
   IsOptional,
+  IsString,
+  MaxLength,
   Max,
   Min,
 } from 'class-validator';
@@ -13,7 +15,11 @@ import { IsBigIntString } from '../../common/decorators/is-big-int-string.decora
 import {
   TOURNAMENT_PHASES,
   type TournamentPhase,
-} from './create-tournament.dto';
+} from '../tournament-lifecycle.constants';
+import {
+  TOURNAMENT_CATEGORY_GENDERS,
+  type TournamentCategoryGender,
+} from '../tournament-category.constants';
 
 const trimString = ({ value }: TransformFnParams): unknown =>
   typeof value === 'string' ? value.trim() : value;
@@ -38,6 +44,19 @@ export class ListTournamentsQueryDto {
   @IsOptional()
   @IsBigIntString()
   tournamentTypeId?: string;
+
+  @ApiPropertyOptional({ example: 'Sub-15', maxLength: 120 })
+  @Transform(trimString)
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  category?: string;
+
+  @ApiPropertyOptional({ enum: TOURNAMENT_CATEGORY_GENDERS })
+  @Transform(trimString)
+  @IsOptional()
+  @IsIn(TOURNAMENT_CATEGORY_GENDERS)
+  categoryGender?: TournamentCategoryGender;
 
   @ApiPropertyOptional({ example: '2026-08-01', format: 'date' })
   @IsOptional()

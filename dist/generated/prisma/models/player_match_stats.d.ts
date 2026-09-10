@@ -467,13 +467,6 @@ export type player_match_statsUncheckedUpdateManyWithoutMatchesNestedInput = {
     updateMany?: Prisma.player_match_statsUpdateManyWithWhereWithoutMatchesInput | Prisma.player_match_statsUpdateManyWithWhereWithoutMatchesInput[];
     deleteMany?: Prisma.player_match_statsScalarWhereInput | Prisma.player_match_statsScalarWhereInput[];
 };
-export type IntFieldUpdateOperationsInput = {
-    set?: number;
-    increment?: number;
-    decrement?: number;
-    multiply?: number;
-    divide?: number;
-};
 export type player_match_statsCreateNestedManyWithoutTournament_team_playersInput = {
     create?: Prisma.XOR<Prisma.player_match_statsCreateWithoutTournament_team_playersInput, Prisma.player_match_statsUncheckedCreateWithoutTournament_team_playersInput> | Prisma.player_match_statsCreateWithoutTournament_team_playersInput[] | Prisma.player_match_statsUncheckedCreateWithoutTournament_team_playersInput[];
     connectOrCreate?: Prisma.player_match_statsCreateOrConnectWithoutTournament_team_playersInput | Prisma.player_match_statsCreateOrConnectWithoutTournament_team_playersInput[];

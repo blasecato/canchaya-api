@@ -16,6 +16,7 @@ const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const is_big_int_string_decorator_1 = require("../../common/decorators/is-big-int-string.decorator");
 const is_optional_non_nullable_decorator_1 = require("../../common/decorators/is-optional-non-nullable.decorator");
+const football_constants_1 = require("../../common/constants/football.constants");
 class CreateTeamDto {
     name;
     sportType;
@@ -26,7 +27,7 @@ class CreateTeamDto {
     memberUserIds;
     status;
     static _OPENAPI_METADATA_FACTORY() {
-        return { name: { required: true, type: () => String, maxLength: 120 }, sportType: { required: true, type: () => String, maxLength: 50 }, modality: { required: true, type: () => String, maxLength: 50 }, primaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, secondaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, captainUserId: { required: false, type: () => String }, memberUserIds: { required: false, type: () => [String], uniqueItems: true }, status: { required: false, type: () => String, enum: ['active', 'inactive'] } };
+        return { name: { required: true, type: () => String, maxLength: 120 }, sportType: { required: true, type: () => String, enum: [football_constants_1.FOOTBALL_SPORT_TYPE] }, modality: { required: true, enum: ["F\u00FAtbol 5", "F\u00FAtbol 7", "F\u00FAtbol 11"], enum: football_constants_1.FOOTBALL_MODALITIES }, primaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, secondaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, captainUserId: { required: false, type: () => String }, memberUserIds: { required: false, type: () => [String], uniqueItems: true }, status: { required: false, type: () => String, enum: ['active', 'inactive'] } };
     }
 }
 exports.CreateTeamDto = CreateTeamDto;
@@ -38,17 +39,21 @@ __decorate([
     __metadata("design:type", String)
 ], CreateTeamDto.prototype, "name", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'football' }),
+    (0, swagger_1.ApiProperty)({ enum: [football_constants_1.FOOTBALL_SPORT_TYPE], example: football_constants_1.FOOTBALL_SPORT_TYPE }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.MaxLength)(50),
-    __metadata("design:type", String)
+    (0, class_validator_1.IsIn)([football_constants_1.FOOTBALL_SPORT_TYPE], {
+        message: 'El único deporte permitido es Fútbol.',
+    }),
+    __metadata("design:type", Object)
 ], CreateTeamDto.prototype, "sportType", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: '11v11' }),
+    (0, swagger_1.ApiProperty)({ enum: football_constants_1.FOOTBALL_MODALITIES, example: 'Fútbol 11' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.MaxLength)(50),
+    (0, class_validator_1.IsIn)(football_constants_1.FOOTBALL_MODALITIES, {
+        message: 'La modalidad debe ser Fútbol 5, Fútbol 7 o Fútbol 11.',
+    }),
     __metadata("design:type", String)
 ], CreateTeamDto.prototype, "modality", void 0);
 __decorate([

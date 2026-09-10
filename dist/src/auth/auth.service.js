@@ -45,6 +45,7 @@ let AuthService = class AuthService {
                 blocked_until: null,
                 block_reason: null,
                 blocked_by: null,
+                block_source_action_id: null,
                 updated_at: now,
             },
         });
@@ -147,6 +148,7 @@ let AuthService = class AuthService {
                     blocked_until: null,
                     block_reason: null,
                     blocked_by: null,
+                    block_source_action_id: null,
                     updated_at: now,
                 },
             });

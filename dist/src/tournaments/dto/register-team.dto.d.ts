@@ -7,6 +7,8 @@ export declare class CaptainTeamOptionResponseDto {
     photoUrl: string | null;
     memberCount: number;
     registrationStatus: string | null;
+    eligible: boolean;
+    eligibilityMessage: string | null;
 }
 export declare class TeamRegistrationResponseDto {
     tournamentId: string;
