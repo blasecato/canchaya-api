@@ -120,7 +120,7 @@ export class UsersController {
         limits: {
           files: 3,
           fileSize: MAX_IMAGE_SIZE_BYTES,
-          fields: 8,
+          fields: 9,
           parts: 12,
         },
         fileFilter: (
