@@ -69,6 +69,9 @@ let TeamsController = class TeamsController {
     findTournamentRosters(id, request) {
         return this.teamsService.findTournamentRosters(id, request.auth.userId);
     }
+    findMatches(id, request) {
+        return this.teamsService.findMatches(id, request.auth.userId);
+    }
     updateTournamentRosterPlayer(id, tournamentId, playerId, request, dto) {
         return this.teamsService.updateTournamentRosterPlayer(id, tournamentId, playerId, request.auth.userId, dto);
     }
@@ -171,6 +174,19 @@ __decorate([
     __metadata("design:paramtypes", [BigInt, Object]),
     __metadata("design:returntype", Promise)
 ], TeamsController.prototype, "findTournamentRosters", null);
+__decorate([
+    (0, common_1.Get)(':id/matches'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Consultar resultados recientes y próximos partidos del equipo',
+    }),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object]),
+    __metadata("design:returntype", void 0)
+], TeamsController.prototype, "findMatches", null);
 __decorate([
     (0, common_1.Patch)(':id/rosters/:tournamentId/players/:playerId'),
     (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER'),

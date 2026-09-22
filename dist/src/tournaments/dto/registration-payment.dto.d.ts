@@ -20,6 +20,21 @@ export declare class TournamentRegistrationPaymentResponseDto {
     updatedAt: string | null;
     updatedBy: RegistrationPaymentUserResponseDto | null;
 }
+export declare class MyTournamentTeamPaymentResponseDto {
+    teamId: string;
+    teamName: string;
+    paymentStatus: RegistrationPaymentStatus;
+    registrationFee: string;
+    amountPaid: string;
+    balanceDue: string;
+    updatedAt: string | null;
+}
+export declare class MyTournamentPaymentResponseDto {
+    tournamentId: string;
+    tournamentName: string;
+    currencyCode: string;
+    payment: MyTournamentTeamPaymentResponseDto;
+}
 export declare class TournamentPaymentSummaryResponseDto {
     totalTeams: number;
     paidTeams: number;

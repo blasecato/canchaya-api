@@ -56,6 +56,7 @@ import { UpdateTournamentRulesDto } from './dto/update-tournament-rules.dto';
 import { TournamentSponsorInputDto } from './dto/tournament-sponsor-input.dto';
 import { ReviewTeamRegistrationDto } from './dto/review-team-registration.dto';
 import {
+  MyTournamentPaymentResponseDto,
   TournamentPaymentsResponseDto,
   TournamentRegistrationPaymentResponseDto,
   UpdateRegistrationPaymentDto,
@@ -292,6 +293,22 @@ export class TournamentCatalogController {
     return this.tournamentsService.registerTeam(
       tournamentId,
       BigInt(dto.teamId),
+      request.auth.userId,
+    );
+  }
+
+  @Get(':tournamentId/my-payment')
+  @RequireRoles('PLAYER')
+  @ApiOperation({
+    summary: 'Consultar el pago del equipo del jugador autenticado',
+  })
+  @ApiOkResponse({ type: MyTournamentPaymentResponseDto })
+  findMyRegistrationPayment(
+    @Param('tournamentId', ParseBigIntPipe) tournamentId: bigint,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<MyTournamentPaymentResponseDto> {
+    return this.tournamentsService.findMyRegistrationPayment(
+      tournamentId,
       request.auth.userId,
     );
   }

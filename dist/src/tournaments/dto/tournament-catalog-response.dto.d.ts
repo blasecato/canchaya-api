@@ -26,6 +26,7 @@ export declare class TournamentStandingResponseDto {
     points: number;
 }
 export declare class TournamentDetailResponseDto extends TournamentCatalogItemResponseDto {
+    viewerTeamId: string | null;
     scorers: TournamentScorerResponseDto[];
     standings: TournamentStandingResponseDto[];
     matchesPlayed: number;

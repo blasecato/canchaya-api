@@ -226,10 +226,10 @@ export class CreateTournamentDto extends TournamentSponsorsInputDto {
   @Max(999_999_999_999.99)
   thirdPrize?: number;
 
-  @ApiProperty({ example: 16, minimum: 2 })
+  @ApiProperty({ example: 16, minimum: 6 })
   @Transform(toNumber)
   @IsInt()
-  @Min(2)
+  @Min(6)
   @Max(2_147_483_647)
   maxTeams!: number;
 

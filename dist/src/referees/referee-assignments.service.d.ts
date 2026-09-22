@@ -174,7 +174,7 @@ export declare class RefereeAssignmentsService {
             };
         };
     }>;
-    assertActiveAssignmentsCompatible(matchId: bigint, matchDate: Date | null, durationMinutes: number): Promise<void>;
+    assertActiveAssignmentsCompatible(matchId: bigint, matchDate: Date | null): Promise<void>;
     private findAssignment;
     private findAssignableMatch;
     private assertActiveReferee;

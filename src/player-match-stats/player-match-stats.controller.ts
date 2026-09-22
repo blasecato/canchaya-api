@@ -62,6 +62,22 @@ export class PlayerMatchStatsController {
     return this.playerMatchStatsService.findAll(request.auth.userId);
   }
 
+  @Get('match/:matchId')
+  @ApiParam({ name: 'matchId', example: '1', type: String })
+  @ApiOperation({
+    summary: 'Consultar el desglose de jugadores y goles de un partido',
+  })
+  @ApiOkResponse({ description: 'Plantillas y goles del partido.' })
+  findMatchDetail(
+    @Param('matchId', ParseBigIntPipe) matchId: bigint,
+    @Req() request: AuthenticatedRequest,
+  ) {
+    return this.playerMatchStatsService.findMatchDetail(
+      matchId,
+      request.auth.userId,
+    );
+  }
+
   @Get(':id')
   @ApiParam({ name: 'id', example: '1', type: String })
   @ApiOperation({ summary: 'Consultar estadísticas por ID' })

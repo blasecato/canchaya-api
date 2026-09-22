@@ -131,15 +131,20 @@ __decorate([
     __metadata("design:type", Number)
 ], TournamentStandingResponseDto.prototype, "points", void 0);
 class TournamentDetailResponseDto extends TournamentCatalogItemResponseDto {
+    viewerTeamId;
     scorers;
     standings;
     matchesPlayed;
     totalGoals;
     static _OPENAPI_METADATA_FACTORY() {
-        return { scorers: { required: true, type: () => [require("./tournament-catalog-response.dto").TournamentScorerResponseDto] }, standings: { required: true, type: () => [require("./tournament-catalog-response.dto").TournamentStandingResponseDto] }, matchesPlayed: { required: true, type: () => Number }, totalGoals: { required: true, type: () => Number } };
+        return { viewerTeamId: { required: true, type: () => String, nullable: true }, scorers: { required: true, type: () => [require("./tournament-catalog-response.dto").TournamentScorerResponseDto] }, standings: { required: true, type: () => [require("./tournament-catalog-response.dto").TournamentStandingResponseDto] }, matchesPlayed: { required: true, type: () => Number }, totalGoals: { required: true, type: () => Number } };
     }
 }
 exports.TournamentDetailResponseDto = TournamentDetailResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '40', type: String, nullable: true }),
+    __metadata("design:type", Object)
+], TournamentDetailResponseDto.prototype, "viewerTeamId", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ type: TournamentScorerResponseDto, isArray: true }),
     __metadata("design:type", Array)

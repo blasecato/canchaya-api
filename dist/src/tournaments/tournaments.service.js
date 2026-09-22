@@ -21,6 +21,8 @@ const association_tournament_response_mapper_1 = require("../associations/associ
 const associations_service_1 = require("../associations/associations.service");
 const competition_access_service_1 = require("../authorization/competition-access.service");
 const football_constants_1 = require("../common/constants/football.constants");
+const competition_engine_1 = require("../competition/competition.engine");
+const competition_service_1 = require("../competition/competition.service");
 const prisma_service_1 = require("../prisma/prisma.service");
 const image_storage_service_1 = require("../uploads/image-storage.service");
 const tournament_catalog_mapper_1 = require("./tournament-catalog.mapper");
@@ -339,7 +341,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         const today = new Date();
         today.setUTCHours(0, 0, 0, 0);
         const registrationsAreOpen = tournament.status === 'active' &&
-            tournament.phase === 'registration' &&
+            ['registration', 'validation', 'scheduled'].includes(tournament.phase) &&
             (!tournament.registration_start_date ||
                 tournament.registration_start_date <= today) &&
             (!tournament.registration_end_date ||
@@ -485,6 +487,57 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
                 allPaid: partialTeams === 0 && unpaidTeams === 0,
             },
             registrations,
+        };
+    }
+    async findMyRegistrationPayment(tournamentId, requestingUserId) {
+        const registration = await this.prisma.tournament_team_registrations.findFirst({
+            where: {
+                tournament_id: tournamentId,
+                request_status: 'approved',
+                tournament_team_players: {
+                    some: {
+                        player_id: requestingUserId,
+                        registration_status: 'approved',
+                    },
+                },
+            },
+            select: {
+                team_id: true,
+                payment_status: true,
+                amount_paid: true,
+                payment_notes: true,
+                payment_updated_at: true,
+                teams: { select: { name: true } },
+                tournaments: {
+                    select: {
+                        id: true,
+                        name: true,
+                        registration_fee: true,
+                        currency_code: true,
+                    },
+                },
+                users_tournament_team_registrations_payment_updated_byTousers: {
+                    select: { id: true, full_name: true },
+                },
+            },
+        });
+        if (!registration) {
+            throw new common_1.NotFoundException('No tienes una inscripción aprobada en este torneo.');
+        }
+        const payment = this.toRegistrationPaymentResponse(registration, registration.tournaments.registration_fee);
+        return {
+            tournamentId: registration.tournaments.id.toString(),
+            tournamentName: registration.tournaments.name,
+            currencyCode: registration.tournaments.currency_code.trim(),
+            payment: {
+                teamId: payment.teamId,
+                teamName: payment.teamName,
+                paymentStatus: payment.paymentStatus,
+                registrationFee: payment.registrationFee,
+                amountPaid: payment.amountPaid,
+                balanceDue: payment.balanceDue,
+                updatedAt: payment.updatedAt,
+            },
         };
     }
     async updateRegistrationPayment(tournamentId, teamId, requestingUserId, dto) {
@@ -709,10 +762,10 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
             createdAt: registration.created_at.toISOString(),
             reviewedAt: registration.reviewed_at?.toISOString() ?? null,
             canReview: canManage &&
-                ['registration', 'validation'].includes(registration.tournaments.phase) &&
+                ['registration', 'validation', 'scheduled'].includes(registration.tournaments.phase) &&
                 registration.request_status === 'pending',
             canResubmit: isCaptain &&
-                ['registration', 'validation'].includes(registration.tournaments.phase) &&
+                ['registration', 'validation', 'scheduled'].includes(registration.tournaments.phase) &&
                 registration.request_status === 'changes_requested',
             events: registration.tournament_registration_events.map((event) => ({
                 id: event.id.toString(),
@@ -784,8 +837,8 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         if (registration.request_status !== 'pending') {
             throw new common_1.BadRequestException('Solo se pueden revisar solicitudes pendientes.');
         }
-        if (!['registration', 'validation'].includes(registration.tournaments.phase)) {
-            throw new common_1.BadRequestException('Las plantillas solo se pueden revisar durante Inscripciones o Validación.');
+        if (!['registration', 'validation', 'scheduled'].includes(registration.tournaments.phase)) {
+            throw new common_1.BadRequestException('Las plantillas se pueden revisar hasta antes de iniciar el torneo.');
         }
         if (dto.status === 'approved' &&
             registration.tournaments._count.tournament_team_registrations >=
@@ -836,6 +889,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
                     })),
                     skipDuplicates: true,
                 });
+                await (0, competition_service_1.assignApprovedTeamToCompetition)(transaction, tournamentId, teamId);
             }
             const recipientIds = [
                 ...new Set([
@@ -931,7 +985,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         if (registration.request_status !== 'changes_requested') {
             throw new common_1.BadRequestException('Esta solicitud no tiene cambios pendientes.');
         }
-        if (!['registration', 'validation'].includes(registration.tournaments.phase)) {
+        if (!['registration', 'validation', 'scheduled'].includes(registration.tournaments.phase)) {
             throw new common_1.BadRequestException('La plantilla ya está cerrada y no admite nuevos cambios.');
         }
         this.assertTeamRosterWithinTournamentLimits(registration.teams.team_members.length, registration.tournaments.min_players_per_team, registration.tournaments.max_players_per_team);
@@ -1067,7 +1121,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         if (!canManage && !this.isAvailable(tournament)) {
             throw new common_1.NotFoundException(`El torneo con ID ${tournamentId.toString()} no existe.`);
         }
-        const [registrations, players, playedMatches] = await Promise.all([
+        const [registrations, players, playedMatches, viewerRegistration] = await Promise.all([
             this.prisma.tournament_team_registrations.findMany({
                 where: { tournament_id: tournamentId, request_status: 'approved' },
                 select: {
@@ -1102,6 +1156,15 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
                     home_score: true,
                     away_score: true,
                 },
+            }),
+            this.prisma.tournament_team_players.findFirst({
+                where: {
+                    tournament_id: tournamentId,
+                    player_id: requestingUserId,
+                    registration_status: 'approved',
+                    tournament_team_registrations: { request_status: 'approved' },
+                },
+                select: { team_id: true },
             }),
         ]);
         const standings = registrations.map((registration) => {
@@ -1156,6 +1219,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
             .sort((left, right) => right.goals - left.goals || left.name.localeCompare(right.name, 'es'));
         return {
             ...(0, tournament_catalog_mapper_1.toTournamentCatalogItemResponse)(tournament, canManage),
+            viewerTeamId: viewerRegistration?.team_id.toString() ?? null,
             standings,
             scorers,
             matchesPlayed: playedMatches.length,
@@ -1427,6 +1491,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
                 await this.requireManagementPermission(transaction, associationId, requestingUserId);
                 const tournamentType = await this.findTournamentTypePlayerLimits(transaction, BigInt(createTournamentDto.tournamentTypeId));
                 this.assertTournamentPlayerRangeWithinType(tournamentType, createTournamentDto.minPlayersPerTeam, createTournamentDto.maxPlayersPerTeam);
+                this.assertTournamentCapacityWithinType(tournamentType, createTournamentDto.maxTeams);
                 const createdTournament = await transaction.tournaments.create({
                     data: {
                         association_id: associationId,
@@ -1537,6 +1602,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
                 this.assertTournamentPlayerRangeWithinType(tournamentType, updateTournamentDto.minPlayersPerTeam ??
                     persistedTournament.min_players_per_team, updateTournamentDto.maxPlayersPerTeam ??
                     persistedTournament.max_players_per_team);
+                this.assertTournamentCapacityWithinType(tournamentType, updateTournamentDto.maxTeams ?? persistedTournament.max_teams);
                 await transaction.tournaments.update({
                     where: {
                         id_association_id: {
@@ -1889,6 +1955,17 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
             maximumPlayers > tournamentType.max_players_per_team) {
             throw new common_1.BadRequestException(`El rango de jugadores por equipo para ${tournamentType.name} debe estar dentro de ${tournamentType.min_players_per_team} a ${tournamentType.max_players_per_team}.`);
         }
+    }
+    assertTournamentCapacityWithinType(tournamentType, maxTeams) {
+        const normalizedName = tournamentType.name
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLocaleLowerCase('es');
+        const directElimination = normalizedName.includes('eliminacion') &&
+            !normalizedName.includes('mixto');
+        if (directElimination &&
+            !competition_engine_1.DIRECT_KNOCKOUT_SIZES.includes(maxTeams))
+            throw new common_1.BadRequestException('Un torneo de eliminación directa debe tener 8, 16 o 32 equipos.');
     }
     assertTeamRosterWithinTournamentLimits(memberCount, minimumPlayers, maximumPlayers) {
         if (memberCount < minimumPlayers) {

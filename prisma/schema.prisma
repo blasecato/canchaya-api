@@ -151,6 +151,9 @@ model match_referees {
 model matches {
   id                                                                                              BigInt                        @id @default(autoincrement())
   tournament_id                                                                                   BigInt
+  competition_key                                                                                String?
+  home_penalties                                                                                 Int?
+  away_penalties                                                                                 Int?
   home_team_id                                                                                    BigInt
   away_team_id                                                                                    BigInt
   match_date                                                                                      DateTime?                     @db.Timestamptz(6)
@@ -175,6 +178,7 @@ model matches {
   referee_assignment_events                                                                       referee_assignment_events[]
 
   @@unique([id, tournament_id], map: "matches_id_tournament_uk")
+  @@unique([tournament_id, competition_key], map: "matches_competition_key_uk")
   @@index([away_team_id], map: "matches_away_team_idx")
   @@index([home_team_id], map: "matches_home_team_idx")
   @@index([tournament_id, match_date], map: "matches_tournament_date_idx")
@@ -547,6 +551,7 @@ model tournaments {
   id                            BigInt                          @id @default(autoincrement())
   association_id                BigInt
   name                          String
+  competition_plan              Json?
   description                   String?
   tournament_type_id            BigInt
   sport_type                    String

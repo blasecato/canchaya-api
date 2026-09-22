@@ -11,6 +11,8 @@ export type AggregateMatches = {
 export type MatchesAvgAggregateOutputType = {
     id: number | null;
     tournament_id: number | null;
+    home_penalties: number | null;
+    away_penalties: number | null;
     home_team_id: number | null;
     away_team_id: number | null;
     round_number: number | null;
@@ -21,6 +23,8 @@ export type MatchesAvgAggregateOutputType = {
 export type MatchesSumAggregateOutputType = {
     id: bigint | null;
     tournament_id: bigint | null;
+    home_penalties: number | null;
+    away_penalties: number | null;
     home_team_id: bigint | null;
     away_team_id: bigint | null;
     round_number: number | null;
@@ -31,6 +35,9 @@ export type MatchesSumAggregateOutputType = {
 export type MatchesMinAggregateOutputType = {
     id: bigint | null;
     tournament_id: bigint | null;
+    competition_key: string | null;
+    home_penalties: number | null;
+    away_penalties: number | null;
     home_team_id: bigint | null;
     away_team_id: bigint | null;
     match_date: Date | null;
@@ -48,6 +55,9 @@ export type MatchesMinAggregateOutputType = {
 export type MatchesMaxAggregateOutputType = {
     id: bigint | null;
     tournament_id: bigint | null;
+    competition_key: string | null;
+    home_penalties: number | null;
+    away_penalties: number | null;
     home_team_id: bigint | null;
     away_team_id: bigint | null;
     match_date: Date | null;
@@ -65,6 +75,9 @@ export type MatchesMaxAggregateOutputType = {
 export type MatchesCountAggregateOutputType = {
     id: number;
     tournament_id: number;
+    competition_key: number;
+    home_penalties: number;
+    away_penalties: number;
     home_team_id: number;
     away_team_id: number;
     match_date: number;
@@ -83,6 +96,8 @@ export type MatchesCountAggregateOutputType = {
 export type MatchesAvgAggregateInputType = {
     id?: true;
     tournament_id?: true;
+    home_penalties?: true;
+    away_penalties?: true;
     home_team_id?: true;
     away_team_id?: true;
     round_number?: true;
@@ -93,6 +108,8 @@ export type MatchesAvgAggregateInputType = {
 export type MatchesSumAggregateInputType = {
     id?: true;
     tournament_id?: true;
+    home_penalties?: true;
+    away_penalties?: true;
     home_team_id?: true;
     away_team_id?: true;
     round_number?: true;
@@ -103,6 +120,9 @@ export type MatchesSumAggregateInputType = {
 export type MatchesMinAggregateInputType = {
     id?: true;
     tournament_id?: true;
+    competition_key?: true;
+    home_penalties?: true;
+    away_penalties?: true;
     home_team_id?: true;
     away_team_id?: true;
     match_date?: true;
@@ -120,6 +140,9 @@ export type MatchesMinAggregateInputType = {
 export type MatchesMaxAggregateInputType = {
     id?: true;
     tournament_id?: true;
+    competition_key?: true;
+    home_penalties?: true;
+    away_penalties?: true;
     home_team_id?: true;
     away_team_id?: true;
     match_date?: true;
@@ -137,6 +160,9 @@ export type MatchesMaxAggregateInputType = {
 export type MatchesCountAggregateInputType = {
     id?: true;
     tournament_id?: true;
+    competition_key?: true;
+    home_penalties?: true;
+    away_penalties?: true;
     home_team_id?: true;
     away_team_id?: true;
     match_date?: true;
@@ -183,6 +209,9 @@ export type matchesGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type MatchesGroupByOutputType = {
     id: bigint;
     tournament_id: bigint;
+    competition_key: string | null;
+    home_penalties: number | null;
+    away_penalties: number | null;
     home_team_id: bigint;
     away_team_id: bigint;
     match_date: Date | null;
@@ -211,6 +240,9 @@ export type matchesWhereInput = {
     NOT?: Prisma.matchesWhereInput | Prisma.matchesWhereInput[];
     id?: Prisma.BigIntFilter<"matches"> | bigint | number;
     tournament_id?: Prisma.BigIntFilter<"matches"> | bigint | number;
+    competition_key?: Prisma.StringNullableFilter<"matches"> | string | null;
+    home_penalties?: Prisma.IntNullableFilter<"matches"> | number | null;
+    away_penalties?: Prisma.IntNullableFilter<"matches"> | number | null;
     home_team_id?: Prisma.BigIntFilter<"matches"> | bigint | number;
     away_team_id?: Prisma.BigIntFilter<"matches"> | bigint | number;
     match_date?: Prisma.DateTimeNullableFilter<"matches"> | Date | string | null;
@@ -234,6 +266,9 @@ export type matchesWhereInput = {
 export type matchesOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     tournament_id?: Prisma.SortOrder;
+    competition_key?: Prisma.SortOrderInput | Prisma.SortOrder;
+    home_penalties?: Prisma.SortOrderInput | Prisma.SortOrder;
+    away_penalties?: Prisma.SortOrderInput | Prisma.SortOrder;
     home_team_id?: Prisma.SortOrder;
     away_team_id?: Prisma.SortOrder;
     match_date?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -257,10 +292,14 @@ export type matchesOrderByWithRelationInput = {
 export type matchesWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number;
     id_tournament_id?: Prisma.matchesIdTournament_idCompoundUniqueInput;
+    tournament_id_competition_key?: Prisma.matchesTournament_idCompetition_keyCompoundUniqueInput;
     AND?: Prisma.matchesWhereInput | Prisma.matchesWhereInput[];
     OR?: Prisma.matchesWhereInput[];
     NOT?: Prisma.matchesWhereInput | Prisma.matchesWhereInput[];
     tournament_id?: Prisma.BigIntFilter<"matches"> | bigint | number;
+    competition_key?: Prisma.StringNullableFilter<"matches"> | string | null;
+    home_penalties?: Prisma.IntNullableFilter<"matches"> | number | null;
+    away_penalties?: Prisma.IntNullableFilter<"matches"> | number | null;
     home_team_id?: Prisma.BigIntFilter<"matches"> | bigint | number;
     away_team_id?: Prisma.BigIntFilter<"matches"> | bigint | number;
     match_date?: Prisma.DateTimeNullableFilter<"matches"> | Date | string | null;
@@ -280,10 +319,13 @@ export type matchesWhereUniqueInput = Prisma.AtLeast<{
     tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.XOR<Prisma.Tournament_team_registrationsScalarRelationFilter, Prisma.tournament_team_registrationsWhereInput>;
     player_match_stats?: Prisma.Player_match_statsListRelationFilter;
     referee_assignment_events?: Prisma.Referee_assignment_eventsListRelationFilter;
-}, "id" | "id_tournament_id">;
+}, "id" | "id_tournament_id" | "tournament_id_competition_key">;
 export type matchesOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     tournament_id?: Prisma.SortOrder;
+    competition_key?: Prisma.SortOrderInput | Prisma.SortOrder;
+    home_penalties?: Prisma.SortOrderInput | Prisma.SortOrder;
+    away_penalties?: Prisma.SortOrderInput | Prisma.SortOrder;
     home_team_id?: Prisma.SortOrder;
     away_team_id?: Prisma.SortOrder;
     match_date?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -309,6 +351,9 @@ export type matchesScalarWhereWithAggregatesInput = {
     NOT?: Prisma.matchesScalarWhereWithAggregatesInput | Prisma.matchesScalarWhereWithAggregatesInput[];
     id?: Prisma.BigIntWithAggregatesFilter<"matches"> | bigint | number;
     tournament_id?: Prisma.BigIntWithAggregatesFilter<"matches"> | bigint | number;
+    competition_key?: Prisma.StringNullableWithAggregatesFilter<"matches"> | string | null;
+    home_penalties?: Prisma.IntNullableWithAggregatesFilter<"matches"> | number | null;
+    away_penalties?: Prisma.IntNullableWithAggregatesFilter<"matches"> | number | null;
     home_team_id?: Prisma.BigIntWithAggregatesFilter<"matches"> | bigint | number;
     away_team_id?: Prisma.BigIntWithAggregatesFilter<"matches"> | bigint | number;
     match_date?: Prisma.DateTimeNullableWithAggregatesFilter<"matches"> | Date | string | null;
@@ -325,6 +370,9 @@ export type matchesScalarWhereWithAggregatesInput = {
 };
 export type matchesCreateInput = {
     id?: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     match_date?: Date | string | null;
     venue?: string | null;
     stage: string;
@@ -346,6 +394,9 @@ export type matchesCreateInput = {
 export type matchesUncheckedCreateInput = {
     id?: bigint | number;
     tournament_id: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     home_team_id: bigint | number;
     away_team_id: bigint | number;
     match_date?: Date | string | null;
@@ -366,6 +417,9 @@ export type matchesUncheckedCreateInput = {
 };
 export type matchesUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     stage?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -387,6 +441,9 @@ export type matchesUpdateInput = {
 export type matchesUncheckedUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     home_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     away_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -408,6 +465,9 @@ export type matchesUncheckedUpdateInput = {
 export type matchesCreateManyInput = {
     id?: bigint | number;
     tournament_id: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     home_team_id: bigint | number;
     away_team_id: bigint | number;
     match_date?: Date | string | null;
@@ -424,6 +484,9 @@ export type matchesCreateManyInput = {
 };
 export type matchesUpdateManyMutationInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     stage?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -439,6 +502,9 @@ export type matchesUpdateManyMutationInput = {
 export type matchesUncheckedUpdateManyInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     home_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     away_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -465,9 +531,16 @@ export type matchesIdTournament_idCompoundUniqueInput = {
     id: bigint | number;
     tournament_id: bigint | number;
 };
+export type matchesTournament_idCompetition_keyCompoundUniqueInput = {
+    tournament_id: bigint | number;
+    competition_key: string;
+};
 export type matchesCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     tournament_id?: Prisma.SortOrder;
+    competition_key?: Prisma.SortOrder;
+    home_penalties?: Prisma.SortOrder;
+    away_penalties?: Prisma.SortOrder;
     home_team_id?: Prisma.SortOrder;
     away_team_id?: Prisma.SortOrder;
     match_date?: Prisma.SortOrder;
@@ -485,6 +558,8 @@ export type matchesCountOrderByAggregateInput = {
 export type matchesAvgOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     tournament_id?: Prisma.SortOrder;
+    home_penalties?: Prisma.SortOrder;
+    away_penalties?: Prisma.SortOrder;
     home_team_id?: Prisma.SortOrder;
     away_team_id?: Prisma.SortOrder;
     round_number?: Prisma.SortOrder;
@@ -495,6 +570,9 @@ export type matchesAvgOrderByAggregateInput = {
 export type matchesMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     tournament_id?: Prisma.SortOrder;
+    competition_key?: Prisma.SortOrder;
+    home_penalties?: Prisma.SortOrder;
+    away_penalties?: Prisma.SortOrder;
     home_team_id?: Prisma.SortOrder;
     away_team_id?: Prisma.SortOrder;
     match_date?: Prisma.SortOrder;
@@ -512,6 +590,9 @@ export type matchesMaxOrderByAggregateInput = {
 export type matchesMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     tournament_id?: Prisma.SortOrder;
+    competition_key?: Prisma.SortOrder;
+    home_penalties?: Prisma.SortOrder;
+    away_penalties?: Prisma.SortOrder;
     home_team_id?: Prisma.SortOrder;
     away_team_id?: Prisma.SortOrder;
     match_date?: Prisma.SortOrder;
@@ -529,6 +610,8 @@ export type matchesMinOrderByAggregateInput = {
 export type matchesSumOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     tournament_id?: Prisma.SortOrder;
+    home_penalties?: Prisma.SortOrder;
+    away_penalties?: Prisma.SortOrder;
     home_team_id?: Prisma.SortOrder;
     away_team_id?: Prisma.SortOrder;
     round_number?: Prisma.SortOrder;
@@ -686,6 +769,9 @@ export type matchesUncheckedUpdateManyWithoutTournament_team_registrations_match
 };
 export type matchesCreateWithoutDisciplinary_actionsInput = {
     id?: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     match_date?: Date | string | null;
     venue?: string | null;
     stage: string;
@@ -706,6 +792,9 @@ export type matchesCreateWithoutDisciplinary_actionsInput = {
 export type matchesUncheckedCreateWithoutDisciplinary_actionsInput = {
     id?: bigint | number;
     tournament_id: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     home_team_id: bigint | number;
     away_team_id: bigint | number;
     match_date?: Date | string | null;
@@ -738,6 +827,9 @@ export type matchesUpdateToOneWithWhereWithoutDisciplinary_actionsInput = {
 };
 export type matchesUpdateWithoutDisciplinary_actionsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     stage?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -758,6 +850,9 @@ export type matchesUpdateWithoutDisciplinary_actionsInput = {
 export type matchesUncheckedUpdateWithoutDisciplinary_actionsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     home_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     away_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -777,6 +872,9 @@ export type matchesUncheckedUpdateWithoutDisciplinary_actionsInput = {
 };
 export type matchesCreateWithoutMatch_refereesInput = {
     id?: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     match_date?: Date | string | null;
     venue?: string | null;
     stage: string;
@@ -797,6 +895,9 @@ export type matchesCreateWithoutMatch_refereesInput = {
 export type matchesUncheckedCreateWithoutMatch_refereesInput = {
     id?: bigint | number;
     tournament_id: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     home_team_id: bigint | number;
     away_team_id: bigint | number;
     match_date?: Date | string | null;
@@ -829,6 +930,9 @@ export type matchesUpdateToOneWithWhereWithoutMatch_refereesInput = {
 };
 export type matchesUpdateWithoutMatch_refereesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     stage?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -849,6 +953,9 @@ export type matchesUpdateWithoutMatch_refereesInput = {
 export type matchesUncheckedUpdateWithoutMatch_refereesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     home_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     away_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -868,6 +975,9 @@ export type matchesUncheckedUpdateWithoutMatch_refereesInput = {
 };
 export type matchesCreateWithoutReferee_assignment_eventsInput = {
     id?: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     match_date?: Date | string | null;
     venue?: string | null;
     stage: string;
@@ -888,6 +998,9 @@ export type matchesCreateWithoutReferee_assignment_eventsInput = {
 export type matchesUncheckedCreateWithoutReferee_assignment_eventsInput = {
     id?: bigint | number;
     tournament_id: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     home_team_id: bigint | number;
     away_team_id: bigint | number;
     match_date?: Date | string | null;
@@ -920,6 +1033,9 @@ export type matchesUpdateToOneWithWhereWithoutReferee_assignment_eventsInput = {
 };
 export type matchesUpdateWithoutReferee_assignment_eventsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     stage?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -940,6 +1056,9 @@ export type matchesUpdateWithoutReferee_assignment_eventsInput = {
 export type matchesUncheckedUpdateWithoutReferee_assignment_eventsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     home_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     away_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -959,6 +1078,9 @@ export type matchesUncheckedUpdateWithoutReferee_assignment_eventsInput = {
 };
 export type matchesCreateWithoutPlayer_match_statsInput = {
     id?: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     match_date?: Date | string | null;
     venue?: string | null;
     stage: string;
@@ -979,6 +1101,9 @@ export type matchesCreateWithoutPlayer_match_statsInput = {
 export type matchesUncheckedCreateWithoutPlayer_match_statsInput = {
     id?: bigint | number;
     tournament_id: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     home_team_id: bigint | number;
     away_team_id: bigint | number;
     match_date?: Date | string | null;
@@ -1011,6 +1136,9 @@ export type matchesUpdateToOneWithWhereWithoutPlayer_match_statsInput = {
 };
 export type matchesUpdateWithoutPlayer_match_statsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     stage?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1031,6 +1159,9 @@ export type matchesUpdateWithoutPlayer_match_statsInput = {
 export type matchesUncheckedUpdateWithoutPlayer_match_statsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     home_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     away_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1050,6 +1181,9 @@ export type matchesUncheckedUpdateWithoutPlayer_match_statsInput = {
 };
 export type matchesCreateWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
     id?: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     match_date?: Date | string | null;
     venue?: string | null;
     stage: string;
@@ -1069,6 +1203,9 @@ export type matchesCreateWithoutTournament_team_registrations_matches_tournament
 };
 export type matchesUncheckedCreateWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
     id?: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     home_team_id: bigint | number;
     match_date?: Date | string | null;
     venue?: string | null;
@@ -1096,6 +1233,9 @@ export type matchesCreateManyTournament_team_registrations_matches_tournament_id
 };
 export type matchesCreateWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
     id?: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     match_date?: Date | string | null;
     venue?: string | null;
     stage: string;
@@ -1115,6 +1255,9 @@ export type matchesCreateWithoutTournament_team_registrations_matches_tournament
 };
 export type matchesUncheckedCreateWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
     id?: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     away_team_id: bigint | number;
     match_date?: Date | string | null;
     venue?: string | null;
@@ -1159,6 +1302,9 @@ export type matchesScalarWhereInput = {
     NOT?: Prisma.matchesScalarWhereInput | Prisma.matchesScalarWhereInput[];
     id?: Prisma.BigIntFilter<"matches"> | bigint | number;
     tournament_id?: Prisma.BigIntFilter<"matches"> | bigint | number;
+    competition_key?: Prisma.StringNullableFilter<"matches"> | string | null;
+    home_penalties?: Prisma.IntNullableFilter<"matches"> | number | null;
+    away_penalties?: Prisma.IntNullableFilter<"matches"> | number | null;
     home_team_id?: Prisma.BigIntFilter<"matches"> | bigint | number;
     away_team_id?: Prisma.BigIntFilter<"matches"> | bigint | number;
     match_date?: Prisma.DateTimeNullableFilter<"matches"> | Date | string | null;
@@ -1188,6 +1334,9 @@ export type matchesUpdateManyWithWhereWithoutTournament_team_registrations_match
 };
 export type matchesCreateManyTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
     id?: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     home_team_id: bigint | number;
     match_date?: Date | string | null;
     venue?: string | null;
@@ -1203,6 +1352,9 @@ export type matchesCreateManyTournament_team_registrations_matches_tournament_id
 };
 export type matchesCreateManyTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
     id?: bigint | number;
+    competition_key?: string | null;
+    home_penalties?: number | null;
+    away_penalties?: number | null;
     away_team_id: bigint | number;
     match_date?: Date | string | null;
     venue?: string | null;
@@ -1218,6 +1370,9 @@ export type matchesCreateManyTournament_team_registrations_matches_tournament_id
 };
 export type matchesUpdateWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     stage?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1237,6 +1392,9 @@ export type matchesUpdateWithoutTournament_team_registrations_matches_tournament
 };
 export type matchesUncheckedUpdateWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     home_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1256,6 +1414,9 @@ export type matchesUncheckedUpdateWithoutTournament_team_registrations_matches_t
 };
 export type matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     home_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1271,6 +1432,9 @@ export type matchesUncheckedUpdateManyWithoutTournament_team_registrations_match
 };
 export type matchesUpdateWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     stage?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1290,6 +1454,9 @@ export type matchesUpdateWithoutTournament_team_registrations_matches_tournament
 };
 export type matchesUncheckedUpdateWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1309,6 +1476,9 @@ export type matchesUncheckedUpdateWithoutTournament_team_registrations_matches_t
 };
 export type matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    competition_key?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    home_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    away_penalties?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     away_team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     match_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1352,6 +1522,9 @@ export type MatchesCountOutputTypeCountReferee_assignment_eventsArgs<ExtArgs ext
 export type matchesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     tournament_id?: boolean;
+    competition_key?: boolean;
+    home_penalties?: boolean;
+    away_penalties?: boolean;
     home_team_id?: boolean;
     away_team_id?: boolean;
     match_date?: boolean;
@@ -1376,6 +1549,9 @@ export type matchesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type matchesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     tournament_id?: boolean;
+    competition_key?: boolean;
+    home_penalties?: boolean;
+    away_penalties?: boolean;
     home_team_id?: boolean;
     away_team_id?: boolean;
     match_date?: boolean;
@@ -1395,6 +1571,9 @@ export type matchesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type matchesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     tournament_id?: boolean;
+    competition_key?: boolean;
+    home_penalties?: boolean;
+    away_penalties?: boolean;
     home_team_id?: boolean;
     away_team_id?: boolean;
     match_date?: boolean;
@@ -1414,6 +1593,9 @@ export type matchesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type matchesSelectScalar = {
     id?: boolean;
     tournament_id?: boolean;
+    competition_key?: boolean;
+    home_penalties?: boolean;
+    away_penalties?: boolean;
     home_team_id?: boolean;
     away_team_id?: boolean;
     match_date?: boolean;
@@ -1428,7 +1610,7 @@ export type matchesSelectScalar = {
     created_at?: boolean;
     updated_at?: boolean;
 };
-export type matchesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tournament_id" | "home_team_id" | "away_team_id" | "match_date" | "venue" | "stage" | "round_number" | "home_score" | "away_score" | "status" | "duration_minutes" | "notes" | "created_at" | "updated_at", ExtArgs["result"]["matches"]>;
+export type matchesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tournament_id" | "competition_key" | "home_penalties" | "away_penalties" | "home_team_id" | "away_team_id" | "match_date" | "venue" | "stage" | "round_number" | "home_score" | "away_score" | "status" | "duration_minutes" | "notes" | "created_at" | "updated_at", ExtArgs["result"]["matches"]>;
 export type matchesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     disciplinary_actions?: boolean | Prisma.matches$disciplinary_actionsArgs<ExtArgs>;
     match_referees?: boolean | Prisma.matches$match_refereesArgs<ExtArgs>;
@@ -1459,6 +1641,9 @@ export type $matchesPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: bigint;
         tournament_id: bigint;
+        competition_key: string | null;
+        home_penalties: number | null;
+        away_penalties: number | null;
         home_team_id: bigint;
         away_team_id: bigint;
         match_date: Date | null;
@@ -1537,6 +1722,9 @@ export interface Prisma__matchesClient<T, Null = never, ExtArgs extends runtime.
 export interface matchesFieldRefs {
     readonly id: Prisma.FieldRef<"matches", 'BigInt'>;
     readonly tournament_id: Prisma.FieldRef<"matches", 'BigInt'>;
+    readonly competition_key: Prisma.FieldRef<"matches", 'String'>;
+    readonly home_penalties: Prisma.FieldRef<"matches", 'Int'>;
+    readonly away_penalties: Prisma.FieldRef<"matches", 'Int'>;
     readonly home_team_id: Prisma.FieldRef<"matches", 'BigInt'>;
     readonly away_team_id: Prisma.FieldRef<"matches", 'BigInt'>;
     readonly match_date: Prisma.FieldRef<"matches", 'DateTime'>;

@@ -31,6 +31,44 @@ const ACTIVE_ROSTER_PHASES = [
   'scheduled',
   'in_progress',
 ] as const;
+const TEAM_MATCH_PREVIEW_LIMIT = 10;
+
+const teamMatchSelect = {
+  id: true,
+  tournament_id: true,
+  home_team_id: true,
+  away_team_id: true,
+  match_date: true,
+  venue: true,
+  status: true,
+  home_score: true,
+  away_score: true,
+  tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations:
+    {
+      select: {
+        teams: { select: { name: true } },
+        tournaments: { select: { name: true } },
+      },
+    },
+  tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations:
+    { select: { teams: { select: { name: true } } } },
+  match_referees: {
+    where: {
+      referee_role: 'main',
+      assignment_status: { in: ['pending', 'accepted'] },
+    },
+    select: {
+      tournament_referees: {
+        select: { users: { select: { full_name: true } } },
+      },
+    },
+    take: 1,
+  },
+} satisfies Prisma.matchesSelect;
+
+type TeamMatchRecord = Prisma.matchesGetPayload<{
+  select: typeof teamMatchSelect;
+}>;
 
 type ActiveTeamRegistration = {
   tournament_id: bigint;
@@ -324,6 +362,67 @@ export class TeamsService {
         `El equipo con ID ${id.toString()} no existe.`,
       );
     return this.toResponse(team, requestingUserId, roles);
+  }
+
+  async findMatches(id: bigint, requestingUserId: bigint) {
+    // Keep the same team visibility rule as the profile itself.
+    await this.findOne(id, requestingUserId);
+    const teamFilter = { OR: [{ home_team_id: id }, { away_team_id: id }] };
+    const [results, upcoming] = await Promise.all([
+      this.prisma.matches.findMany({
+        where: { ...teamFilter, status: 'played' },
+        orderBy: [
+          { match_date: { sort: 'desc', nulls: 'last' } },
+          { id: 'desc' },
+        ],
+        take: TEAM_MATCH_PREVIEW_LIMIT,
+        select: teamMatchSelect,
+      }),
+      this.prisma.matches.findMany({
+        where: {
+          ...teamFilter,
+          status: { in: ['scheduled', 'postponed'] },
+          match_date: { gt: new Date() },
+        },
+        orderBy: [{ match_date: 'asc' }, { id: 'asc' }],
+        take: TEAM_MATCH_PREVIEW_LIMIT,
+        select: teamMatchSelect,
+      }),
+    ]);
+
+    const toMatch = (match: TeamMatchRecord) => ({
+      id: match.id.toString(),
+      tournamentId: match.tournament_id.toString(),
+      tournamentName:
+        match
+          .tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations
+          .tournaments.name,
+      matchDate: match.match_date?.toISOString() ?? null,
+      venue: match.venue,
+      status: match.status,
+      homeTeam: {
+        id: match.home_team_id.toString(),
+        name: match
+          .tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations
+          .teams.name,
+      },
+      awayTeam: {
+        id: match.away_team_id.toString(),
+        name: match
+          .tournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrations
+          .teams.name,
+      },
+      homeScore: match.home_score,
+      awayScore: match.away_score,
+      refereeName:
+        match.match_referees[0]?.tournament_referees.users.full_name ?? null,
+    });
+
+    return {
+      teamId: id.toString(),
+      results: results.map(toMatch),
+      upcoming: upcoming.map(toMatch),
+    };
   }
 
   async findTournamentRosters(

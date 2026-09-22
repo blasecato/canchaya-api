@@ -10,7 +10,7 @@ import { TournamentLifecycleService } from './tournament-lifecycle.service';
 import { UpdateTournamentRulesDto } from './dto/update-tournament-rules.dto';
 import { TournamentSponsorInputDto } from './dto/tournament-sponsor-input.dto';
 import { ReviewTeamRegistrationDto } from './dto/review-team-registration.dto';
-import { TournamentPaymentsResponseDto, TournamentRegistrationPaymentResponseDto, UpdateRegistrationPaymentDto } from './dto/registration-payment.dto';
+import { MyTournamentPaymentResponseDto, TournamentPaymentsResponseDto, TournamentRegistrationPaymentResponseDto, UpdateRegistrationPaymentDto } from './dto/registration-payment.dto';
 import { CaptainTeamOptionResponseDto, RegisterTeamDto, TeamRegistrationResponseDto } from './dto/register-team.dto';
 export declare class TournamentCatalogController {
     private readonly tournamentsService;
@@ -30,6 +30,7 @@ export declare class TournamentCatalogController {
     }>;
     findCaptainTeams(tournamentId: bigint, request: AuthenticatedRequest): Promise<CaptainTeamOptionResponseDto[]>;
     registerTeam(tournamentId: bigint, request: AuthenticatedRequest, dto: RegisterTeamDto): Promise<TeamRegistrationResponseDto>;
+    findMyRegistrationPayment(tournamentId: bigint, request: AuthenticatedRequest): Promise<MyTournamentPaymentResponseDto>;
     findRegistrationPayments(tournamentId: bigint, request: AuthenticatedRequest): Promise<TournamentPaymentsResponseDto>;
     updateRegistrationPayment(tournamentId: bigint, teamId: bigint, request: AuthenticatedRequest, dto: UpdateRegistrationPaymentDto): Promise<TournamentRegistrationPaymentResponseDto>;
     findRegistrationDetail(tournamentId: bigint, teamId: bigint, request: AuthenticatedRequest): Promise<{

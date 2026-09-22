@@ -166,6 +166,9 @@ exports.Match_refereesScalarFieldEnum = {
 exports.MatchesScalarFieldEnum = {
     id: 'id',
     tournament_id: 'tournament_id',
+    competition_key: 'competition_key',
+    home_penalties: 'home_penalties',
+    away_penalties: 'away_penalties',
     home_team_id: 'home_team_id',
     away_team_id: 'away_team_id',
     match_date: 'match_date',
@@ -407,6 +410,7 @@ exports.TournamentsScalarFieldEnum = {
     id: 'id',
     association_id: 'association_id',
     name: 'name',
+    competition_plan: 'competition_plan',
     description: 'description',
     tournament_type_id: 'tournament_type_id',
     sport_type: 'sport_type',

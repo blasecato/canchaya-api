@@ -6,6 +6,8 @@ export declare class CreateMatchDto {
     venue?: string | null;
     stage: string;
     roundNumber?: number | null;
+    homePenalties?: number | null;
+    awayPenalties?: number | null;
     homeScore?: number | null;
     awayScore?: number | null;
     status?: string;

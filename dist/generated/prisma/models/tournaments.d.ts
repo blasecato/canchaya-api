@@ -114,6 +114,7 @@ export type TournamentsCountAggregateOutputType = {
     id: number;
     association_id: number;
     name: number;
+    competition_plan: number;
     description: number;
     tournament_type_id: number;
     sport_type: number;
@@ -253,6 +254,7 @@ export type TournamentsCountAggregateInputType = {
     id?: true;
     association_id?: true;
     name?: true;
+    competition_plan?: true;
     description?: true;
     tournament_type_id?: true;
     sport_type?: true;
@@ -318,6 +320,7 @@ export type TournamentsGroupByOutputType = {
     id: bigint;
     association_id: bigint;
     name: string;
+    competition_plan: runtime.JsonValue | null;
     description: string | null;
     tournament_type_id: bigint;
     sport_type: string;
@@ -365,6 +368,7 @@ export type tournamentsWhereInput = {
     id?: Prisma.BigIntFilter<"tournaments"> | bigint | number;
     association_id?: Prisma.BigIntFilter<"tournaments"> | bigint | number;
     name?: Prisma.StringFilter<"tournaments"> | string;
+    competition_plan?: Prisma.JsonNullableFilter<"tournaments">;
     description?: Prisma.StringNullableFilter<"tournaments"> | string | null;
     tournament_type_id?: Prisma.BigIntFilter<"tournaments"> | bigint | number;
     sport_type?: Prisma.StringFilter<"tournaments"> | string;
@@ -409,6 +413,7 @@ export type tournamentsOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     association_id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    competition_plan?: Prisma.SortOrderInput | Prisma.SortOrder;
     description?: Prisma.SortOrderInput | Prisma.SortOrder;
     tournament_type_id?: Prisma.SortOrder;
     sport_type?: Prisma.SortOrder;
@@ -457,6 +462,7 @@ export type tournamentsWhereUniqueInput = Prisma.AtLeast<{
     NOT?: Prisma.tournamentsWhereInput | Prisma.tournamentsWhereInput[];
     association_id?: Prisma.BigIntFilter<"tournaments"> | bigint | number;
     name?: Prisma.StringFilter<"tournaments"> | string;
+    competition_plan?: Prisma.JsonNullableFilter<"tournaments">;
     description?: Prisma.StringNullableFilter<"tournaments"> | string | null;
     tournament_type_id?: Prisma.BigIntFilter<"tournaments"> | bigint | number;
     sport_type?: Prisma.StringFilter<"tournaments"> | string;
@@ -501,6 +507,7 @@ export type tournamentsOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     association_id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    competition_plan?: Prisma.SortOrderInput | Prisma.SortOrder;
     description?: Prisma.SortOrderInput | Prisma.SortOrder;
     tournament_type_id?: Prisma.SortOrder;
     sport_type?: Prisma.SortOrder;
@@ -545,6 +552,7 @@ export type tournamentsScalarWhereWithAggregatesInput = {
     id?: Prisma.BigIntWithAggregatesFilter<"tournaments"> | bigint | number;
     association_id?: Prisma.BigIntWithAggregatesFilter<"tournaments"> | bigint | number;
     name?: Prisma.StringWithAggregatesFilter<"tournaments"> | string;
+    competition_plan?: Prisma.JsonNullableWithAggregatesFilter<"tournaments">;
     description?: Prisma.StringNullableWithAggregatesFilter<"tournaments"> | string | null;
     tournament_type_id?: Prisma.BigIntWithAggregatesFilter<"tournaments"> | bigint | number;
     sport_type?: Prisma.StringWithAggregatesFilter<"tournaments"> | string;
@@ -580,6 +588,7 @@ export type tournamentsScalarWhereWithAggregatesInput = {
 export type tournamentsCreateInput = {
     id?: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     sport_type: string;
     modality: string;
@@ -622,6 +631,7 @@ export type tournamentsUncheckedCreateInput = {
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     tournament_type_id: bigint | number;
     sport_type: string;
@@ -662,6 +672,7 @@ export type tournamentsUncheckedCreateInput = {
 export type tournamentsUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -704,6 +715,7 @@ export type tournamentsUncheckedUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -745,6 +757,7 @@ export type tournamentsCreateManyInput = {
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     tournament_type_id: bigint | number;
     sport_type: string;
@@ -780,6 +793,7 @@ export type tournamentsCreateManyInput = {
 export type tournamentsUpdateManyMutationInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -814,6 +828,7 @@ export type tournamentsUncheckedUpdateManyInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -866,6 +881,7 @@ export type tournamentsCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     association_id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    competition_plan?: Prisma.SortOrder;
     description?: Prisma.SortOrder;
     tournament_type_id?: Prisma.SortOrder;
     sport_type?: Prisma.SortOrder;
@@ -1177,6 +1193,7 @@ export type tournamentsUncheckedUpdateManyWithoutUsersNestedInput = {
 export type tournamentsCreateWithoutAssociationsInput = {
     id?: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     sport_type: string;
     modality: string;
@@ -1217,6 +1234,7 @@ export type tournamentsCreateWithoutAssociationsInput = {
 export type tournamentsUncheckedCreateWithoutAssociationsInput = {
     id?: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     tournament_type_id: bigint | number;
     sport_type: string;
@@ -1282,6 +1300,7 @@ export type tournamentsScalarWhereInput = {
     id?: Prisma.BigIntFilter<"tournaments"> | bigint | number;
     association_id?: Prisma.BigIntFilter<"tournaments"> | bigint | number;
     name?: Prisma.StringFilter<"tournaments"> | string;
+    competition_plan?: Prisma.JsonNullableFilter<"tournaments">;
     description?: Prisma.StringNullableFilter<"tournaments"> | string | null;
     tournament_type_id?: Prisma.BigIntFilter<"tournaments"> | bigint | number;
     sport_type?: Prisma.StringFilter<"tournaments"> | string;
@@ -1317,6 +1336,7 @@ export type tournamentsScalarWhereInput = {
 export type tournamentsCreateWithoutTournament_administratorsInput = {
     id?: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     sport_type: string;
     modality: string;
@@ -1358,6 +1378,7 @@ export type tournamentsUncheckedCreateWithoutTournament_administratorsInput = {
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     tournament_type_id: bigint | number;
     sport_type: string;
@@ -1410,6 +1431,7 @@ export type tournamentsUpdateToOneWithWhereWithoutTournament_administratorsInput
 export type tournamentsUpdateWithoutTournament_administratorsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1451,6 +1473,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_administratorsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1490,6 +1513,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_administratorsInput = {
 export type tournamentsCreateWithoutTournament_refereesInput = {
     id?: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     sport_type: string;
     modality: string;
@@ -1531,6 +1555,7 @@ export type tournamentsUncheckedCreateWithoutTournament_refereesInput = {
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     tournament_type_id: bigint | number;
     sport_type: string;
@@ -1583,6 +1608,7 @@ export type tournamentsUpdateToOneWithWhereWithoutTournament_refereesInput = {
 export type tournamentsUpdateWithoutTournament_refereesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1624,6 +1650,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_refereesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1663,6 +1690,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_refereesInput = {
 export type tournamentsCreateWithoutTournament_sponsorsInput = {
     id?: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     sport_type: string;
     modality: string;
@@ -1704,6 +1732,7 @@ export type tournamentsUncheckedCreateWithoutTournament_sponsorsInput = {
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     tournament_type_id: bigint | number;
     sport_type: string;
@@ -1756,6 +1785,7 @@ export type tournamentsUpdateToOneWithWhereWithoutTournament_sponsorsInput = {
 export type tournamentsUpdateWithoutTournament_sponsorsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1797,6 +1827,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_sponsorsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1836,6 +1867,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_sponsorsInput = {
 export type tournamentsCreateWithoutTournament_team_registrationsInput = {
     id?: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     sport_type: string;
     modality: string;
@@ -1877,6 +1909,7 @@ export type tournamentsUncheckedCreateWithoutTournament_team_registrationsInput 
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     tournament_type_id: bigint | number;
     sport_type: string;
@@ -1929,6 +1962,7 @@ export type tournamentsUpdateToOneWithWhereWithoutTournament_team_registrationsI
 export type tournamentsUpdateWithoutTournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1970,6 +2004,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_team_registrationsInput 
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2009,6 +2044,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_team_registrationsInput 
 export type tournamentsCreateWithoutTournament_lifecycle_eventsInput = {
     id?: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     sport_type: string;
     modality: string;
@@ -2050,6 +2086,7 @@ export type tournamentsUncheckedCreateWithoutTournament_lifecycle_eventsInput = 
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     tournament_type_id: bigint | number;
     sport_type: string;
@@ -2102,6 +2139,7 @@ export type tournamentsUpdateToOneWithWhereWithoutTournament_lifecycle_eventsInp
 export type tournamentsUpdateWithoutTournament_lifecycle_eventsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2143,6 +2181,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_lifecycle_eventsInput = 
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2182,6 +2221,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_lifecycle_eventsInput = 
 export type tournamentsCreateWithoutTournament_typesInput = {
     id?: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     sport_type: string;
     modality: string;
@@ -2223,6 +2263,7 @@ export type tournamentsUncheckedCreateWithoutTournament_typesInput = {
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     sport_type: string;
     modality: string;
@@ -2283,6 +2324,7 @@ export type tournamentsUpdateManyWithWhereWithoutTournament_typesInput = {
 export type tournamentsCreateWithoutUsersInput = {
     id?: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     sport_type: string;
     modality: string;
@@ -2324,6 +2366,7 @@ export type tournamentsUncheckedCreateWithoutUsersInput = {
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     tournament_type_id: bigint | number;
     sport_type: string;
@@ -2384,6 +2427,7 @@ export type tournamentsUpdateManyWithWhereWithoutUsersInput = {
 export type tournamentsCreateManyAssociationsInput = {
     id?: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     tournament_type_id: bigint | number;
     sport_type: string;
@@ -2419,6 +2463,7 @@ export type tournamentsCreateManyAssociationsInput = {
 export type tournamentsUpdateWithoutAssociationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2459,6 +2504,7 @@ export type tournamentsUpdateWithoutAssociationsInput = {
 export type tournamentsUncheckedUpdateWithoutAssociationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2499,6 +2545,7 @@ export type tournamentsUncheckedUpdateWithoutAssociationsInput = {
 export type tournamentsUncheckedUpdateManyWithoutAssociationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2535,6 +2582,7 @@ export type tournamentsCreateManyTournament_typesInput = {
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     sport_type: string;
     modality: string;
@@ -2569,6 +2617,7 @@ export type tournamentsCreateManyTournament_typesInput = {
 export type tournamentsUpdateWithoutTournament_typesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2610,6 +2659,7 @@ export type tournamentsUncheckedUpdateWithoutTournament_typesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2650,6 +2700,7 @@ export type tournamentsUncheckedUpdateManyWithoutTournament_typesInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2685,6 +2736,7 @@ export type tournamentsCreateManyUsersInput = {
     id?: bigint | number;
     association_id: bigint | number;
     name: string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: string | null;
     tournament_type_id: bigint | number;
     sport_type: string;
@@ -2719,6 +2771,7 @@ export type tournamentsCreateManyUsersInput = {
 export type tournamentsUpdateWithoutUsersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
     modality?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2760,6 +2813,7 @@ export type tournamentsUncheckedUpdateWithoutUsersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2800,6 +2854,7 @@ export type tournamentsUncheckedUpdateManyWithoutUsersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     association_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    competition_plan?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     tournament_type_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -2867,6 +2922,7 @@ export type tournamentsSelect<ExtArgs extends runtime.Types.Extensions.InternalA
     id?: boolean;
     association_id?: boolean;
     name?: boolean;
+    competition_plan?: boolean;
     description?: boolean;
     tournament_type_id?: boolean;
     sport_type?: boolean;
@@ -2912,6 +2968,7 @@ export type tournamentsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
     id?: boolean;
     association_id?: boolean;
     name?: boolean;
+    competition_plan?: boolean;
     description?: boolean;
     tournament_type_id?: boolean;
     sport_type?: boolean;
@@ -2951,6 +3008,7 @@ export type tournamentsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
     id?: boolean;
     association_id?: boolean;
     name?: boolean;
+    competition_plan?: boolean;
     description?: boolean;
     tournament_type_id?: boolean;
     sport_type?: boolean;
@@ -2990,6 +3048,7 @@ export type tournamentsSelectScalar = {
     id?: boolean;
     association_id?: boolean;
     name?: boolean;
+    competition_plan?: boolean;
     description?: boolean;
     tournament_type_id?: boolean;
     sport_type?: boolean;
@@ -3022,7 +3081,7 @@ export type tournamentsSelectScalar = {
     created_at?: boolean;
     updated_at?: boolean;
 };
-export type tournamentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "association_id" | "name" | "description" | "tournament_type_id" | "sport_type" | "modality" | "category_name" | "category_min_age" | "category_max_age" | "category_gender" | "start_date" | "end_date" | "registration_start_date" | "registration_end_date" | "registration_fee" | "currency_code" | "grand_prize" | "second_prize" | "third_prize" | "max_teams" | "min_players_per_team" | "max_players_per_team" | "location_name" | "location_address" | "rules_url" | "rules_content" | "photo_url" | "photo_public_id" | "phase" | "status" | "created_by" | "created_at" | "updated_at", ExtArgs["result"]["tournaments"]>;
+export type tournamentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "association_id" | "name" | "competition_plan" | "description" | "tournament_type_id" | "sport_type" | "modality" | "category_name" | "category_min_age" | "category_max_age" | "category_gender" | "start_date" | "end_date" | "registration_start_date" | "registration_end_date" | "registration_fee" | "currency_code" | "grand_prize" | "second_prize" | "third_prize" | "max_teams" | "min_players_per_team" | "max_players_per_team" | "location_name" | "location_address" | "rules_url" | "rules_content" | "photo_url" | "photo_public_id" | "phase" | "status" | "created_by" | "created_at" | "updated_at", ExtArgs["result"]["tournaments"]>;
 export type tournamentsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     tournament_administrators?: boolean | Prisma.tournaments$tournament_administratorsArgs<ExtArgs>;
     tournament_referees?: boolean | Prisma.tournaments$tournament_refereesArgs<ExtArgs>;
@@ -3060,6 +3119,7 @@ export type $tournamentsPayload<ExtArgs extends runtime.Types.Extensions.Interna
         id: bigint;
         association_id: bigint;
         name: string;
+        competition_plan: runtime.JsonValue | null;
         description: string | null;
         tournament_type_id: bigint;
         sport_type: string;
@@ -3159,6 +3219,7 @@ export interface tournamentsFieldRefs {
     readonly id: Prisma.FieldRef<"tournaments", 'BigInt'>;
     readonly association_id: Prisma.FieldRef<"tournaments", 'BigInt'>;
     readonly name: Prisma.FieldRef<"tournaments", 'String'>;
+    readonly competition_plan: Prisma.FieldRef<"tournaments", 'Json'>;
     readonly description: Prisma.FieldRef<"tournaments", 'String'>;
     readonly tournament_type_id: Prisma.FieldRef<"tournaments", 'BigInt'>;
     readonly sport_type: Prisma.FieldRef<"tournaments", 'String'>;

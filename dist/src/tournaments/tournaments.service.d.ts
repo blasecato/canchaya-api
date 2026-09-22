@@ -12,7 +12,7 @@ import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { UpdateTournamentRulesDto } from './dto/update-tournament-rules.dto';
 import { TournamentSponsorInputDto } from './dto/tournament-sponsor-input.dto';
 import type { ReviewTeamRegistrationDto } from './dto/review-team-registration.dto';
-import type { TournamentPaymentsResponseDto, TournamentRegistrationPaymentResponseDto, UpdateRegistrationPaymentDto } from './dto/registration-payment.dto';
+import type { MyTournamentPaymentResponseDto, TournamentPaymentsResponseDto, TournamentRegistrationPaymentResponseDto, UpdateRegistrationPaymentDto } from './dto/registration-payment.dto';
 import type { CaptainTeamOptionResponseDto, TeamRegistrationResponseDto } from './dto/register-team.dto';
 export declare class TournamentsService {
     private readonly prisma;
@@ -32,6 +32,7 @@ export declare class TournamentsService {
     findCaptainTeams(tournamentId: bigint, requestingUserId: bigint): Promise<CaptainTeamOptionResponseDto[]>;
     registerTeam(tournamentId: bigint, teamId: bigint, requestingUserId: bigint): Promise<TeamRegistrationResponseDto>;
     findRegistrationPayments(tournamentId: bigint, requestingUserId: bigint): Promise<TournamentPaymentsResponseDto>;
+    findMyRegistrationPayment(tournamentId: bigint, requestingUserId: bigint): Promise<MyTournamentPaymentResponseDto>;
     updateRegistrationPayment(tournamentId: bigint, teamId: bigint, requestingUserId: bigint, dto: UpdateRegistrationPaymentDto): Promise<TournamentRegistrationPaymentResponseDto>;
     private resolveRegistrationPaymentAmount;
     private toRegistrationPaymentResponse;
@@ -95,6 +96,7 @@ export declare class TournamentsService {
     private sanitizeRulesContent;
     private findTournamentTypePlayerLimits;
     private assertTournamentPlayerRangeWithinType;
+    private assertTournamentCapacityWithinType;
     private assertTeamRosterWithinTournamentLimits;
     private toEligibilityRules;
     private toEligibilityPlayer;

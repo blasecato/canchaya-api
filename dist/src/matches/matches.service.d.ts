@@ -17,6 +17,9 @@ export declare class MatchesService {
         updated_at: Date;
         tournament_id: bigint;
         notes: string | null;
+        competition_key: string | null;
+        home_penalties: number | null;
+        away_penalties: number | null;
         home_team_id: bigint;
         away_team_id: bigint;
         match_date: Date | null;
@@ -34,6 +37,9 @@ export declare class MatchesService {
         updated_at: Date;
         tournament_id: bigint;
         notes: string | null;
+        competition_key: string | null;
+        home_penalties: number | null;
+        away_penalties: number | null;
         home_team_id: bigint;
         away_team_id: bigint;
         match_date: Date | null;
@@ -51,6 +57,9 @@ export declare class MatchesService {
         updated_at: Date;
         tournament_id: bigint;
         notes: string | null;
+        competition_key: string | null;
+        home_penalties: number | null;
+        away_penalties: number | null;
         home_team_id: bigint;
         away_team_id: bigint;
         match_date: Date | null;
@@ -68,6 +77,9 @@ export declare class MatchesService {
         updated_at: Date;
         tournament_id: bigint;
         notes: string | null;
+        competition_key: string | null;
+        home_penalties: number | null;
+        away_penalties: number | null;
         home_team_id: bigint;
         away_team_id: bigint;
         match_date: Date | null;
@@ -85,6 +97,9 @@ export declare class MatchesService {
         updated_at: Date;
         tournament_id: bigint;
         notes: string | null;
+        competition_key: string | null;
+        home_penalties: number | null;
+        away_penalties: number | null;
         home_team_id: bigint;
         away_team_id: bigint;
         match_date: Date | null;
@@ -95,6 +110,7 @@ export declare class MatchesService {
         away_score: number | null;
         duration_minutes: number;
     }>;
+    private assertManagedMatchUpdate;
     private findExistingMatch;
     private assertValidParticipants;
     private assertMatchUpdateAllowed;

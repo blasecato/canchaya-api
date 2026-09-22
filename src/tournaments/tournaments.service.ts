@@ -19,6 +19,8 @@ import { AssociationTournamentResponseDto } from '../associations/dto/associatio
 import { TournamentSponsorResponseDto } from '../associations/dto/association-tournament-response.dto';
 import { CompetitionAccessService } from '../authorization/competition-access.service';
 import { FOOTBALL_SPORT_TYPE } from '../common/constants/football.constants';
+import { DIRECT_KNOCKOUT_SIZES } from '../competition/competition.engine';
+import { assignApprovedTeamToCompetition } from '../competition/competition.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { ImageStorageService } from '../uploads/image-storage.service';
 import type {
@@ -40,6 +42,7 @@ import { UpdateTournamentRulesDto } from './dto/update-tournament-rules.dto';
 import { TournamentSponsorInputDto } from './dto/tournament-sponsor-input.dto';
 import type { ReviewTeamRegistrationDto } from './dto/review-team-registration.dto';
 import type {
+  MyTournamentPaymentResponseDto,
   RegistrationPaymentStatus,
   TournamentPaymentsResponseDto,
   TournamentRegistrationPaymentResponseDto,
@@ -485,7 +488,7 @@ export class TournamentsService {
     today.setUTCHours(0, 0, 0, 0);
     const registrationsAreOpen =
       tournament.status === 'active' &&
-      tournament.phase === 'registration' &&
+      ['registration', 'validation', 'scheduled'].includes(tournament.phase) &&
       (!tournament.registration_start_date ||
         tournament.registration_start_date <= today) &&
       (!tournament.registration_end_date ||
@@ -676,6 +679,70 @@ export class TournamentsService {
         allPaid: partialTeams === 0 && unpaidTeams === 0,
       },
       registrations,
+    };
+  }
+
+  async findMyRegistrationPayment(
+    tournamentId: bigint,
+    requestingUserId: bigint,
+  ): Promise<MyTournamentPaymentResponseDto> {
+    const registration =
+      await this.prisma.tournament_team_registrations.findFirst({
+        where: {
+          tournament_id: tournamentId,
+          request_status: 'approved',
+          tournament_team_players: {
+            some: {
+              player_id: requestingUserId,
+              registration_status: 'approved',
+            },
+          },
+        },
+        select: {
+          team_id: true,
+          payment_status: true,
+          amount_paid: true,
+          payment_notes: true,
+          payment_updated_at: true,
+          teams: { select: { name: true } },
+          tournaments: {
+            select: {
+              id: true,
+              name: true,
+              registration_fee: true,
+              currency_code: true,
+            },
+          },
+          users_tournament_team_registrations_payment_updated_byTousers: {
+            select: { id: true, full_name: true },
+          },
+        },
+      });
+
+    if (!registration) {
+      throw new NotFoundException(
+        'No tienes una inscripción aprobada en este torneo.',
+      );
+    }
+
+    const payment = this.toRegistrationPaymentResponse(
+      registration,
+      registration.tournaments.registration_fee,
+    );
+
+    return {
+      tournamentId: registration.tournaments.id.toString(),
+      tournamentName: registration.tournaments.name,
+      currencyCode: registration.tournaments.currency_code.trim(),
+      payment: {
+        teamId: payment.teamId,
+        teamName: payment.teamName,
+        paymentStatus: payment.paymentStatus,
+        registrationFee: payment.registrationFee,
+        amountPaid: payment.amountPaid,
+        balanceDue: payment.balanceDue,
+        updatedAt: payment.updatedAt,
+      },
     };
   }
 
@@ -959,13 +1026,13 @@ export class TournamentsService {
       reviewedAt: registration.reviewed_at?.toISOString() ?? null,
       canReview:
         canManage &&
-        ['registration', 'validation'].includes(
+        ['registration', 'validation', 'scheduled'].includes(
           registration.tournaments.phase,
         ) &&
         registration.request_status === 'pending',
       canResubmit:
         isCaptain &&
-        ['registration', 'validation'].includes(
+        ['registration', 'validation', 'scheduled'].includes(
           registration.tournaments.phase,
         ) &&
         registration.request_status === 'changes_requested',
@@ -1054,10 +1121,12 @@ export class TournamentsService {
       );
     }
     if (
-      !['registration', 'validation'].includes(registration.tournaments.phase)
+      !['registration', 'validation', 'scheduled'].includes(
+        registration.tournaments.phase,
+      )
     ) {
       throw new BadRequestException(
-        'Las plantillas solo se pueden revisar durante Inscripciones o Validación.',
+        'Las plantillas se pueden revisar hasta antes de iniciar el torneo.',
       );
     }
     if (
@@ -1125,6 +1194,11 @@ export class TournamentsService {
           })),
           skipDuplicates: true,
         });
+        await assignApprovedTeamToCompetition(
+          transaction,
+          tournamentId,
+          teamId,
+        );
       }
       const recipientIds = [
         ...new Set([
@@ -1230,7 +1304,9 @@ export class TournamentsService {
       );
     }
     if (
-      !['registration', 'validation'].includes(registration.tournaments.phase)
+      !['registration', 'validation', 'scheduled'].includes(
+        registration.tournaments.phase,
+      )
     ) {
       throw new BadRequestException(
         'La plantilla ya está cerrada y no admite nuevos cambios.',
@@ -1410,43 +1486,53 @@ export class TournamentsService {
       );
     }
 
-    const [registrations, players, playedMatches] = await Promise.all([
-      this.prisma.tournament_team_registrations.findMany({
-        where: { tournament_id: tournamentId, request_status: 'approved' },
-        select: {
-          team_id: true,
-          points: true,
-          teams: {
-            select: { name: true, primary_color: true },
-          },
-        },
-      }),
-      this.prisma.tournament_team_players.findMany({
-        where: {
-          tournament_id: tournamentId,
-          registration_status: 'approved',
-        },
-        select: {
-          player_id: true,
-          team_members: {
-            select: {
-              users: { select: { full_name: true } },
-              teams: { select: { name: true } },
+    const [registrations, players, playedMatches, viewerRegistration] =
+      await Promise.all([
+        this.prisma.tournament_team_registrations.findMany({
+          where: { tournament_id: tournamentId, request_status: 'approved' },
+          select: {
+            team_id: true,
+            points: true,
+            teams: {
+              select: { name: true, primary_color: true },
             },
           },
-          player_match_stats: { select: { goals: true } },
-        },
-      }),
-      this.prisma.matches.findMany({
-        where: { tournament_id: tournamentId, status: 'played' },
-        select: {
-          home_team_id: true,
-          away_team_id: true,
-          home_score: true,
-          away_score: true,
-        },
-      }),
-    ]);
+        }),
+        this.prisma.tournament_team_players.findMany({
+          where: {
+            tournament_id: tournamentId,
+            registration_status: 'approved',
+          },
+          select: {
+            player_id: true,
+            team_members: {
+              select: {
+                users: { select: { full_name: true } },
+                teams: { select: { name: true } },
+              },
+            },
+            player_match_stats: { select: { goals: true } },
+          },
+        }),
+        this.prisma.matches.findMany({
+          where: { tournament_id: tournamentId, status: 'played' },
+          select: {
+            home_team_id: true,
+            away_team_id: true,
+            home_score: true,
+            away_score: true,
+          },
+        }),
+        this.prisma.tournament_team_players.findFirst({
+          where: {
+            tournament_id: tournamentId,
+            player_id: requestingUserId,
+            registration_status: 'approved',
+            tournament_team_registrations: { request_status: 'approved' },
+          },
+          select: { team_id: true },
+        }),
+      ]);
 
     const standings = registrations.map((registration) => {
       let played = 0;
@@ -1510,6 +1596,7 @@ export class TournamentsService {
 
     return {
       ...toTournamentCatalogItemResponse(tournament, canManage),
+      viewerTeamId: viewerRegistration?.team_id.toString() ?? null,
       standings,
       scorers,
       matchesPlayed: playedMatches.length,
@@ -1892,6 +1979,10 @@ export class TournamentsService {
             createTournamentDto.minPlayersPerTeam,
             createTournamentDto.maxPlayersPerTeam,
           );
+          this.assertTournamentCapacityWithinType(
+            tournamentType,
+            createTournamentDto.maxTeams,
+          );
 
           const createdTournament = await transaction.tournaments.create({
             data: {
@@ -2097,6 +2188,10 @@ export class TournamentsService {
               persistedTournament.min_players_per_team,
             updateTournamentDto.maxPlayersPerTeam ??
               persistedTournament.max_players_per_team,
+          );
+          this.assertTournamentCapacityWithinType(
+            tournamentType,
+            updateTournamentDto.maxTeams ?? persistedTournament.max_teams,
           );
 
           await transaction.tournaments.update({
@@ -2600,6 +2695,28 @@ export class TournamentsService {
         `El rango de jugadores por equipo para ${tournamentType.name} debe estar dentro de ${tournamentType.min_players_per_team} a ${tournamentType.max_players_per_team}.`,
       );
     }
+  }
+
+  private assertTournamentCapacityWithinType(
+    tournamentType: TournamentTypePlayerLimits,
+    maxTeams: number,
+  ): void {
+    const normalizedName = tournamentType.name
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLocaleLowerCase('es');
+    const directElimination =
+      normalizedName.includes('eliminacion') &&
+      !normalizedName.includes('mixto');
+    if (
+      directElimination &&
+      !DIRECT_KNOCKOUT_SIZES.includes(
+        maxTeams as (typeof DIRECT_KNOCKOUT_SIZES)[number],
+      )
+    )
+      throw new BadRequestException(
+        'Un torneo de eliminación directa debe tener 8, 16 o 32 equipos.',
+      );
   }
 
   private assertTeamRosterWithinTournamentLimits(

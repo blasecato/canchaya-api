@@ -166,6 +166,18 @@ export class TeamsController {
     return this.teamsService.findTournamentRosters(id, request.auth.userId);
   }
 
+  @Get(':id/matches')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER')
+  @ApiOperation({
+    summary: 'Consultar resultados recientes y próximos partidos del equipo',
+  })
+  findMatches(
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Req() request: AuthenticatedRequest,
+  ) {
+    return this.teamsService.findMatches(id, request.auth.userId);
+  }
+
   @Patch(':id/rosters/:tournamentId/players/:playerId')
   @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER')
   @ApiOperation({

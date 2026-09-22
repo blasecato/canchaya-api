@@ -505,7 +505,9 @@ let AssociationsService = AssociationsService_1 = class AssociationsService {
                 permissionLevel,
             };
         }
-        if ((roleCodes.has('PLAYER') || roleCodes.has('REFEREE')) &&
+        if ((roleCodes.has('ASSOCIATION_ADMIN') ||
+            roleCodes.has('PLAYER') ||
+            roleCodes.has('REFEREE')) &&
             association.status === 'active') {
             return {
                 canEdit: false,

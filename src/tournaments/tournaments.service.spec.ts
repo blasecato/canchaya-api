@@ -198,6 +198,23 @@ describe('TournamentsService', () => {
   });
 
   describe('create', () => {
+    it('rechaza eliminación directa cuando el cupo no es 8, 16 o 32', async () => {
+      transactionTournamentTypeFindUnique.mockResolvedValue({
+        id: 2n,
+        name: 'Eliminación directa',
+        min_players_per_team: 7,
+        max_players_per_team: 25,
+      });
+
+      await expect(
+        service.create(associationId, requestingUserId, {
+          ...createDto,
+          maxTeams: 20,
+        }),
+      ).rejects.toThrow('8, 16 o 32');
+      expect(transactionTournamentCreate).not.toHaveBeenCalled();
+    });
+
     it('fija la asociación desde la ruta y el creador desde el usuario autenticado', async () => {
       saveTournamentPhoto.mockResolvedValue(
         storedAsset('/uploads/tournaments/new-photo.png'),

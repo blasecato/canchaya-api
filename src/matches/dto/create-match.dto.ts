@@ -50,6 +50,20 @@ export class CreateMatchDto {
   @Max(2_147_483_647)
   roundNumber?: number | null;
 
+  @ApiPropertyOptional({ minimum: 0, nullable: true })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(1000)
+  homePenalties?: number | null;
+
+  @ApiPropertyOptional({ minimum: 0, nullable: true })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(1000)
+  awayPenalties?: number | null;
+
   @ApiPropertyOptional({ example: 2, minimum: 0, nullable: true })
   @IsOptional()
   @IsInt()

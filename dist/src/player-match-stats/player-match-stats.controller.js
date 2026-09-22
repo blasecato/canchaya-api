@@ -34,6 +34,9 @@ let PlayerMatchStatsController = class PlayerMatchStatsController {
     findAll(request) {
         return this.playerMatchStatsService.findAll(request.auth.userId);
     }
+    findMatchDetail(matchId, request) {
+        return this.playerMatchStatsService.findMatchDetail(matchId, request.auth.userId);
+    }
     findOne(id, request) {
         return this.playerMatchStatsService.findOne(id, request.auth.userId);
     }
@@ -69,6 +72,19 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], PlayerMatchStatsController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('match/:matchId'),
+    (0, swagger_1.ApiParam)({ name: 'matchId', example: '1', type: String }),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Consultar el desglose de jugadores y goles de un partido',
+    }),
+    (0, swagger_1.ApiOkResponse)({ description: 'Plantillas y goles del partido.' }),
+    __param(0, (0, common_1.Param)('matchId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object]),
+    __metadata("design:returntype", void 0)
+], PlayerMatchStatsController.prototype, "findMatchDetail", null);
 __decorate([
     (0, common_1.Get)(':id'),
     (0, swagger_1.ApiParam)({ name: 'id', example: '1', type: String }),

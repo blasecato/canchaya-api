@@ -68,6 +68,9 @@ export class TournamentStandingResponseDto {
 }
 
 export class TournamentDetailResponseDto extends TournamentCatalogItemResponseDto {
+  @ApiProperty({ example: '40', type: String, nullable: true })
+  viewerTeamId!: string | null;
+
   @ApiProperty({ type: TournamentScorerResponseDto, isArray: true })
   scorers!: TournamentScorerResponseDto[];
 

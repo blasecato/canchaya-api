@@ -16,6 +16,7 @@ describe('AssociationsService', () => {
   const tournamentsFindMany = jest.fn();
   const registrationsGroupBy = jest.fn();
   const userRolesFindMany = jest.fn();
+  const userRolesFindFirst = jest.fn();
   const transactionUsersFindUnique = jest.fn();
   const transactionAssociationsCreate = jest.fn();
   const transactionAssociationsFindUnique = jest.fn();
@@ -48,7 +49,10 @@ describe('AssociationsService', () => {
     },
     tournaments: { findMany: tournamentsFindMany },
     tournament_team_registrations: { groupBy: registrationsGroupBy },
-    user_roles: { findMany: userRolesFindMany },
+    user_roles: {
+      findMany: userRolesFindMany,
+      findFirst: userRolesFindFirst,
+    },
   } as unknown as PrismaService;
   const saveAssociationLogo = jest.fn();
   const saveAssociationCover = jest.fn();
@@ -106,6 +110,7 @@ describe('AssociationsService', () => {
         callback(transactionClient),
     );
     userRolesFindMany.mockResolvedValue([{ role_code: 'SUPER_ADMIN' }]);
+    userRolesFindFirst.mockResolvedValue(null);
     transactionUserRolesFindMany.mockResolvedValue([
       { role_code: 'SUPER_ADMIN' },
     ]);
@@ -361,6 +366,17 @@ describe('AssociationsService', () => {
       await expect(service.findAll()).resolves.toEqual([]);
       expect(registrationsGroupBy).not.toHaveBeenCalled();
     });
+
+    it('muestra a un administrador el listado público de asociaciones activas', async () => {
+      associationsFindMany.mockResolvedValue([]);
+
+      await expect(service.findAll(9n)).resolves.toEqual([]);
+      expect(associationsFindMany).toHaveBeenCalledWith({
+        where: { status: 'active' },
+        orderBy: { id: 'asc' },
+        select: associationResponseSelect,
+      });
+    });
   });
 
   describe('findOne', () => {
@@ -447,10 +463,33 @@ describe('AssociationsService', () => {
       expect(result.permissions.permissionLevel).toBe('viewer');
     });
 
-    it('rechaza a un ASSOCIATION_ADMIN ajeno a la asociación', async () => {
+    it('permite consultar sin editar una asociación activa ajena', async () => {
+      userRolesFindMany.mockResolvedValue([{ role_code: 'ASSOCIATION_ADMIN' }]);
+      associationsFindUnique
+        .mockResolvedValueOnce({
+          owner_user_id: 2n,
+          status: 'active',
+          association_administrators: [],
+        })
+        .mockResolvedValueOnce(associationRecord);
+      registrationsGroupBy.mockResolvedValue([]);
+
+      const result = await service.findOne(5n, 9n);
+
+      expect(result.permissions).toEqual({
+        canEdit: false,
+        canManageOwner: false,
+        canManageTournaments: false,
+        isOwner: false,
+        permissionLevel: 'viewer',
+      });
+    });
+
+    it('rechaza a un ASSOCIATION_ADMIN ajeno a una asociación inactiva', async () => {
       userRolesFindMany.mockResolvedValue([{ role_code: 'ASSOCIATION_ADMIN' }]);
       associationsFindUnique.mockResolvedValue({
         owner_user_id: 2n,
+        status: 'inactive',
         association_administrators: [],
       });
 

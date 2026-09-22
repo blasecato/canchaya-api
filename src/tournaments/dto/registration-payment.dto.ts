@@ -91,6 +91,43 @@ export class TournamentRegistrationPaymentResponseDto {
   updatedBy!: RegistrationPaymentUserResponseDto | null;
 }
 
+export class MyTournamentTeamPaymentResponseDto {
+  @ApiProperty({ example: '40', type: String })
+  teamId!: string;
+
+  @ApiProperty({ example: 'Ladrillera Fútbol Club' })
+  teamName!: string;
+
+  @ApiProperty({ enum: REGISTRATION_PAYMENT_STATUSES })
+  paymentStatus!: RegistrationPaymentStatus;
+
+  @ApiProperty({ example: '150000.00' })
+  registrationFee!: string;
+
+  @ApiProperty({ example: '50000.00' })
+  amountPaid!: string;
+
+  @ApiProperty({ example: '100000.00' })
+  balanceDue!: string;
+
+  @ApiProperty({ example: null, nullable: true })
+  updatedAt!: string | null;
+}
+
+export class MyTournamentPaymentResponseDto {
+  @ApiProperty({ example: '7', type: String })
+  tournamentId!: string;
+
+  @ApiProperty({ example: 'Copa Surcolombiana' })
+  tournamentName!: string;
+
+  @ApiProperty({ example: 'COP' })
+  currencyCode!: string;
+
+  @ApiProperty({ type: MyTournamentTeamPaymentResponseDto })
+  payment!: MyTournamentTeamPaymentResponseDto;
+}
+
 export class TournamentPaymentSummaryResponseDto {
   @ApiProperty({ example: 8 })
   totalTeams!: number;

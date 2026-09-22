@@ -113,6 +113,47 @@ export declare class TeamsController {
     }>;
     findCarnets(id: bigint, query: TeamCarnetsQueryDto, request: AuthenticatedRequest): Promise<TeamCarnetsResponseDto>;
     findTournamentRosters(id: bigint, request: AuthenticatedRequest): Promise<TeamRostersResponseDto>;
+    findMatches(id: bigint, request: AuthenticatedRequest): Promise<{
+        teamId: string;
+        results: {
+            id: string;
+            tournamentId: string;
+            tournamentName: string;
+            matchDate: string | null;
+            venue: string | null;
+            status: string;
+            homeTeam: {
+                id: string;
+                name: string;
+            };
+            awayTeam: {
+                id: string;
+                name: string;
+            };
+            homeScore: number | null;
+            awayScore: number | null;
+            refereeName: string;
+        }[];
+        upcoming: {
+            id: string;
+            tournamentId: string;
+            tournamentName: string;
+            matchDate: string | null;
+            venue: string | null;
+            status: string;
+            homeTeam: {
+                id: string;
+                name: string;
+            };
+            awayTeam: {
+                id: string;
+                name: string;
+            };
+            homeScore: number | null;
+            awayScore: number | null;
+            refereeName: string;
+        }[];
+    }>;
     updateTournamentRosterPlayer(id: bigint, tournamentId: bigint, playerId: bigint, request: AuthenticatedRequest, dto: UpdateTournamentRosterPlayerDto): Promise<TeamRosterPlayerResponseDto>;
     removeMember(id: bigint, playerId: bigint, request: AuthenticatedRequest): Promise<{
         teamId: string;

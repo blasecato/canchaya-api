@@ -87,6 +87,9 @@ let TournamentCatalogController = class TournamentCatalogController {
     registerTeam(tournamentId, request, dto) {
         return this.tournamentsService.registerTeam(tournamentId, BigInt(dto.teamId), request.auth.userId);
     }
+    findMyRegistrationPayment(tournamentId, request) {
+        return this.tournamentsService.findMyRegistrationPayment(tournamentId, request.auth.userId);
+    }
     findRegistrationPayments(tournamentId, request) {
         return this.tournamentsService.findRegistrationPayments(tournamentId, request.auth.userId);
     }
@@ -264,6 +267,19 @@ __decorate([
     __metadata("design:paramtypes", [BigInt, Object, register_team_dto_1.RegisterTeamDto]),
     __metadata("design:returntype", Promise)
 ], TournamentCatalogController.prototype, "registerTeam", null);
+__decorate([
+    (0, common_1.Get)(':tournamentId/my-payment'),
+    (0, require_roles_decorator_1.RequireRoles)('PLAYER'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Consultar el pago del equipo del jugador autenticado',
+    }),
+    (0, swagger_1.ApiOkResponse)({ type: registration_payment_dto_1.MyTournamentPaymentResponseDto }),
+    __param(0, (0, common_1.Param)('tournamentId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object]),
+    __metadata("design:returntype", Promise)
+], TournamentCatalogController.prototype, "findMyRegistrationPayment", null);
 __decorate([
     (0, common_1.Get)(':tournamentId/payments'),
     (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),

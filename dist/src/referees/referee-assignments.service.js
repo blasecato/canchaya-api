@@ -15,6 +15,7 @@ const client_1 = require("../../generated/prisma/client");
 const competition_access_service_1 = require("../authorization/competition-access.service");
 const prisma_service_1 = require("../prisma/prisma.service");
 const ACTIVE_ASSIGNMENT_STATUSES = ['pending', 'accepted'];
+const REFEREE_ASSIGNMENT_WINDOW_MINUTES = 60;
 const ASSIGNABLE_TOURNAMENT_PHASES = [
     'validation',
     'scheduled',
@@ -158,7 +159,7 @@ let RefereeAssignmentsService = class RefereeAssignmentsService {
             await this.prisma.$transaction(async (transaction) => {
                 const match = await this.findAssignableMatch(transaction, matchId);
                 await this.assertActiveReferee(transaction, refereeId);
-                await this.assertCanAttend(transaction, refereeId, match.id, match.match_date, match.duration_minutes);
+                await this.assertCanAttend(transaction, refereeId, match.id, match.match_date);
                 await this.assertRoleIsAvailable(transaction, match.id, refereeId, dto.role);
                 await this.persistPendingAssignment(transaction, match, refereeId, dto.role, managerId);
             }, { isolationLevel: client_1.Prisma.TransactionIsolationLevel.Serializable });
@@ -198,7 +199,7 @@ let RefereeAssignmentsService = class RefereeAssignmentsService {
         try {
             await this.prisma.$transaction(async (transaction) => {
                 if (dto.status === 'accepted') {
-                    await this.assertCanAttend(transaction, refereeId, matchId, current.matches.match_date, current.matches.duration_minutes);
+                    await this.assertCanAttend(transaction, refereeId, matchId, current.matches.match_date);
                 }
                 const changed = await transaction.match_referees.updateMany({
                     where: {
@@ -263,7 +264,7 @@ let RefereeAssignmentsService = class RefereeAssignmentsService {
                 }
                 const match = await this.findAssignableMatch(transaction, matchId);
                 await this.assertActiveReferee(transaction, newRefereeId);
-                await this.assertCanAttend(transaction, newRefereeId, match.id, match.match_date, match.duration_minutes);
+                await this.assertCanAttend(transaction, newRefereeId, match.id, match.match_date);
                 await this.assertRoleIsAvailable(transaction, match.id, newRefereeId, current.referee_role, currentRefereeId);
                 await transaction.match_referees.update({
                     where: {
@@ -314,7 +315,7 @@ let RefereeAssignmentsService = class RefereeAssignmentsService {
         }
         return this.findAssignment(matchId, newRefereeId);
     }
-    async assertActiveAssignmentsCompatible(matchId, matchDate, durationMinutes) {
+    async assertActiveAssignmentsCompatible(matchId, matchDate) {
         const assignments = await this.prisma.match_referees.findMany({
             where: {
                 match_id: matchId,
@@ -323,7 +324,7 @@ let RefereeAssignmentsService = class RefereeAssignmentsService {
             select: { referee_id: true },
         });
         for (const assignment of assignments) {
-            await this.assertCanAttend(this.prisma, assignment.referee_id, matchId, matchDate, durationMinutes);
+            await this.assertCanAttend(this.prisma, assignment.referee_id, matchId, matchDate);
         }
     }
     async findAssignment(matchId, refereeId) {
@@ -384,23 +385,11 @@ let RefereeAssignmentsService = class RefereeAssignmentsService {
             throw new common_1.BadRequestException('El usuario seleccionado no es un árbitro activo.');
         }
     }
-    async assertCanAttend(client, refereeId, matchId, startsAt, durationMinutes) {
+    async assertCanAttend(client, refereeId, matchId, startsAt) {
         if (!startsAt) {
             throw new common_1.BadRequestException('El partido debe tener fecha y hora para validar la disponibilidad.');
         }
-        const endsAt = new Date(startsAt.getTime() + durationMinutes * 60_000);
-        const availability = await client.referee_availability.findFirst({
-            where: {
-                referee_id: refereeId,
-                status: 'active',
-                starts_at: { lte: startsAt },
-                ends_at: { gte: endsAt },
-            },
-            select: { id: true },
-        });
-        if (!availability) {
-            throw new common_1.BadRequestException('El árbitro no registró disponibilidad para cubrir todo el horario del partido.');
-        }
+        const endsAt = new Date(startsAt.getTime() + REFEREE_ASSIGNMENT_WINDOW_MINUTES * 60_000);
         const otherAssignments = await client.match_referees.findMany({
             where: {
                 referee_id: refereeId,
@@ -418,7 +407,8 @@ let RefereeAssignmentsService = class RefereeAssignmentsService {
         const conflict = otherAssignments.find(({ matches }) => {
             if (!matches.match_date)
                 return false;
-            const otherEnd = new Date(matches.match_date.getTime() + matches.duration_minutes * 60_000);
+            const otherEnd = new Date(matches.match_date.getTime() +
+                REFEREE_ASSIGNMENT_WINDOW_MINUTES * 60_000);
             return matches.match_date < endsAt && otherEnd > startsAt;
         });
         if (conflict) {
@@ -475,31 +465,37 @@ let RefereeAssignmentsService = class RefereeAssignmentsService {
             },
             update: { status: 'active' },
         });
-        await transaction.match_referees.upsert({
-            where: {
-                match_id_referee_id: { match_id: match.id, referee_id: refereeId },
-            },
-            create: {
-                match_id: match.id,
-                tournament_id: match.tournament_id,
-                referee_id: refereeId,
-                referee_role: role,
-                assignment_status: 'pending',
-                assigned_by: managerId,
-                replaced_referee_id: replacedRefereeId,
-                replacement_reason: reason?.trim() || null,
-            },
-            update: {
-                referee_role: role,
-                assignment_status: 'pending',
-                assigned_by: managerId,
-                responded_at: null,
-                response_notes: null,
-                replaced_referee_id: replacedRefereeId,
-                replacement_reason: reason?.trim() || null,
-                updated_at: new Date(),
-            },
-        });
+        if (previousAssignment) {
+            await transaction.match_referees.update({
+                where: {
+                    match_id_referee_id: { match_id: match.id, referee_id: refereeId },
+                },
+                data: {
+                    referee_role: role,
+                    assignment_status: 'pending',
+                    assigned_by: managerId,
+                    responded_at: null,
+                    response_notes: null,
+                    replaced_referee_id: replacedRefereeId,
+                    replacement_reason: reason?.trim() || null,
+                    updated_at: new Date(),
+                },
+            });
+        }
+        else {
+            await transaction.match_referees.create({
+                data: {
+                    match_id: match.id,
+                    tournament_id: match.tournament_id,
+                    referee_id: refereeId,
+                    referee_role: role,
+                    assignment_status: 'pending',
+                    assigned_by: managerId,
+                    replaced_referee_id: replacedRefereeId,
+                    replacement_reason: reason?.trim() || null,
+                },
+            });
+        }
         await transaction.referee_assignment_events.create({
             data: {
                 match_id: match.id,

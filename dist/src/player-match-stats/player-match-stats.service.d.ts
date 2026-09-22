@@ -20,8 +20,9 @@ export declare class PlayerMatchStatsService {
         minutes_played: number;
     }>;
     findAll(requestingUserId: bigint): Promise<{
+        playerName: string;
+        teamName: string;
         id: bigint;
-        created_at: Date;
         tournament_id: bigint;
         match_id: bigint;
         team_id: bigint;
@@ -31,6 +32,17 @@ export declare class PlayerMatchStatsService {
         yellow_cards: number;
         red_cards: number;
         minutes_played: number;
+    }[]>;
+    findMatchDetail(matchId: bigint, requestingUserId: bigint): Promise<{
+        matchId: string;
+        teamId: string;
+        teamName: string;
+        playerId: string;
+        playerName: string;
+        jerseyNumber: number | null;
+        goals: number;
+        yellowCards: number;
+        redCards: number;
     }[]>;
     findOne(id: bigint, requestingUserId: bigint): Promise<{
         id: bigint;

@@ -721,7 +721,9 @@ export class AssociationsService {
     }
 
     if (
-      (roleCodes.has('PLAYER') || roleCodes.has('REFEREE')) &&
+      (roleCodes.has('ASSOCIATION_ADMIN') ||
+        roleCodes.has('PLAYER') ||
+        roleCodes.has('REFEREE')) &&
       association.status === 'active'
     ) {
       return {

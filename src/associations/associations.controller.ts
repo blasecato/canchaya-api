@@ -165,11 +165,11 @@ export class AssociationsController {
   }
 
   @Get()
-  @RequireRoles('SUPER_ADMIN', 'PLAYER', 'REFEREE')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER', 'REFEREE')
   @ApiOperation({
     summary: 'Listar las asociaciones visibles para el usuario',
     description:
-      'SUPER_ADMIN consulta todas las asociaciones; PLAYER y REFEREE consultan únicamente las asociaciones activas.',
+      'SUPER_ADMIN consulta todas las asociaciones; ASSOCIATION_ADMIN, PLAYER y REFEREE consultan únicamente las asociaciones activas.',
   })
   @ApiOkResponse({
     description: 'Listado de asociaciones con propietario y métricas.',

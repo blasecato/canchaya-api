@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TournamentPaymentsResponseDto = exports.TournamentPaymentSummaryResponseDto = exports.TournamentRegistrationPaymentResponseDto = exports.RegistrationPaymentUserResponseDto = exports.UpdateRegistrationPaymentDto = exports.REGISTRATION_PAYMENT_STATUSES = void 0;
+exports.TournamentPaymentsResponseDto = exports.TournamentPaymentSummaryResponseDto = exports.MyTournamentPaymentResponseDto = exports.MyTournamentTeamPaymentResponseDto = exports.TournamentRegistrationPaymentResponseDto = exports.RegistrationPaymentUserResponseDto = exports.UpdateRegistrationPaymentDto = exports.REGISTRATION_PAYMENT_STATUSES = void 0;
 const openapi = require("@nestjs/swagger");
 const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
@@ -128,6 +128,73 @@ __decorate([
     }),
     __metadata("design:type", Object)
 ], TournamentRegistrationPaymentResponseDto.prototype, "updatedBy", void 0);
+class MyTournamentTeamPaymentResponseDto {
+    teamId;
+    teamName;
+    paymentStatus;
+    registrationFee;
+    amountPaid;
+    balanceDue;
+    updatedAt;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { teamId: { required: true, type: () => String }, teamName: { required: true, type: () => String }, paymentStatus: { required: true, enum: ["paid", "unpaid", "partial"] }, registrationFee: { required: true, type: () => String }, amountPaid: { required: true, type: () => String }, balanceDue: { required: true, type: () => String }, updatedAt: { required: true, type: () => String, nullable: true } };
+    }
+}
+exports.MyTournamentTeamPaymentResponseDto = MyTournamentTeamPaymentResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '40', type: String }),
+    __metadata("design:type", String)
+], MyTournamentTeamPaymentResponseDto.prototype, "teamId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Ladrillera Fútbol Club' }),
+    __metadata("design:type", String)
+], MyTournamentTeamPaymentResponseDto.prototype, "teamName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ enum: exports.REGISTRATION_PAYMENT_STATUSES }),
+    __metadata("design:type", String)
+], MyTournamentTeamPaymentResponseDto.prototype, "paymentStatus", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '150000.00' }),
+    __metadata("design:type", String)
+], MyTournamentTeamPaymentResponseDto.prototype, "registrationFee", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '50000.00' }),
+    __metadata("design:type", String)
+], MyTournamentTeamPaymentResponseDto.prototype, "amountPaid", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '100000.00' }),
+    __metadata("design:type", String)
+], MyTournamentTeamPaymentResponseDto.prototype, "balanceDue", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: null, nullable: true }),
+    __metadata("design:type", Object)
+], MyTournamentTeamPaymentResponseDto.prototype, "updatedAt", void 0);
+class MyTournamentPaymentResponseDto {
+    tournamentId;
+    tournamentName;
+    currencyCode;
+    payment;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { tournamentId: { required: true, type: () => String }, tournamentName: { required: true, type: () => String }, currencyCode: { required: true, type: () => String }, payment: { required: true, type: () => require("./registration-payment.dto").MyTournamentTeamPaymentResponseDto } };
+    }
+}
+exports.MyTournamentPaymentResponseDto = MyTournamentPaymentResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '7', type: String }),
+    __metadata("design:type", String)
+], MyTournamentPaymentResponseDto.prototype, "tournamentId", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Copa Surcolombiana' }),
+    __metadata("design:type", String)
+], MyTournamentPaymentResponseDto.prototype, "tournamentName", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'COP' }),
+    __metadata("design:type", String)
+], MyTournamentPaymentResponseDto.prototype, "currencyCode", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: MyTournamentTeamPaymentResponseDto }),
+    __metadata("design:type", MyTournamentTeamPaymentResponseDto)
+], MyTournamentPaymentResponseDto.prototype, "payment", void 0);
 class TournamentPaymentSummaryResponseDto {
     totalTeams;
     paidTeams;

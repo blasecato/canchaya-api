@@ -12,6 +12,7 @@ import { ReplaceRefereeDto } from './dto/replace-referee.dto';
 import { RespondRefereeAssignmentDto } from './dto/respond-referee-assignment.dto';
 
 const ACTIVE_ASSIGNMENT_STATUSES = ['pending', 'accepted'] as const;
+const REFEREE_ASSIGNMENT_WINDOW_MINUTES = 60;
 const ASSIGNABLE_TOURNAMENT_PHASES = [
   'validation',
   'scheduled',
@@ -191,7 +192,6 @@ export class RefereeAssignmentsService {
             refereeId,
             match.id,
             match.match_date,
-            match.duration_minutes,
           );
           await this.assertRoleIsAvailable(
             transaction,
@@ -266,7 +266,6 @@ export class RefereeAssignmentsService {
               refereeId,
               matchId,
               current.matches.match_date,
-              current.matches.duration_minutes,
             );
           }
           const changed = await transaction.match_referees.updateMany({
@@ -371,7 +370,6 @@ export class RefereeAssignmentsService {
             newRefereeId,
             match.id,
             match.match_date,
-            match.duration_minutes,
           );
           await this.assertRoleIsAvailable(
             transaction,
@@ -444,7 +442,6 @@ export class RefereeAssignmentsService {
   async assertActiveAssignmentsCompatible(
     matchId: bigint,
     matchDate: Date | null,
-    durationMinutes: number,
   ): Promise<void> {
     const assignments = await this.prisma.match_referees.findMany({
       where: {
@@ -459,7 +456,6 @@ export class RefereeAssignmentsService {
         assignment.referee_id,
         matchId,
         matchDate,
-        durationMinutes,
       );
     }
   }
@@ -542,28 +538,15 @@ export class RefereeAssignmentsService {
     refereeId: bigint,
     matchId: bigint,
     startsAt: Date | null,
-    durationMinutes: number,
   ): Promise<void> {
     if (!startsAt) {
       throw new BadRequestException(
         'El partido debe tener fecha y hora para validar la disponibilidad.',
       );
     }
-    const endsAt = new Date(startsAt.getTime() + durationMinutes * 60_000);
-    const availability = await client.referee_availability.findFirst({
-      where: {
-        referee_id: refereeId,
-        status: 'active',
-        starts_at: { lte: startsAt },
-        ends_at: { gte: endsAt },
-      },
-      select: { id: true },
-    });
-    if (!availability) {
-      throw new BadRequestException(
-        'El árbitro no registró disponibilidad para cubrir todo el horario del partido.',
-      );
-    }
+    const endsAt = new Date(
+      startsAt.getTime() + REFEREE_ASSIGNMENT_WINDOW_MINUTES * 60_000,
+    );
 
     const otherAssignments = await client.match_referees.findMany({
       where: {
@@ -582,7 +565,8 @@ export class RefereeAssignmentsService {
     const conflict = otherAssignments.find(({ matches }) => {
       if (!matches.match_date) return false;
       const otherEnd = new Date(
-        matches.match_date.getTime() + matches.duration_minutes * 60_000,
+        matches.match_date.getTime() +
+          REFEREE_ASSIGNMENT_WINDOW_MINUTES * 60_000,
       );
       return matches.match_date < endsAt && otherEnd > startsAt;
     });
@@ -667,31 +651,36 @@ export class RefereeAssignmentsService {
       },
       update: { status: 'active' },
     });
-    await transaction.match_referees.upsert({
-      where: {
-        match_id_referee_id: { match_id: match.id, referee_id: refereeId },
-      },
-      create: {
-        match_id: match.id,
-        tournament_id: match.tournament_id,
-        referee_id: refereeId,
-        referee_role: role,
-        assignment_status: 'pending',
-        assigned_by: managerId,
-        replaced_referee_id: replacedRefereeId,
-        replacement_reason: reason?.trim() || null,
-      },
-      update: {
-        referee_role: role,
-        assignment_status: 'pending',
-        assigned_by: managerId,
-        responded_at: null,
-        response_notes: null,
-        replaced_referee_id: replacedRefereeId,
-        replacement_reason: reason?.trim() || null,
-        updated_at: new Date(),
-      },
-    });
+    if (previousAssignment) {
+      await transaction.match_referees.update({
+        where: {
+          match_id_referee_id: { match_id: match.id, referee_id: refereeId },
+        },
+        data: {
+          referee_role: role,
+          assignment_status: 'pending',
+          assigned_by: managerId,
+          responded_at: null,
+          response_notes: null,
+          replaced_referee_id: replacedRefereeId,
+          replacement_reason: reason?.trim() || null,
+          updated_at: new Date(),
+        },
+      });
+    } else {
+      await transaction.match_referees.create({
+        data: {
+          match_id: match.id,
+          tournament_id: match.tournament_id,
+          referee_id: refereeId,
+          referee_role: role,
+          assignment_status: 'pending',
+          assigned_by: managerId,
+          replaced_referee_id: replacedRefereeId,
+          replacement_reason: reason?.trim() || null,
+        },
+      });
+    }
     await transaction.referee_assignment_events.create({
       data: {
         match_id: match.id,

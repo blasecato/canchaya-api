@@ -13,6 +13,7 @@ exports.TournamentLifecycleService = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("../../generated/prisma/client");
 const competition_access_service_1 = require("../authorization/competition-access.service");
+const competition_engine_1 = require("../competition/competition.engine");
 const prisma_service_1 = require("../prisma/prisma.service");
 const tournament_lifecycle_constants_1 = require("./tournament-lifecycle.constants");
 const tournament_eligibility_1 = require("./tournament-eligibility");
@@ -60,6 +61,7 @@ let TournamentLifecycleService = class TournamentLifecycleService {
         await this.access.assertCanManageTournament(requestingUserId, tournamentId);
         const reason = dto.reason?.trim() || null;
         await this.prisma.$transaction(async (transaction) => {
+            await transaction.$queryRaw `SELECT id FROM tournaments WHERE id = ${tournamentId} FOR UPDATE`;
             const snapshot = await this.findSnapshot(transaction, tournamentId);
             const option = this.buildTransitionOptions(snapshot).find(({ phase }) => phase === dto.phase);
             if (!option) {
@@ -167,7 +169,6 @@ let TournamentLifecycleService = class TournamentLifecycleService {
     }
     findBlockers(snapshot, targetPhase) {
         const blockers = [];
-        const viableRegistrations = snapshot.registrations.filter(({ status }) => ['pending', 'approved', 'changes_requested'].includes(status));
         const approvedRegistrations = snapshot.registrations.filter(({ status }) => status === 'approved');
         if (targetPhase === 'registration') {
             if (snapshot.status !== 'active') {
@@ -180,29 +181,36 @@ let TournamentLifecycleService = class TournamentLifecycleService {
                 blockers.push('La fecha de cierre de inscripciones ya pasó; actualízala antes de abrirlas.');
             }
         }
-        if (targetPhase === 'validation' && viableRegistrations.length < 2) {
-            blockers.push('Se necesitan al menos dos solicitudes de equipos sin rechazar para cerrar inscripciones.');
-        }
         if (targetPhase === 'scheduled') {
-            if (approvedRegistrations.length < 2) {
-                blockers.push('Aprueba al menos dos equipos antes de programar el torneo.');
+            if (!snapshot.competitionPlan)
+                blockers.push('Organiza y confirma el calendario o el cuadro antes de marcar el torneo como programado.');
+        }
+        if (targetPhase === 'in_progress') {
+            if (snapshot.competitionPlan) {
+                const ids = approvedRegistrations.map(({ teamId }) => teamId.toString());
+                const assigned = (0, competition_engine_1.assignedTeamIds)(snapshot.competitionPlan);
+                if (ids.length !== assigned.length ||
+                    ids.some((id) => !assigned.includes(id)))
+                    blockers.push('Los equipos aprobados no coinciden con la organización guardada. Revisa las inscripciones.');
+                if ((0, competition_engine_1.hasUnfilledSlots)(snapshot.competitionPlan))
+                    blockers.push('Todos los lugares del sorteo deben tener un equipo aprobado antes de iniciar el torneo.');
             }
-            if (approvedRegistrations.length > snapshot.maxTeams) {
+            if (approvedRegistrations.length < 6)
+                blockers.push('Se necesitan al menos seis equipos aprobados para iniciar el torneo.');
+            if (approvedRegistrations.length < snapshot.maxTeams)
+                blockers.push(`Completa los ${snapshot.maxTeams - approvedRegistrations.length} lugar${snapshot.maxTeams - approvedRegistrations.length === 1 ? '' : 'es'} pendiente${snapshot.maxTeams - approvedRegistrations.length === 1 ? '' : 's'} antes de iniciar el torneo.`);
+            if (approvedRegistrations.length > snapshot.maxTeams)
                 blockers.push(`Hay ${approvedRegistrations.length} equipos aprobados y el torneo admite máximo ${snapshot.maxTeams}.`);
-            }
             const unresolved = snapshot.registrations.filter(({ status }) => ['pending', 'changes_requested'].includes(status)).length;
-            if (unresolved > 0) {
+            if (unresolved > 0)
                 blockers.push(`Resuelve ${unresolved} solicitud${unresolved === 1 ? '' : 'es'} pendiente${unresolved === 1 ? '' : 's'}.`);
-            }
             for (const registration of approvedRegistrations) {
                 const playerCount = registration.players.length;
                 if (playerCount < snapshot.minPlayersPerTeam ||
-                    playerCount > snapshot.maxPlayersPerTeam) {
+                    playerCount > snapshot.maxPlayersPerTeam)
                     blockers.push(`El equipo ${registration.teamId.toString()} debe tener entre ${snapshot.minPlayersPerTeam} y ${snapshot.maxPlayersPerTeam} jugadores aprobados.`);
-                }
-                if (registration.players.filter(({ isCaptain }) => isCaptain).length !== 1) {
+                if (registration.players.filter(({ isCaptain }) => isCaptain).length !== 1)
                     blockers.push(`El equipo ${registration.teamId.toString()} debe tener exactamente un capitán en su plantilla aprobada.`);
-                }
                 const eligibilityRules = {
                     name: snapshot.name,
                     startDate: snapshot.startDate,
@@ -212,29 +220,9 @@ let TournamentLifecycleService = class TournamentLifecycleService {
                     gender: snapshot.categoryGender,
                 };
                 const eligibilityIssues = (0, tournament_eligibility_1.getTournamentEligibilityIssues)(eligibilityRules, registration.players);
-                if (eligibilityIssues.length > 0) {
+                if (eligibilityIssues.length > 0)
                     blockers.push(`${registration.teamName}: ${(0, tournament_eligibility_1.formatTournamentEligibilityError)(eligibilityRules, eligibilityIssues)}`);
-                }
             }
-            if (snapshot.matches.length === 0) {
-                blockers.push('Genera los enfrentamientos y sus fechas antes de marcar el torneo como programado.');
-            }
-            else {
-                const teamsWithMatches = new Set(snapshot.matches.flatMap(({ homeTeamId, awayTeamId }) => [
-                    homeTeamId.toString(),
-                    awayTeamId.toString(),
-                ]));
-                const missingTeams = approvedRegistrations.filter(({ teamId }) => !teamsWithMatches.has(teamId.toString()));
-                if (missingTeams.length > 0) {
-                    blockers.push(`${missingTeams.length} equipo${missingTeams.length === 1 ? '' : 's'} aprobado${missingTeams.length === 1 ? '' : 's'} aún no tiene${missingTeams.length === 1 ? '' : 'n'} enfrentamientos.`);
-                }
-                const matchesWithoutDate = snapshot.matches.filter(({ status, matchDate }) => status !== 'cancelled' && !matchDate).length;
-                if (matchesWithoutDate > 0) {
-                    blockers.push(`Asigna fecha a ${matchesWithoutDate} partido${matchesWithoutDate === 1 ? '' : 's'}.`);
-                }
-            }
-        }
-        if (targetPhase === 'in_progress') {
             const activeMatches = snapshot.matches.filter(({ status }) => status !== 'cancelled');
             if (activeMatches.length === 0) {
                 blockers.push('El torneo debe tener al menos un partido programado.');
@@ -242,8 +230,18 @@ let TournamentLifecycleService = class TournamentLifecycleService {
             if (activeMatches.some(({ matchDate }) => !matchDate)) {
                 blockers.push('Todos los partidos activos deben tener una fecha asignada.');
             }
+            const teamsWithMatches = new Set(activeMatches.flatMap(({ homeTeamId, awayTeamId }) => [
+                homeTeamId.toString(),
+                awayTeamId.toString(),
+            ]));
+            const missingTeams = approvedRegistrations.filter(({ teamId }) => !teamsWithMatches.has(teamId.toString()));
+            if (missingTeams.length > 0)
+                blockers.push(`${missingTeams.length} equipo${missingTeams.length === 1 ? '' : 's'} aprobado${missingTeams.length === 1 ? '' : 's'} aún no tiene${missingTeams.length === 1 ? '' : 'n'} enfrentamientos.`);
         }
         if (targetPhase === 'finished') {
+            if (snapshot.competitionPlan && !snapshot.competitionPlan.champion) {
+                blockers.push('Resuelve todas las etapas deportivas y define el campeón antes de finalizar.');
+            }
             const playedMatches = snapshot.matches.filter(({ status }) => status === 'played');
             if (playedMatches.length === 0) {
                 blockers.push('Debe existir al menos un partido jugado.');
@@ -287,6 +285,7 @@ let TournamentLifecycleService = class TournamentLifecycleService {
                     min_players_per_team: true,
                     max_players_per_team: true,
                     max_teams: true,
+                    competition_plan: true,
                     registration_fee: true,
                     currency_code: true,
                     tournament_team_registrations: {
@@ -368,6 +367,7 @@ let TournamentLifecycleService = class TournamentLifecycleService {
             minPlayersPerTeam: tournament.min_players_per_team,
             maxPlayersPerTeam: tournament.max_players_per_team,
             maxTeams: tournament.max_teams,
+            competitionPlan: (0, competition_engine_1.readPlan)(tournament.competition_plan),
             registrationFee: tournament.registration_fee,
             currencyCode: tournament.currency_code,
             openDisciplinaryActions,

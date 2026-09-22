@@ -29,6 +29,7 @@ const sponsors_module_1 = require("./sponsors/sponsors.module");
 const suspensions_module_1 = require("./suspensions/suspensions.module");
 const teams_module_1 = require("./teams/teams.module");
 const tournament_types_module_1 = require("./tournament-types/tournament-types.module");
+const competition_module_1 = require("./competition/competition.module");
 const tournaments_module_1 = require("./tournaments/tournaments.module");
 const users_module_1 = require("./users/users.module");
 let AppModule = class AppModule {
@@ -47,6 +48,7 @@ exports.AppModule = AppModule = __decorate([
             associations_module_1.AssociationsModule,
             tournament_types_module_1.TournamentTypesModule,
             tournaments_module_1.TournamentsModule,
+            competition_module_1.CompetitionModule,
             teams_module_1.TeamsModule,
             matches_module_1.MatchesModule,
             notifications_module_1.NotificationsModule,

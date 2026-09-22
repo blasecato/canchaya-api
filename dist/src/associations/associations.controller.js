@@ -134,10 +134,10 @@ __decorate([
 ], AssociationsController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
-    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'PLAYER', 'REFEREE'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'PLAYER', 'REFEREE'),
     (0, swagger_1.ApiOperation)({
         summary: 'Listar las asociaciones visibles para el usuario',
-        description: 'SUPER_ADMIN consulta todas las asociaciones; PLAYER y REFEREE consultan únicamente las asociaciones activas.',
+        description: 'SUPER_ADMIN consulta todas las asociaciones; ASSOCIATION_ADMIN, PLAYER y REFEREE consultan únicamente las asociaciones activas.',
     }),
     (0, swagger_1.ApiOkResponse)({
         description: 'Listado de asociaciones con propietario y métricas.',

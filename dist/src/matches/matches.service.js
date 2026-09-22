@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MatchesService = void 0;
 const common_1 = require("@nestjs/common");
+const competition_engine_1 = require("../competition/competition.engine");
 const competition_access_service_1 = require("../authorization/competition-access.service");
 const notification_events_1 = require("../notifications/notification-events");
 const match_operational_notifications_service_1 = require("../notifications/match-operational-notifications.service");
@@ -19,6 +20,8 @@ const referee_assignments_service_1 = require("../referees/referee-assignments.s
 const REFEREE_EDITABLE_FIELDS = [
     'homeScore',
     'awayScore',
+    'homePenalties',
+    'awayPenalties',
     'status',
     'notes',
 ];
@@ -41,12 +44,20 @@ let MatchesService = class MatchesService {
         await this.assertTournamentPhase(tournamentId, ['validation'], 'Los enfrentamientos solo se pueden crear durante la fase de Validación.');
         if ((dto.status !== undefined && dto.status !== 'scheduled') ||
             dto.homeScore != null ||
-            dto.awayScore != null) {
+            dto.awayScore != null ||
+            dto.homePenalties != null ||
+            dto.awayPenalties != null) {
             throw new common_1.BadRequestException('Un enfrentamiento nuevo debe quedar Programado y sin marcador.');
         }
         await this.assertValidParticipants(tournamentId, homeTeamId, awayTeamId);
         this.assertValidResult(dto.status ?? 'scheduled', dto.homeScore, dto.awayScore);
         return this.prisma.$transaction(async (transaction) => {
+            await transaction.$queryRaw `SELECT id FROM tournaments WHERE id = ${tournamentId} FOR UPDATE`;
+            const tournament = await transaction.tournaments.findUniqueOrThrow({
+                where: { id: tournamentId },
+            });
+            if (tournament.phase !== 'validation' || tournament.competition_plan)
+                throw new common_1.BadRequestException('Los partidos de una competencia organizada se generan desde sus etapas.');
             const match = await transaction.matches.create({
                 data: {
                     tournament_id: tournamentId,
@@ -62,6 +73,8 @@ let MatchesService = class MatchesService {
                     round_number: dto.roundNumber,
                     home_score: dto.homeScore,
                     away_score: dto.awayScore,
+                    home_penalties: dto.homePenalties,
+                    away_penalties: dto.awayPenalties,
                     status: dto.status,
                     duration_minutes: dto.durationMinutes,
                     notes: dto.notes,
@@ -138,9 +151,20 @@ let MatchesService = class MatchesService {
                     ? notification_events_1.OPERATIONAL_NOTIFICATION_EVENTS.MATCH_UPDATED
                     : null;
         if (scheduleChanged && nextStatus !== 'cancelled') {
-            await this.refereeAssignments.assertActiveAssignmentsCompatible(id, nextMatchDate, nextDuration);
+            await this.refereeAssignments.assertActiveAssignmentsCompatible(id, nextMatchDate);
         }
         return this.prisma.$transaction(async (transaction) => {
+            await transaction.$queryRaw `SELECT id FROM tournaments WHERE id = ${tournamentId} FOR UPDATE`;
+            const latest = await transaction.matches.findUniqueOrThrow({
+                where: { id },
+            });
+            if (latest.updated_at.getTime() !== current.updated_at.getTime())
+                throw new common_1.ConflictException('El partido cambió. Actualiza la página.');
+            await this.assertManagedMatchUpdate(transaction, tournamentId, current.competition_key, dto, nextStatus, nextHomeScore, nextAwayScore, dto.homePenalties !== undefined
+                ? dto.homePenalties
+                : current.home_penalties, dto.awayPenalties !== undefined
+                ? dto.awayPenalties
+                : current.away_penalties);
             const match = await transaction.matches.update({
                 where: { id },
                 data: {
@@ -157,6 +181,8 @@ let MatchesService = class MatchesService {
                     round_number: dto.roundNumber,
                     home_score: dto.homeScore,
                     away_score: dto.awayScore,
+                    home_penalties: dto.homePenalties,
+                    away_penalties: dto.awayPenalties,
                     status: dto.status,
                     duration_minutes: dto.durationMinutes,
                     notes: dto.notes,
@@ -232,9 +258,62 @@ let MatchesService = class MatchesService {
         const tournamentId = await this.access.assertCanManageMatch(requestingUserId, id);
         await this.assertTournamentPhase(tournamentId, ['validation', 'scheduled'], 'Los partidos solo se pueden eliminar antes de iniciar el torneo.');
         return this.prisma.$transaction(async (transaction) => {
+            await transaction.$queryRaw `SELECT id FROM tournaments WHERE id = ${tournamentId} FOR UPDATE`;
+            const tournament = await transaction.tournaments.findUniqueOrThrow({
+                where: { id: tournamentId },
+            });
+            const current = await transaction.matches.findUniqueOrThrow({
+                where: { id },
+            });
+            if (current.competition_key ||
+                !['validation', 'scheduled'].includes(tournament.phase))
+                throw new common_1.BadRequestException('No puedes eliminar un partido de una competencia organizada. Puedes reprogramarlo.');
             await this.matchNotifications.notifyMatchChanged(id, notification_events_1.OPERATIONAL_NOTIFICATION_EVENTS.MATCH_CANCELLED, [], transaction);
             return transaction.matches.delete({ where: { id } });
         });
+    }
+    async assertManagedMatchUpdate(tx, tournamentId, key, dto, status, home, away, homePenalties, awayPenalties) {
+        const tournament = await tx.tournaments.findUniqueOrThrow({
+            where: { id: tournamentId },
+        });
+        if (!['validation', 'scheduled', 'in_progress'].includes(tournament.phase))
+            throw new common_1.BadRequestException('El torneo ya no permite modificar partidos.');
+        if (tournament.phase !== 'in_progress' &&
+            (home !== null ||
+                away !== null ||
+                homePenalties !== null ||
+                awayPenalties !== null ||
+                ['played', 'in_progress'].includes(status)))
+            throw new common_1.BadRequestException('Inicia el torneo antes de registrar resultados.');
+        const plan = (0, competition_engine_1.readPlan)(tournament.competition_plan);
+        const stage = plan?.stages.find((s) => s.fixtures.some((f) => f.key === key));
+        if (key) {
+            if (!stage || stage.resolved)
+                throw new common_1.BadRequestException('La etapa ya fue resuelta y sus resultados están bloqueados.');
+            if ([
+                dto.homeTeamId,
+                dto.awayTeamId,
+                dto.stage,
+                dto.roundNumber,
+                dto.tournamentId,
+            ].some((v) => v !== undefined))
+                throw new common_1.BadRequestException('Los equipos y las llaves quedan fijados por el sorteo.');
+        }
+        if (homePenalties !== null || awayPenalties !== null) {
+            if (homePenalties === null ||
+                awayPenalties === null ||
+                homePenalties === awayPenalties ||
+                home !== away ||
+                home === null ||
+                status !== 'played' ||
+                (stage && stage.kind !== 'knockout'))
+                throw new common_1.BadRequestException('Los penaltis requieren un empate final en eliminatorias y un ganador de la tanda.');
+        }
+        if (stage?.kind === 'knockout' &&
+            status === 'played' &&
+            home === away &&
+            (homePenalties === null || awayPenalties === null))
+            throw new common_1.BadRequestException('Registra los penaltis para resolver el empate de la eliminatoria.');
     }
     async findExistingMatch(id) {
         const match = await this.prisma.matches.findUnique({ where: { id } });

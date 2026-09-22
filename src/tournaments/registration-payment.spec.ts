@@ -82,3 +82,52 @@ it('records a partial payment, its audit event and a supported registration noti
     ],
   });
 });
+
+it('returns only the payment for the authenticated player team', async () => {
+  const findFirst = jest.fn().mockResolvedValue({
+    team_id: 31n,
+    payment_status: 'partial',
+    amount_paid: new Prisma.Decimal(100000),
+    payment_notes: null,
+    payment_updated_at: new Date('2026-09-18T12:00:00.000Z'),
+    teams: { name: 'Arena Kings' },
+    tournaments: {
+      id: 62n,
+      name: 'Liga Mi Casa',
+      registration_fee: new Prisma.Decimal(200000),
+      currency_code: 'COP',
+    },
+    users_tournament_team_registrations_payment_updated_byTousers: null,
+  });
+  const service = new TournamentsService(
+    {
+      tournament_team_registrations: { findFirst },
+    } as unknown as PrismaService,
+    {} as AssociationsService,
+    {} as ImageStorageService,
+    {} as CompetitionAccessService,
+  );
+
+  const result = await service.findMyRegistrationPayment(62n, 99n);
+
+  expect(findFirst).toHaveBeenCalledWith(
+    expect.objectContaining({
+      where: expect.objectContaining({
+        tournament_id: 62n,
+        tournament_team_players: {
+          some: { player_id: 99n, registration_status: 'approved' },
+        },
+      }),
+    }),
+  );
+  expect(result).toMatchObject({
+    tournamentId: '62',
+    payment: {
+      teamId: '31',
+      teamName: 'Arena Kings',
+      paymentStatus: 'partial',
+      amountPaid: '100000.00',
+      balanceDue: '100000.00',
+    },
+  });
+});

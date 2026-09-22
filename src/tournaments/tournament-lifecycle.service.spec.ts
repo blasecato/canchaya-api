@@ -52,3 +52,93 @@ it('uses a supported notification type when advancing to validation', async () =
     });
   }
 });
+
+it('allows entering validation without registrations so the organizer can draw placeholders', () => {
+  const service = new TournamentLifecycleService(
+    {} as PrismaService,
+    {} as CompetitionAccessService,
+  );
+  const snapshot = {
+    id: 1n,
+    name: 'Copa anticipada',
+    phase: 'registration',
+    status: 'active',
+    registrations: [],
+    matches: [],
+  } as Parameters<(typeof service)['findBlockers']>[0];
+  expect(service['findBlockers'](snapshot, 'validation')).toEqual([]);
+});
+
+it('allows scheduling with placeholders and moves completion checks to start', () => {
+  const service = new TournamentLifecycleService(
+    {} as PrismaService,
+    {} as CompetitionAccessService,
+  );
+  const snapshot = {
+    id: 1n,
+    name: 'Copa anticipada',
+    phase: 'validation',
+    status: 'active',
+    maxTeams: 6,
+    minPlayersPerTeam: 1,
+    maxPlayersPerTeam: 25,
+    startDate: new Date('2026-10-01'),
+    categoryName: 'Libre',
+    categoryMinAge: null,
+    categoryMaxAge: null,
+    categoryGender: 'open',
+    registrations: [],
+    matches: [],
+    competitionPlan: {
+      version: 2,
+      config: {
+        format: 'league',
+        legs: 1,
+        groups: 1,
+        qualifiers: 1,
+        finalLegs: 1,
+      },
+      seed: 'seed',
+      teamIds: Array.from({ length: 6 }, (_, index) => `slot-${index + 1}`),
+      slots: Array.from({ length: 6 }, (_, index) => ({
+        id: `slot-${index + 1}`,
+        label: `Equipo ${index + 1}`,
+        teamId: null,
+      })),
+      stages: [],
+      champion: null,
+      createdBy: '1',
+      createdAt: new Date().toISOString(),
+      originalType: 'Eliminación directa',
+      changeReason: null,
+    },
+  } as Parameters<(typeof service)['findBlockers']>[0];
+  expect(service['findBlockers'](snapshot, 'scheduled')).toEqual([]);
+  expect(service['findBlockers'](snapshot, 'in_progress')).toEqual(
+    expect.arrayContaining([
+      expect.stringContaining('Completa los 6 lugares'),
+      expect.stringContaining('Todos los lugares del sorteo'),
+      expect.stringContaining('al menos seis equipos'),
+      expect.stringContaining('al menos un partido'),
+    ]),
+  );
+});
+
+it('requires a confirmed organization before scheduling', () => {
+  const service = new TournamentLifecycleService(
+    {} as PrismaService,
+    {} as CompetitionAccessService,
+  );
+  const snapshot = {
+    id: 1n,
+    name: 'Copa sin organización',
+    phase: 'validation',
+    status: 'active',
+    registrations: [],
+    matches: [],
+    competitionPlan: null,
+  } as Parameters<(typeof service)['findBlockers']>[0];
+  expect(service['findBlockers'](snapshot, 'scheduled')).toEqual([
+    expect.stringContaining('Organiza y confirma'),
+  ]);
+});

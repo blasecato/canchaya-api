@@ -20,6 +20,7 @@ import { SponsorsModule } from './sponsors/sponsors.module';
 import { SuspensionsModule } from './suspensions/suspensions.module';
 import { TeamsModule } from './teams/teams.module';
 import { TournamentTypesModule } from './tournament-types/tournament-types.module';
+import { CompetitionModule } from './competition/competition.module';
 import { TournamentsModule } from './tournaments/tournaments.module';
 import { UsersModule } from './users/users.module';
 
@@ -35,6 +36,7 @@ import { UsersModule } from './users/users.module';
     AssociationsModule,
     TournamentTypesModule,
     TournamentsModule,
+    CompetitionModule,
     TeamsModule,
     MatchesModule,
     NotificationsModule,

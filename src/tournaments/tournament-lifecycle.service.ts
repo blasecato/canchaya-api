@@ -6,6 +6,12 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client';
 import { CompetitionAccessService } from '../authorization/competition-access.service';
+import {
+  assignedTeamIds,
+  hasUnfilledSlots,
+  readPlan,
+} from '../competition/competition.engine';
+import type { CompetitionPlan } from '../competition/competition.engine';
 import { PrismaService } from '../prisma/prisma.service';
 import type { TournamentLifecycleResponseDto } from './dto/tournament-lifecycle-response.dto';
 import type { TournamentTransitionOptionResponseDto } from './dto/tournament-lifecycle-response.dto';
@@ -38,6 +44,7 @@ type LifecycleSnapshot = {
   minPlayersPerTeam: number;
   maxPlayersPerTeam: number;
   maxTeams: number;
+  competitionPlan: CompetitionPlan | null;
   registrationFee: Prisma.Decimal;
   currencyCode: string;
   openDisciplinaryActions: number;
@@ -121,6 +128,7 @@ export class TournamentLifecycleService {
 
     await this.prisma.$transaction(
       async (transaction) => {
+        await transaction.$queryRaw`SELECT id FROM tournaments WHERE id = ${tournamentId} FOR UPDATE`;
         const snapshot = await this.findSnapshot(transaction, tournamentId);
         const option = this.buildTransitionOptions(snapshot).find(
           ({ phase }) => phase === dto.phase,
@@ -275,9 +283,6 @@ export class TournamentLifecycleService {
     targetPhase: TournamentPhase,
   ): string[] {
     const blockers: string[] = [];
-    const viableRegistrations = snapshot.registrations.filter(({ status }) =>
-      ['pending', 'approved', 'changes_requested'].includes(status),
-    );
     const approvedRegistrations = snapshot.registrations.filter(
       ({ status }) => status === 'approved',
     );
@@ -298,49 +303,66 @@ export class TournamentLifecycleService {
       }
     }
 
-    if (targetPhase === 'validation' && viableRegistrations.length < 2) {
-      blockers.push(
-        'Se necesitan al menos dos solicitudes de equipos sin rechazar para cerrar inscripciones.',
-      );
+    if (targetPhase === 'scheduled') {
+      if (!snapshot.competitionPlan)
+        blockers.push(
+          'Organiza y confirma el calendario o el cuadro antes de marcar el torneo como programado.',
+        );
     }
 
-    if (targetPhase === 'scheduled') {
-      if (approvedRegistrations.length < 2) {
-        blockers.push(
-          'Aprueba al menos dos equipos antes de programar el torneo.',
+    if (targetPhase === 'in_progress') {
+      if (snapshot.competitionPlan) {
+        const ids = approvedRegistrations.map(({ teamId }) =>
+          teamId.toString(),
         );
+        const assigned = assignedTeamIds(snapshot.competitionPlan);
+        if (
+          ids.length !== assigned.length ||
+          ids.some((id) => !assigned.includes(id))
+        )
+          blockers.push(
+            'Los equipos aprobados no coinciden con la organización guardada. Revisa las inscripciones.',
+          );
+        if (hasUnfilledSlots(snapshot.competitionPlan))
+          blockers.push(
+            'Todos los lugares del sorteo deben tener un equipo aprobado antes de iniciar el torneo.',
+          );
       }
-      if (approvedRegistrations.length > snapshot.maxTeams) {
+      if (approvedRegistrations.length < 6)
+        blockers.push(
+          'Se necesitan al menos seis equipos aprobados para iniciar el torneo.',
+        );
+      if (approvedRegistrations.length < snapshot.maxTeams)
+        blockers.push(
+          `Completa los ${snapshot.maxTeams - approvedRegistrations.length} lugar${snapshot.maxTeams - approvedRegistrations.length === 1 ? '' : 'es'} pendiente${snapshot.maxTeams - approvedRegistrations.length === 1 ? '' : 's'} antes de iniciar el torneo.`,
+        );
+      if (approvedRegistrations.length > snapshot.maxTeams)
         blockers.push(
           `Hay ${approvedRegistrations.length} equipos aprobados y el torneo admite máximo ${snapshot.maxTeams}.`,
         );
-      }
       const unresolved = snapshot.registrations.filter(({ status }) =>
         ['pending', 'changes_requested'].includes(status),
       ).length;
-      if (unresolved > 0) {
+      if (unresolved > 0)
         blockers.push(
           `Resuelve ${unresolved} solicitud${unresolved === 1 ? '' : 'es'} pendiente${unresolved === 1 ? '' : 's'}.`,
         );
-      }
 
       for (const registration of approvedRegistrations) {
         const playerCount = registration.players.length;
         if (
           playerCount < snapshot.minPlayersPerTeam ||
           playerCount > snapshot.maxPlayersPerTeam
-        ) {
+        )
           blockers.push(
             `El equipo ${registration.teamId.toString()} debe tener entre ${snapshot.minPlayersPerTeam} y ${snapshot.maxPlayersPerTeam} jugadores aprobados.`,
           );
-        }
         if (
           registration.players.filter(({ isCaptain }) => isCaptain).length !== 1
-        ) {
+        )
           blockers.push(
             `El equipo ${registration.teamId.toString()} debe tener exactamente un capitán en su plantilla aprobada.`,
           );
-        }
         const eligibilityRules = {
           name: snapshot.name,
           startDate: snapshot.startDate,
@@ -353,44 +375,12 @@ export class TournamentLifecycleService {
           eligibilityRules,
           registration.players,
         );
-        if (eligibilityIssues.length > 0) {
+        if (eligibilityIssues.length > 0)
           blockers.push(
             `${registration.teamName}: ${formatTournamentEligibilityError(eligibilityRules, eligibilityIssues)}`,
           );
-        }
       }
 
-      if (snapshot.matches.length === 0) {
-        blockers.push(
-          'Genera los enfrentamientos y sus fechas antes de marcar el torneo como programado.',
-        );
-      } else {
-        const teamsWithMatches = new Set(
-          snapshot.matches.flatMap(({ homeTeamId, awayTeamId }) => [
-            homeTeamId.toString(),
-            awayTeamId.toString(),
-          ]),
-        );
-        const missingTeams = approvedRegistrations.filter(
-          ({ teamId }) => !teamsWithMatches.has(teamId.toString()),
-        );
-        if (missingTeams.length > 0) {
-          blockers.push(
-            `${missingTeams.length} equipo${missingTeams.length === 1 ? '' : 's'} aprobado${missingTeams.length === 1 ? '' : 's'} aún no tiene${missingTeams.length === 1 ? '' : 'n'} enfrentamientos.`,
-          );
-        }
-        const matchesWithoutDate = snapshot.matches.filter(
-          ({ status, matchDate }) => status !== 'cancelled' && !matchDate,
-        ).length;
-        if (matchesWithoutDate > 0) {
-          blockers.push(
-            `Asigna fecha a ${matchesWithoutDate} partido${matchesWithoutDate === 1 ? '' : 's'}.`,
-          );
-        }
-      }
-    }
-
-    if (targetPhase === 'in_progress') {
       const activeMatches = snapshot.matches.filter(
         ({ status }) => status !== 'cancelled',
       );
@@ -402,9 +392,27 @@ export class TournamentLifecycleService {
           'Todos los partidos activos deben tener una fecha asignada.',
         );
       }
+      const teamsWithMatches = new Set(
+        activeMatches.flatMap(({ homeTeamId, awayTeamId }) => [
+          homeTeamId.toString(),
+          awayTeamId.toString(),
+        ]),
+      );
+      const missingTeams = approvedRegistrations.filter(
+        ({ teamId }) => !teamsWithMatches.has(teamId.toString()),
+      );
+      if (missingTeams.length > 0)
+        blockers.push(
+          `${missingTeams.length} equipo${missingTeams.length === 1 ? '' : 's'} aprobado${missingTeams.length === 1 ? '' : 's'} aún no tiene${missingTeams.length === 1 ? '' : 'n'} enfrentamientos.`,
+        );
     }
 
     if (targetPhase === 'finished') {
+      if (snapshot.competitionPlan && !snapshot.competitionPlan.champion) {
+        blockers.push(
+          'Resuelve todas las etapas deportivas y define el campeón antes de finalizar.',
+        );
+      }
       const playedMatches = snapshot.matches.filter(
         ({ status }) => status === 'played',
       );
@@ -475,6 +483,7 @@ export class TournamentLifecycleService {
           min_players_per_team: true,
           max_players_per_team: true,
           max_teams: true,
+          competition_plan: true,
           registration_fee: true,
           currency_code: true,
           tournament_team_registrations: {
@@ -557,6 +566,7 @@ export class TournamentLifecycleService {
       minPlayersPerTeam: tournament.min_players_per_team,
       maxPlayersPerTeam: tournament.max_players_per_team,
       maxTeams: tournament.max_teams,
+      competitionPlan: readPlan(tournament.competition_plan),
       registrationFee: tournament.registration_fee,
       currencyCode: tournament.currency_code,
       openDisciplinaryActions,

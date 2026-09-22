@@ -12,6 +12,9 @@ export declare class MatchesController {
         updated_at: Date;
         tournament_id: bigint;
         notes: string | null;
+        competition_key: string | null;
+        home_penalties: number | null;
+        away_penalties: number | null;
         home_team_id: bigint;
         away_team_id: bigint;
         match_date: Date | null;
@@ -29,6 +32,9 @@ export declare class MatchesController {
         updated_at: Date;
         tournament_id: bigint;
         notes: string | null;
+        competition_key: string | null;
+        home_penalties: number | null;
+        away_penalties: number | null;
         home_team_id: bigint;
         away_team_id: bigint;
         match_date: Date | null;
@@ -46,6 +52,9 @@ export declare class MatchesController {
         updated_at: Date;
         tournament_id: bigint;
         notes: string | null;
+        competition_key: string | null;
+        home_penalties: number | null;
+        away_penalties: number | null;
         home_team_id: bigint;
         away_team_id: bigint;
         match_date: Date | null;
@@ -63,6 +72,9 @@ export declare class MatchesController {
         updated_at: Date;
         tournament_id: bigint;
         notes: string | null;
+        competition_key: string | null;
+        home_penalties: number | null;
+        away_penalties: number | null;
         home_team_id: bigint;
         away_team_id: bigint;
         match_date: Date | null;
@@ -80,6 +92,9 @@ export declare class MatchesController {
         updated_at: Date;
         tournament_id: bigint;
         notes: string | null;
+        competition_key: string | null;
+        home_penalties: number | null;
+        away_penalties: number | null;
         home_team_id: bigint;
         away_team_id: bigint;
         match_date: Date | null;

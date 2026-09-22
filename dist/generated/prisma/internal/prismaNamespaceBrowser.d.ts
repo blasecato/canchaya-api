@@ -140,6 +140,9 @@ export type Match_refereesScalarFieldEnum = (typeof Match_refereesScalarFieldEnu
 export declare const MatchesScalarFieldEnum: {
     readonly id: "id";
     readonly tournament_id: "tournament_id";
+    readonly competition_key: "competition_key";
+    readonly home_penalties: "home_penalties";
+    readonly away_penalties: "away_penalties";
     readonly home_team_id: "home_team_id";
     readonly away_team_id: "away_team_id";
     readonly match_date: "match_date";
@@ -402,6 +405,7 @@ export declare const TournamentsScalarFieldEnum: {
     readonly id: "id";
     readonly association_id: "association_id";
     readonly name: "name";
+    readonly competition_plan: "competition_plan";
     readonly description: "description";
     readonly tournament_type_id: "tournament_type_id";
     readonly sport_type: "sport_type";
