@@ -6,6 +6,7 @@ import {
   ExceptionFilter,
   HttpException,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
@@ -13,6 +14,8 @@ import { Prisma } from '../../../generated/prisma/client';
 
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(PrismaExceptionFilter.name);
+
   catch(
     exception: Prisma.PrismaClientKnownRequestError,
     host: ArgumentsHost,
@@ -22,6 +25,10 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     const response = context.getResponse<Response>();
     const httpException = this.toHttpException(exception);
     const status = httpException.getStatus();
+
+    this.logger.error(
+      `Prisma ${exception.code} en ${request.method} ${request.url}: ${JSON.stringify(exception.meta ?? {})}`,
+    );
 
     response.status(status).json({
       statusCode: status,
