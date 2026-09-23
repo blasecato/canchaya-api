@@ -126,8 +126,7 @@ __decorate([
         limits: {
             files: 3,
             fileSize: uploads_constants_1.MAX_IMAGE_SIZE_BYTES,
-            fields: 8,
-            parts: 12,
+            fields: 9,
         },
         fileFilter: (_request, file, callback) => {
             if (!uploads_constants_1.ALLOWED_IMAGE_MIME_TYPES.includes(file.mimetype)) {

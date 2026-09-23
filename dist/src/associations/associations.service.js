@@ -62,30 +62,15 @@ let AssociationsService = AssociationsService_1 = class AssociationsService {
                     select: association_response_mapper_1.associationResponseSelect,
                 });
                 await this.ensureAssociationAdminRole(transaction, ownerUserId);
-                if (ownerUserId !== requestingUserId) {
-                    await transaction.notifications.create({
-                        data: {
-                            user_id: ownerUserId,
-                            type: 'association',
-                            title: 'Te asignaron una asociación',
-                            message: `Ahora eres el propietario y administrador principal de ${association.name}.`,
-                            entity_type: 'association',
-                            entity_id: association.id.toString(),
-                            metadata: {
-                                associationId: association.id.toString(),
-                                associationName: association.name,
-                                actionUrl: `/associations/${association.id.toString()}/tournaments`,
-                                actionLabel: 'Ver asociación',
-                            },
-                        },
-                    });
-                }
                 return (0, association_response_mapper_1.toAssociationResponse)(association, 0);
             });
         }
         catch (error) {
             await this.deleteImagesWithoutMaskingError([logoAsset, coverAsset]);
             throw error;
+        }
+        if (ownerUserId !== requestingUserId) {
+            await this.notifyAssociationAssignmentSafely(ownerUserId, response.id, response.name);
         }
         return response;
     }
@@ -404,6 +389,30 @@ let AssociationsService = AssociationsService_1 = class AssociationsService {
             },
             update: {},
         });
+    }
+    async notifyAssociationAssignmentSafely(ownerUserId, associationId, associationName) {
+        try {
+            await this.prisma.notifications.create({
+                data: {
+                    user_id: ownerUserId,
+                    type: 'association',
+                    title: 'Te asignaron una asociación',
+                    message: `Ahora eres el propietario y administrador principal de ${associationName}.`,
+                    entity_type: 'association',
+                    entity_id: associationId,
+                    metadata: {
+                        associationId,
+                        associationName,
+                        actionUrl: `/associations/${associationId}/tournaments`,
+                        actionLabel: 'Ver asociación',
+                    },
+                },
+            });
+        }
+        catch (error) {
+            const message = error instanceof Error ? error.message : 'error desconocido';
+            this.logger.warn(`La asociación ${associationId} fue creada, pero no se pudo notificar al propietario ${ownerUserId.toString()}: ${message}`);
+        }
     }
     async assertCanCreateAssociation(client, requestingUserId, ownerUserId) {
         const liveRoles = await client.user_roles.findMany({

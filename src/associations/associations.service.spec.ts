@@ -17,6 +17,7 @@ describe('AssociationsService', () => {
   const registrationsGroupBy = jest.fn();
   const userRolesFindMany = jest.fn();
   const userRolesFindFirst = jest.fn();
+  const notificationsCreate = jest.fn();
   const transactionUsersFindUnique = jest.fn();
   const transactionAssociationsCreate = jest.fn();
   const transactionAssociationsFindUnique = jest.fn();
@@ -53,6 +54,7 @@ describe('AssociationsService', () => {
       findMany: userRolesFindMany,
       findFirst: userRolesFindFirst,
     },
+    notifications: { create: notificationsCreate },
   } as unknown as PrismaService;
   const saveAssociationLogo = jest.fn();
   const saveAssociationCover = jest.fn();
@@ -117,6 +119,7 @@ describe('AssociationsService', () => {
     transactionAssociationsFindUnique.mockResolvedValue(associationRecord);
     associationsFindFirst.mockResolvedValue(null);
     transactionAssociationsFindFirst.mockResolvedValue(null);
+    notificationsCreate.mockResolvedValue({});
   });
 
   describe('create', () => {
@@ -197,6 +200,49 @@ describe('AssociationsService', () => {
         create: { user_id: 2n, role_code: 'ASSOCIATION_ADMIN' },
         update: {},
       });
+      expect(notificationsCreate).toHaveBeenCalledWith({
+        data: {
+          user_id: 2n,
+          type: 'association',
+          title: 'Te asignaron una asociación',
+          message:
+            'Ahora eres el propietario y administrador principal de Liga Regional.',
+          entity_type: 'association',
+          entity_id: '5',
+          metadata: {
+            associationId: '5',
+            associationName: 'Liga Regional',
+            actionUrl: '/associations/5/tournaments',
+            actionLabel: 'Ver asociación',
+          },
+        },
+      });
+      expect(deleteByPublicUrl).not.toHaveBeenCalled();
+    });
+
+    it('conserva la asociación si falla únicamente la notificación al propietario', async () => {
+      saveAssociationLogo.mockResolvedValue(
+        storedAsset('/uploads/associations/logo.png'),
+      );
+      saveAssociationCover.mockResolvedValue(
+        storedAsset('/uploads/associations/covers/cover.png'),
+      );
+      transactionUsersFindUnique.mockResolvedValue({ status: 'active' });
+      transactionAssociationsCreate.mockResolvedValue({
+        ...associationRecord,
+        association_administrators: [],
+        _count: { tournaments: 0 },
+      });
+      transactionUserRolesUpsert.mockResolvedValue({});
+      notificationsCreate.mockRejectedValue(
+        new Error('notifications_type_check'),
+      );
+
+      await expect(service.create(createDto, logo, cover, 1n)).resolves.toEqual(
+        expect.objectContaining({ id: '5', name: 'Liga Regional' }),
+      );
+
+      expect(prismaTransaction).toHaveBeenCalledTimes(1);
       expect(deleteByPublicUrl).not.toHaveBeenCalled();
     });
 

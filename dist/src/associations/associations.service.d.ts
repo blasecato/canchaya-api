@@ -29,6 +29,7 @@ export declare class AssociationsService {
     private countApprovedTeams;
     private ensureActiveOwner;
     private ensureAssociationAdminRole;
+    private notifyAssociationAssignmentSafely;
     private assertCanCreateAssociation;
     getAssociationPermissions(client: Prisma.TransactionClient, associationId: bigint, requestingUserId: bigint): Promise<AssociationPermissionsResponseDto>;
     private deleteImagesWithoutMaskingError;

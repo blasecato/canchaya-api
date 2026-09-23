@@ -120,6 +120,12 @@ $ npm run test:cov
 
 ## Deployment
 
+Los comandos `npm start` y `npm run start:prod` ejecutan automáticamente
+`prisma migrate deploy` antes de iniciar NestJS. Esto mantiene el esquema de
+PostgreSQL sincronizado con el código y evita desplegar una versión que use
+columnas o restricciones todavía no aplicadas. La cuenta de la base de datos
+debe tener permisos para ejecutar las migraciones incluidas en `prisma/migrations`.
+
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 
 If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:

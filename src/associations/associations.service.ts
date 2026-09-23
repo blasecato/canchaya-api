@@ -103,30 +103,19 @@ export class AssociationsService {
 
         await this.ensureAssociationAdminRole(transaction, ownerUserId);
 
-        if (ownerUserId !== requestingUserId) {
-          await transaction.notifications.create({
-            data: {
-              user_id: ownerUserId,
-              type: 'association',
-              title: 'Te asignaron una asociación',
-              message: `Ahora eres el propietario y administrador principal de ${association.name}.`,
-              entity_type: 'association',
-              entity_id: association.id.toString(),
-              metadata: {
-                associationId: association.id.toString(),
-                associationName: association.name,
-                actionUrl: `/associations/${association.id.toString()}/tournaments`,
-                actionLabel: 'Ver asociación',
-              },
-            },
-          });
-        }
-
         return toAssociationResponse(association, 0);
       });
     } catch (error: unknown) {
       await this.deleteImagesWithoutMaskingError([logoAsset, coverAsset]);
       throw error;
+    }
+
+    if (ownerUserId !== requestingUserId) {
+      await this.notifyAssociationAssignmentSafely(
+        ownerUserId,
+        response.id,
+        response.name,
+      );
     }
 
     return response;
@@ -586,6 +575,37 @@ export class AssociationsService {
       },
       update: {},
     });
+  }
+
+  private async notifyAssociationAssignmentSafely(
+    ownerUserId: bigint,
+    associationId: string,
+    associationName: string,
+  ): Promise<void> {
+    try {
+      await this.prisma.notifications.create({
+        data: {
+          user_id: ownerUserId,
+          type: 'association',
+          title: 'Te asignaron una asociación',
+          message: `Ahora eres el propietario y administrador principal de ${associationName}.`,
+          entity_type: 'association',
+          entity_id: associationId,
+          metadata: {
+            associationId,
+            associationName,
+            actionUrl: `/associations/${associationId}/tournaments`,
+            actionLabel: 'Ver asociación',
+          },
+        },
+      });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'error desconocido';
+      this.logger.warn(
+        `La asociación ${associationId} fue creada, pero no se pudo notificar al propietario ${ownerUserId.toString()}: ${message}`,
+      );
+    }
   }
 
   private async assertCanCreateAssociation(
