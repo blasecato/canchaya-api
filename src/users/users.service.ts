@@ -581,11 +581,16 @@ export class UsersService {
         `El usuario con ID ${id.toString()} no existe.`,
       );
     }
-    await this.assertCanAccessProfile(
+    const requesterRoles = await this.assertCanAccessProfile(
       requestingUserId,
       id,
       user.user_roles.map(({ role_code }) => role_code),
     );
+    if (!requesterRoles.has('SUPER_ADMIN')) {
+      throw new ForbiddenException(
+        'Solamente un superadministrador puede consultar el documento de identidad.',
+      );
+    }
 
     const publicId =
       side === 'front'

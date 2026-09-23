@@ -65,7 +65,8 @@ describe('CreateAssociationDto', () => {
   });
 
   it('sigue exigiendo los campos obligatorios', async () => {
-    const { city: _city, ...withoutCity } = basePayload;
+    const withoutCity = { ...basePayload };
+    delete (withoutCity as Partial<typeof basePayload>).city;
 
     await expect(transform(withoutCity)).rejects.toThrow();
   });

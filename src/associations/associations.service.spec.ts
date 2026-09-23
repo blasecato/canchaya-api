@@ -646,7 +646,13 @@ describe('AssociationsService', () => {
           association_id: 5n,
           status: 'active',
           phase: {
-            in: ['registration', 'validation', 'scheduled', 'in_progress', 'finished'],
+            in: [
+              'registration',
+              'validation',
+              'scheduled',
+              'in_progress',
+              'finished',
+            ],
           },
         },
         orderBy: [{ start_date: 'asc' }, { id: 'asc' }],

@@ -13,6 +13,8 @@ export const publicUserSelect = {
   phone: true,
   photo_url: true,
   photo_public_id: true,
+  document_front_public_id: true,
+  document_back_public_id: true,
   status: true,
   identity_verification_status: true,
   blocked_until: true,
@@ -47,6 +49,11 @@ export function toPublicUserResponse(
     email: user.email,
     phone: user.phone,
     photoUrl: user.photo_url,
+    // Solo se informa si existen; las imágenes nunca viajan en esta
+    // respuesta, se piden aparte con un enlace firmado de corta duración.
+    hasIdentityDocuments: Boolean(
+      user.document_front_public_id && user.document_back_public_id,
+    ),
     status: user.status,
     identityVerificationStatus:
       user.identity_verification_status as PublicUserResponseDto['identityVerificationStatus'],

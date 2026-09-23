@@ -263,14 +263,19 @@ export class UsersController {
   }
 
   @Get(':id/identity-documents/:side')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RequireRoles('SUPER_ADMIN')
   @Header('Cache-Control', 'private, no-store')
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Generar acceso temporal a un documento de identidad protegido',
+    description:
+      'La cédula fotografiada es el dato más sensible del perfil, así que solo ' +
+      'un superadministrador puede pedir el enlace.',
   })
   @ApiParam({ name: 'id', example: '1', type: String })
   @ApiParam({ name: 'side', enum: ['front', 'back'] })
+  @ApiForbiddenResponse({ description: 'Requiere el rol SUPER_ADMIN.' })
   getIdentityDocument(
     @Param('id', ParseBigIntPipe) id: bigint,
     @Param('side') side: string,

@@ -56,8 +56,8 @@ export class TeamCarnetsResponseDto {
   @ApiProperty({ example: 'Fútbol' })
   sportType!: string;
 
-  @ApiProperty({ example: 'Sala' })
-  modality!: string;
+  @ApiProperty({ example: 'Fútbol 11', nullable: true })
+  modality!: string | null;
 
   @ApiProperty({ example: '#00994f', nullable: true })
   primaryColor!: string | null;

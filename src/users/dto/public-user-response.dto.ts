@@ -35,6 +35,14 @@ export class PublicUserResponseDto {
   })
   photoUrl!: string | null;
 
+  @ApiProperty({
+    description:
+      'Indica si el usuario tiene archivadas las dos caras de su documento de identidad. ' +
+      'Las imágenes se solicitan aparte y solo puede verlas un superadministrador.',
+    example: true,
+  })
+  hasIdentityDocuments!: boolean;
+
   @ApiProperty({ example: 'active' })
   status!: string;
 

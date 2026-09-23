@@ -33,13 +33,19 @@ export class CreateTeamDto {
   })
   sportType!: typeof FOOTBALL_SPORT_TYPE;
 
-  @ApiProperty({ enum: FOOTBALL_MODALITIES, example: 'Fútbol 11' })
-  @IsString()
-  @IsNotEmpty()
+  @ApiPropertyOptional({
+    enum: FOOTBALL_MODALITIES,
+    example: 'Fútbol 11',
+    nullable: true,
+    description:
+      'Ya no se pide al crear el equipo: la modalidad la fija cada torneo. ' +
+      'Se mantiene por compatibilidad y para no perder el dato histórico.',
+  })
+  @IsOptional()
   @IsIn(FOOTBALL_MODALITIES, {
     message: 'La modalidad debe ser Fútbol 5, Fútbol 7 o Fútbol 11.',
   })
-  modality!: FootballModality;
+  modality?: FootballModality | null;
 
   @ApiPropertyOptional({ example: '#0066CC', nullable: true })
   @IsOptional()

@@ -342,7 +342,7 @@ model teams {
   id                                 BigInt                          @id @default(autoincrement())
   name                               String
   sport_type                         String
-  modality                           String
+  modality                           String?
   primary_color                      String?
   secondary_color                    String?
   captain_user_id                    BigInt

@@ -417,8 +417,7 @@ export class CompetitionService {
             homePenalties: m?.home_penalties ?? null,
             awayPenalties: m?.away_penalties ?? null,
             refereeName:
-              m?.match_referees[0]?.tournament_referees.users.full_name ??
-              null,
+              m?.match_referees[0]?.tournament_referees.users.full_name ?? null,
             refereeStatus: m?.match_referees[0]?.assignment_status ?? null,
           };
         }),

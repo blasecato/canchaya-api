@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ImageStorageService } from '../uploads/image-storage.service';
 import { IdentityVerificationService } from './identity-verification.service';
@@ -8,14 +8,41 @@ import { UsersService } from './users.service';
 describe('UsersService', () => {
   const usersFindUnique = jest.fn();
   const usersFindMany = jest.fn();
+  const userRolesFindMany = jest.fn();
+  const createIdentityDocumentDownloadUrl = jest.fn(
+    () => 'https://signed.test/documento',
+  );
   const prisma = {
     users: { findMany: usersFindMany, findUnique: usersFindUnique },
+    user_roles: { findMany: userRolesFindMany },
   } as unknown as PrismaService;
   const usersService = new UsersService(
     prisma,
-    {} as ImageStorageService,
+    { createIdentityDocumentDownloadUrl } as unknown as ImageStorageService,
     {} as IdentityVerificationService,
   );
+
+  const baseUserRecord = {
+    id: 7n,
+    id_number: '1020304050',
+    document_type: 'CC',
+    full_name: 'Usuario Prueba',
+    birth_date: new Date('1995-06-20T00:00:00.000Z'),
+    birth_city: null,
+    gender: null,
+    email: 'user@example.com',
+    phone: '+573001234567',
+    photo_url: null,
+    photo_public_id: null,
+    document_front_public_id: 'canchaya/users/documents/front/abc',
+    document_back_public_id: 'canchaya/users/documents/back/def',
+    identity_verification_status: 'verified',
+    status: 'active',
+    blocked_until: null,
+    block_reason: null,
+    created_at: new Date('2026-08-20T12:00:00.000Z'),
+    updated_at: new Date('2026-08-21T12:00:00.000Z'),
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -58,22 +85,7 @@ describe('UsersService', () => {
   describe('findOne', () => {
     it('devuelve el usuario público completo con sus roles', async () => {
       usersFindUnique.mockResolvedValue({
-        id: 7n,
-        id_number: '1020304050',
-        document_type: 'CC',
-        full_name: 'Usuario Prueba',
-        birth_date: new Date('1995-06-20T00:00:00.000Z'),
-        birth_city: null,
-        gender: null,
-        email: 'user@example.com',
-        phone: '+573001234567',
-        photo_url: null,
-        photo_public_id: null,
-        status: 'active',
-        blocked_until: null,
-        block_reason: null,
-        created_at: new Date('2026-08-20T12:00:00.000Z'),
-        updated_at: new Date('2026-08-21T12:00:00.000Z'),
+        ...baseUserRecord,
         user_roles: [
           { role_code: 'REFEREE' },
           { role_code: 'PLAYER' },
@@ -92,6 +104,8 @@ describe('UsersService', () => {
         email: 'user@example.com',
         phone: '+573001234567',
         photoUrl: null,
+        hasIdentityDocuments: true,
+        identityVerificationStatus: 'verified',
         status: 'active',
         blockReason: null,
         blockedUntil: null,
@@ -112,6 +126,64 @@ describe('UsersService', () => {
       await expect(usersService.findOne(99n)).rejects.toThrow(
         new NotFoundException('El usuario con ID 99 no existe.'),
       );
+    });
+
+    it('informa que no hay documento cuando falta alguna de las dos caras', async () => {
+      usersFindUnique.mockResolvedValue({
+        ...baseUserRecord,
+        document_back_public_id: null,
+        user_roles: [{ role_code: 'PLAYER' }],
+      });
+
+      await expect(usersService.findOne(7n)).resolves.toEqual(
+        expect.objectContaining({ hasIdentityDocuments: false }),
+      );
+    });
+  });
+
+  describe('getIdentityDocumentDownload', () => {
+    const documentOwner = {
+      document_front_public_id: 'canchaya/users/documents/front/abc',
+      document_front_format: 'png',
+      document_back_public_id: 'canchaya/users/documents/back/def',
+      document_back_format: 'png',
+      user_roles: [{ role_code: 'PLAYER' }],
+    };
+
+    it('entrega un enlace firmado al superadministrador', async () => {
+      usersFindUnique.mockResolvedValue(documentOwner);
+      userRolesFindMany.mockResolvedValue([{ role_code: 'SUPER_ADMIN' }]);
+
+      await expect(
+        usersService.getIdentityDocumentDownload(7n, 1n, 'front'),
+      ).resolves.toEqual(
+        expect.objectContaining({ url: 'https://signed.test/documento' }),
+      );
+      expect(createIdentityDocumentDownloadUrl).toHaveBeenCalledWith(
+        'canchaya/users/documents/front/abc',
+        'png',
+        300,
+      );
+    });
+
+    it('niega el documento a un administrador de asociación', async () => {
+      // Puede consultar el perfil del jugador, pero la cédula fotografiada no.
+      usersFindUnique.mockResolvedValue(documentOwner);
+      userRolesFindMany.mockResolvedValue([{ role_code: 'ASSOCIATION_ADMIN' }]);
+
+      await expect(
+        usersService.getIdentityDocumentDownload(7n, 1n, 'front'),
+      ).rejects.toThrow(ForbiddenException);
+      expect(createIdentityDocumentDownloadUrl).not.toHaveBeenCalled();
+    });
+
+    it('niega el documento al propio titular del perfil', async () => {
+      usersFindUnique.mockResolvedValue(documentOwner);
+      userRolesFindMany.mockResolvedValue([{ role_code: 'PLAYER' }]);
+
+      await expect(
+        usersService.getIdentityDocumentDownload(7n, 7n, 'back'),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 });
