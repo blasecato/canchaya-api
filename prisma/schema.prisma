@@ -629,6 +629,9 @@ model users {
   document_back_public_id                                                               String?
   document_back_format                                                                  String?
   identity_verified_at                                                                  DateTime?                        @db.Timestamptz(6)
+  identity_verification_status                                                          String                           @default("pending_review")
+  identity_verification_details                                                         Json?
+  identity_verification_checked_at                                                      DateTime?                        @db.Timestamptz(6)
   password_hash                                                                         String
   status                                                                                String                           @default("active")
   blocked_until                                                                         DateTime?                        @db.Timestamptz(6)

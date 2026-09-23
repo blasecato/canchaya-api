@@ -1,9 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, type TransformFnParams } from 'class-transformer';
 import {
   IsEmail,
   IsIn,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
@@ -11,6 +12,16 @@ import { IsBigIntString } from '../../common/decorators/is-big-int-string.decora
 
 function trimString({ value }: TransformFnParams): unknown {
   return typeof value === 'string' ? value.trim() : value;
+}
+
+/**
+ * Los campos opcionales llegan como cadena vacía desde un formulario HTML.
+ * Convertirlos a null los guarda como ausentes en lugar de como texto vacío,
+ * que además chocaría contra el índice único del NIT.
+ */
+function trimToNull(params: TransformFnParams): unknown {
+  const value = trimString(params);
+  return value === '' ? null : value;
 }
 
 export class CreateAssociationDto {
@@ -42,20 +53,23 @@ export class CreateAssociationDto {
   @MaxLength(250)
   address!: string;
 
-  @ApiProperty({ example: '900123456-7' })
-  @Transform(trimString)
+  @ApiPropertyOptional({ example: '900123456-7', nullable: true })
+  @Transform(trimToNull)
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MaxLength(50)
-  taxId!: string;
+  taxId?: string | null;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'contacto@liga.example',
+    nullable: true,
   })
-  @Transform(trimString)
+  @Transform(trimToNull)
+  @IsOptional()
   @IsEmail()
   @MaxLength(254)
-  email!: string;
+  email?: string | null;
 
   @ApiProperty({ example: '+576011234567' })
   @Transform(trimString)

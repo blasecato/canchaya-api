@@ -51,15 +51,23 @@ export class UsersService {
     files: RegisterPlayerFiles,
   ): Promise<PublicUserResponseDto> {
     this.assertValidBirthDate(dto.birthDate);
+    this.assertDeclaredAgeMatchesBirthDate(dto.birthDate, dto.age);
     await this.assertUserIdentifiersAreAvailable(dto.idNumber, dto.email);
 
-    await this.identityVerification.verify(
+    // El OCR informa, no bloquea: una foto difícil no debe impedir el registro.
+    // Lo que no queda confirmado se guarda para revisión de un administrador.
+    const identityCheck = await this.identityVerification.verify(
       files.documentFront,
       files.documentBack,
       dto.idNumber,
       dto.birthDate,
-      dto.age,
     );
+    if (!identityCheck.verified) {
+      this.logger.warn(
+        `Documento sin confirmar para la cédula ${dto.idNumber}: ` +
+          `${identityCheck.outcome} (${JSON.stringify(identityCheck.details)})`,
+      );
+    }
 
     let photoAsset: StoredImageAsset | null = null;
     let documentFrontAsset: StoredImageAsset | null = null;
@@ -97,7 +105,13 @@ export class UsersService {
             document_back_url: persistedDocumentBack.url,
             document_back_public_id: persistedDocumentBack.publicId,
             document_back_format: persistedDocumentBack.format,
-            identity_verified_at: new Date(),
+            identity_verified_at: identityCheck.verified ? new Date() : null,
+            identity_verification_status: identityCheck.verified
+              ? 'verified'
+              : 'pending_review',
+            identity_verification_details:
+              identityCheck.details as unknown as Prisma.InputJsonValue,
+            identity_verification_checked_at: new Date(),
             password_hash: await hash(dto.password, 12),
             status: 'active',
           },
@@ -126,6 +140,30 @@ export class UsersService {
         );
       }
       throw error;
+    }
+  }
+
+  /**
+   * La edad es un campo aparte del formulario; si contradice la fecha escrita,
+   * el error está en el formulario y no en la foto, así que sí se rechaza.
+   */
+  private assertDeclaredAgeMatchesBirthDate(
+    birthDate: string,
+    declaredAge: number,
+  ): void {
+    const [year, month, day] = birthDate.split('-').map(Number);
+    const today = new Date();
+    let expectedAge = today.getFullYear() - year;
+    if (
+      today.getMonth() + 1 < month ||
+      (today.getMonth() + 1 === month && today.getDate() < day)
+    ) {
+      expectedAge -= 1;
+    }
+    if (expectedAge !== declaredAge) {
+      throw new BadRequestException(
+        `La edad indicada no coincide con la fecha de nacimiento. Para esa fecha la edad actual es ${expectedAge} años.`,
+      );
     }
   }
 

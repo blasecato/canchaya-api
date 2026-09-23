@@ -14,6 +14,7 @@ export const publicUserSelect = {
   photo_url: true,
   photo_public_id: true,
   status: true,
+  identity_verification_status: true,
   blocked_until: true,
   block_reason: true,
   created_at: true,
@@ -47,6 +48,8 @@ export function toPublicUserResponse(
     phone: user.phone,
     photoUrl: user.photo_url,
     status: user.status,
+    identityVerificationStatus:
+      user.identity_verification_status as PublicUserResponseDto['identityVerificationStatus'],
     blockReason: user.block_reason,
     blockedUntil: user.blocked_until?.toISOString() ?? null,
     roles,

@@ -51,6 +51,15 @@ export class PublicUserResponseDto {
   })
   blockedUntil!: string | null;
 
+  @ApiProperty({
+    description:
+      'Resultado del cruce automático entre los datos escritos y la foto del documento. ' +
+      '"pending_review" no bloquea la cuenta: solo indica que un administrador debe revisarla.',
+    enum: ['verified', 'pending_review'],
+    example: 'verified',
+  })
+  identityVerificationStatus!: 'verified' | 'pending_review';
+
   @ApiProperty({ example: ['PLAYER'], type: [String] })
   roles!: string[];
 
