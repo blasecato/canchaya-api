@@ -7,7 +7,7 @@ import { UsersService } from './users.service';
 
 describe('UsersService', () => {
   const usersFindUnique = jest.fn();
-  const usersFindMany = jest.fn();
+  const usersFindMany = jest.fn<(args: unknown) => Promise<unknown[]>>();
   const userRolesFindMany = jest.fn();
   const createIdentityDocumentDownloadUrl = jest.fn(
     () => 'https://signed.test/documento',
@@ -79,6 +79,57 @@ describe('UsersService', () => {
         orderBy: { id: 'asc' },
         select: publicUserSelect,
       });
+    });
+  });
+
+  describe('exportAdministrators', () => {
+    it('exporta únicamente datos de contacto, rol y asociaciones', async () => {
+      usersFindMany.mockResolvedValue([
+        {
+          id_number: '1020304050',
+          document_type: 'CC',
+          full_name: 'Administradora Prueba',
+          email: 'admin@example.com',
+          phone: '+573001234567',
+          status: 'active',
+          user_roles: [{ role_code: 'ASSOCIATION_ADMIN' }],
+          associations: { id: 4n, name: 'Liga Principal' },
+          association_administrators: [
+            {
+              permission_level: 'administrator',
+              associations: { id: 8n, name: 'Liga Alterna' },
+            },
+          ],
+        },
+      ]);
+
+      const result = await usersService.exportAdministrators({
+        search: 'Prueba',
+        role: 'ASSOCIATION_ADMIN',
+        status: 'active',
+      });
+
+      expect(result).toEqual([
+        {
+          fullName: 'Administradora Prueba',
+          documentType: 'CC',
+          idNumber: '1020304050',
+          phone: '+573001234567',
+          email: 'admin@example.com',
+          status: 'active',
+          roles: ['ASSOCIATION_ADMIN'],
+          associations: [
+            { name: 'Liga Principal', permissionLevel: 'owner' },
+            {
+              name: 'Liga Alterna',
+              permissionLevel: 'administrator',
+            },
+          ],
+        },
+      ]);
+      expect(usersFindMany).toHaveBeenCalledTimes(1);
+      expect(result[0]).not.toHaveProperty('birthDate');
+      expect(result[0]).not.toHaveProperty('photoUrl');
     });
   });
 

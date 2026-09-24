@@ -75,6 +75,8 @@ type TournamentDates = {
   registrationEndDate: Date | null;
 };
 
+type TournamentAgreementDates = Pick<TournamentDates, 'startDate' | 'endDate'>;
+
 type TournamentTypePlayerLimits = {
   id: bigint;
   name: string;
@@ -1708,7 +1710,6 @@ export class TournamentsService {
     dto: TournamentSponsorInputDto,
     logo?: UploadedImageFile,
   ): Promise<TournamentSponsorResponseDto> {
-    this.assertValidSponsorDates(dto);
     await this.requireTournamentManagementPermission(
       this.prisma,
       tournamentId,
@@ -1726,7 +1727,10 @@ export class TournamentsService {
           tournamentId,
           requestingUserId,
         );
-        await this.assertSponsorsEditable(transaction, tournamentId);
+        const agreementDates = await this.assertSponsorsEditable(
+          transaction,
+          tournamentId,
+        );
         let sponsorId: bigint;
         if (dto.sponsorId) {
           sponsorId = BigInt(dto.sponsorId);
@@ -1797,7 +1801,7 @@ export class TournamentsService {
           data: {
             tournament_id: tournamentId,
             sponsor_id: sponsorId,
-            ...this.tournamentSponsorData(dto),
+            ...this.tournamentSponsorData(dto, agreementDates),
           },
           select: tournamentSponsorResponseSelect,
         });
@@ -1820,7 +1824,6 @@ export class TournamentsService {
     dto: TournamentSponsorInputDto,
     logo?: UploadedImageFile,
   ): Promise<TournamentSponsorResponseDto> {
-    this.assertValidSponsorDates(dto);
     await this.requireTournamentManagementPermission(
       this.prisma,
       tournamentId,
@@ -1838,7 +1841,10 @@ export class TournamentsService {
           tournamentId,
           requestingUserId,
         );
-        await this.assertSponsorsEditable(transaction, tournamentId);
+        const agreementDates = await this.assertSponsorsEditable(
+          transaction,
+          tournamentId,
+        );
         const relation = await transaction.tournament_sponsors.findUnique({
           where: {
             tournament_id_sponsor_id: {
@@ -1885,7 +1891,7 @@ export class TournamentsService {
               sponsor_id: sponsorId,
             },
           },
-          data: this.tournamentSponsorData(dto),
+          data: this.tournamentSponsorData(dto, agreementDates),
           select: tournamentSponsorResponseSelect,
         });
         return toTournamentSponsorResponse(updated);
@@ -2526,10 +2532,10 @@ export class TournamentsService {
   private async assertSponsorsEditable(
     client: Prisma.TransactionClient,
     tournamentId: bigint,
-  ): Promise<void> {
+  ): Promise<TournamentAgreementDates> {
     const tournament = await client.tournaments.findUnique({
       where: { id: tournamentId },
-      select: { phase: true },
+      select: { phase: true, start_date: true, end_date: true },
     });
     if (!tournament) {
       throw new NotFoundException('El torneo solicitado no existe.');
@@ -2539,6 +2545,10 @@ export class TournamentsService {
         'Los patrocinadores no se pueden modificar en un torneo finalizado, archivado o cancelado.',
       );
     }
+    return {
+      startDate: tournament.start_date,
+      endDate: tournament.end_date,
+    };
   }
 
   private dateChanged(
@@ -2548,16 +2558,6 @@ export class TournamentsService {
     if (value === undefined) return false;
     const nextDate = this.toDate(value);
     return (nextDate?.getTime() ?? null) !== (current?.getTime() ?? null);
-  }
-
-  private assertValidSponsorDates(dto: TournamentSponsorInputDto): void {
-    const startDate = this.toDate(dto.agreementStartDate) ?? null;
-    const endDate = this.toDate(dto.agreementEndDate) ?? null;
-    if (startDate && endDate && endDate < startDate) {
-      throw new BadRequestException(
-        'La fecha final del acuerdo no puede ser anterior a la fecha inicial.',
-      );
-    }
   }
 
   private sponsorData(dto: TournamentSponsorInputDto, logo?: StoredImageAsset) {
@@ -2575,15 +2575,18 @@ export class TournamentsService {
     };
   }
 
-  private tournamentSponsorData(dto: TournamentSponsorInputDto) {
+  private tournamentSponsorData(
+    dto: TournamentSponsorInputDto,
+    agreementDates: TournamentAgreementDates,
+  ) {
     return {
       sponsorship_level: dto.sponsorshipLevel ?? null,
       contribution_type: dto.contributionType ?? 'money',
       contribution_amount: dto.contributionAmount ?? null,
       currency_code: dto.contributionCurrencyCode?.toUpperCase() ?? 'COP',
       contribution_description: dto.contributionDescription ?? null,
-      agreement_start_date: this.toDate(dto.agreementStartDate) ?? null,
-      agreement_end_date: this.toDate(dto.agreementEndDate) ?? null,
+      agreement_start_date: agreementDates.startDate,
+      agreement_end_date: agreementDates.endDate,
       status: dto.status ?? 'active',
     };
   }
@@ -2826,15 +2829,14 @@ export class TournamentsService {
     const retainedSponsorIds: bigint[] = [];
     const retainedSponsorKeys = new Set<string>();
     const replacedImages: StoredImageReference[] = [];
+    const agreementDates =
+      sponsorInputs.length > 0
+        ? await this.assertSponsorsEditable(client, tournamentId)
+        : null;
 
     for (const sponsorInput of sponsorInputs) {
-      const startDate = this.toDate(sponsorInput.agreementStartDate) ?? null;
-      const endDate = this.toDate(sponsorInput.agreementEndDate) ?? null;
-      if (startDate && endDate && endDate < startDate) {
-        throw new BadRequestException(
-          `La fecha final del acuerdo de ${sponsorInput.name} no puede ser anterior a la fecha inicial.`,
-        );
-      }
+      const startDate = agreementDates?.startDate ?? null;
+      const endDate = agreementDates?.endDate ?? null;
 
       const logoAsset =
         sponsorInput.logoFileIndex === undefined
@@ -3028,15 +3030,6 @@ export class TournamentsService {
     ) {
       throw new BadRequestException(
         'La fecha de inicio de inscripciones no puede ser posterior al inicio del torneo.',
-      );
-    }
-
-    if (
-      dates.registrationEndDate &&
-      dates.registrationEndDate > dates.startDate
-    ) {
-      throw new BadRequestException(
-        'La fecha de cierre de inscripciones no puede ser posterior al inicio del torneo.',
       );
     }
 

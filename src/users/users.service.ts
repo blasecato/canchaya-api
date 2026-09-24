@@ -15,6 +15,7 @@ import type {
   UploadedImageFile,
 } from '../uploads/image-storage.types';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ExportAdministratorsQueryDto } from './dto/export-administrators-query.dto';
 import { ListAdministratorsQueryDto } from './dto/list-administrators-query.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
@@ -27,6 +28,17 @@ export type RegisterPlayerFiles = {
   photo: UploadedImageFile;
   documentFront: UploadedImageFile;
   documentBack: UploadedImageFile;
+};
+
+export type AdministratorExportItem = {
+  fullName: string;
+  documentType: string;
+  idNumber: string;
+  phone: string | null;
+  email: string;
+  status: string;
+  roles: string[];
+  associations: Array<{ name: string; permissionLevel: string }>;
 };
 
 const ROLE_LABELS: Record<string, string> = {
@@ -229,37 +241,7 @@ export class UsersService {
 
   async findAdministrators(query: ListAdministratorsQueryDto) {
     const administratorRoles = ['SUPER_ADMIN', 'ASSOCIATION_ADMIN'];
-    const adminRoleWhere: Prisma.user_rolesWhereInput = query.role
-      ? { role_code: query.role }
-      : { role_code: { in: administratorRoles } };
-    const where: Prisma.usersWhereInput = {
-      status: query.status,
-      user_roles: { some: adminRoleWhere },
-      ...(query.search
-        ? {
-            OR: [
-              {
-                full_name: {
-                  contains: query.search,
-                  mode: 'insensitive' as const,
-                },
-              },
-              {
-                email: { contains: query.search, mode: 'insensitive' as const },
-              },
-              {
-                id_number: {
-                  contains: query.search,
-                  mode: 'insensitive' as const,
-                },
-              },
-              {
-                phone: { contains: query.search, mode: 'insensitive' as const },
-              },
-            ],
-          }
-        : {}),
-    };
+    const where = this.buildAdministratorWhere(query);
     const allAdministratorsWhere: Prisma.usersWhereInput = {
       user_roles: { some: { role_code: { in: administratorRoles } } },
     };
@@ -366,6 +348,108 @@ export class UsersService {
       pageSize: query.pageSize,
       total,
       hasNextPage: skip + users.length < total,
+    };
+  }
+
+  async exportAdministrators(
+    query: ExportAdministratorsQueryDto,
+  ): Promise<AdministratorExportItem[]> {
+    const users = await this.prisma.users.findMany({
+      where: this.buildAdministratorWhere(query),
+      orderBy: [{ full_name: 'asc' }, { id: 'asc' }],
+      select: {
+        id_number: true,
+        document_type: true,
+        full_name: true,
+        email: true,
+        phone: true,
+        status: true,
+        user_roles: {
+          where: {
+            role_code: { in: ['SUPER_ADMIN', 'ASSOCIATION_ADMIN'] },
+          },
+          orderBy: { role_code: 'asc' },
+          select: { role_code: true },
+        },
+        associations: { select: { id: true, name: true } },
+        association_administrators: {
+          where: { status: 'active' },
+          select: {
+            permission_level: true,
+            associations: { select: { id: true, name: true } },
+          },
+        },
+      },
+    });
+
+    return users.map((user) => {
+      const associations = new Map<
+        string,
+        { name: string; permissionLevel: string }
+      >();
+      if (user.associations) {
+        associations.set(user.associations.id.toString(), {
+          name: user.associations.name,
+          permissionLevel: 'owner',
+        });
+      }
+      for (const assignment of user.association_administrators) {
+        associations.set(assignment.associations.id.toString(), {
+          name: assignment.associations.name,
+          permissionLevel: assignment.permission_level,
+        });
+      }
+
+      return {
+        fullName: user.full_name,
+        documentType: user.document_type,
+        idNumber: user.id_number,
+        phone: user.phone,
+        email: user.email,
+        status: user.status,
+        roles: user.user_roles.map(({ role_code }) => role_code),
+        associations: [...associations.values()],
+      };
+    });
+  }
+
+  private buildAdministratorWhere(query: {
+    search?: string;
+    role?: 'SUPER_ADMIN' | 'ASSOCIATION_ADMIN';
+    status?: 'active' | 'blocked';
+  }): Prisma.usersWhereInput {
+    const administratorRoles = ['SUPER_ADMIN', 'ASSOCIATION_ADMIN'];
+    const adminRoleWhere: Prisma.user_rolesWhereInput = query.role
+      ? { role_code: query.role }
+      : { role_code: { in: administratorRoles } };
+
+    return {
+      status: query.status,
+      user_roles: { some: adminRoleWhere },
+      ...(query.search
+        ? {
+            OR: [
+              {
+                full_name: {
+                  contains: query.search,
+                  mode: 'insensitive' as const,
+                },
+              },
+              {
+                email: { contains: query.search, mode: 'insensitive' as const },
+              },
+              {
+                id_number: {
+                  contains: query.search,
+                  mode: 'insensitive' as const,
+                },
+              },
+              {
+                phone: { contains: query.search, mode: 'insensitive' as const },
+              },
+            ],
+          }
+        : {}),
     };
   }
 

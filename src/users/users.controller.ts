@@ -46,6 +46,7 @@ import {
   MAX_IMAGE_SIZE_BYTES,
 } from '../uploads/uploads.constants';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ExportAdministratorsQueryDto } from './dto/export-administrators-query.dto';
 import { ListAdministratorsQueryDto } from './dto/list-administrators-query.dto';
 import { RegisterPlayerDto } from './dto/register-player.dto';
 import { PublicUserResponseDto } from './dto/public-user-response.dto';
@@ -207,6 +208,24 @@ export class UsersController {
   })
   findAll(): Promise<PublicUserResponseDto[]> {
     return this.usersService.findAll();
+  }
+
+  @Get('administrators/export')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @RequireRoles('SUPER_ADMIN')
+  @Header('Cache-Control', 'private, no-store')
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: 'Obtener los datos de contacto exportables de administradores',
+  })
+  @ApiOkResponse({
+    description:
+      'Listado completo, sin paginación, de los administradores que coinciden con los filtros.',
+  })
+  @ApiUnauthorizedResponse({ description: 'Token de acceso inválido.' })
+  @ApiForbiddenResponse({ description: 'Requiere el rol SUPER_ADMIN.' })
+  exportAdministrators(@Query() query: ExportAdministratorsQueryDto) {
+    return this.usersService.exportAdministrators(query);
   }
 
   @Get('administrators')

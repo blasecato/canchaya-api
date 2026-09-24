@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
+import { tournamentSponsorResponseSelect } from '../associations/association-tournament-response.mapper';
 import { AssociationsService } from '../associations/associations.service';
 import { CompetitionAccessService } from '../authorization/competition-access.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -32,6 +33,11 @@ describe('TournamentsService', () => {
   const transactionLifecycleEventCreate = jest.fn();
   const transactionRegistrationCount = jest.fn();
   const transactionTournamentSponsorsDeleteMany = jest.fn();
+  const transactionSponsorFindUnique = jest.fn();
+  const transactionSponsorCreate = jest.fn();
+  const transactionSponsorUpdate = jest.fn();
+  const transactionTournamentSponsorFindUnique = jest.fn();
+  const transactionTournamentSponsorCreate = jest.fn();
 
   const transactionClient = {
     tournament_types: { findUnique: transactionTournamentTypeFindUnique },
@@ -44,8 +50,15 @@ describe('TournamentsService', () => {
     tournament_team_registrations: {
       count: transactionRegistrationCount,
     },
+    sponsors: {
+      findUnique: transactionSponsorFindUnique,
+      create: transactionSponsorCreate,
+      update: transactionSponsorUpdate,
+    },
     tournament_lifecycle_events: { create: transactionLifecycleEventCreate },
     tournament_sponsors: {
+      findUnique: transactionTournamentSponsorFindUnique,
+      create: transactionTournamentSponsorCreate,
       deleteMany: transactionTournamentSponsorsDeleteMany,
     },
   };
@@ -188,6 +201,8 @@ describe('TournamentsService', () => {
     tournamentsFindFirst.mockResolvedValue(null);
     teamsFindFirst.mockResolvedValue(null);
     sponsorsFindFirst.mockResolvedValue(null);
+    transactionSponsorFindUnique.mockResolvedValue(null);
+    transactionTournamentSponsorFindUnique.mockResolvedValue(null);
 
     service = new TournamentsService(
       prisma,
@@ -195,6 +210,71 @@ describe('TournamentsService', () => {
       imageStorage,
       competitionAccess,
     );
+  });
+
+  describe('createSponsor', () => {
+    it('usa las fechas del torneo y permite omitir NIT, correo y sitio web', async () => {
+      const sponsorId = 44n;
+      const tournamentWithOwner = {
+        ...tournamentRecord,
+        created_by: requestingUserId,
+      };
+      tournamentsFindUnique.mockResolvedValue(tournamentWithOwner);
+      transactionTournamentFindUnique.mockResolvedValue(tournamentWithOwner);
+      transactionSponsorCreate.mockResolvedValue({ id: sponsorId });
+      transactionTournamentSponsorCreate.mockResolvedValue({
+        sponsor_id: sponsorId,
+        sponsorship_level: null,
+        contribution_type: 'money',
+        contribution_amount: null,
+        currency_code: 'COP',
+        contribution_description: null,
+        agreement_start_date: tournamentRecord.start_date,
+        agreement_end_date: tournamentRecord.end_date,
+        status: 'active',
+        sponsors: {
+          name: 'Patrocinador sin datos fiscales',
+          tax_id: null,
+          contact_name: null,
+          email: null,
+          phone: null,
+          website_url: null,
+          logo_url: null,
+        },
+      });
+
+      await expect(
+        service.createSponsor(tournamentId, requestingUserId, {
+          name: 'Patrocinador sin datos fiscales',
+          agreementStartDate: '2020-01-01',
+          agreementEndDate: '2030-01-01',
+        }),
+      ).resolves.toEqual(
+        expect.objectContaining({
+          taxId: null,
+          email: null,
+          websiteUrl: null,
+          agreementStartDate: '2026-09-15',
+          agreementEndDate: '2026-10-15',
+        }),
+      );
+
+      expect(transactionTournamentSponsorCreate).toHaveBeenCalledWith({
+        data: {
+          tournament_id: tournamentId,
+          sponsor_id: sponsorId,
+          sponsorship_level: null,
+          contribution_type: 'money',
+          contribution_amount: null,
+          currency_code: 'COP',
+          contribution_description: null,
+          agreement_start_date: tournamentRecord.start_date,
+          agreement_end_date: tournamentRecord.end_date,
+          status: 'active',
+        },
+        select: tournamentSponsorResponseSelect,
+      });
+    });
   });
 
   describe('create', () => {
@@ -340,11 +420,6 @@ describe('TournamentsService', () => {
         'La fecha de inicio de inscripciones',
       ],
       [
-        'el cierre de inscripciones después del inicio',
-        { registrationEndDate: '2026-09-16' },
-        'La fecha de cierre de inscripciones',
-      ],
-      [
         'el cierre de inscripciones antes de su apertura',
         {
           registrationStartDate: '2026-09-10',
@@ -362,6 +437,29 @@ describe('TournamentsService', () => {
 
       expect(getAssociationPermissions).not.toHaveBeenCalled();
       expect(prismaTransaction).not.toHaveBeenCalled();
+    });
+
+    it('permite cerrar inscripciones después del inicio del torneo', async () => {
+      const registrationEndDate = '2026-09-20';
+      transactionTournamentCreate.mockResolvedValue({ id: tournamentId });
+      transactionTournamentFindUnique.mockResolvedValue({
+        ...tournamentRecord,
+        registration_end_date: new Date(`${registrationEndDate}T00:00:00.000Z`),
+      });
+
+      await expect(
+        service.create(associationId, requestingUserId, {
+          ...createDto,
+          registrationEndDate,
+        }),
+      ).resolves.toEqual(
+        expect.objectContaining({
+          id: tournamentId.toString(),
+          registrationEndDate,
+        }),
+      );
+
+      expect(transactionTournamentCreate).toHaveBeenCalled();
     });
 
     it('elimina la foto nueva cuando la transacción falla', async () => {
