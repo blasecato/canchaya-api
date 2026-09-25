@@ -27,7 +27,7 @@ class CreateTeamDto {
     memberUserIds;
     status;
     static _OPENAPI_METADATA_FACTORY() {
-        return { name: { required: true, type: () => String, maxLength: 120 }, sportType: { required: true, type: () => String, enum: [football_constants_1.FOOTBALL_SPORT_TYPE] }, modality: { required: true, enum: ["F\u00FAtbol 5", "F\u00FAtbol 7", "F\u00FAtbol 11"], enum: football_constants_1.FOOTBALL_MODALITIES }, primaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, secondaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, captainUserId: { required: false, type: () => String }, memberUserIds: { required: false, type: () => [String], uniqueItems: true }, status: { required: false, type: () => String, enum: ['active', 'inactive'] } };
+        return { name: { required: true, type: () => String, maxLength: 120 }, sportType: { required: true, type: () => String, enum: [football_constants_1.FOOTBALL_SPORT_TYPE] }, modality: { required: false, nullable: true, enum: ["F\u00FAtbol 5", "F\u00FAtbol 7", "F\u00FAtbol 11"], enum: football_constants_1.FOOTBALL_MODALITIES }, primaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, secondaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, captainUserId: { required: false, type: () => String }, memberUserIds: { required: false, type: () => [String], uniqueItems: true }, status: { required: false, type: () => String, enum: ['active', 'inactive'] } };
     }
 }
 exports.CreateTeamDto = CreateTeamDto;
@@ -48,13 +48,18 @@ __decorate([
     __metadata("design:type", Object)
 ], CreateTeamDto.prototype, "sportType", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ enum: football_constants_1.FOOTBALL_MODALITIES, example: 'Fútbol 11' }),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, swagger_1.ApiPropertyOptional)({
+        enum: football_constants_1.FOOTBALL_MODALITIES,
+        example: 'Fútbol 11',
+        nullable: true,
+        description: 'Ya no se pide al crear el equipo: la modalidad la fija cada torneo. ' +
+            'Se mantiene por compatibilidad y para no perder el dato histórico.',
+    }),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsIn)(football_constants_1.FOOTBALL_MODALITIES, {
         message: 'La modalidad debe ser Fútbol 5, Fútbol 7 o Fútbol 11.',
     }),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], CreateTeamDto.prototype, "modality", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: '#0066CC', nullable: true }),

@@ -20,7 +20,7 @@ export declare class TeamCarnetsResponseDto {
     teamId: string;
     teamName: string;
     sportType: string;
-    modality: string;
+    modality: string | null;
     primaryColor: string | null;
     secondaryColor: string | null;
     photoUrl: string | null;

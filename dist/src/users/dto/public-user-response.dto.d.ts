@@ -10,9 +10,11 @@ export declare class PublicUserResponseDto {
     email: string;
     phone: string | null;
     photoUrl: string | null;
+    hasIdentityDocuments: boolean;
     status: string;
     blockReason: string | null;
     blockedUntil: string | null;
+    identityVerificationStatus: 'verified' | 'pending_review';
     roles: string[];
     createdAt: string;
     updatedAt: string;

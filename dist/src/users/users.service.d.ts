@@ -2,6 +2,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ImageStorageService } from '../uploads/image-storage.service';
 import type { UploadedImageFile } from '../uploads/image-storage.types';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ExportAdministratorsQueryDto } from './dto/export-administrators-query.dto';
 import { ListAdministratorsQueryDto } from './dto/list-administrators-query.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
@@ -13,6 +14,19 @@ export type RegisterPlayerFiles = {
     documentFront: UploadedImageFile;
     documentBack: UploadedImageFile;
 };
+export type AdministratorExportItem = {
+    fullName: string;
+    documentType: string;
+    idNumber: string;
+    phone: string | null;
+    email: string;
+    status: string;
+    roles: string[];
+    associations: Array<{
+        name: string;
+        permissionLevel: string;
+    }>;
+};
 export declare class UsersService {
     private readonly prisma;
     private readonly imageStorage;
@@ -20,6 +34,7 @@ export declare class UsersService {
     private readonly logger;
     constructor(prisma: PrismaService, imageStorage: ImageStorageService, identityVerification: IdentityVerificationService);
     registerPlayer(dto: RegisterPlayerDto, files: RegisterPlayerFiles): Promise<PublicUserResponseDto>;
+    private assertDeclaredAgeMatchesBirthDate;
     private assertUserIdentifiersAreAvailable;
     create(createUserDto: CreateUserDto): Promise<{
         id: bigint;
@@ -43,6 +58,9 @@ export declare class UsersService {
         document_back_public_id: string | null;
         document_back_format: string | null;
         identity_verified_at: Date | null;
+        identity_verification_status: string;
+        identity_verification_details: import("@prisma/client/runtime/client").JsonValue | null;
+        identity_verification_checked_at: Date | null;
         blocked_until: Date | null;
         block_reason: string | null;
         blocked_by: bigint | null;
@@ -81,6 +99,8 @@ export declare class UsersService {
         total: number;
         hasNextPage: boolean;
     }>;
+    exportAdministrators(query: ExportAdministratorsQueryDto): Promise<AdministratorExportItem[]>;
+    private buildAdministratorWhere;
     findOne(id: bigint): Promise<PublicUserResponseDto>;
     findVisibleProfile(id: bigint, requestingUserId: bigint): Promise<PublicUserResponseDto>;
     updateProfile(id: bigint, requestingUserId: bigint, dto: UpdateUserProfileDto, photo?: UploadedImageFile): Promise<PublicUserResponseDto>;
@@ -106,6 +126,9 @@ export declare class UsersService {
         document_back_public_id: string | null;
         document_back_format: string | null;
         identity_verified_at: Date | null;
+        identity_verification_status: string;
+        identity_verification_details: import("@prisma/client/runtime/client").JsonValue | null;
+        identity_verification_checked_at: Date | null;
         blocked_until: Date | null;
         block_reason: string | null;
         blocked_by: bigint | null;
@@ -137,6 +160,9 @@ export declare class UsersService {
         document_back_public_id: string | null;
         document_back_format: string | null;
         identity_verified_at: Date | null;
+        identity_verification_status: string;
+        identity_verification_details: import("@prisma/client/runtime/client").JsonValue | null;
+        identity_verification_checked_at: Date | null;
         blocked_until: Date | null;
         block_reason: string | null;
         blocked_by: bigint | null;

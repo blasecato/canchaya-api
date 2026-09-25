@@ -2871,6 +2871,9 @@ export declare const UsersScalarFieldEnum: {
     readonly document_back_public_id: "document_back_public_id";
     readonly document_back_format: "document_back_format";
     readonly identity_verified_at: "identity_verified_at";
+    readonly identity_verification_status: "identity_verification_status";
+    readonly identity_verification_details: "identity_verification_details";
+    readonly identity_verification_checked_at: "identity_verification_checked_at";
     readonly password_hash: "password_hash";
     readonly status: "status";
     readonly blocked_until: "blocked_until";

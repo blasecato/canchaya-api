@@ -1293,7 +1293,6 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         return sponsors.map(association_tournament_response_mapper_1.toTournamentSponsorResponse);
     }
     async createSponsor(tournamentId, requestingUserId, dto, logo) {
-        this.assertValidSponsorDates(dto);
         await this.requireTournamentManagementPermission(this.prisma, tournamentId, requestingUserId);
         await this.assertSponsorsEditable(this.prisma, tournamentId);
         const uploadedLogo = logo
@@ -1303,7 +1302,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         try {
             const response = await this.prisma.$transaction(async (transaction) => {
                 await this.requireTournamentManagementPermission(transaction, tournamentId, requestingUserId);
-                await this.assertSponsorsEditable(transaction, tournamentId);
+                const agreementDates = await this.assertSponsorsEditable(transaction, tournamentId);
                 let sponsorId;
                 if (dto.sponsorId) {
                     sponsorId = BigInt(dto.sponsorId);
@@ -1369,7 +1368,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
                     data: {
                         tournament_id: tournamentId,
                         sponsor_id: sponsorId,
-                        ...this.tournamentSponsorData(dto),
+                        ...this.tournamentSponsorData(dto, agreementDates),
                     },
                     select: association_tournament_response_mapper_1.tournamentSponsorResponseSelect,
                 });
@@ -1387,7 +1386,6 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         }
     }
     async updateSponsor(tournamentId, sponsorId, requestingUserId, dto, logo) {
-        this.assertValidSponsorDates(dto);
         await this.requireTournamentManagementPermission(this.prisma, tournamentId, requestingUserId);
         await this.assertSponsorsEditable(this.prisma, tournamentId);
         const uploadedLogo = logo
@@ -1397,7 +1395,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         try {
             const response = await this.prisma.$transaction(async (transaction) => {
                 await this.requireTournamentManagementPermission(transaction, tournamentId, requestingUserId);
-                await this.assertSponsorsEditable(transaction, tournamentId);
+                const agreementDates = await this.assertSponsorsEditable(transaction, tournamentId);
                 const relation = await transaction.tournament_sponsors.findUnique({
                     where: {
                         tournament_id_sponsor_id: {
@@ -1440,7 +1438,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
                             sponsor_id: sponsorId,
                         },
                     },
-                    data: this.tournamentSponsorData(dto),
+                    data: this.tournamentSponsorData(dto, agreementDates),
                     select: association_tournament_response_mapper_1.tournamentSponsorResponseSelect,
                 });
                 return (0, association_tournament_response_mapper_1.toTournamentSponsorResponse)(updated);
@@ -1825,7 +1823,7 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
     async assertSponsorsEditable(client, tournamentId) {
         const tournament = await client.tournaments.findUnique({
             where: { id: tournamentId },
-            select: { phase: true },
+            select: { phase: true, start_date: true, end_date: true },
         });
         if (!tournament) {
             throw new common_1.NotFoundException('El torneo solicitado no existe.');
@@ -1833,19 +1831,16 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         if (['finished', 'archived', 'cancelled'].includes(tournament.phase)) {
             throw new common_1.BadRequestException('Los patrocinadores no se pueden modificar en un torneo finalizado, archivado o cancelado.');
         }
+        return {
+            startDate: tournament.start_date,
+            endDate: tournament.end_date,
+        };
     }
     dateChanged(value, current) {
         if (value === undefined)
             return false;
         const nextDate = this.toDate(value);
         return (nextDate?.getTime() ?? null) !== (current?.getTime() ?? null);
-    }
-    assertValidSponsorDates(dto) {
-        const startDate = this.toDate(dto.agreementStartDate) ?? null;
-        const endDate = this.toDate(dto.agreementEndDate) ?? null;
-        if (startDate && endDate && endDate < startDate) {
-            throw new common_1.BadRequestException('La fecha final del acuerdo no puede ser anterior a la fecha inicial.');
-        }
     }
     sponsorData(dto, logo) {
         return {
@@ -1861,15 +1856,15 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
             updated_at: new Date(),
         };
     }
-    tournamentSponsorData(dto) {
+    tournamentSponsorData(dto, agreementDates) {
         return {
             sponsorship_level: dto.sponsorshipLevel ?? null,
             contribution_type: dto.contributionType ?? 'money',
             contribution_amount: dto.contributionAmount ?? null,
             currency_code: dto.contributionCurrencyCode?.toUpperCase() ?? 'COP',
             contribution_description: dto.contributionDescription ?? null,
-            agreement_start_date: this.toDate(dto.agreementStartDate) ?? null,
-            agreement_end_date: this.toDate(dto.agreementEndDate) ?? null,
+            agreement_start_date: agreementDates.startDate,
+            agreement_end_date: agreementDates.endDate,
             status: dto.status ?? 'active',
         };
     }
@@ -2027,12 +2022,12 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         const retainedSponsorIds = [];
         const retainedSponsorKeys = new Set();
         const replacedImages = [];
+        const agreementDates = sponsorInputs.length > 0
+            ? await this.assertSponsorsEditable(client, tournamentId)
+            : null;
         for (const sponsorInput of sponsorInputs) {
-            const startDate = this.toDate(sponsorInput.agreementStartDate) ?? null;
-            const endDate = this.toDate(sponsorInput.agreementEndDate) ?? null;
-            if (startDate && endDate && endDate < startDate) {
-                throw new common_1.BadRequestException(`La fecha final del acuerdo de ${sponsorInput.name} no puede ser anterior a la fecha inicial.`);
-            }
+            const startDate = agreementDates?.startDate ?? null;
+            const endDate = agreementDates?.endDate ?? null;
             const logoAsset = sponsorInput.logoFileIndex === undefined
                 ? undefined
                 : sponsorLogoAssets.get(sponsorInput.logoFileIndex);
@@ -2178,10 +2173,6 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         if (dates.registrationStartDate &&
             dates.registrationStartDate > dates.startDate) {
             throw new common_1.BadRequestException('La fecha de inicio de inscripciones no puede ser posterior al inicio del torneo.');
-        }
-        if (dates.registrationEndDate &&
-            dates.registrationEndDate > dates.startDate) {
-            throw new common_1.BadRequestException('La fecha de cierre de inscripciones no puede ser posterior al inicio del torneo.');
         }
         if (dates.registrationStartDate &&
             dates.registrationEndDate &&

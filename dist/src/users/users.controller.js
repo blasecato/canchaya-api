@@ -24,6 +24,7 @@ const roles_guard_1 = require("../auth/guards/roles.guard");
 const parse_big_int_pipe_1 = require("../common/pipes/parse-big-int.pipe");
 const uploads_constants_1 = require("../uploads/uploads.constants");
 const create_user_dto_1 = require("./dto/create-user.dto");
+const export_administrators_query_dto_1 = require("./dto/export-administrators-query.dto");
 const list_administrators_query_dto_1 = require("./dto/list-administrators-query.dto");
 const register_player_dto_1 = require("./dto/register-player.dto");
 const public_user_response_dto_1 = require("./dto/public-user-response.dto");
@@ -77,6 +78,9 @@ let UsersController = class UsersController {
     }
     findAll() {
         return this.usersService.findAll();
+    }
+    exportAdministrators(query) {
+        return this.usersService.exportAdministrators(query);
     }
     findAdministrators(query) {
         return this.usersService.findAdministrators(query);
@@ -186,6 +190,25 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findAll", null);
 __decorate([
+    (0, common_1.Get)('administrators/export'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN'),
+    (0, common_1.Header)('Cache-Control', 'private, no-store'),
+    (0, swagger_1.ApiBearerAuth)('access-token'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Obtener los datos de contacto exportables de administradores',
+    }),
+    (0, swagger_1.ApiOkResponse)({
+        description: 'Listado completo, sin paginación, de los administradores que coinciden con los filtros.',
+    }),
+    (0, swagger_1.ApiUnauthorizedResponse)({ description: 'Token de acceso inválido.' }),
+    (0, swagger_1.ApiForbiddenResponse)({ description: 'Requiere el rol SUPER_ADMIN.' }),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [export_administrators_query_dto_1.ExportAdministratorsQueryDto]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "exportAdministrators", null);
+__decorate([
     (0, common_1.Get)('administrators'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN'),
@@ -239,14 +262,18 @@ __decorate([
 ], UsersController.prototype, "updateMe", null);
 __decorate([
     (0, common_1.Get)(':id/identity-documents/:side'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN'),
     (0, common_1.Header)('Cache-Control', 'private, no-store'),
     (0, swagger_1.ApiBearerAuth)('access-token'),
     (0, swagger_1.ApiOperation)({
         summary: 'Generar acceso temporal a un documento de identidad protegido',
+        description: 'La cédula fotografiada es el dato más sensible del perfil, así que solo ' +
+            'un superadministrador puede pedir el enlace.',
     }),
     (0, swagger_1.ApiParam)({ name: 'id', example: '1', type: String }),
     (0, swagger_1.ApiParam)({ name: 'side', enum: ['front', 'back'] }),
+    (0, swagger_1.ApiForbiddenResponse)({ description: 'Requiere el rol SUPER_ADMIN.' }),
     openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
     __param(1, (0, common_1.Param)('side')),

@@ -36,8 +36,13 @@ let UsersService = UsersService_1 = class UsersService {
     }
     async registerPlayer(dto, files) {
         this.assertValidBirthDate(dto.birthDate);
+        this.assertDeclaredAgeMatchesBirthDate(dto.birthDate, dto.age);
         await this.assertUserIdentifiersAreAvailable(dto.idNumber, dto.email);
-        await this.identityVerification.verify(files.documentFront, files.documentBack, dto.idNumber, dto.birthDate, dto.age);
+        const identityCheck = await this.identityVerification.verify(files.documentFront, files.documentBack, dto.idNumber, dto.birthDate);
+        if (!identityCheck.verified) {
+            this.logger.warn(`Documento sin confirmar para la cédula ${dto.idNumber}: ` +
+                `${identityCheck.outcome} (${JSON.stringify(identityCheck.details)})`);
+        }
         let photoAsset = null;
         let documentFrontAsset = null;
         let documentBackAsset = null;
@@ -67,7 +72,12 @@ let UsersService = UsersService_1 = class UsersService {
                         document_back_url: persistedDocumentBack.url,
                         document_back_public_id: persistedDocumentBack.publicId,
                         document_back_format: persistedDocumentBack.format,
-                        identity_verified_at: new Date(),
+                        identity_verified_at: identityCheck.verified ? new Date() : null,
+                        identity_verification_status: identityCheck.verified
+                            ? 'verified'
+                            : 'pending_review',
+                        identity_verification_details: identityCheck.details,
+                        identity_verification_checked_at: new Date(),
                         password_hash: await (0, bcryptjs_1.hash)(dto.password, 12),
                         status: 'active',
                     },
@@ -92,6 +102,18 @@ let UsersService = UsersService_1 = class UsersService {
                 throw new common_1.ConflictException('Ya existe una cuenta con ese documento o correo electrónico.');
             }
             throw error;
+        }
+    }
+    assertDeclaredAgeMatchesBirthDate(birthDate, declaredAge) {
+        const [year, month, day] = birthDate.split('-').map(Number);
+        const today = new Date();
+        let expectedAge = today.getFullYear() - year;
+        if (today.getMonth() + 1 < month ||
+            (today.getMonth() + 1 === month && today.getDate() < day)) {
+            expectedAge -= 1;
+        }
+        if (expectedAge !== declaredAge) {
+            throw new common_1.BadRequestException(`La edad indicada no coincide con la fecha de nacimiento. Para esa fecha la edad actual es ${expectedAge} años.`);
         }
     }
     async assertUserIdentifiersAreAvailable(idNumber, email) {
@@ -141,37 +163,7 @@ let UsersService = UsersService_1 = class UsersService {
     }
     async findAdministrators(query) {
         const administratorRoles = ['SUPER_ADMIN', 'ASSOCIATION_ADMIN'];
-        const adminRoleWhere = query.role
-            ? { role_code: query.role }
-            : { role_code: { in: administratorRoles } };
-        const where = {
-            status: query.status,
-            user_roles: { some: adminRoleWhere },
-            ...(query.search
-                ? {
-                    OR: [
-                        {
-                            full_name: {
-                                contains: query.search,
-                                mode: 'insensitive',
-                            },
-                        },
-                        {
-                            email: { contains: query.search, mode: 'insensitive' },
-                        },
-                        {
-                            id_number: {
-                                contains: query.search,
-                                mode: 'insensitive',
-                            },
-                        },
-                        {
-                            phone: { contains: query.search, mode: 'insensitive' },
-                        },
-                    ],
-                }
-                : {}),
-        };
+        const where = this.buildAdministratorWhere(query);
         const allAdministratorsWhere = {
             user_roles: { some: { role_code: { in: administratorRoles } } },
         };
@@ -265,6 +257,94 @@ let UsersService = UsersService_1 = class UsersService {
             pageSize: query.pageSize,
             total,
             hasNextPage: skip + users.length < total,
+        };
+    }
+    async exportAdministrators(query) {
+        const users = await this.prisma.users.findMany({
+            where: this.buildAdministratorWhere(query),
+            orderBy: [{ full_name: 'asc' }, { id: 'asc' }],
+            select: {
+                id_number: true,
+                document_type: true,
+                full_name: true,
+                email: true,
+                phone: true,
+                status: true,
+                user_roles: {
+                    where: {
+                        role_code: { in: ['SUPER_ADMIN', 'ASSOCIATION_ADMIN'] },
+                    },
+                    orderBy: { role_code: 'asc' },
+                    select: { role_code: true },
+                },
+                associations: { select: { id: true, name: true } },
+                association_administrators: {
+                    where: { status: 'active' },
+                    select: {
+                        permission_level: true,
+                        associations: { select: { id: true, name: true } },
+                    },
+                },
+            },
+        });
+        return users.map((user) => {
+            const associations = new Map();
+            if (user.associations) {
+                associations.set(user.associations.id.toString(), {
+                    name: user.associations.name,
+                    permissionLevel: 'owner',
+                });
+            }
+            for (const assignment of user.association_administrators) {
+                associations.set(assignment.associations.id.toString(), {
+                    name: assignment.associations.name,
+                    permissionLevel: assignment.permission_level,
+                });
+            }
+            return {
+                fullName: user.full_name,
+                documentType: user.document_type,
+                idNumber: user.id_number,
+                phone: user.phone,
+                email: user.email,
+                status: user.status,
+                roles: user.user_roles.map(({ role_code }) => role_code),
+                associations: [...associations.values()],
+            };
+        });
+    }
+    buildAdministratorWhere(query) {
+        const administratorRoles = ['SUPER_ADMIN', 'ASSOCIATION_ADMIN'];
+        const adminRoleWhere = query.role
+            ? { role_code: query.role }
+            : { role_code: { in: administratorRoles } };
+        return {
+            status: query.status,
+            user_roles: { some: adminRoleWhere },
+            ...(query.search
+                ? {
+                    OR: [
+                        {
+                            full_name: {
+                                contains: query.search,
+                                mode: 'insensitive',
+                            },
+                        },
+                        {
+                            email: { contains: query.search, mode: 'insensitive' },
+                        },
+                        {
+                            id_number: {
+                                contains: query.search,
+                                mode: 'insensitive',
+                            },
+                        },
+                        {
+                            phone: { contains: query.search, mode: 'insensitive' },
+                        },
+                    ],
+                }
+                : {}),
         };
     }
     async findOne(id) {
@@ -432,7 +512,10 @@ let UsersService = UsersService_1 = class UsersService {
         if (!user) {
             throw new common_1.NotFoundException(`El usuario con ID ${id.toString()} no existe.`);
         }
-        await this.assertCanAccessProfile(requestingUserId, id, user.user_roles.map(({ role_code }) => role_code));
+        const requesterRoles = await this.assertCanAccessProfile(requestingUserId, id, user.user_roles.map(({ role_code }) => role_code));
+        if (!requesterRoles.has('SUPER_ADMIN')) {
+            throw new common_1.ForbiddenException('Solamente un superadministrador puede consultar el documento de identidad.');
+        }
         const publicId = side === 'front'
             ? user.document_front_public_id
             : user.document_back_public_id;

@@ -338,8 +338,7 @@ let CompetitionService = class CompetitionService {
                         awayScore: m?.away_score ?? null,
                         homePenalties: m?.home_penalties ?? null,
                         awayPenalties: m?.away_penalties ?? null,
-                        refereeName: m?.match_referees[0]?.tournament_referees.users.full_name ??
-                            null,
+                        refereeName: m?.match_referees[0]?.tournament_referees.users.full_name ?? null,
                         refereeStatus: m?.match_referees[0]?.assignment_status ?? null,
                     };
                 }),

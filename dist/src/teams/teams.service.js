@@ -118,7 +118,7 @@ let TeamsService = class TeamsService {
                     data: {
                         name: dto.name.trim(),
                         sport_type: football_constants_1.FOOTBALL_SPORT_TYPE,
-                        modality: dto.modality.trim(),
+                        modality: dto.modality?.trim() ?? null,
                         primary_color: dto.primaryColor ?? null,
                         secondary_color: dto.secondaryColor ?? null,
                         captain_user_id: captainUserId,

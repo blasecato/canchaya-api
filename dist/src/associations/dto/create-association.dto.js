@@ -18,6 +18,10 @@ const is_big_int_string_decorator_1 = require("../../common/decorators/is-big-in
 function trimString({ value }) {
     return typeof value === 'string' ? value.trim() : value;
 }
+function trimToNull(params) {
+    const value = trimString(params);
+    return value === '' ? null : value;
+}
 class CreateAssociationDto {
     name;
     description;
@@ -29,7 +33,7 @@ class CreateAssociationDto {
     ownerUserId;
     status;
     static _OPENAPI_METADATA_FACTORY() {
-        return { name: { required: true, type: () => String, maxLength: 150 }, description: { required: true, type: () => String, maxLength: 2000 }, city: { required: true, type: () => String, maxLength: 120 }, address: { required: true, type: () => String, maxLength: 250 }, taxId: { required: true, type: () => String, maxLength: 50 }, email: { required: true, type: () => String, maxLength: 254, format: "email" }, phone: { required: true, type: () => String, maxLength: 30 }, ownerUserId: { required: true, type: () => String }, status: { required: true, enum: ["active", "inactive"], enum: ['active', 'inactive'] } };
+        return { name: { required: true, type: () => String, maxLength: 150 }, description: { required: true, type: () => String, maxLength: 2000 }, city: { required: true, type: () => String, maxLength: 120 }, address: { required: true, type: () => String, maxLength: 250 }, taxId: { required: false, type: () => String, nullable: true, maxLength: 50 }, email: { required: false, type: () => String, nullable: true, maxLength: 254, format: "email" }, phone: { required: true, type: () => String, maxLength: 30 }, ownerUserId: { required: true, type: () => String }, status: { required: true, enum: ["active", "inactive"], enum: ['active', 'inactive'] } };
     }
 }
 exports.CreateAssociationDto = CreateAssociationDto;
@@ -66,21 +70,24 @@ __decorate([
     __metadata("design:type", String)
 ], CreateAssociationDto.prototype, "address", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: '900123456-7' }),
-    (0, class_transformer_1.Transform)(trimString),
+    (0, swagger_1.ApiPropertyOptional)({ example: '900123456-7', nullable: true }),
+    (0, class_transformer_1.Transform)(trimToNull),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.MaxLength)(50),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], CreateAssociationDto.prototype, "taxId", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({
+    (0, swagger_1.ApiPropertyOptional)({
         example: 'contacto@liga.example',
+        nullable: true,
     }),
-    (0, class_transformer_1.Transform)(trimString),
+    (0, class_transformer_1.Transform)(trimToNull),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.MaxLength)(254),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], CreateAssociationDto.prototype, "email", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: '+576011234567' }),

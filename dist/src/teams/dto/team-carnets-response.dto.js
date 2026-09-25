@@ -105,7 +105,7 @@ class TeamCarnetsResponseDto {
     tournaments;
     players;
     static _OPENAPI_METADATA_FACTORY() {
-        return { teamId: { required: true, type: () => String }, teamName: { required: true, type: () => String }, sportType: { required: true, type: () => String }, modality: { required: true, type: () => String }, primaryColor: { required: true, type: () => String, nullable: true }, secondaryColor: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, tournaments: { required: true, type: () => [require("./team-carnets-response.dto").TeamCarnetTournamentResponseDto] }, players: { required: true, type: () => [require("./team-carnets-response.dto").TeamCarnetPlayerResponseDto] } };
+        return { teamId: { required: true, type: () => String }, teamName: { required: true, type: () => String }, sportType: { required: true, type: () => String }, modality: { required: true, type: () => String, nullable: true }, primaryColor: { required: true, type: () => String, nullable: true }, secondaryColor: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, tournaments: { required: true, type: () => [require("./team-carnets-response.dto").TeamCarnetTournamentResponseDto] }, players: { required: true, type: () => [require("./team-carnets-response.dto").TeamCarnetPlayerResponseDto] } };
     }
 }
 exports.TeamCarnetsResponseDto = TeamCarnetsResponseDto;
@@ -122,8 +122,8 @@ __decorate([
     __metadata("design:type", String)
 ], TeamCarnetsResponseDto.prototype, "sportType", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Sala' }),
-    __metadata("design:type", String)
+    (0, swagger_1.ApiProperty)({ example: 'Fútbol 11', nullable: true }),
+    __metadata("design:type", Object)
 ], TeamCarnetsResponseDto.prototype, "modality", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: '#00994f', nullable: true }),

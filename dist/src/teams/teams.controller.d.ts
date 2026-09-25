@@ -33,7 +33,7 @@ export declare class TeamsController {
         id: string;
         name: string;
         sportType: string;
-        modality: string;
+        modality: string | null;
         primaryColor: string | null;
         secondaryColor: string | null;
         photoUrl: string | null;
@@ -72,7 +72,7 @@ export declare class TeamsController {
             id: string;
             name: string;
             sportType: string;
-            modality: string;
+            modality: string | null;
             primaryColor: string | null;
             secondaryColor: string | null;
             photoUrl: string | null;
@@ -164,7 +164,7 @@ export declare class TeamsController {
         id: string;
         name: string;
         sportType: string;
-        modality: string;
+        modality: string | null;
         primaryColor: string | null;
         secondaryColor: string | null;
         photoUrl: string | null;
@@ -206,7 +206,7 @@ export declare class TeamsController {
         id: string;
         name: string;
         sportType: string;
-        modality: string;
+        modality: string | null;
         primaryColor: string | null;
         secondaryColor: string | null;
         photoUrl: string | null;

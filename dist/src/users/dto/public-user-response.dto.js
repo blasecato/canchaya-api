@@ -24,14 +24,16 @@ class PublicUserResponseDto {
     email;
     phone;
     photoUrl;
+    hasIdentityDocuments;
     status;
     blockReason;
     blockedUntil;
+    identityVerificationStatus;
     roles;
     createdAt;
     updatedAt;
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => String }, idNumber: { required: true, type: () => String }, documentType: { required: true, type: () => String }, fullName: { required: true, type: () => String }, birthDate: { required: true, type: () => String }, birthCity: { required: true, type: () => String, nullable: true }, gender: { required: true, nullable: true, enum: ["male", "female", "non_binary", "prefer_not_to_say"] }, email: { required: true, type: () => String }, phone: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, status: { required: true, type: () => String }, blockReason: { required: true, type: () => String, nullable: true }, blockedUntil: { required: true, type: () => String, nullable: true }, roles: { required: true, type: () => [String] }, createdAt: { required: true, type: () => String }, updatedAt: { required: true, type: () => String } };
+        return { id: { required: true, type: () => String }, idNumber: { required: true, type: () => String }, documentType: { required: true, type: () => String }, fullName: { required: true, type: () => String }, birthDate: { required: true, type: () => String }, birthCity: { required: true, type: () => String, nullable: true }, gender: { required: true, nullable: true, enum: ["male", "female", "non_binary", "prefer_not_to_say"] }, email: { required: true, type: () => String }, phone: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, hasIdentityDocuments: { required: true, type: () => Boolean }, status: { required: true, type: () => String }, blockReason: { required: true, type: () => String, nullable: true }, blockedUntil: { required: true, type: () => String, nullable: true }, identityVerificationStatus: { required: true, enum: ["verified", "pending_review"] }, roles: { required: true, type: () => [String] }, createdAt: { required: true, type: () => String }, updatedAt: { required: true, type: () => String } };
     }
 }
 exports.PublicUserResponseDto = PublicUserResponseDto;
@@ -79,6 +81,14 @@ __decorate([
     __metadata("design:type", Object)
 ], PublicUserResponseDto.prototype, "photoUrl", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Indica si el usuario tiene archivadas las dos caras de su documento de identidad. ' +
+            'Las imágenes se solicitan aparte y solo puede verlas un superadministrador.',
+        example: true,
+    }),
+    __metadata("design:type", Boolean)
+], PublicUserResponseDto.prototype, "hasIdentityDocuments", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({ example: 'active' }),
     __metadata("design:type", String)
 ], PublicUserResponseDto.prototype, "status", void 0);
@@ -97,6 +107,15 @@ __decorate([
     }),
     __metadata("design:type", Object)
 ], PublicUserResponseDto.prototype, "blockedUntil", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Resultado del cruce automático entre los datos escritos y la foto del documento. ' +
+            '"pending_review" no bloquea la cuenta: solo indica que un administrador debe revisarla.',
+        enum: ['verified', 'pending_review'],
+        example: 'verified',
+    }),
+    __metadata("design:type", String)
+], PublicUserResponseDto.prototype, "identityVerificationStatus", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: ['PLAYER'], type: [String] }),
     __metadata("design:type", Array)

@@ -42,7 +42,7 @@ export declare class TournamentsService {
         teamId: string;
         teamName: string;
         sportType: string;
-        modality: string;
+        modality: string | null;
         memberCount: number;
         status: string;
         reviewNotes: string | null;
@@ -89,7 +89,6 @@ export declare class TournamentsService {
     private assertRulesEditable;
     private assertSponsorsEditable;
     private dateChanged;
-    private assertValidSponsorDates;
     private sponsorData;
     private tournamentSponsorData;
     private findManagedAssociationIds;

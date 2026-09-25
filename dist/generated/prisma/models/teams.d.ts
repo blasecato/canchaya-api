@@ -152,7 +152,7 @@ export type TeamsGroupByOutputType = {
     id: bigint;
     name: string;
     sport_type: string;
-    modality: string;
+    modality: string | null;
     primary_color: string | null;
     secondary_color: string | null;
     captain_user_id: bigint;
@@ -178,7 +178,7 @@ export type teamsWhereInput = {
     id?: Prisma.BigIntFilter<"teams"> | bigint | number;
     name?: Prisma.StringFilter<"teams"> | string;
     sport_type?: Prisma.StringFilter<"teams"> | string;
-    modality?: Prisma.StringFilter<"teams"> | string;
+    modality?: Prisma.StringNullableFilter<"teams"> | string | null;
     primary_color?: Prisma.StringNullableFilter<"teams"> | string | null;
     secondary_color?: Prisma.StringNullableFilter<"teams"> | string | null;
     captain_user_id?: Prisma.BigIntFilter<"teams"> | bigint | number;
@@ -197,7 +197,7 @@ export type teamsOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
     sport_type?: Prisma.SortOrder;
-    modality?: Prisma.SortOrder;
+    modality?: Prisma.SortOrderInput | Prisma.SortOrder;
     primary_color?: Prisma.SortOrderInput | Prisma.SortOrder;
     secondary_color?: Prisma.SortOrderInput | Prisma.SortOrder;
     captain_user_id?: Prisma.SortOrder;
@@ -219,7 +219,7 @@ export type teamsWhereUniqueInput = Prisma.AtLeast<{
     NOT?: Prisma.teamsWhereInput | Prisma.teamsWhereInput[];
     name?: Prisma.StringFilter<"teams"> | string;
     sport_type?: Prisma.StringFilter<"teams"> | string;
-    modality?: Prisma.StringFilter<"teams"> | string;
+    modality?: Prisma.StringNullableFilter<"teams"> | string | null;
     primary_color?: Prisma.StringNullableFilter<"teams"> | string | null;
     secondary_color?: Prisma.StringNullableFilter<"teams"> | string | null;
     captain_user_id?: Prisma.BigIntFilter<"teams"> | bigint | number;
@@ -238,7 +238,7 @@ export type teamsOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
     sport_type?: Prisma.SortOrder;
-    modality?: Prisma.SortOrder;
+    modality?: Prisma.SortOrderInput | Prisma.SortOrder;
     primary_color?: Prisma.SortOrderInput | Prisma.SortOrder;
     secondary_color?: Prisma.SortOrderInput | Prisma.SortOrder;
     captain_user_id?: Prisma.SortOrder;
@@ -261,7 +261,7 @@ export type teamsScalarWhereWithAggregatesInput = {
     id?: Prisma.BigIntWithAggregatesFilter<"teams"> | bigint | number;
     name?: Prisma.StringWithAggregatesFilter<"teams"> | string;
     sport_type?: Prisma.StringWithAggregatesFilter<"teams"> | string;
-    modality?: Prisma.StringWithAggregatesFilter<"teams"> | string;
+    modality?: Prisma.StringNullableWithAggregatesFilter<"teams"> | string | null;
     primary_color?: Prisma.StringNullableWithAggregatesFilter<"teams"> | string | null;
     secondary_color?: Prisma.StringNullableWithAggregatesFilter<"teams"> | string | null;
     captain_user_id?: Prisma.BigIntWithAggregatesFilter<"teams"> | bigint | number;
@@ -276,7 +276,7 @@ export type teamsCreateInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     photo_url?: string | null;
@@ -293,7 +293,7 @@ export type teamsUncheckedCreateInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     captain_user_id: bigint | number;
@@ -310,7 +310,7 @@ export type teamsUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -327,7 +327,7 @@ export type teamsUncheckedUpdateInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     captain_user_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -344,7 +344,7 @@ export type teamsCreateManyInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     captain_user_id: bigint | number;
@@ -359,7 +359,7 @@ export type teamsUpdateManyMutationInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -372,7 +372,7 @@ export type teamsUncheckedUpdateManyInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     captain_user_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -554,7 +554,7 @@ export type teamsCreateWithoutTeam_membersInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     photo_url?: string | null;
@@ -570,7 +570,7 @@ export type teamsUncheckedCreateWithoutTeam_membersInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     captain_user_id: bigint | number;
@@ -599,7 +599,7 @@ export type teamsUpdateWithoutTeam_membersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -615,7 +615,7 @@ export type teamsUncheckedUpdateWithoutTeam_membersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     captain_user_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -631,7 +631,7 @@ export type teamsCreateWithoutTournament_team_registrationsInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     photo_url?: string | null;
@@ -647,7 +647,7 @@ export type teamsUncheckedCreateWithoutTournament_team_registrationsInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     captain_user_id: bigint | number;
@@ -676,7 +676,7 @@ export type teamsUpdateWithoutTournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -692,7 +692,7 @@ export type teamsUncheckedUpdateWithoutTournament_team_registrationsInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     captain_user_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -708,7 +708,7 @@ export type teamsCreateWithoutUsers_teams_captain_user_idTousersInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     photo_url?: string | null;
@@ -724,7 +724,7 @@ export type teamsUncheckedCreateWithoutUsers_teams_captain_user_idTousersInput =
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     created_by: bigint | number;
@@ -748,7 +748,7 @@ export type teamsCreateWithoutUsers_teams_created_byTousersInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     photo_url?: string | null;
@@ -764,7 +764,7 @@ export type teamsUncheckedCreateWithoutUsers_teams_created_byTousersInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     captain_user_id: bigint | number;
@@ -804,7 +804,7 @@ export type teamsScalarWhereInput = {
     id?: Prisma.BigIntFilter<"teams"> | bigint | number;
     name?: Prisma.StringFilter<"teams"> | string;
     sport_type?: Prisma.StringFilter<"teams"> | string;
-    modality?: Prisma.StringFilter<"teams"> | string;
+    modality?: Prisma.StringNullableFilter<"teams"> | string | null;
     primary_color?: Prisma.StringNullableFilter<"teams"> | string | null;
     secondary_color?: Prisma.StringNullableFilter<"teams"> | string | null;
     captain_user_id?: Prisma.BigIntFilter<"teams"> | bigint | number;
@@ -832,7 +832,7 @@ export type teamsCreateManyUsers_teams_captain_user_idTousersInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     created_by: bigint | number;
@@ -846,7 +846,7 @@ export type teamsCreateManyUsers_teams_created_byTousersInput = {
     id?: bigint | number;
     name: string;
     sport_type: string;
-    modality: string;
+    modality?: string | null;
     primary_color?: string | null;
     secondary_color?: string | null;
     captain_user_id: bigint | number;
@@ -860,7 +860,7 @@ export type teamsUpdateWithoutUsers_teams_captain_user_idTousersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -876,7 +876,7 @@ export type teamsUncheckedUpdateWithoutUsers_teams_captain_user_idTousersInput =
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -892,7 +892,7 @@ export type teamsUncheckedUpdateManyWithoutUsers_teams_captain_user_idTousersInp
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     created_by?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -906,7 +906,7 @@ export type teamsUpdateWithoutUsers_teams_created_byTousersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -922,7 +922,7 @@ export type teamsUncheckedUpdateWithoutUsers_teams_created_byTousersInput = {
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     captain_user_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -938,7 +938,7 @@ export type teamsUncheckedUpdateManyWithoutUsers_teams_created_byTousersInput = 
     id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     sport_type?: Prisma.StringFieldUpdateOperationsInput | string;
-    modality?: Prisma.StringFieldUpdateOperationsInput | string;
+    modality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     primary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     secondary_color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     captain_user_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -1062,7 +1062,7 @@ export type $teamsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
         id: bigint;
         name: string;
         sport_type: string;
-        modality: string;
+        modality: string | null;
         primary_color: string | null;
         secondary_color: string | null;
         captain_user_id: bigint;

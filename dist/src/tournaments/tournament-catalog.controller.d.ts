@@ -39,7 +39,7 @@ export declare class TournamentCatalogController {
         teamId: string;
         teamName: string;
         sportType: string;
-        modality: string;
+        modality: string | null;
         memberCount: number;
         status: string;
         reviewNotes: string | null;

@@ -37,6 +37,8 @@ export type UsersMinAggregateOutputType = {
     document_back_public_id: string | null;
     document_back_format: string | null;
     identity_verified_at: Date | null;
+    identity_verification_status: string | null;
+    identity_verification_checked_at: Date | null;
     password_hash: string | null;
     status: string | null;
     blocked_until: Date | null;
@@ -65,6 +67,8 @@ export type UsersMaxAggregateOutputType = {
     document_back_public_id: string | null;
     document_back_format: string | null;
     identity_verified_at: Date | null;
+    identity_verification_status: string | null;
+    identity_verification_checked_at: Date | null;
     password_hash: string | null;
     status: string | null;
     blocked_until: Date | null;
@@ -93,6 +97,9 @@ export type UsersCountAggregateOutputType = {
     document_back_public_id: number;
     document_back_format: number;
     identity_verified_at: number;
+    identity_verification_status: number;
+    identity_verification_details: number;
+    identity_verification_checked_at: number;
     password_hash: number;
     status: number;
     blocked_until: number;
@@ -132,6 +139,8 @@ export type UsersMinAggregateInputType = {
     document_back_public_id?: true;
     document_back_format?: true;
     identity_verified_at?: true;
+    identity_verification_status?: true;
+    identity_verification_checked_at?: true;
     password_hash?: true;
     status?: true;
     blocked_until?: true;
@@ -160,6 +169,8 @@ export type UsersMaxAggregateInputType = {
     document_back_public_id?: true;
     document_back_format?: true;
     identity_verified_at?: true;
+    identity_verification_status?: true;
+    identity_verification_checked_at?: true;
     password_hash?: true;
     status?: true;
     blocked_until?: true;
@@ -188,6 +199,9 @@ export type UsersCountAggregateInputType = {
     document_back_public_id?: true;
     document_back_format?: true;
     identity_verified_at?: true;
+    identity_verification_status?: true;
+    identity_verification_details?: true;
+    identity_verification_checked_at?: true;
     password_hash?: true;
     status?: true;
     blocked_until?: true;
@@ -245,6 +259,9 @@ export type UsersGroupByOutputType = {
     document_back_public_id: string | null;
     document_back_format: string | null;
     identity_verified_at: Date | null;
+    identity_verification_status: string;
+    identity_verification_details: runtime.JsonValue | null;
+    identity_verification_checked_at: Date | null;
     password_hash: string;
     status: string;
     blocked_until: Date | null;
@@ -284,6 +301,9 @@ export type usersWhereInput = {
     document_back_public_id?: Prisma.StringNullableFilter<"users"> | string | null;
     document_back_format?: Prisma.StringNullableFilter<"users"> | string | null;
     identity_verified_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null;
+    identity_verification_status?: Prisma.StringFilter<"users"> | string;
+    identity_verification_details?: Prisma.JsonNullableFilter<"users">;
+    identity_verification_checked_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null;
     password_hash?: Prisma.StringFilter<"users"> | string;
     status?: Prisma.StringFilter<"users"> | string;
     blocked_until?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null;
@@ -342,6 +362,9 @@ export type usersOrderByWithRelationInput = {
     document_back_public_id?: Prisma.SortOrderInput | Prisma.SortOrder;
     document_back_format?: Prisma.SortOrderInput | Prisma.SortOrder;
     identity_verified_at?: Prisma.SortOrderInput | Prisma.SortOrder;
+    identity_verification_status?: Prisma.SortOrder;
+    identity_verification_details?: Prisma.SortOrderInput | Prisma.SortOrder;
+    identity_verification_checked_at?: Prisma.SortOrderInput | Prisma.SortOrder;
     password_hash?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
     blocked_until?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -403,6 +426,9 @@ export type usersWhereUniqueInput = Prisma.AtLeast<{
     document_back_public_id?: Prisma.StringNullableFilter<"users"> | string | null;
     document_back_format?: Prisma.StringNullableFilter<"users"> | string | null;
     identity_verified_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null;
+    identity_verification_status?: Prisma.StringFilter<"users"> | string;
+    identity_verification_details?: Prisma.JsonNullableFilter<"users">;
+    identity_verification_checked_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null;
     password_hash?: Prisma.StringFilter<"users"> | string;
     status?: Prisma.StringFilter<"users"> | string;
     blocked_until?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null;
@@ -461,6 +487,9 @@ export type usersOrderByWithAggregationInput = {
     document_back_public_id?: Prisma.SortOrderInput | Prisma.SortOrder;
     document_back_format?: Prisma.SortOrderInput | Prisma.SortOrder;
     identity_verified_at?: Prisma.SortOrderInput | Prisma.SortOrder;
+    identity_verification_status?: Prisma.SortOrder;
+    identity_verification_details?: Prisma.SortOrderInput | Prisma.SortOrder;
+    identity_verification_checked_at?: Prisma.SortOrderInput | Prisma.SortOrder;
     password_hash?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
     blocked_until?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -497,6 +526,9 @@ export type usersScalarWhereWithAggregatesInput = {
     document_back_public_id?: Prisma.StringNullableWithAggregatesFilter<"users"> | string | null;
     document_back_format?: Prisma.StringNullableWithAggregatesFilter<"users"> | string | null;
     identity_verified_at?: Prisma.DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null;
+    identity_verification_status?: Prisma.StringWithAggregatesFilter<"users"> | string;
+    identity_verification_details?: Prisma.JsonNullableWithAggregatesFilter<"users">;
+    identity_verification_checked_at?: Prisma.DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null;
     password_hash?: Prisma.StringWithAggregatesFilter<"users"> | string;
     status?: Prisma.StringWithAggregatesFilter<"users"> | string;
     blocked_until?: Prisma.DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null;
@@ -525,6 +557,9 @@ export type usersCreateInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -582,6 +617,9 @@ export type usersUncheckedCreateInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -639,6 +677,9 @@ export type usersUpdateInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -696,6 +737,9 @@ export type usersUncheckedUpdateInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -753,6 +797,9 @@ export type usersCreateManyInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -781,6 +828,9 @@ export type usersUpdateManyMutationInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -808,6 +858,9 @@ export type usersUncheckedUpdateManyInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -852,6 +905,9 @@ export type usersCountOrderByAggregateInput = {
     document_back_public_id?: Prisma.SortOrder;
     document_back_format?: Prisma.SortOrder;
     identity_verified_at?: Prisma.SortOrder;
+    identity_verification_status?: Prisma.SortOrder;
+    identity_verification_details?: Prisma.SortOrder;
+    identity_verification_checked_at?: Prisma.SortOrder;
     password_hash?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
     blocked_until?: Prisma.SortOrder;
@@ -885,6 +941,8 @@ export type usersMaxOrderByAggregateInput = {
     document_back_public_id?: Prisma.SortOrder;
     document_back_format?: Prisma.SortOrder;
     identity_verified_at?: Prisma.SortOrder;
+    identity_verification_status?: Prisma.SortOrder;
+    identity_verification_checked_at?: Prisma.SortOrder;
     password_hash?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
     blocked_until?: Prisma.SortOrder;
@@ -913,6 +971,8 @@ export type usersMinOrderByAggregateInput = {
     document_back_public_id?: Prisma.SortOrder;
     document_back_format?: Prisma.SortOrder;
     identity_verified_at?: Prisma.SortOrder;
+    identity_verification_status?: Prisma.SortOrder;
+    identity_verification_checked_at?: Prisma.SortOrder;
     password_hash?: Prisma.SortOrder;
     status?: Prisma.SortOrder;
     blocked_until?: Prisma.SortOrder;
@@ -1346,6 +1406,9 @@ export type usersCreateWithoutAuth_sessionsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -1402,6 +1465,9 @@ export type usersUncheckedCreateWithoutAuth_sessionsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -1471,6 +1537,9 @@ export type usersUpdateWithoutAuth_sessionsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1527,6 +1596,9 @@ export type usersUncheckedUpdateWithoutAuth_sessionsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1583,6 +1655,9 @@ export type usersCreateWithoutAssociation_administratorsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -1639,6 +1714,9 @@ export type usersUncheckedCreateWithoutAssociation_administratorsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -1708,6 +1786,9 @@ export type usersUpdateWithoutAssociation_administratorsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1764,6 +1845,9 @@ export type usersUncheckedUpdateWithoutAssociation_administratorsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -1820,6 +1904,9 @@ export type usersCreateWithoutAssociationsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -1876,6 +1963,9 @@ export type usersUncheckedCreateWithoutAssociationsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -1945,6 +2035,9 @@ export type usersUpdateWithoutAssociationsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2001,6 +2094,9 @@ export type usersUncheckedUpdateWithoutAssociationsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2057,6 +2153,9 @@ export type usersCreateWithoutDisciplinary_actions_disciplinary_actions_decided_
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -2113,6 +2212,9 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_disciplinary_actions
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -2173,6 +2275,9 @@ export type usersCreateWithoutDisciplinary_actions_reviewedInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -2229,6 +2334,9 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_reviewedInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -2289,6 +2397,9 @@ export type usersCreateWithoutDisciplinary_actions_disciplinary_actions_reported
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -2345,6 +2456,9 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_disciplinary_actions
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -2405,6 +2519,9 @@ export type usersCreateWithoutBlock_source_actionInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -2461,6 +2578,9 @@ export type usersUncheckedCreateWithoutBlock_source_actionInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -2534,6 +2654,9 @@ export type usersUpdateWithoutDisciplinary_actions_disciplinary_actions_decided_
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2590,6 +2713,9 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_disciplinary_actions
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2655,6 +2781,9 @@ export type usersUpdateWithoutDisciplinary_actions_reviewedInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2711,6 +2840,9 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_reviewedInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2776,6 +2908,9 @@ export type usersUpdateWithoutDisciplinary_actions_disciplinary_actions_reported
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2832,6 +2967,9 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_disciplinary_actions
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -2904,6 +3042,9 @@ export type usersScalarWhereInput = {
     document_back_public_id?: Prisma.StringNullableFilter<"users"> | string | null;
     document_back_format?: Prisma.StringNullableFilter<"users"> | string | null;
     identity_verified_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null;
+    identity_verification_status?: Prisma.StringFilter<"users"> | string;
+    identity_verification_details?: Prisma.JsonNullableFilter<"users">;
+    identity_verification_checked_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null;
     password_hash?: Prisma.StringFilter<"users"> | string;
     status?: Prisma.StringFilter<"users"> | string;
     blocked_until?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null;
@@ -2932,6 +3073,9 @@ export type usersCreateWithoutFinesInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -2988,6 +3132,9 @@ export type usersUncheckedCreateWithoutFinesInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -3057,6 +3204,9 @@ export type usersUpdateWithoutFinesInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -3113,6 +3263,9 @@ export type usersUncheckedUpdateWithoutFinesInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -3169,6 +3322,9 @@ export type usersCreateWithoutMatch_referees_assigned_byInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -3225,6 +3381,9 @@ export type usersUncheckedCreateWithoutMatch_referees_assigned_byInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -3285,6 +3444,9 @@ export type usersCreateWithoutMatch_referees_replaced_refereeInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -3341,6 +3503,9 @@ export type usersUncheckedCreateWithoutMatch_referees_replaced_refereeInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -3410,6 +3575,9 @@ export type usersUpdateWithoutMatch_referees_assigned_byInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -3466,6 +3634,9 @@ export type usersUncheckedUpdateWithoutMatch_referees_assigned_byInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -3531,6 +3702,9 @@ export type usersUpdateWithoutMatch_referees_replaced_refereeInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -3587,6 +3761,9 @@ export type usersUncheckedUpdateWithoutMatch_referees_replaced_refereeInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -3643,6 +3820,9 @@ export type usersCreateWithoutReferee_availabilityInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -3699,6 +3879,9 @@ export type usersUncheckedCreateWithoutReferee_availabilityInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -3768,6 +3951,9 @@ export type usersUpdateWithoutReferee_availabilityInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -3824,6 +4010,9 @@ export type usersUncheckedUpdateWithoutReferee_availabilityInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -3880,6 +4069,9 @@ export type usersCreateWithoutReferee_assignment_eventsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -3936,6 +4128,9 @@ export type usersUncheckedCreateWithoutReferee_assignment_eventsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -4005,6 +4200,9 @@ export type usersUpdateWithoutReferee_assignment_eventsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -4061,6 +4259,9 @@ export type usersUncheckedUpdateWithoutReferee_assignment_eventsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -4117,6 +4318,9 @@ export type usersCreateWithoutSuspensionsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -4173,6 +4377,9 @@ export type usersUncheckedCreateWithoutSuspensionsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -4242,6 +4449,9 @@ export type usersUpdateWithoutSuspensionsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -4298,6 +4508,9 @@ export type usersUncheckedUpdateWithoutSuspensionsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -4354,6 +4567,9 @@ export type usersCreateWithoutDisciplinary_appeals_playerInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -4410,6 +4626,9 @@ export type usersUncheckedCreateWithoutDisciplinary_appeals_playerInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -4470,6 +4689,9 @@ export type usersCreateWithoutDisciplinary_appeals_reviewerInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -4526,6 +4748,9 @@ export type usersUncheckedCreateWithoutDisciplinary_appeals_reviewerInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -4595,6 +4820,9 @@ export type usersUpdateWithoutDisciplinary_appeals_playerInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -4651,6 +4879,9 @@ export type usersUncheckedUpdateWithoutDisciplinary_appeals_playerInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -4716,6 +4947,9 @@ export type usersUpdateWithoutDisciplinary_appeals_reviewerInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -4772,6 +5006,9 @@ export type usersUncheckedUpdateWithoutDisciplinary_appeals_reviewerInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -4828,6 +5065,9 @@ export type usersCreateWithoutDisciplinary_eventsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -4884,6 +5124,9 @@ export type usersUncheckedCreateWithoutDisciplinary_eventsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -4953,6 +5196,9 @@ export type usersUpdateWithoutDisciplinary_eventsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -5009,6 +5255,9 @@ export type usersUncheckedUpdateWithoutDisciplinary_eventsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -5065,6 +5314,9 @@ export type usersCreateWithoutTeam_membersInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -5121,6 +5373,9 @@ export type usersUncheckedCreateWithoutTeam_membersInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -5190,6 +5445,9 @@ export type usersUpdateWithoutTeam_membersInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -5246,6 +5504,9 @@ export type usersUncheckedUpdateWithoutTeam_membersInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -5302,6 +5563,9 @@ export type usersCreateWithoutTeams_teams_captain_user_idTousersInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -5358,6 +5622,9 @@ export type usersUncheckedCreateWithoutTeams_teams_captain_user_idTousersInput =
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -5418,6 +5685,9 @@ export type usersCreateWithoutTeams_teams_created_byTousersInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -5474,6 +5744,9 @@ export type usersUncheckedCreateWithoutTeams_teams_created_byTousersInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -5543,6 +5816,9 @@ export type usersUpdateWithoutTeams_teams_captain_user_idTousersInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -5599,6 +5875,9 @@ export type usersUncheckedUpdateWithoutTeams_teams_captain_user_idTousersInput =
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -5664,6 +5943,9 @@ export type usersUpdateWithoutTeams_teams_created_byTousersInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -5720,6 +6002,9 @@ export type usersUncheckedUpdateWithoutTeams_teams_created_byTousersInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -5776,6 +6061,9 @@ export type usersCreateWithoutTournament_administratorsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -5832,6 +6120,9 @@ export type usersUncheckedCreateWithoutTournament_administratorsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -5901,6 +6192,9 @@ export type usersUpdateWithoutTournament_administratorsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -5957,6 +6251,9 @@ export type usersUncheckedUpdateWithoutTournament_administratorsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -6013,6 +6310,9 @@ export type usersCreateWithoutTournament_refereesInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -6069,6 +6369,9 @@ export type usersUncheckedCreateWithoutTournament_refereesInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -6138,6 +6441,9 @@ export type usersUpdateWithoutTournament_refereesInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -6194,6 +6500,9 @@ export type usersUncheckedUpdateWithoutTournament_refereesInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -6250,6 +6559,9 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -6306,6 +6618,9 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -6366,6 +6681,9 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -6422,6 +6740,9 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -6482,6 +6803,9 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -6538,6 +6862,9 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -6607,6 +6934,9 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -6663,6 +6993,9 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -6728,6 +7061,9 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -6784,6 +7120,9 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -6849,6 +7188,9 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -6905,6 +7247,9 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -6961,6 +7306,9 @@ export type usersCreateWithoutNotificationsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -7017,6 +7365,9 @@ export type usersUncheckedCreateWithoutNotificationsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -7086,6 +7437,9 @@ export type usersUpdateWithoutNotificationsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -7142,6 +7496,9 @@ export type usersUncheckedUpdateWithoutNotificationsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -7198,6 +7555,9 @@ export type usersCreateWithoutNotification_preferencesInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -7254,6 +7614,9 @@ export type usersUncheckedCreateWithoutNotification_preferencesInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -7323,6 +7686,9 @@ export type usersUpdateWithoutNotification_preferencesInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -7379,6 +7745,9 @@ export type usersUncheckedUpdateWithoutNotification_preferencesInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -7435,6 +7804,9 @@ export type usersCreateWithoutTournament_registration_eventsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -7491,6 +7863,9 @@ export type usersUncheckedCreateWithoutTournament_registration_eventsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -7560,6 +7935,9 @@ export type usersUpdateWithoutTournament_registration_eventsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -7616,6 +7994,9 @@ export type usersUncheckedUpdateWithoutTournament_registration_eventsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -7672,6 +8053,9 @@ export type usersCreateWithoutTournament_lifecycle_eventsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -7728,6 +8112,9 @@ export type usersUncheckedCreateWithoutTournament_lifecycle_eventsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -7797,6 +8184,9 @@ export type usersUpdateWithoutTournament_lifecycle_eventsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -7853,6 +8243,9 @@ export type usersUncheckedUpdateWithoutTournament_lifecycle_eventsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -7909,6 +8302,9 @@ export type usersCreateWithoutTournamentsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -7965,6 +8361,9 @@ export type usersUncheckedCreateWithoutTournamentsInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -8034,6 +8433,9 @@ export type usersUpdateWithoutTournamentsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -8090,6 +8492,9 @@ export type usersUncheckedUpdateWithoutTournamentsInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -8146,6 +8551,9 @@ export type usersCreateWithoutUser_rolesInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -8202,6 +8610,9 @@ export type usersUncheckedCreateWithoutUser_rolesInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -8271,6 +8682,9 @@ export type usersUpdateWithoutUser_rolesInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -8327,6 +8741,9 @@ export type usersUncheckedUpdateWithoutUser_rolesInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -8383,6 +8800,9 @@ export type usersCreateManyBlock_source_actionInput = {
     document_back_public_id?: string | null;
     document_back_format?: string | null;
     identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
     password_hash: string;
     status?: string;
     blocked_until?: Date | string | null;
@@ -8410,6 +8830,9 @@ export type usersUpdateWithoutBlock_source_actionInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -8466,6 +8889,9 @@ export type usersUncheckedUpdateWithoutBlock_source_actionInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -8522,6 +8948,9 @@ export type usersUncheckedUpdateManyWithoutBlock_source_actionInput = {
     document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.StringFieldUpdateOperationsInput | string;
     blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -8691,6 +9120,9 @@ export type usersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     document_back_public_id?: boolean;
     document_back_format?: boolean;
     identity_verified_at?: boolean;
+    identity_verification_status?: boolean;
+    identity_verification_details?: boolean;
+    identity_verification_checked_at?: boolean;
     password_hash?: boolean;
     status?: boolean;
     blocked_until?: boolean;
@@ -8750,6 +9182,9 @@ export type usersSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
     document_back_public_id?: boolean;
     document_back_format?: boolean;
     identity_verified_at?: boolean;
+    identity_verification_status?: boolean;
+    identity_verification_details?: boolean;
+    identity_verification_checked_at?: boolean;
     password_hash?: boolean;
     status?: boolean;
     blocked_until?: boolean;
@@ -8779,6 +9214,9 @@ export type usersSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
     document_back_public_id?: boolean;
     document_back_format?: boolean;
     identity_verified_at?: boolean;
+    identity_verification_status?: boolean;
+    identity_verification_details?: boolean;
+    identity_verification_checked_at?: boolean;
     password_hash?: boolean;
     status?: boolean;
     blocked_until?: boolean;
@@ -8808,6 +9246,9 @@ export type usersSelectScalar = {
     document_back_public_id?: boolean;
     document_back_format?: boolean;
     identity_verified_at?: boolean;
+    identity_verification_status?: boolean;
+    identity_verification_details?: boolean;
+    identity_verification_checked_at?: boolean;
     password_hash?: boolean;
     status?: boolean;
     blocked_until?: boolean;
@@ -8817,7 +9258,7 @@ export type usersSelectScalar = {
     created_at?: boolean;
     updated_at?: boolean;
 };
-export type usersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "id_number" | "document_type" | "full_name" | "birth_date" | "birth_city" | "gender" | "email" | "phone" | "photo_url" | "photo_public_id" | "document_front_url" | "document_front_public_id" | "document_front_format" | "document_back_url" | "document_back_public_id" | "document_back_format" | "identity_verified_at" | "password_hash" | "status" | "blocked_until" | "block_reason" | "blocked_by" | "block_source_action_id" | "created_at" | "updated_at", ExtArgs["result"]["users"]>;
+export type usersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "id_number" | "document_type" | "full_name" | "birth_date" | "birth_city" | "gender" | "email" | "phone" | "photo_url" | "photo_public_id" | "document_front_url" | "document_front_public_id" | "document_front_format" | "document_back_url" | "document_back_public_id" | "document_back_format" | "identity_verified_at" | "identity_verification_status" | "identity_verification_details" | "identity_verification_checked_at" | "password_hash" | "status" | "blocked_until" | "block_reason" | "blocked_by" | "block_source_action_id" | "created_at" | "updated_at", ExtArgs["result"]["users"]>;
 export type usersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     auth_sessions?: boolean | Prisma.users$auth_sessionsArgs<ExtArgs>;
     notifications?: boolean | Prisma.users$notificationsArgs<ExtArgs>;
@@ -8910,6 +9351,9 @@ export type $usersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
         document_back_public_id: string | null;
         document_back_format: string | null;
         identity_verified_at: Date | null;
+        identity_verification_status: string;
+        identity_verification_details: runtime.JsonValue | null;
+        identity_verification_checked_at: Date | null;
         password_hash: string;
         status: string;
         blocked_until: Date | null;
@@ -9023,6 +9467,9 @@ export interface usersFieldRefs {
     readonly document_back_public_id: Prisma.FieldRef<"users", 'String'>;
     readonly document_back_format: Prisma.FieldRef<"users", 'String'>;
     readonly identity_verified_at: Prisma.FieldRef<"users", 'DateTime'>;
+    readonly identity_verification_status: Prisma.FieldRef<"users", 'String'>;
+    readonly identity_verification_details: Prisma.FieldRef<"users", 'Json'>;
+    readonly identity_verification_checked_at: Prisma.FieldRef<"users", 'DateTime'>;
     readonly password_hash: Prisma.FieldRef<"users", 'String'>;
     readonly status: Prisma.FieldRef<"users", 'String'>;
     readonly blocked_until: Prisma.FieldRef<"users", 'DateTime'>;

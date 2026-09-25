@@ -12,7 +12,10 @@ export declare const publicUserSelect: {
     phone: true;
     photo_url: true;
     photo_public_id: true;
+    document_front_public_id: true;
+    document_back_public_id: true;
     status: true;
+    identity_verification_status: true;
     blocked_until: true;
     block_reason: true;
     created_at: true;

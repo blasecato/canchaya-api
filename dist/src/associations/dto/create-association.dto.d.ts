@@ -3,8 +3,8 @@ export declare class CreateAssociationDto {
     description: string;
     city: string;
     address: string;
-    taxId: string;
-    email: string;
+    taxId?: string | null;
+    email?: string | null;
     phone: string;
     ownerUserId: string;
     status: 'active' | 'inactive';

@@ -1,6 +1,7 @@
 import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-request.interface';
 import type { UploadedImageFile } from '../uploads/image-storage.types';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ExportAdministratorsQueryDto } from './dto/export-administrators-query.dto';
 import { ListAdministratorsQueryDto } from './dto/list-administrators-query.dto';
 import { RegisterPlayerDto } from './dto/register-player.dto';
 import { PublicUserResponseDto } from './dto/public-user-response.dto';
@@ -31,6 +32,9 @@ export declare class UsersController {
         document_back_public_id: string | null;
         document_back_format: string | null;
         identity_verified_at: Date | null;
+        identity_verification_status: string;
+        identity_verification_details: import("@prisma/client/runtime/client").JsonValue | null;
+        identity_verification_checked_at: Date | null;
         blocked_until: Date | null;
         block_reason: string | null;
         blocked_by: bigint | null;
@@ -42,6 +46,7 @@ export declare class UsersController {
         documentBack?: UploadedImageFile[];
     }): Promise<PublicUserResponseDto>;
     findAll(): Promise<PublicUserResponseDto[]>;
+    exportAdministrators(query: ExportAdministratorsQueryDto): Promise<import("./users.service").AdministratorExportItem[]>;
     findAdministrators(query: ListAdministratorsQueryDto): Promise<{
         items: {
             id: string;
@@ -104,6 +109,9 @@ export declare class UsersController {
         document_back_public_id: string | null;
         document_back_format: string | null;
         identity_verified_at: Date | null;
+        identity_verification_status: string;
+        identity_verification_details: import("@prisma/client/runtime/client").JsonValue | null;
+        identity_verification_checked_at: Date | null;
         blocked_until: Date | null;
         block_reason: string | null;
         blocked_by: bigint | null;
