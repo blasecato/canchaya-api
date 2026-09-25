@@ -1964,7 +1964,8 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
             .replace(/[\u0300-\u036f]/g, '')
             .toLocaleLowerCase('es');
         const directElimination = normalizedName.includes('eliminacion') &&
-            !normalizedName.includes('mixto');
+            !normalizedName.includes('mixto') &&
+            !normalizedName.includes('grupo');
         if (directElimination &&
             !competition_engine_1.DIRECT_KNOCKOUT_SIZES.includes(maxTeams))
             throw new common_1.BadRequestException('Un torneo de eliminación directa debe tener 8, 16 o 32 equipos.');

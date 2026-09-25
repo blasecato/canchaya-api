@@ -1,6 +1,7 @@
 import {
   estimate,
   firstStage,
+  groupKnockoutConfigs,
   knockoutStage,
   resolveStage,
   roundRobin,
@@ -175,6 +176,74 @@ describe('competition formats', () => {
     expect(() => validateConfig(mixed, 20)).toThrow('potencia de dos');
     for (const qualifiers of [2, 4, 8, 16])
       expect(() => validateConfig({ ...mixed, qualifiers }, 20)).not.toThrow();
+  });
+  it('recommends only uniform group stages that feed a valid knockout bracket', () => {
+    const configs = groupKnockoutConfigs(20);
+
+    expect(configs).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ groups: 4, qualifiers: 1 }),
+        expect.objectContaining({ groups: 4, qualifiers: 2 }),
+        expect.objectContaining({ groups: 4, qualifiers: 4 }),
+      ]),
+    );
+    expect(configs.some(({ groups }) => groups === 5)).toBe(false);
+    expect(
+      configs.every(({ groups, qualifiers }) =>
+        [2, 4, 8, 16, 32].includes(groups * qualifiers),
+      ),
+    ).toBe(true);
+  });
+  it('rejects group configurations that cannot produce a complete bracket', () => {
+    const config: CompetitionConfig = {
+      format: 'groups_knockout',
+      legs: 1,
+      groups: 5,
+      qualifiers: 2,
+      finalLegs: 1,
+    };
+
+    expect(() => validateConfig(config, 20)).toThrow(
+      'clasifica 10 equipos',
+    );
+    expect(() =>
+      validateConfig({ ...config, groups: 4, qualifiers: 2 }, 20),
+    ).not.toThrow();
+  });
+  it('draws equal groups and crosses their qualifiers into elimination', () => {
+    const config: CompetitionConfig = {
+      format: 'groups_knockout',
+      legs: 1,
+      groups: 4,
+      qualifiers: 2,
+      finalLegs: 1,
+    };
+    const plan = planFor(config, 20);
+
+    expect(plan.stages[0].groups.map(({ teams }) => teams.length)).toEqual([
+      5, 5, 5, 5,
+    ]);
+    const tables = plan.stages[0].groups.map((group) =>
+      standings(
+        plan.stages[0],
+        group.name,
+        scoreStage(plan.stages[0]),
+        plan.teamIds,
+      ),
+    );
+    const next = resolveStage(plan, scoreStage(plan.stages[0])).next!;
+    const orderedQualifiers = [
+      ...tables.map((table) => table[0].teamId),
+      ...tables.map((table) => table[1].teamId),
+    ];
+
+    expect(next.label).toBe('Ronda de 8');
+    expect(next.fixtures[0]).toEqual(
+      expect.objectContaining({
+        home: orderedQualifiers[0],
+        away: orderedQualifiers[7],
+      }),
+    );
   });
   it('builds a Final Four from the top four league positions', () => {
     const plan = planFor(

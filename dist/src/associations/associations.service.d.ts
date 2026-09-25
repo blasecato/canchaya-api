@@ -15,6 +15,8 @@ export declare class AssociationsService {
     constructor(prisma: PrismaService, imageStorage: ImageStorageService);
     create(createAssociationDto: CreateAssociationDto, logo: UploadedImageFile, cover: UploadedImageFile, requestingUserId: bigint): Promise<AssociationResponseDto>;
     findAll(requestingUserId?: bigint): Promise<AssociationResponseDto[]>;
+    private hasRole;
+    private pinFeaturedAssociation;
     findMine(requestingUserId: bigint): Promise<AssociationResponseDto[]>;
     findAdministeredBy(userId: bigint): Promise<AssociationResponseDto[]>;
     private findAdministeredAssociations;

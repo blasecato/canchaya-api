@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isPowerOfTwo = exports.DIRECT_KNOCKOUT_SIZES = exports.hasFinalLeague = exports.hasGroups = exports.FORMAT_LABELS = exports.FORMATS = void 0;
+exports.isPowerOfTwo = exports.GROUP_KNOCKOUT_QUALIFIER_SIZES = exports.DIRECT_KNOCKOUT_SIZES = exports.hasFinalLeague = exports.hasGroups = exports.FORMAT_LABELS = exports.FORMATS = void 0;
+exports.groupKnockoutConfigs = groupKnockoutConfigs;
 exports.validateConfig = validateConfig;
 exports.shuffled = shuffled;
 exports.splitGroups = splitGroups;
@@ -30,7 +31,7 @@ exports.FORMAT_LABELS = {
     league: 'Liga',
     league_knockout: 'Mixto · Liga + eliminación directa',
     knockout: 'Eliminación directa',
-    groups_knockout: 'Grupos + eliminatorias',
+    groups_knockout: 'Fase de grupos + eliminación directa',
     league_final: 'Liga + liguilla final',
     groups_final: 'Grupos + liguilla final',
 };
@@ -42,8 +43,41 @@ exports.hasGroups = hasGroups;
 const hasFinalLeague = (format) => format.endsWith('_final');
 exports.hasFinalLeague = hasFinalLeague;
 exports.DIRECT_KNOCKOUT_SIZES = [8, 16, 32];
+exports.GROUP_KNOCKOUT_QUALIFIER_SIZES = [2, 4, 8, 16, 32];
 const isPowerOfTwo = (count) => Number.isInteger(count) && count > 0 && Number.isInteger(Math.log2(count));
 exports.isPowerOfTwo = isPowerOfTwo;
+function groupKnockoutConfigs(count) {
+    if (!Number.isInteger(count) || count < 6)
+        return [];
+    const configs = [];
+    const maximumGroups = Math.min(Math.floor(count / 3), exports.GROUP_KNOCKOUT_QUALIFIER_SIZES.at(-1));
+    for (let groups = 2; groups <= maximumGroups; groups++) {
+        if (count % groups !== 0)
+            continue;
+        const teamsPerGroup = count / groups;
+        const maximumQualifiers = Math.min(teamsPerGroup - 1, Math.floor(exports.GROUP_KNOCKOUT_QUALIFIER_SIZES.at(-1) / groups));
+        for (let qualifiers = 1; qualifiers <= maximumQualifiers; qualifiers++) {
+            const advancing = groups * qualifiers;
+            if (!exports.GROUP_KNOCKOUT_QUALIFIER_SIZES.includes(advancing))
+                continue;
+            configs.push({
+                format: 'groups_knockout',
+                legs: 1,
+                groups,
+                qualifiers,
+                finalLegs: 1,
+            });
+        }
+    }
+    return configs.sort((a, b) => {
+        const aSize = count / a.groups;
+        const bSize = count / b.groups;
+        return (Math.abs(aSize - 4) - Math.abs(bSize - 4) ||
+            Math.abs(a.qualifiers - 2) - Math.abs(b.qualifiers - 2) ||
+            a.groups - b.groups ||
+            a.qualifiers - b.qualifiers);
+    });
+}
 function validateConfig(config, count) {
     if (!Number.isInteger(count) || count < 6)
         fail('Se necesitan al menos seis equipos aprobados.');
@@ -56,6 +90,8 @@ function validateConfig(config, count) {
     if ((0, exports.hasGroups)(config.format)) {
         if (config.groups < 2 || config.groups > Math.floor(count / 3))
             fail('Cada grupo debe tener al menos tres equipos.');
+        if (config.format === 'groups_knockout' && count % config.groups !== 0)
+            fail(`Los ${count} equipos deben repartirse en grupos del mismo tamaño para este formato.`);
         if (config.qualifiers < 1 ||
             config.qualifiers >= Math.floor(count / config.groups))
             fail('Debe clasificar al menos uno y quedar eliminado al menos uno por grupo.');
@@ -76,6 +112,9 @@ function validateConfig(config, count) {
             fail('La cantidad de clasificados no es válida para la etapa final.');
         if (config.format === 'league_knockout' && !(0, exports.isPowerOfTwo)(advancing))
             fail('La fase eliminatoria del formato mixto debe clasificar una potencia de dos: 2, 4, 8, 16, 32…');
+        if (config.format === 'groups_knockout' &&
+            !exports.GROUP_KNOCKOUT_QUALIFIER_SIZES.includes(advancing))
+            fail(`Esta configuración clasifica ${advancing} equipos (${config.groups} grupos × ${config.qualifiers} por grupo). La eliminación directa debe iniciar con 2, 4, 8, 16 o 32 equipos.`);
     }
     if (estimate(config, count).totalMatches > 10000)
         fail('Esta configuración supera los 10.000 partidos. Usa grupos o eliminación directa.');
@@ -415,6 +454,7 @@ function suggestions(count) {
             qualifiers: 4,
             finalLegs: 1,
         },
+        ...groupKnockoutConfigs(count),
         ...(exports.DIRECT_KNOCKOUT_SIZES.includes(count)
             ? [
                 {
@@ -431,7 +471,7 @@ function suggestions(count) {
         .filter((config) => estimate(config, count).totalMatches <= 10000)
         .map((config) => ({
         config,
-        label: `${exports.FORMAT_LABELS[config.format]}${(0, exports.hasGroups)(config.format) ? ` · ${config.groups} grupos` : config.format === 'league' ? ` · ${config.legs} vuelta${config.legs === 1 ? '' : 's'}` : ''}`,
+        label: `${exports.FORMAT_LABELS[config.format]}${config.format === 'groups_knockout' ? ` · ${config.groups} grupos de ${count / config.groups} · pasan ${config.qualifiers} por grupo` : (0, exports.hasGroups)(config.format) ? ` · ${config.groups} grupos` : config.format === 'league' ? ` · ${config.legs} vuelta${config.legs === 1 ? '' : 's'}` : ''}`,
         ...estimate(config, count),
     }));
 }

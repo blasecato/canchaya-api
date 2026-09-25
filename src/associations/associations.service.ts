@@ -39,6 +39,15 @@ type AssociationCreationAuthorizationClient = Pick<
   'associations' | 'user_roles'
 >;
 
+/**
+ * Organización que el catálogo muestra de primera a los jugadores.
+ * Se puede cambiar sin recompilar con FEATURED_ASSOCIATION_ID.
+ */
+const FEATURED_ASSOCIATION_ID = (() => {
+  const configured = process.env.FEATURED_ASSOCIATION_ID?.trim();
+  return configured && /^\d+$/.test(configured) ? BigInt(configured) : 6n;
+})();
+
 @Injectable()
 export class AssociationsService {
   private readonly logger = new Logger(AssociationsService.name);
@@ -122,24 +131,49 @@ export class AssociationsService {
   }
 
   async findAll(requestingUserId?: bigint): Promise<AssociationResponseDto[]> {
-    const canSeeInactiveAssociations = requestingUserId
-      ? Boolean(
-          await this.prisma.user_roles.findFirst({
-            where: {
-              user_id: requestingUserId,
-              role_code: 'SUPER_ADMIN',
-            },
-            select: { role_code: true },
-          }),
-        )
-      : true;
+    const isSuperAdmin = requestingUserId
+      ? await this.hasRole(requestingUserId, 'SUPER_ADMIN')
+      : false;
+    const isPlayer =
+      requestingUserId && !isSuperAdmin
+        ? await this.hasRole(requestingUserId, 'PLAYER')
+        : false;
+    const canSeeInactiveAssociations = requestingUserId ? isSuperAdmin : true;
     const associations = await this.prisma.associations.findMany({
       where: canSeeInactiveAssociations ? undefined : { status: 'active' },
       orderBy: { id: 'asc' },
       select: associationResponseSelect,
     });
 
-    return this.toAssociationResponsesWithTeamCounts(associations);
+    const response =
+      await this.toAssociationResponsesWithTeamCounts(associations);
+
+    return isPlayer ? this.pinFeaturedAssociation(response) : response;
+  }
+
+  private async hasRole(userId: bigint, roleCode: string): Promise<boolean> {
+    return Boolean(
+      await this.prisma.user_roles.findFirst({
+        where: { user_id: userId, role_code: roleCode },
+        select: { role_code: true },
+      }),
+    );
+  }
+
+  /** Deja la organización destacada de primera en el catálogo del jugador. */
+  private pinFeaturedAssociation(
+    associations: AssociationResponseDto[],
+  ): AssociationResponseDto[] {
+    const featuredId = FEATURED_ASSOCIATION_ID.toString();
+    const featuredIndex = associations.findIndex(({ id }) => id === featuredId);
+    if (featuredIndex <= 0) return associations;
+
+    const featured = associations[featuredIndex];
+    return [
+      featured,
+      ...associations.slice(0, featuredIndex),
+      ...associations.slice(featuredIndex + 1),
+    ];
   }
 
   async findMine(requestingUserId: bigint): Promise<AssociationResponseDto[]> {

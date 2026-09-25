@@ -295,6 +295,36 @@ describe('TournamentsService', () => {
       expect(transactionTournamentCreate).not.toHaveBeenCalled();
     });
 
+    it('permite cupos no binarios para el tipo fase de grupos más eliminación', async () => {
+      transactionTournamentTypeFindUnique.mockResolvedValue({
+        id: 4n,
+        name: 'Fase de grupos + eliminación directa',
+        min_players_per_team: 1,
+        max_players_per_team: 25,
+      });
+      transactionTournamentCreate.mockResolvedValue({ id: tournamentId });
+      transactionTournamentFindUnique.mockResolvedValue({
+        ...tournamentRecord,
+        tournament_type_id: 4n,
+        max_teams: 20,
+        tournament_types: {
+          ...tournamentRecord.tournament_types,
+          id: 4n,
+          name: 'Fase de grupos + eliminación directa',
+        },
+      });
+
+      await expect(
+        service.create(associationId, requestingUserId, {
+          ...createDto,
+          tournamentTypeId: '4',
+          maxTeams: 20,
+          minPlayersPerTeam: 1,
+          maxPlayersPerTeam: 25,
+        }),
+      ).resolves.toBeDefined();
+    });
+
     it('fija la asociación desde la ruta y el creador desde el usuario autenticado', async () => {
       saveTournamentPhoto.mockResolvedValue(
         storedAsset('/uploads/tournaments/new-photo.png'),

@@ -2724,7 +2724,8 @@ export class TournamentsService {
       .toLocaleLowerCase('es');
     const directElimination =
       normalizedName.includes('eliminacion') &&
-      !normalizedName.includes('mixto');
+      !normalizedName.includes('mixto') &&
+      !normalizedName.includes('grupo');
     if (
       directElimination &&
       !DIRECT_KNOCKOUT_SIZES.includes(

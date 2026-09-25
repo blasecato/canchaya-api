@@ -14,7 +14,7 @@ export const FORMAT_LABELS: Record<Format, string> = {
   league: 'Liga',
   league_knockout: 'Mixto · Liga + eliminación directa',
   knockout: 'Eliminación directa',
-  groups_knockout: 'Grupos + eliminatorias',
+  groups_knockout: 'Fase de grupos + eliminación directa',
   league_final: 'Liga + liguilla final',
   groups_final: 'Grupos + liguilla final',
 };
@@ -87,8 +87,55 @@ const fail = (message: string): never => {
 export const hasGroups = (format: Format) => format.startsWith('groups_');
 export const hasFinalLeague = (format: Format) => format.endsWith('_final');
 export const DIRECT_KNOCKOUT_SIZES = [8, 16, 32] as const;
+export const GROUP_KNOCKOUT_QUALIFIER_SIZES = [2, 4, 8, 16, 32] as const;
 export const isPowerOfTwo = (count: number) =>
   Number.isInteger(count) && count > 0 && Number.isInteger(Math.log2(count));
+
+export function groupKnockoutConfigs(count: number): CompetitionConfig[] {
+  if (!Number.isInteger(count) || count < 6) return [];
+
+  const configs: CompetitionConfig[] = [];
+  const maximumGroups = Math.min(
+    Math.floor(count / 3),
+    GROUP_KNOCKOUT_QUALIFIER_SIZES.at(-1)!,
+  );
+  for (let groups = 2; groups <= maximumGroups; groups++) {
+    if (count % groups !== 0) continue;
+    const teamsPerGroup = count / groups;
+    const maximumQualifiers = Math.min(
+      teamsPerGroup - 1,
+      Math.floor(GROUP_KNOCKOUT_QUALIFIER_SIZES.at(-1)! / groups),
+    );
+    for (let qualifiers = 1; qualifiers <= maximumQualifiers; qualifiers++) {
+      const advancing = groups * qualifiers;
+      if (
+        !GROUP_KNOCKOUT_QUALIFIER_SIZES.includes(
+          advancing as (typeof GROUP_KNOCKOUT_QUALIFIER_SIZES)[number],
+        )
+      )
+        continue;
+      configs.push({
+        format: 'groups_knockout',
+        legs: 1,
+        groups,
+        qualifiers,
+        finalLegs: 1,
+      });
+    }
+  }
+
+  return configs.sort((a, b) => {
+    const aSize = count / a.groups;
+    const bSize = count / b.groups;
+    return (
+      Math.abs(aSize - 4) - Math.abs(bSize - 4) ||
+      Math.abs(a.qualifiers - 2) - Math.abs(b.qualifiers - 2) ||
+      a.groups - b.groups ||
+      a.qualifiers - b.qualifiers
+    );
+  });
+}
+
 export function validateConfig(config: CompetitionConfig, count: number) {
   if (!Number.isInteger(count) || count < 6)
     fail('Se necesitan al menos seis equipos aprobados.');
@@ -103,6 +150,10 @@ export function validateConfig(config: CompetitionConfig, count: number) {
   if (hasGroups(config.format)) {
     if (config.groups < 2 || config.groups > Math.floor(count / 3))
       fail('Cada grupo debe tener al menos tres equipos.');
+    if (config.format === 'groups_knockout' && count % config.groups !== 0)
+      fail(
+        `Los ${count} equipos deben repartirse en grupos del mismo tamaño para este formato.`,
+      );
     if (
       config.qualifiers < 1 ||
       config.qualifiers >= Math.floor(count / config.groups)
@@ -134,6 +185,15 @@ export function validateConfig(config: CompetitionConfig, count: number) {
     if (config.format === 'league_knockout' && !isPowerOfTwo(advancing))
       fail(
         'La fase eliminatoria del formato mixto debe clasificar una potencia de dos: 2, 4, 8, 16, 32…',
+      );
+    if (
+      config.format === 'groups_knockout' &&
+      !GROUP_KNOCKOUT_QUALIFIER_SIZES.includes(
+        advancing as (typeof GROUP_KNOCKOUT_QUALIFIER_SIZES)[number],
+      )
+    )
+      fail(
+        `Esta configuración clasifica ${advancing} equipos (${config.groups} grupos × ${config.qualifiers} por grupo). La eliminación directa debe iniciar con 2, 4, 8, 16 o 32 equipos.`,
       );
   }
   // Bound generated work rather than imposing an arbitrary team limit.
@@ -550,6 +610,7 @@ export function suggestions(count: number) {
       qualifiers: 4,
       finalLegs: 1,
     },
+    ...groupKnockoutConfigs(count),
     ...(DIRECT_KNOCKOUT_SIZES.includes(
       count as (typeof DIRECT_KNOCKOUT_SIZES)[number],
     )
@@ -568,7 +629,7 @@ export function suggestions(count: number) {
     .filter((config) => estimate(config, count).totalMatches <= 10000)
     .map((config) => ({
       config,
-      label: `${FORMAT_LABELS[config.format]}${hasGroups(config.format) ? ` · ${config.groups} grupos` : config.format === 'league' ? ` · ${config.legs} vuelta${config.legs === 1 ? '' : 's'}` : ''}`,
+      label: `${FORMAT_LABELS[config.format]}${config.format === 'groups_knockout' ? ` · ${config.groups} grupos de ${count / config.groups} · pasan ${config.qualifiers} por grupo` : hasGroups(config.format) ? ` · ${config.groups} grupos` : config.format === 'league' ? ` · ${config.legs} vuelta${config.legs === 1 ? '' : 's'}` : ''}`,
       ...estimate(config, count),
     }));
 }

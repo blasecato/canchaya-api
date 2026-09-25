@@ -17,6 +17,10 @@ const image_storage_service_1 = require("../uploads/image-storage.service");
 const association_response_mapper_1 = require("./association-response.mapper");
 const association_tournament_response_mapper_1 = require("./association-tournament-response.mapper");
 const tournament_lifecycle_constants_1 = require("../tournaments/tournament-lifecycle.constants");
+const FEATURED_ASSOCIATION_ID = (() => {
+    const configured = process.env.FEATURED_ASSOCIATION_ID?.trim();
+    return configured && /^\d+$/.test(configured) ? BigInt(configured) : 6n;
+})();
 let AssociationsService = AssociationsService_1 = class AssociationsService {
     prisma;
     imageStorage;
@@ -75,21 +79,38 @@ let AssociationsService = AssociationsService_1 = class AssociationsService {
         return response;
     }
     async findAll(requestingUserId) {
-        const canSeeInactiveAssociations = requestingUserId
-            ? Boolean(await this.prisma.user_roles.findFirst({
-                where: {
-                    user_id: requestingUserId,
-                    role_code: 'SUPER_ADMIN',
-                },
-                select: { role_code: true },
-            }))
-            : true;
+        const isSuperAdmin = requestingUserId
+            ? await this.hasRole(requestingUserId, 'SUPER_ADMIN')
+            : false;
+        const isPlayer = requestingUserId && !isSuperAdmin
+            ? await this.hasRole(requestingUserId, 'PLAYER')
+            : false;
+        const canSeeInactiveAssociations = requestingUserId ? isSuperAdmin : true;
         const associations = await this.prisma.associations.findMany({
             where: canSeeInactiveAssociations ? undefined : { status: 'active' },
             orderBy: { id: 'asc' },
             select: association_response_mapper_1.associationResponseSelect,
         });
-        return this.toAssociationResponsesWithTeamCounts(associations);
+        const response = await this.toAssociationResponsesWithTeamCounts(associations);
+        return isPlayer ? this.pinFeaturedAssociation(response) : response;
+    }
+    async hasRole(userId, roleCode) {
+        return Boolean(await this.prisma.user_roles.findFirst({
+            where: { user_id: userId, role_code: roleCode },
+            select: { role_code: true },
+        }));
+    }
+    pinFeaturedAssociation(associations) {
+        const featuredId = FEATURED_ASSOCIATION_ID.toString();
+        const featuredIndex = associations.findIndex(({ id }) => id === featuredId);
+        if (featuredIndex <= 0)
+            return associations;
+        const featured = associations[featuredIndex];
+        return [
+            featured,
+            ...associations.slice(0, featuredIndex),
+            ...associations.slice(featuredIndex + 1),
+        ];
     }
     async findMine(requestingUserId) {
         return this.findAdministeredAssociations(requestingUserId);

@@ -70,7 +70,9 @@ export interface Standing {
 export declare const hasGroups: (format: Format) => boolean;
 export declare const hasFinalLeague: (format: Format) => boolean;
 export declare const DIRECT_KNOCKOUT_SIZES: readonly [8, 16, 32];
+export declare const GROUP_KNOCKOUT_QUALIFIER_SIZES: readonly [2, 4, 8, 16, 32];
 export declare const isPowerOfTwo: (count: number) => boolean;
+export declare function groupKnockoutConfigs(count: number): CompetitionConfig[];
 export declare function validateConfig(config: CompetitionConfig, count: number): void;
 export declare function shuffled(ids: string[], seed: string): string[];
 export declare function splitGroups(ids: string[], count: number): {
