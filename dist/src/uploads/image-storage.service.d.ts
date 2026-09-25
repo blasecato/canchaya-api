@@ -7,6 +7,7 @@ export declare class ImageStorageService {
     constructor(config: ConfigService, localStorage: LocalImageStorageService);
     saveAssociationLogo(file: UploadedImageFile): Promise<StoredImageAsset>;
     saveAssociationCover(file: UploadedImageFile): Promise<StoredImageAsset>;
+    saveAssociationAnnouncement(file: UploadedImageFile): Promise<StoredImageAsset>;
     saveTournamentPhoto(file: UploadedImageFile): Promise<StoredImageAsset>;
     saveTeamPhoto(file: UploadedImageFile): Promise<StoredImageAsset>;
     saveUserPhoto(file: UploadedImageFile): Promise<StoredImageAsset>;

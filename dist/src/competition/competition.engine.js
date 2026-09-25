@@ -214,6 +214,35 @@ function knockoutStage(ids, id, previousSides) {
         resolved: false,
     };
 }
+function medalStage(finalists, thirdPlaceTeams, id) {
+    return {
+        id,
+        label: 'Final y tercer puesto',
+        kind: 'knockout',
+        groups: [
+            { name: 'Final', teams: finalists },
+            { name: 'Tercer puesto', teams: thirdPlaceTeams },
+        ],
+        fixtures: [
+            {
+                key: `${id}:knockout:0`,
+                home: finalists[0],
+                away: finalists[1],
+                round: 1,
+                group: 'Final',
+            },
+            {
+                key: `${id}:third-place:0`,
+                home: thirdPlaceTeams[0],
+                away: thirdPlaceTeams[1],
+                round: 1,
+                group: 'Tercer puesto',
+            },
+        ],
+        byes: [],
+        resolved: false,
+    };
+}
 function firstStage(config, ids) {
     return config.format === 'knockout'
         ? knockoutStage(ids, 1)
@@ -231,8 +260,14 @@ function estimate(config, count) {
         : (0, exports.hasFinalLeague)(config.format)
             ? ((qualified * (qualified - 1)) / 2) * config.finalLegs
             : qualified - 1;
+    const eliminationEntrants = config.format === 'knockout'
+        ? count
+        : config.format.endsWith('_knockout')
+            ? qualified
+            : 0;
+    const thirdPlaceMatch = eliminationEntrants >= 4 && (0, exports.isPowerOfTwo)(eliminationEntrants) ? 1 : 0;
     return {
-        totalMatches: initial + extra,
+        totalMatches: initial + extra + thirdPlaceMatch,
         minimumMatches: config.format === 'knockout' ? 1 : (Math.min(...sizes) - 1) * config.legs,
         groupSizes: config.format === 'knockout' ? [] : sizes,
         qualified: ['league', 'knockout'].includes(config.format) ? 0 : qualified,
@@ -305,17 +340,38 @@ function resolveStage(plan, scores) {
         fail('Finaliza todos los partidos de la etapa antes de avanzar. Los cancelados deben reprogramarse.');
     let qualified;
     if (current.kind === 'knockout') {
-        const winners = current.fixtures.map((f) => {
+        const outcomes = current.fixtures.map((f) => {
             const s = map.get(f.key);
-            if (s.homeScore !== s.awayScore)
-                return s.homeScore > s.awayScore ? f.home : f.away;
+            if (s.homeScore !== s.awayScore) {
+                const homeWins = s.homeScore > s.awayScore;
+                return {
+                    winner: homeWins ? f.home : f.away,
+                    loser: homeWins ? f.away : f.home,
+                };
+            }
             if (s.homePenalties === null ||
                 s.awayPenalties === null ||
                 s.homePenalties === s.awayPenalties)
                 return fail('Resuelve los empates de eliminación directa mediante penaltis.');
-            return s.homePenalties > s.awayPenalties ? f.home : f.away;
+            const homeWins = s.homePenalties > s.awayPenalties;
+            return {
+                winner: homeWins ? f.home : f.away,
+                loser: homeWins ? f.away : f.home,
+            };
         });
+        const winners = outcomes.map(({ winner }) => winner);
+        const losers = outcomes.map(({ loser }) => loser);
+        const finalIndex = current.fixtures.findIndex(({ group }) => group === 'Final');
+        if (finalIndex >= 0)
+            return { next: null, champion: winners[finalIndex] };
         qualified = [...winners, ...current.byes];
+        if (qualified.length === 2 &&
+            current.fixtures.length === 2 &&
+            current.byes.length === 0)
+            return {
+                next: medalStage(winners, losers, current.id + 1),
+                champion: null,
+            };
         const nextSides = current.groups
             .map((group) => ({
             name: group.name,

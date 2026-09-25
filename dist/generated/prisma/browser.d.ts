@@ -5,6 +5,7 @@ export * from './enums';
 export type auth_sessions = Prisma.auth_sessionsModel;
 export type association_administrators = Prisma.association_administratorsModel;
 export type associations = Prisma.associationsModel;
+export type association_announcements = Prisma.association_announcementsModel;
 export type disciplinary_actions = Prisma.disciplinary_actionsModel;
 export type fines = Prisma.finesModel;
 export type match_referees = Prisma.match_refereesModel;

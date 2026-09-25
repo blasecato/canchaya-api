@@ -10,9 +10,9 @@ export declare class SuspensionsController {
         created_at: Date;
         status: string;
         updated_at: Date;
+        created_by: bigint;
         reason: string | null;
         disciplinary_action_id: bigint;
-        created_by: bigint;
         matches_count: number | null;
         start_date: Date | null;
         end_date: Date | null;
@@ -24,9 +24,9 @@ export declare class SuspensionsController {
         created_at: Date;
         status: string;
         updated_at: Date;
+        created_by: bigint;
         reason: string | null;
         disciplinary_action_id: bigint;
-        created_by: bigint;
         matches_count: number | null;
         start_date: Date | null;
         end_date: Date | null;
@@ -45,9 +45,9 @@ export declare class SuspensionsController {
         created_at: Date;
         status: string;
         updated_at: Date;
+        created_by: bigint;
         reason: string | null;
         disciplinary_action_id: bigint;
-        created_by: bigint;
         matches_count: number | null;
         start_date: Date | null;
         end_date: Date | null;
@@ -59,9 +59,9 @@ export declare class SuspensionsController {
         created_at: Date;
         status: string;
         updated_at: Date;
+        created_by: bigint;
         reason: string | null;
         disciplinary_action_id: bigint;
-        created_by: bigint;
         matches_count: number | null;
         start_date: Date | null;
         end_date: Date | null;
@@ -73,9 +73,9 @@ export declare class SuspensionsController {
         created_at: Date;
         status: string;
         updated_at: Date;
+        created_by: bigint;
         reason: string | null;
         disciplinary_action_id: bigint;
-        created_by: bigint;
         matches_count: number | null;
         start_date: Date | null;
         end_date: Date | null;

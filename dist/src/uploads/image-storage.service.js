@@ -41,6 +41,9 @@ let ImageStorageService = ImageStorageService_1 = class ImageStorageService {
     saveAssociationCover(file) {
         return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_ASSOCIATION_COVER_FOLDER, 'La portada');
     }
+    saveAssociationAnnouncement(file) {
+        return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_ASSOCIATION_ANNOUNCEMENT_FOLDER, 'La imagen de la publicación');
+    }
     saveTournamentPhoto(file) {
         return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_TOURNAMENT_PHOTO_FOLDER, 'La foto del torneo');
     }

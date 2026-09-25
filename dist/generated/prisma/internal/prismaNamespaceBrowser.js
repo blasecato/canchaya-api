@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.UsersScalarFieldEnum = exports.User_rolesScalarFieldEnum = exports.TournamentsScalarFieldEnum = exports.Tournament_typesScalarFieldEnum = exports.Tournament_lifecycle_eventsScalarFieldEnum = exports.Tournament_registration_eventsScalarFieldEnum = exports.Notification_preferencesScalarFieldEnum = exports.NotificationsScalarFieldEnum = exports.Tournament_team_registrationsScalarFieldEnum = exports.Tournament_team_playersScalarFieldEnum = exports.Tournament_sponsorsScalarFieldEnum = exports.Tournament_refereesScalarFieldEnum = exports.Tournament_administratorsScalarFieldEnum = exports.TeamsScalarFieldEnum = exports.Team_membersScalarFieldEnum = exports.Disciplinary_eventsScalarFieldEnum = exports.Disciplinary_appealsScalarFieldEnum = exports.SuspensionsScalarFieldEnum = exports.SponsorsScalarFieldEnum = exports.RolesScalarFieldEnum = exports.Player_match_statsScalarFieldEnum = exports.Referee_assignment_eventsScalarFieldEnum = exports.Referee_availabilityScalarFieldEnum = exports.MatchesScalarFieldEnum = exports.Match_refereesScalarFieldEnum = exports.FinesScalarFieldEnum = exports.Disciplinary_actionsScalarFieldEnum = exports.AssociationsScalarFieldEnum = exports.Association_administratorsScalarFieldEnum = exports.Auth_sessionsScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.UsersScalarFieldEnum = exports.User_rolesScalarFieldEnum = exports.TournamentsScalarFieldEnum = exports.Tournament_typesScalarFieldEnum = exports.Tournament_lifecycle_eventsScalarFieldEnum = exports.Tournament_registration_eventsScalarFieldEnum = exports.Notification_preferencesScalarFieldEnum = exports.NotificationsScalarFieldEnum = exports.Tournament_team_registrationsScalarFieldEnum = exports.Tournament_team_playersScalarFieldEnum = exports.Tournament_sponsorsScalarFieldEnum = exports.Tournament_refereesScalarFieldEnum = exports.Tournament_administratorsScalarFieldEnum = exports.TeamsScalarFieldEnum = exports.Team_membersScalarFieldEnum = exports.Disciplinary_eventsScalarFieldEnum = exports.Disciplinary_appealsScalarFieldEnum = exports.SuspensionsScalarFieldEnum = exports.SponsorsScalarFieldEnum = exports.RolesScalarFieldEnum = exports.Player_match_statsScalarFieldEnum = exports.Referee_assignment_eventsScalarFieldEnum = exports.Referee_availabilityScalarFieldEnum = exports.MatchesScalarFieldEnum = exports.Match_refereesScalarFieldEnum = exports.FinesScalarFieldEnum = exports.Disciplinary_actionsScalarFieldEnum = exports.Association_announcementsScalarFieldEnum = exports.AssociationsScalarFieldEnum = exports.Association_administratorsScalarFieldEnum = exports.Auth_sessionsScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -48,6 +48,7 @@ exports.ModelName = {
     auth_sessions: 'auth_sessions',
     association_administrators: 'association_administrators',
     associations: 'associations',
+    association_announcements: 'association_announcements',
     disciplinary_actions: 'disciplinary_actions',
     fines: 'fines',
     match_referees: 'match_referees',
@@ -112,6 +113,26 @@ exports.AssociationsScalarFieldEnum = {
     cover_public_id: 'cover_public_id',
     owner_user_id: 'owner_user_id',
     status: 'status',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+};
+exports.Association_announcementsScalarFieldEnum = {
+    id: 'id',
+    association_id: 'association_id',
+    title: 'title',
+    description: 'description',
+    image_url: 'image_url',
+    image_public_id: 'image_public_id',
+    starts_on: 'starts_on',
+    ends_on: 'ends_on',
+    contact_phone: 'contact_phone',
+    address: 'address',
+    registration_fee: 'registration_fee',
+    registration_starts_on: 'registration_starts_on',
+    tournament_starts_on: 'tournament_starts_on',
+    first_place_prize: 'first_place_prize',
+    second_place_prize: 'second_place_prize',
+    created_by: 'created_by',
     created_at: 'created_at',
     updated_at: 'updated_at'
 };

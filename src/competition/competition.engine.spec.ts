@@ -136,7 +136,11 @@ describe('competition formats', () => {
       plan.champion = result.champion;
     }
     expect(plan.stages.map(({ fixtures }) => fixtures.length)).toEqual([
-      8, 4, 2, 1,
+      8, 4, 2, 2,
+    ]);
+    expect(plan.stages.at(-1)?.groups.map(({ name }) => name)).toEqual([
+      'Final',
+      'Tercer puesto',
     ]);
   });
   it('only offers direct elimination for 8, 16 or 32 entrants', () => {
@@ -199,6 +203,47 @@ describe('competition formats', () => {
         group: 'Lado derecho',
       }),
     ]);
+  });
+  it('creates the final and third-place match from both semifinals', () => {
+    const semifinal = knockoutStage(ids(4), 2);
+    const plan: CompetitionPlan = {
+      ...planFor(
+        {
+          format: 'league_knockout',
+          legs: 1,
+          groups: 1,
+          qualifiers: 4,
+          finalLegs: 1,
+        },
+        8,
+      ),
+      stages: [semifinal],
+    };
+
+    const medalStage = resolveStage(plan, scoreStage(semifinal)).next!;
+
+    expect(medalStage.label).toBe('Final y tercer puesto');
+    expect(medalStage.fixtures).toEqual([
+      expect.objectContaining({
+        home: semifinal.fixtures[0].home,
+        away: semifinal.fixtures[1].home,
+        group: 'Final',
+      }),
+      expect.objectContaining({
+        home: semifinal.fixtures[0].away,
+        away: semifinal.fixtures[1].away,
+        group: 'Tercer puesto',
+      }),
+    ]);
+
+    plan.stages[0].resolved = true;
+    plan.stages.push(medalStage);
+    expect(() => resolveStage(plan, scoreStage(medalStage).slice(0, 1))).toThrow(
+      'Finaliza',
+    );
+    const result = resolveStage(plan, scoreStage(medalStage));
+    expect(result.next).toBeNull();
+    expect(result.champion).toBe(medalStage.fixtures[0].home);
   });
   it('replays exactly the same draw regardless of source ordering', () => {
     expect(shuffled(ids(20), 'abc')).toEqual(

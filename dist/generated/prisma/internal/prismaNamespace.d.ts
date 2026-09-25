@@ -163,6 +163,7 @@ export declare const ModelName: {
     readonly auth_sessions: "auth_sessions";
     readonly association_administrators: "association_administrators";
     readonly associations: "associations";
+    readonly association_announcements: "association_announcements";
     readonly disciplinary_actions: "disciplinary_actions";
     readonly fines: "fines";
     readonly match_referees: "match_referees";
@@ -202,7 +203,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "auth_sessions" | "association_administrators" | "associations" | "disciplinary_actions" | "fines" | "match_referees" | "matches" | "referee_availability" | "referee_assignment_events" | "player_match_stats" | "roles" | "sponsors" | "suspensions" | "disciplinary_appeals" | "disciplinary_events" | "team_members" | "teams" | "tournament_administrators" | "tournament_referees" | "tournament_sponsors" | "tournament_team_players" | "tournament_team_registrations" | "notifications" | "notification_preferences" | "tournament_registration_events" | "tournament_lifecycle_events" | "tournament_types" | "tournaments" | "user_roles" | "users";
+        modelProps: "auth_sessions" | "association_administrators" | "associations" | "association_announcements" | "disciplinary_actions" | "fines" | "match_referees" | "matches" | "referee_availability" | "referee_assignment_events" | "player_match_stats" | "roles" | "sponsors" | "suspensions" | "disciplinary_appeals" | "disciplinary_events" | "team_members" | "teams" | "tournament_administrators" | "tournament_referees" | "tournament_sponsors" | "tournament_team_players" | "tournament_team_registrations" | "notifications" | "notification_preferences" | "tournament_registration_events" | "tournament_lifecycle_events" | "tournament_types" | "tournaments" | "user_roles" | "users";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -425,6 +426,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 count: {
                     args: Prisma.associationsCountArgs<ExtArgs>;
                     result: runtime.Types.Utils.Optional<Prisma.AssociationsCountAggregateOutputType> | number;
+                };
+            };
+        };
+        association_announcements: {
+            payload: Prisma.$association_announcementsPayload<ExtArgs>;
+            fields: Prisma.association_announcementsFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.association_announcementsFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$association_announcementsPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.association_announcementsFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$association_announcementsPayload>;
+                };
+                findFirst: {
+                    args: Prisma.association_announcementsFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$association_announcementsPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.association_announcementsFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$association_announcementsPayload>;
+                };
+                findMany: {
+                    args: Prisma.association_announcementsFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$association_announcementsPayload>[];
+                };
+                create: {
+                    args: Prisma.association_announcementsCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$association_announcementsPayload>;
+                };
+                createMany: {
+                    args: Prisma.association_announcementsCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.association_announcementsCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$association_announcementsPayload>[];
+                };
+                delete: {
+                    args: Prisma.association_announcementsDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$association_announcementsPayload>;
+                };
+                update: {
+                    args: Prisma.association_announcementsUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$association_announcementsPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.association_announcementsDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.association_announcementsUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.association_announcementsUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$association_announcementsPayload>[];
+                };
+                upsert: {
+                    args: Prisma.association_announcementsUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$association_announcementsPayload>;
+                };
+                aggregate: {
+                    args: Prisma.Association_announcementsAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateAssociation_announcements>;
+                };
+                groupBy: {
+                    args: Prisma.association_announcementsGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Association_announcementsGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.association_announcementsCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Association_announcementsCountAggregateOutputType> | number;
                 };
             };
         };
@@ -2493,6 +2568,27 @@ export declare const AssociationsScalarFieldEnum: {
     readonly updated_at: "updated_at";
 };
 export type AssociationsScalarFieldEnum = (typeof AssociationsScalarFieldEnum)[keyof typeof AssociationsScalarFieldEnum];
+export declare const Association_announcementsScalarFieldEnum: {
+    readonly id: "id";
+    readonly association_id: "association_id";
+    readonly title: "title";
+    readonly description: "description";
+    readonly image_url: "image_url";
+    readonly image_public_id: "image_public_id";
+    readonly starts_on: "starts_on";
+    readonly ends_on: "ends_on";
+    readonly contact_phone: "contact_phone";
+    readonly address: "address";
+    readonly registration_fee: "registration_fee";
+    readonly registration_starts_on: "registration_starts_on";
+    readonly tournament_starts_on: "tournament_starts_on";
+    readonly first_place_prize: "first_place_prize";
+    readonly second_place_prize: "second_place_prize";
+    readonly created_by: "created_by";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Association_announcementsScalarFieldEnum = (typeof Association_announcementsScalarFieldEnum)[keyof typeof Association_announcementsScalarFieldEnum];
 export declare const Disciplinary_actionsScalarFieldEnum: {
     readonly id: "id";
     readonly tournament_id: "tournament_id";
@@ -2956,6 +3052,7 @@ export type GlobalOmitConfig = {
     auth_sessions?: Prisma.auth_sessionsOmit;
     association_administrators?: Prisma.association_administratorsOmit;
     associations?: Prisma.associationsOmit;
+    association_announcements?: Prisma.association_announcementsOmit;
     disciplinary_actions?: Prisma.disciplinary_actionsOmit;
     fines?: Prisma.finesOmit;
     match_referees?: Prisma.match_refereesOmit;

@@ -14,6 +14,7 @@ export declare const ModelName: {
     readonly auth_sessions: "auth_sessions";
     readonly association_administrators: "association_administrators";
     readonly associations: "associations";
+    readonly association_announcements: "association_announcements";
     readonly disciplinary_actions: "disciplinary_actions";
     readonly fines: "fines";
     readonly match_referees: "match_referees";
@@ -86,6 +87,27 @@ export declare const AssociationsScalarFieldEnum: {
     readonly updated_at: "updated_at";
 };
 export type AssociationsScalarFieldEnum = (typeof AssociationsScalarFieldEnum)[keyof typeof AssociationsScalarFieldEnum];
+export declare const Association_announcementsScalarFieldEnum: {
+    readonly id: "id";
+    readonly association_id: "association_id";
+    readonly title: "title";
+    readonly description: "description";
+    readonly image_url: "image_url";
+    readonly image_public_id: "image_public_id";
+    readonly starts_on: "starts_on";
+    readonly ends_on: "ends_on";
+    readonly contact_phone: "contact_phone";
+    readonly address: "address";
+    readonly registration_fee: "registration_fee";
+    readonly registration_starts_on: "registration_starts_on";
+    readonly tournament_starts_on: "tournament_starts_on";
+    readonly first_place_prize: "first_place_prize";
+    readonly second_place_prize: "second_place_prize";
+    readonly created_by: "created_by";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Association_announcementsScalarFieldEnum = (typeof Association_announcementsScalarFieldEnum)[keyof typeof Association_announcementsScalarFieldEnum];
 export declare const Disciplinary_actionsScalarFieldEnum: {
     readonly id: "id";
     readonly tournament_id: "tournament_id";

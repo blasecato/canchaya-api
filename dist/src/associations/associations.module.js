@@ -12,14 +12,16 @@ const auth_module_1 = require("../auth/auth.module");
 const uploads_module_1 = require("../uploads/uploads.module");
 const associations_controller_1 = require("./associations.controller");
 const associations_service_1 = require("./associations.service");
+const association_announcements_controller_1 = require("./association-announcements.controller");
+const association_announcements_service_1 = require("./association-announcements.service");
 let AssociationsModule = class AssociationsModule {
 };
 exports.AssociationsModule = AssociationsModule;
 exports.AssociationsModule = AssociationsModule = __decorate([
     (0, common_1.Module)({
         imports: [auth_module_1.AuthModule, uploads_module_1.UploadsModule],
-        controllers: [associations_controller_1.AssociationsController],
-        providers: [associations_service_1.AssociationsService],
+        controllers: [associations_controller_1.AssociationsController, association_announcements_controller_1.AssociationAnnouncementsController],
+        providers: [associations_service_1.AssociationsService, association_announcements_service_1.AssociationAnnouncementsService],
         exports: [associations_service_1.AssociationsService],
     })
 ], AssociationsModule);

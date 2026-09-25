@@ -431,13 +431,6 @@ export type tournament_sponsorsUncheckedUpdateManyWithoutSponsorsNestedInput = {
     updateMany?: Prisma.tournament_sponsorsUpdateManyWithWhereWithoutSponsorsInput | Prisma.tournament_sponsorsUpdateManyWithWhereWithoutSponsorsInput[];
     deleteMany?: Prisma.tournament_sponsorsScalarWhereInput | Prisma.tournament_sponsorsScalarWhereInput[];
 };
-export type NullableDecimalFieldUpdateOperationsInput = {
-    set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null;
-    increment?: runtime.Decimal | runtime.DecimalJsLike | number | string;
-    decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string;
-    multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string;
-    divide?: runtime.Decimal | runtime.DecimalJsLike | number | string;
-};
 export type tournament_sponsorsCreateNestedManyWithoutTournamentsInput = {
     create?: Prisma.XOR<Prisma.tournament_sponsorsCreateWithoutTournamentsInput, Prisma.tournament_sponsorsUncheckedCreateWithoutTournamentsInput> | Prisma.tournament_sponsorsCreateWithoutTournamentsInput[] | Prisma.tournament_sponsorsUncheckedCreateWithoutTournamentsInput[];
     connectOrCreate?: Prisma.tournament_sponsorsCreateOrConnectWithoutTournamentsInput | Prisma.tournament_sponsorsCreateOrConnectWithoutTournamentsInput[];

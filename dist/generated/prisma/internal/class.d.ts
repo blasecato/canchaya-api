@@ -39,6 +39,9 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get associations(): Prisma.associationsDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    get association_announcements(): Prisma.association_announcementsDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
     get disciplinary_actions(): Prisma.disciplinary_actionsDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;

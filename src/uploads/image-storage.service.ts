@@ -15,6 +15,7 @@ import { randomUUID } from 'node:crypto';
 import { LocalImageStorageService } from './local-image-storage.service';
 import {
   ALLOWED_IMAGE_MIME_TYPES,
+  CLOUDINARY_ASSOCIATION_ANNOUNCEMENT_FOLDER,
   CLOUDINARY_ASSOCIATION_COVER_FOLDER,
   CLOUDINARY_ASSOCIATION_LOGO_FOLDER,
   CLOUDINARY_IDENTITY_DOCUMENT_BACK_FOLDER,
@@ -74,6 +75,16 @@ export class ImageStorageService {
       file,
       CLOUDINARY_ASSOCIATION_COVER_FOLDER,
       'La portada',
+    );
+  }
+
+  saveAssociationAnnouncement(
+    file: UploadedImageFile,
+  ): Promise<StoredImageAsset> {
+    return this.uploadPublic(
+      file,
+      CLOUDINARY_ASSOCIATION_ANNOUNCEMENT_FOLDER,
+      'La imagen de la publicación',
     );
   }
 

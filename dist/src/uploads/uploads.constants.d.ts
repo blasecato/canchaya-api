@@ -9,6 +9,7 @@ export declare const IDENTITY_DOCUMENT_DIRECTORY = "identity-documents";
 export declare const CLOUDINARY_ROOT_FOLDER = "canchaya";
 export declare const CLOUDINARY_ASSOCIATION_LOGO_FOLDER = "canchaya/associations/logos";
 export declare const CLOUDINARY_ASSOCIATION_COVER_FOLDER = "canchaya/associations/covers";
+export declare const CLOUDINARY_ASSOCIATION_ANNOUNCEMENT_FOLDER = "canchaya/associations/announcements";
 export declare const CLOUDINARY_TOURNAMENT_PHOTO_FOLDER = "canchaya/tournaments/photos";
 export declare const CLOUDINARY_TEAM_PHOTO_FOLDER = "canchaya/teams/logos";
 export declare const CLOUDINARY_USER_PHOTO_FOLDER = "canchaya/users/profiles";

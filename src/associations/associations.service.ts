@@ -494,10 +494,16 @@ export class AssociationsService {
   }
 
   async remove(id: bigint): Promise<AssociationResponseDto> {
-    const associationRecord = await this.prisma.associations.findUnique({
-      where: { id },
-      select: associationResponseSelect,
-    });
+    const [associationRecord, announcements] = await Promise.all([
+      this.prisma.associations.findUnique({
+        where: { id },
+        select: associationResponseSelect,
+      }),
+      this.prisma.association_announcements.findMany({
+        where: { association_id: id },
+        select: { image_url: true, image_public_id: true },
+      }),
+    ]);
 
     if (!associationRecord) {
       throw new NotFoundException(
@@ -520,6 +526,10 @@ export class AssociationsService {
         url: associationRecord.cover_url,
         publicId: associationRecord.cover_public_id,
       },
+      ...announcements.map((announcement) => ({
+        url: announcement.image_url,
+        publicId: announcement.image_public_id,
+      })),
     ]);
 
     return association;

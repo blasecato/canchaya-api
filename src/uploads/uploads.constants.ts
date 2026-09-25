@@ -11,6 +11,7 @@ export const IDENTITY_DOCUMENT_DIRECTORY = 'identity-documents';
 export const CLOUDINARY_ROOT_FOLDER = 'canchaya';
 export const CLOUDINARY_ASSOCIATION_LOGO_FOLDER = `${CLOUDINARY_ROOT_FOLDER}/associations/logos`;
 export const CLOUDINARY_ASSOCIATION_COVER_FOLDER = `${CLOUDINARY_ROOT_FOLDER}/associations/covers`;
+export const CLOUDINARY_ASSOCIATION_ANNOUNCEMENT_FOLDER = `${CLOUDINARY_ROOT_FOLDER}/associations/announcements`;
 export const CLOUDINARY_TOURNAMENT_PHOTO_FOLDER = `${CLOUDINARY_ROOT_FOLDER}/tournaments/photos`;
 export const CLOUDINARY_TEAM_PHOTO_FOLDER = `${CLOUDINARY_ROOT_FOLDER}/teams/logos`;
 export const CLOUDINARY_USER_PHOTO_FOLDER = `${CLOUDINARY_ROOT_FOLDER}/users/profiles`;

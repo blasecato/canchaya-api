@@ -9,6 +9,7 @@ export declare class FinesController {
         id: bigint;
         created_at: Date;
         updated_at: Date;
+        created_by: bigint;
         disciplinary_action_id: bigint;
         amount: import("@prisma/client-runtime-utils").Decimal;
         currency_code: string;
@@ -17,12 +18,12 @@ export declare class FinesController {
         paid_at: Date | null;
         payment_reference: string | null;
         notes: string | null;
-        created_by: bigint;
     }>;
     findAll(request: AuthenticatedRequest): Promise<{
         id: bigint;
         created_at: Date;
         updated_at: Date;
+        created_by: bigint;
         disciplinary_action_id: bigint;
         amount: import("@prisma/client-runtime-utils").Decimal;
         currency_code: string;
@@ -31,7 +32,6 @@ export declare class FinesController {
         paid_at: Date | null;
         payment_reference: string | null;
         notes: string | null;
-        created_by: bigint;
     }[]>;
     findOne(id: bigint, request: AuthenticatedRequest): Promise<{
         disciplinary_actions: {
@@ -44,6 +44,7 @@ export declare class FinesController {
         id: bigint;
         created_at: Date;
         updated_at: Date;
+        created_by: bigint;
         disciplinary_action_id: bigint;
         amount: import("@prisma/client-runtime-utils").Decimal;
         currency_code: string;
@@ -52,12 +53,12 @@ export declare class FinesController {
         paid_at: Date | null;
         payment_reference: string | null;
         notes: string | null;
-        created_by: bigint;
     }>;
     update(id: bigint, request: AuthenticatedRequest, updateFineDto: UpdateFineDto): Promise<{
         id: bigint;
         created_at: Date;
         updated_at: Date;
+        created_by: bigint;
         disciplinary_action_id: bigint;
         amount: import("@prisma/client-runtime-utils").Decimal;
         currency_code: string;
@@ -66,12 +67,12 @@ export declare class FinesController {
         paid_at: Date | null;
         payment_reference: string | null;
         notes: string | null;
-        created_by: bigint;
     }>;
     remove(id: bigint, request: AuthenticatedRequest): Promise<{
         id: bigint;
         created_at: Date;
         updated_at: Date;
+        created_by: bigint;
         disciplinary_action_id: bigint;
         amount: import("@prisma/client-runtime-utils").Decimal;
         currency_code: string;
@@ -80,6 +81,5 @@ export declare class FinesController {
         paid_at: Date | null;
         payment_reference: string | null;
         notes: string | null;
-        created_by: bigint;
     }>;
 }
