@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.associationAnnouncementSelect = void 0;
+exports.publicAssociationAnnouncementSelect = exports.associationAnnouncementSelect = void 0;
 exports.toAssociationAnnouncementResponse = toAssociationAnnouncementResponse;
+exports.toPublicAssociationAnnouncementResponse = toPublicAssociationAnnouncementResponse;
 exports.associationAnnouncementSelect = {
     id: true,
     association_id: true,
@@ -20,6 +21,16 @@ exports.associationAnnouncementSelect = {
     second_place_prize: true,
     created_at: true,
     updated_at: true,
+};
+exports.publicAssociationAnnouncementSelect = {
+    ...exports.associationAnnouncementSelect,
+    associations: {
+        select: {
+            name: true,
+            city: true,
+            logo_url: true,
+        },
+    },
 };
 const toDateValue = (date) => date.toISOString().slice(0, 10);
 const toOptionalDateValue = (date) => date ? toDateValue(date) : null;
@@ -48,6 +59,14 @@ function toAssociationAnnouncementResponse(announcement, today) {
         visibility,
         createdAt: announcement.created_at.toISOString(),
         updatedAt: announcement.updated_at.toISOString(),
+    };
+}
+function toPublicAssociationAnnouncementResponse(announcement, today) {
+    return {
+        ...toAssociationAnnouncementResponse(announcement, today),
+        associationName: announcement.associations.name,
+        associationCity: announcement.associations.city,
+        associationLogoUrl: announcement.associations.logo_url,
     };
 }
 //# sourceMappingURL=association-announcement.mapper.js.map

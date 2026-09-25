@@ -9,7 +9,9 @@ import { ImageStorageService } from '../uploads/image-storage.service';
 import type { UploadedImageFile } from '../uploads/image-storage.types';
 import {
   associationAnnouncementSelect,
+  publicAssociationAnnouncementSelect,
   toAssociationAnnouncementResponse,
+  toPublicAssociationAnnouncementResponse,
   type AssociationAnnouncementRecord,
 } from './association-announcement.mapper';
 import { AssociationsService } from './associations.service';
@@ -17,6 +19,7 @@ import type {
   AssociationAnnouncementResponseDto,
   AssociationAnnouncementScope,
   CreateAssociationAnnouncementDto,
+  PublicAssociationAnnouncementResponseDto,
   UpdateAssociationAnnouncementDto,
 } from './dto/association-announcement.dto';
 
@@ -27,6 +30,26 @@ export class AssociationAnnouncementsService {
     private readonly associationsService: AssociationsService,
     private readonly imageStorage: ImageStorageService,
   ) {}
+
+  async findVisibleForHome(): Promise<
+    PublicAssociationAnnouncementResponseDto[]
+  > {
+    const today = this.todayInColombia();
+    const announcements = await this.prisma.association_announcements.findMany({
+      where: {
+        starts_on: { lte: today },
+        ends_on: { gte: today },
+        associations: { status: 'active' },
+      },
+      orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
+      take: 5,
+      select: publicAssociationAnnouncementSelect,
+    });
+
+    return announcements.map((announcement) =>
+      toPublicAssociationAnnouncementResponse(announcement, today),
+    );
+  }
 
   async findAll(
     associationId: bigint,

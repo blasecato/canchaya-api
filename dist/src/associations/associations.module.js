@@ -20,7 +20,11 @@ exports.AssociationsModule = AssociationsModule;
 exports.AssociationsModule = AssociationsModule = __decorate([
     (0, common_1.Module)({
         imports: [auth_module_1.AuthModule, uploads_module_1.UploadsModule],
-        controllers: [associations_controller_1.AssociationsController, association_announcements_controller_1.AssociationAnnouncementsController],
+        controllers: [
+            associations_controller_1.AssociationsController,
+            association_announcements_controller_1.AssociationAnnouncementsController,
+            association_announcements_controller_1.PublicAssociationAnnouncementsController,
+        ],
         providers: [associations_service_1.AssociationsService, association_announcements_service_1.AssociationAnnouncementsService],
         exports: [associations_service_1.AssociationsService],
     })

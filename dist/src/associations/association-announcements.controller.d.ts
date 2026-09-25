@@ -1,7 +1,12 @@
 import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-request.interface';
 import type { UploadedImageFile } from '../uploads/image-storage.types';
 import { AssociationAnnouncementsService } from './association-announcements.service';
-import { AssociationAnnouncementResponseDto, CreateAssociationAnnouncementDto, ListAssociationAnnouncementsQueryDto, UpdateAssociationAnnouncementDto } from './dto/association-announcement.dto';
+import { AssociationAnnouncementResponseDto, CreateAssociationAnnouncementDto, ListAssociationAnnouncementsQueryDto, PublicAssociationAnnouncementResponseDto, UpdateAssociationAnnouncementDto } from './dto/association-announcement.dto';
+export declare class PublicAssociationAnnouncementsController {
+    private readonly announcementsService;
+    constructor(announcementsService: AssociationAnnouncementsService);
+    findVisible(): Promise<PublicAssociationAnnouncementResponseDto[]>;
+}
 export declare class AssociationAnnouncementsController {
     private readonly announcementsService;
     constructor(announcementsService: AssociationAnnouncementsService);

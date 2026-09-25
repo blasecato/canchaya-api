@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AssociationAnnouncementsController = void 0;
+exports.AssociationAnnouncementsController = exports.PublicAssociationAnnouncementsController = void 0;
 const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
@@ -26,10 +26,10 @@ const association_announcements_service_1 = require("./association-announcements
 const association_announcement_dto_1 = require("./dto/association-announcement.dto");
 const announcementUploadOptions = {
     limits: {
-        fields: 4,
+        fields: 20,
         files: 1,
         fileSize: uploads_constants_1.MAX_IMAGE_SIZE_BYTES,
-        parts: 6,
+        parts: 22,
     },
     fileFilter: (_request, file, callback) => {
         if (!uploads_constants_1.ALLOWED_IMAGE_MIME_TYPES.includes(file.mimetype)) {
@@ -39,6 +39,34 @@ const announcementUploadOptions = {
         callback(null, true);
     },
 };
+let PublicAssociationAnnouncementsController = class PublicAssociationAnnouncementsController {
+    announcementsService;
+    constructor(announcementsService) {
+        this.announcementsService = announcementsService;
+    }
+    findVisible() {
+        return this.announcementsService.findVisibleForHome();
+    }
+};
+exports.PublicAssociationAnnouncementsController = PublicAssociationAnnouncementsController;
+__decorate([
+    (0, common_1.Get)('visible'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Listar las publicaciones vigentes para la portada pública',
+    }),
+    (0, swagger_1.ApiOkResponse)({
+        type: association_announcement_dto_1.PublicAssociationAnnouncementResponseDto,
+        isArray: true,
+    }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], PublicAssociationAnnouncementsController.prototype, "findVisible", null);
+exports.PublicAssociationAnnouncementsController = PublicAssociationAnnouncementsController = __decorate([
+    (0, swagger_1.ApiTags)('Association announcements'),
+    (0, common_1.Controller)('association-announcements'),
+    __metadata("design:paramtypes", [association_announcements_service_1.AssociationAnnouncementsService])
+], PublicAssociationAnnouncementsController);
 let AssociationAnnouncementsController = class AssociationAnnouncementsController {
     announcementsService;
     constructor(announcementsService) {

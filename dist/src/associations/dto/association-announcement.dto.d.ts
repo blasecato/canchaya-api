@@ -40,4 +40,9 @@ export declare class AssociationAnnouncementResponseDto {
     createdAt: string;
     updatedAt: string;
 }
+export declare class PublicAssociationAnnouncementResponseDto extends AssociationAnnouncementResponseDto {
+    associationName: string;
+    associationCity: string;
+    associationLogoUrl: string | null;
+}
 export {};

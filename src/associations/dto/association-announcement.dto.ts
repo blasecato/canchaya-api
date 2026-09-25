@@ -98,16 +98,25 @@ export class CreateAssociationAnnouncementDto {
   @Max(MAX_ANNOUNCEMENT_AMOUNT)
   registrationFee?: number | null;
 
-  @ApiPropertyOptional({ example: '2026-10-05', format: 'date', nullable: true })
+  @ApiPropertyOptional({
+    example: '2026-10-05',
+    format: 'date',
+    nullable: true,
+  })
   @Transform(trimToNull)
   @IsOptional()
   @IsString()
   @Matches(ANNOUNCEMENT_DATE_PATTERN, {
-    message: 'La fecha de inicio de inscripciones debe tener formato AAAA-MM-DD.',
+    message:
+      'La fecha de inicio de inscripciones debe tener formato AAAA-MM-DD.',
   })
   registrationStartsOn?: string | null;
 
-  @ApiPropertyOptional({ example: '2026-11-01', format: 'date', nullable: true })
+  @ApiPropertyOptional({
+    example: '2026-11-01',
+    format: 'date',
+    nullable: true,
+  })
   @Transform(trimToNull)
   @IsOptional()
   @IsString()
@@ -218,4 +227,18 @@ export class AssociationAnnouncementResponseDto {
 
   @ApiProperty({ example: '2026-09-24T15:00:00.000Z' })
   updatedAt!: string;
+}
+
+export class PublicAssociationAnnouncementResponseDto extends AssociationAnnouncementResponseDto {
+  @ApiProperty({ example: 'Organización Deportiva Pitalito' })
+  associationName!: string;
+
+  @ApiProperty({ example: 'Pitalito' })
+  associationCity!: string;
+
+  @ApiPropertyOptional({
+    example: 'https://cdn.example.com/organization-logo.png',
+    nullable: true,
+  })
+  associationLogoUrl!: string | null;
 }

@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AssociationAnnouncementResponseDto = exports.ASSOCIATION_ANNOUNCEMENT_VISIBILITIES = exports.ListAssociationAnnouncementsQueryDto = exports.ASSOCIATION_ANNOUNCEMENT_SCOPES = exports.UpdateAssociationAnnouncementDto = exports.CreateAssociationAnnouncementDto = void 0;
+exports.PublicAssociationAnnouncementResponseDto = exports.AssociationAnnouncementResponseDto = exports.ASSOCIATION_ANNOUNCEMENT_VISIBILITIES = exports.ListAssociationAnnouncementsQueryDto = exports.ASSOCIATION_ANNOUNCEMENT_SCOPES = exports.UpdateAssociationAnnouncementDto = exports.CreateAssociationAnnouncementDto = void 0;
 const openapi = require("@nestjs/swagger");
 const swagger_1 = require("@nestjs/swagger");
 const swagger_2 = require("@nestjs/swagger");
@@ -121,7 +121,11 @@ __decorate([
     __metadata("design:type", Object)
 ], CreateAssociationAnnouncementDto.prototype, "registrationFee", void 0);
 __decorate([
-    (0, swagger_2.ApiPropertyOptional)({ example: '2026-10-05', format: 'date', nullable: true }),
+    (0, swagger_2.ApiPropertyOptional)({
+        example: '2026-10-05',
+        format: 'date',
+        nullable: true,
+    }),
     (0, class_transformer_1.Transform)(trimToNull),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
@@ -131,7 +135,11 @@ __decorate([
     __metadata("design:type", Object)
 ], CreateAssociationAnnouncementDto.prototype, "registrationStartsOn", void 0);
 __decorate([
-    (0, swagger_2.ApiPropertyOptional)({ example: '2026-11-01', format: 'date', nullable: true }),
+    (0, swagger_2.ApiPropertyOptional)({
+        example: '2026-11-01',
+        format: 'date',
+        nullable: true,
+    }),
     (0, class_transformer_1.Transform)(trimToNull),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
@@ -284,4 +292,28 @@ __decorate([
     (0, swagger_2.ApiProperty)({ example: '2026-09-24T15:00:00.000Z' }),
     __metadata("design:type", String)
 ], AssociationAnnouncementResponseDto.prototype, "updatedAt", void 0);
+class PublicAssociationAnnouncementResponseDto extends AssociationAnnouncementResponseDto {
+    associationName;
+    associationCity;
+    associationLogoUrl;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { associationName: { required: true, type: () => String }, associationCity: { required: true, type: () => String }, associationLogoUrl: { required: true, type: () => String, nullable: true } };
+    }
+}
+exports.PublicAssociationAnnouncementResponseDto = PublicAssociationAnnouncementResponseDto;
+__decorate([
+    (0, swagger_2.ApiProperty)({ example: 'Organización Deportiva Pitalito' }),
+    __metadata("design:type", String)
+], PublicAssociationAnnouncementResponseDto.prototype, "associationName", void 0);
+__decorate([
+    (0, swagger_2.ApiProperty)({ example: 'Pitalito' }),
+    __metadata("design:type", String)
+], PublicAssociationAnnouncementResponseDto.prototype, "associationCity", void 0);
+__decorate([
+    (0, swagger_2.ApiPropertyOptional)({
+        example: 'https://cdn.example.com/organization-logo.png',
+        nullable: true,
+    }),
+    __metadata("design:type", Object)
+], PublicAssociationAnnouncementResponseDto.prototype, "associationLogoUrl", void 0);
 //# sourceMappingURL=association-announcement.dto.js.map

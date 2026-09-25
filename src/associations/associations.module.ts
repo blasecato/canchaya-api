@@ -3,12 +3,19 @@ import { AuthModule } from '../auth/auth.module';
 import { UploadsModule } from '../uploads/uploads.module';
 import { AssociationsController } from './associations.controller';
 import { AssociationsService } from './associations.service';
-import { AssociationAnnouncementsController } from './association-announcements.controller';
+import {
+  AssociationAnnouncementsController,
+  PublicAssociationAnnouncementsController,
+} from './association-announcements.controller';
 import { AssociationAnnouncementsService } from './association-announcements.service';
 
 @Module({
   imports: [AuthModule, UploadsModule],
-  controllers: [AssociationsController, AssociationAnnouncementsController],
+  controllers: [
+    AssociationsController,
+    AssociationAnnouncementsController,
+    PublicAssociationAnnouncementsController,
+  ],
   providers: [AssociationsService, AssociationAnnouncementsService],
   exports: [AssociationsService],
 })

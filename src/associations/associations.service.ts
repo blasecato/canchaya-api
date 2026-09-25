@@ -474,8 +474,8 @@ export class AssociationsService {
                   associationName:
                     updateAssociationDto.name?.trim() ||
                     currentAssociation.name,
-                  actionUrl: '/my-associations',
-                  actionLabel: 'Ver mis asociaciones',
+                  actionUrl: '/associations',
+                  actionLabel: 'Ver organizaciones',
                 },
               },
             });

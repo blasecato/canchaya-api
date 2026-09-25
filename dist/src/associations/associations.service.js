@@ -311,8 +311,8 @@ let AssociationsService = AssociationsService_1 = class AssociationsService {
                                     associationId: id.toString(),
                                     associationName: updateAssociationDto.name?.trim() ||
                                         currentAssociation.name,
-                                    actionUrl: '/my-associations',
-                                    actionLabel: 'Ver mis asociaciones',
+                                    actionUrl: '/associations',
+                                    actionLabel: 'Ver organizaciones',
                                 },
                             },
                         });

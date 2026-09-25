@@ -40,15 +40,20 @@ import {
   AssociationAnnouncementResponseDto,
   CreateAssociationAnnouncementDto,
   ListAssociationAnnouncementsQueryDto,
+  PublicAssociationAnnouncementResponseDto,
   UpdateAssociationAnnouncementDto,
 } from './dto/association-announcement.dto';
 
 const announcementUploadOptions = {
   limits: {
-    fields: 4,
+    // El formulario actual envía 11 campos. Busboy emite el evento de límite
+    // al alcanzarlo, por eso dejamos margen controlado para procesar la última
+    // parte y para futuras ampliaciones del formulario.
+    fields: 20,
     files: 1,
     fileSize: MAX_IMAGE_SIZE_BYTES,
-    parts: 6,
+    // Campos de texto, una imagen y margen para el cierre multipart.
+    parts: 22,
   },
   fileFilter: (
     _request: unknown,
@@ -69,6 +74,26 @@ const announcementUploadOptions = {
     callback(null, true);
   },
 };
+
+@ApiTags('Association announcements')
+@Controller('association-announcements')
+export class PublicAssociationAnnouncementsController {
+  constructor(
+    private readonly announcementsService: AssociationAnnouncementsService,
+  ) {}
+
+  @Get('visible')
+  @ApiOperation({
+    summary: 'Listar las publicaciones vigentes para la portada pública',
+  })
+  @ApiOkResponse({
+    type: PublicAssociationAnnouncementResponseDto,
+    isArray: true,
+  })
+  findVisible(): Promise<PublicAssociationAnnouncementResponseDto[]> {
+    return this.announcementsService.findVisibleForHome();
+  }
+}
 
 @ApiTags('Association announcements')
 @ApiBearerAuth('access-token')

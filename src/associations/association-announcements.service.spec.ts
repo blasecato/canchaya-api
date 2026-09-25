@@ -1,7 +1,10 @@
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ImageStorageService } from '../uploads/image-storage.service';
-import { associationAnnouncementSelect } from './association-announcement.mapper';
+import {
+  associationAnnouncementSelect,
+  publicAssociationAnnouncementSelect,
+} from './association-announcement.mapper';
 import { AssociationAnnouncementsService } from './association-announcements.service';
 import { AssociationsService } from './associations.service';
 
@@ -86,6 +89,38 @@ describe('AssociationAnnouncementsService', () => {
       },
       orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
       select: associationAnnouncementSelect,
+    });
+  });
+
+  it('publica en portada las cinco novedades vigentes de organizaciones activas', async () => {
+    findMany.mockResolvedValue([
+      {
+        ...record,
+        associations: {
+          name: 'Organización Deportiva Pitalito',
+          city: 'Pitalito',
+          logo_url: 'https://example.com/logo.png',
+        },
+      },
+    ]);
+
+    await expect(service.findVisibleForHome()).resolves.toEqual([
+      expect.objectContaining({
+        id: '11',
+        associationName: 'Organización Deportiva Pitalito',
+        associationCity: 'Pitalito',
+        visibility: 'visible',
+      }),
+    ]);
+    expect(findMany).toHaveBeenCalledWith({
+      where: {
+        starts_on: { lte: today },
+        ends_on: { gte: today },
+        associations: { status: 'active' },
+      },
+      orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
+      take: 5,
+      select: publicAssociationAnnouncementSelect,
     });
   });
 

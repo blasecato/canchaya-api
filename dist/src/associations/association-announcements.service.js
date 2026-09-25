@@ -24,6 +24,20 @@ let AssociationAnnouncementsService = class AssociationAnnouncementsService {
         this.associationsService = associationsService;
         this.imageStorage = imageStorage;
     }
+    async findVisibleForHome() {
+        const today = this.todayInColombia();
+        const announcements = await this.prisma.association_announcements.findMany({
+            where: {
+                starts_on: { lte: today },
+                ends_on: { gte: today },
+                associations: { status: 'active' },
+            },
+            orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
+            take: 5,
+            select: association_announcement_mapper_1.publicAssociationAnnouncementSelect,
+        });
+        return announcements.map((announcement) => (0, association_announcement_mapper_1.toPublicAssociationAnnouncementResponse)(announcement, today));
+    }
     async findAll(associationId, requestingUserId, scope = 'visible') {
         if (scope === 'management') {
             await this.assertCanManage(associationId, requestingUserId);

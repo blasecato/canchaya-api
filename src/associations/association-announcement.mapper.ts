@@ -2,6 +2,7 @@ import { Prisma } from '../../generated/prisma/client';
 import type {
   AssociationAnnouncementResponseDto,
   AssociationAnnouncementVisibility,
+  PublicAssociationAnnouncementResponseDto,
 } from './dto/association-announcement.dto';
 
 export const associationAnnouncementSelect = {
@@ -27,6 +28,22 @@ export const associationAnnouncementSelect = {
 export type AssociationAnnouncementRecord =
   Prisma.association_announcementsGetPayload<{
     select: typeof associationAnnouncementSelect;
+  }>;
+
+export const publicAssociationAnnouncementSelect = {
+  ...associationAnnouncementSelect,
+  associations: {
+    select: {
+      name: true,
+      city: true,
+      logo_url: true,
+    },
+  },
+} satisfies Prisma.association_announcementsSelect;
+
+export type PublicAssociationAnnouncementRecord =
+  Prisma.association_announcementsGetPayload<{
+    select: typeof publicAssociationAnnouncementSelect;
   }>;
 
 const toDateValue = (date: Date) => date.toISOString().slice(0, 10);
@@ -68,5 +85,17 @@ export function toAssociationAnnouncementResponse(
     visibility,
     createdAt: announcement.created_at.toISOString(),
     updatedAt: announcement.updated_at.toISOString(),
+  };
+}
+
+export function toPublicAssociationAnnouncementResponse(
+  announcement: PublicAssociationAnnouncementRecord,
+  today: Date,
+): PublicAssociationAnnouncementResponseDto {
+  return {
+    ...toAssociationAnnouncementResponse(announcement, today),
+    associationName: announcement.associations.name,
+    associationCity: announcement.associations.city,
+    associationLogoUrl: announcement.associations.logo_url,
   };
 }
