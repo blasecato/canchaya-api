@@ -41,7 +41,7 @@ exports.PublicTournamentsController = PublicTournamentsController;
 __decorate([
     (0, common_1.Get)('active'),
     (0, swagger_1.ApiOperation)({
-        summary: 'Consultar los seis torneos activos más recientes para el inicio',
+        summary: 'Consultar los diez torneos más recientes (próximos o en curso) para el inicio',
     }),
     (0, swagger_1.ApiOkResponse)({ type: tournament_catalog_response_dto_1.TournamentCatalogItemResponseDto, isArray: true }),
     __metadata("design:type", Function),

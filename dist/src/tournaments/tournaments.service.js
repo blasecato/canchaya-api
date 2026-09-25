@@ -29,6 +29,13 @@ const tournament_catalog_mapper_1 = require("./tournament-catalog.mapper");
 const tournament_category_constants_1 = require("./tournament-category.constants");
 const tournament_eligibility_1 = require("./tournament-eligibility");
 const tournament_lifecycle_constants_1 = require("./tournament-lifecycle.constants");
+const HOME_FEATURED_TOURNAMENT_PHASES = [
+    'registration',
+    'validation',
+    'scheduled',
+    'in_progress',
+];
+const HOME_FEATURED_TOURNAMENTS_LIMIT = 10;
 let TournamentsService = TournamentsService_1 = class TournamentsService {
     prisma;
     associationsService;
@@ -45,10 +52,10 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         const tournaments = await this.prisma.tournaments.findMany({
             where: {
                 status: 'active',
-                phase: { in: [...tournament_lifecycle_constants_1.ACTIVE_TOURNAMENT_PHASES] },
+                phase: { in: [...HOME_FEATURED_TOURNAMENT_PHASES] },
             },
-            orderBy: [{ start_date: 'desc' }, { id: 'desc' }],
-            take: 6,
+            orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
+            take: HOME_FEATURED_TOURNAMENTS_LIMIT,
             select: tournament_catalog_mapper_1.tournamentCatalogItemSelect,
         });
         return tournaments.map((tournament) => (0, tournament_catalog_mapper_1.toTournamentCatalogItemResponse)(tournament, false));

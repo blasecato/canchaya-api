@@ -15,7 +15,8 @@ export class PublicTournamentsController {
 
   @Get('active')
   @ApiOperation({
-    summary: 'Consultar los seis torneos activos más recientes para el inicio',
+    summary:
+      'Consultar los diez torneos más recientes (próximos o en curso) para el inicio',
   })
   @ApiOkResponse({ type: TournamentCatalogItemResponseDto, isArray: true })
   findActive(): Promise<TournamentCatalogItemResponseDto[]> {

@@ -66,6 +66,7 @@ import {
 import {
   ACTIVE_TOURNAMENT_PHASES,
   PUBLIC_TOURNAMENT_PHASES,
+  type TournamentPhase,
 } from './tournament-lifecycle.constants';
 
 type TournamentDates = {
@@ -97,6 +98,19 @@ type RegistrationPaymentRecord = {
   } | null;
 };
 
+/**
+ * Torneos que el inicio público muestra como próximos: los más recientes que
+ * ya salieron de borrador y siguen vigentes.
+ */
+const HOME_FEATURED_TOURNAMENT_PHASES = [
+  'registration',
+  'validation',
+  'scheduled',
+  'in_progress',
+] as const satisfies readonly TournamentPhase[];
+
+const HOME_FEATURED_TOURNAMENTS_LIMIT = 10;
+
 @Injectable()
 export class TournamentsService {
   private readonly logger = new Logger(TournamentsService.name);
@@ -112,10 +126,10 @@ export class TournamentsService {
     const tournaments = await this.prisma.tournaments.findMany({
       where: {
         status: 'active',
-        phase: { in: [...ACTIVE_TOURNAMENT_PHASES] },
+        phase: { in: [...HOME_FEATURED_TOURNAMENT_PHASES] },
       },
-      orderBy: [{ start_date: 'desc' }, { id: 'desc' }],
-      take: 6,
+      orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
+      take: HOME_FEATURED_TOURNAMENTS_LIMIT,
       select: tournamentCatalogItemSelect,
     });
 
