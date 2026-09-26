@@ -660,13 +660,6 @@ export type NullableIntFieldUpdateOperationsInput = {
     multiply?: number;
     divide?: number;
 };
-export type IntFieldUpdateOperationsInput = {
-    set?: number;
-    increment?: number;
-    decrement?: number;
-    multiply?: number;
-    divide?: number;
-};
 export type matchesCreateNestedOneWithoutReferee_assignment_eventsInput = {
     create?: Prisma.XOR<Prisma.matchesCreateWithoutReferee_assignment_eventsInput, Prisma.matchesUncheckedCreateWithoutReferee_assignment_eventsInput>;
     connectOrCreate?: Prisma.matchesCreateOrConnectWithoutReferee_assignment_eventsInput;

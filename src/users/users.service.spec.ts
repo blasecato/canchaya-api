@@ -1,6 +1,7 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ImageStorageService } from '../uploads/image-storage.service';
+import type { MailService } from '../mail/mail.service';
 import { IdentityVerificationService } from './identity-verification.service';
 import { publicUserSelect } from './public-user.mapper';
 import { UsersService } from './users.service';
@@ -20,6 +21,7 @@ describe('UsersService', () => {
     prisma,
     { createIdentityDocumentDownloadUrl } as unknown as ImageStorageService,
     {} as IdentityVerificationService,
+    { sendWelcome: jest.fn() } as unknown as MailService,
   );
 
   const baseUserRecord = {

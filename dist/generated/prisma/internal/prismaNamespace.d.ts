@@ -164,6 +164,7 @@ export declare const ModelName: {
     readonly association_administrators: "association_administrators";
     readonly associations: "associations";
     readonly association_announcements: "association_announcements";
+    readonly password_reset_codes: "password_reset_codes";
     readonly disciplinary_actions: "disciplinary_actions";
     readonly fines: "fines";
     readonly match_referees: "match_referees";
@@ -203,7 +204,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "auth_sessions" | "association_administrators" | "associations" | "association_announcements" | "disciplinary_actions" | "fines" | "match_referees" | "matches" | "referee_availability" | "referee_assignment_events" | "player_match_stats" | "roles" | "sponsors" | "suspensions" | "disciplinary_appeals" | "disciplinary_events" | "team_members" | "teams" | "tournament_administrators" | "tournament_referees" | "tournament_sponsors" | "tournament_team_players" | "tournament_team_registrations" | "notifications" | "notification_preferences" | "tournament_registration_events" | "tournament_lifecycle_events" | "tournament_types" | "tournaments" | "user_roles" | "users";
+        modelProps: "auth_sessions" | "association_administrators" | "associations" | "association_announcements" | "password_reset_codes" | "disciplinary_actions" | "fines" | "match_referees" | "matches" | "referee_availability" | "referee_assignment_events" | "player_match_stats" | "roles" | "sponsors" | "suspensions" | "disciplinary_appeals" | "disciplinary_events" | "team_members" | "teams" | "tournament_administrators" | "tournament_referees" | "tournament_sponsors" | "tournament_team_players" | "tournament_team_registrations" | "notifications" | "notification_preferences" | "tournament_registration_events" | "tournament_lifecycle_events" | "tournament_types" | "tournaments" | "user_roles" | "users";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -500,6 +501,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 count: {
                     args: Prisma.association_announcementsCountArgs<ExtArgs>;
                     result: runtime.Types.Utils.Optional<Prisma.Association_announcementsCountAggregateOutputType> | number;
+                };
+            };
+        };
+        password_reset_codes: {
+            payload: Prisma.$password_reset_codesPayload<ExtArgs>;
+            fields: Prisma.password_reset_codesFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.password_reset_codesFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$password_reset_codesPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.password_reset_codesFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$password_reset_codesPayload>;
+                };
+                findFirst: {
+                    args: Prisma.password_reset_codesFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$password_reset_codesPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.password_reset_codesFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$password_reset_codesPayload>;
+                };
+                findMany: {
+                    args: Prisma.password_reset_codesFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$password_reset_codesPayload>[];
+                };
+                create: {
+                    args: Prisma.password_reset_codesCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$password_reset_codesPayload>;
+                };
+                createMany: {
+                    args: Prisma.password_reset_codesCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.password_reset_codesCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$password_reset_codesPayload>[];
+                };
+                delete: {
+                    args: Prisma.password_reset_codesDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$password_reset_codesPayload>;
+                };
+                update: {
+                    args: Prisma.password_reset_codesUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$password_reset_codesPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.password_reset_codesDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.password_reset_codesUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.password_reset_codesUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$password_reset_codesPayload>[];
+                };
+                upsert: {
+                    args: Prisma.password_reset_codesUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$password_reset_codesPayload>;
+                };
+                aggregate: {
+                    args: Prisma.Password_reset_codesAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregatePassword_reset_codes>;
+                };
+                groupBy: {
+                    args: Prisma.password_reset_codesGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Password_reset_codesGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.password_reset_codesCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Password_reset_codesCountAggregateOutputType> | number;
                 };
             };
         };
@@ -2589,6 +2664,17 @@ export declare const Association_announcementsScalarFieldEnum: {
     readonly updated_at: "updated_at";
 };
 export type Association_announcementsScalarFieldEnum = (typeof Association_announcementsScalarFieldEnum)[keyof typeof Association_announcementsScalarFieldEnum];
+export declare const Password_reset_codesScalarFieldEnum: {
+    readonly id: "id";
+    readonly user_id: "user_id";
+    readonly code_hash: "code_hash";
+    readonly expires_at: "expires_at";
+    readonly consumed_at: "consumed_at";
+    readonly attempts: "attempts";
+    readonly requested_ip: "requested_ip";
+    readonly created_at: "created_at";
+};
+export type Password_reset_codesScalarFieldEnum = (typeof Password_reset_codesScalarFieldEnum)[keyof typeof Password_reset_codesScalarFieldEnum];
 export declare const Disciplinary_actionsScalarFieldEnum: {
     readonly id: "id";
     readonly tournament_id: "tournament_id";
@@ -3053,6 +3139,7 @@ export type GlobalOmitConfig = {
     association_administrators?: Prisma.association_administratorsOmit;
     associations?: Prisma.associationsOmit;
     association_announcements?: Prisma.association_announcementsOmit;
+    password_reset_codes?: Prisma.password_reset_codesOmit;
     disciplinary_actions?: Prisma.disciplinary_actionsOmit;
     fines?: Prisma.finesOmit;
     match_referees?: Prisma.match_refereesOmit;

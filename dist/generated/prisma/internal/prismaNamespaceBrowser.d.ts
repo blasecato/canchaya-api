@@ -15,6 +15,7 @@ export declare const ModelName: {
     readonly association_administrators: "association_administrators";
     readonly associations: "associations";
     readonly association_announcements: "association_announcements";
+    readonly password_reset_codes: "password_reset_codes";
     readonly disciplinary_actions: "disciplinary_actions";
     readonly fines: "fines";
     readonly match_referees: "match_referees";
@@ -108,6 +109,17 @@ export declare const Association_announcementsScalarFieldEnum: {
     readonly updated_at: "updated_at";
 };
 export type Association_announcementsScalarFieldEnum = (typeof Association_announcementsScalarFieldEnum)[keyof typeof Association_announcementsScalarFieldEnum];
+export declare const Password_reset_codesScalarFieldEnum: {
+    readonly id: "id";
+    readonly user_id: "user_id";
+    readonly code_hash: "code_hash";
+    readonly expires_at: "expires_at";
+    readonly consumed_at: "consumed_at";
+    readonly attempts: "attempts";
+    readonly requested_ip: "requested_ip";
+    readonly created_at: "created_at";
+};
+export type Password_reset_codesScalarFieldEnum = (typeof Password_reset_codesScalarFieldEnum)[keyof typeof Password_reset_codesScalarFieldEnum];
 export declare const Disciplinary_actionsScalarFieldEnum: {
     readonly id: "id";
     readonly tournament_id: "tournament_id";

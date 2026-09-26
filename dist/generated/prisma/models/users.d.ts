@@ -312,6 +312,7 @@ export type usersWhereInput = {
     block_source_action_id?: Prisma.BigIntNullableFilter<"users"> | bigint | number | null;
     created_at?: Prisma.DateTimeFilter<"users"> | Date | string;
     updated_at?: Prisma.DateTimeFilter<"users"> | Date | string;
+    password_reset_codes?: Prisma.Password_reset_codesListRelationFilter;
     auth_sessions?: Prisma.Auth_sessionsListRelationFilter;
     notifications?: Prisma.NotificationsListRelationFilter;
     notification_preferences?: Prisma.XOR<Prisma.Notification_preferencesNullableScalarRelationFilter, Prisma.notification_preferencesWhereInput> | null;
@@ -374,6 +375,7 @@ export type usersOrderByWithRelationInput = {
     block_source_action_id?: Prisma.SortOrderInput | Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
     updated_at?: Prisma.SortOrder;
+    password_reset_codes?: Prisma.password_reset_codesOrderByRelationAggregateInput;
     auth_sessions?: Prisma.auth_sessionsOrderByRelationAggregateInput;
     notifications?: Prisma.notificationsOrderByRelationAggregateInput;
     notification_preferences?: Prisma.notification_preferencesOrderByWithRelationInput;
@@ -439,6 +441,7 @@ export type usersWhereUniqueInput = Prisma.AtLeast<{
     block_source_action_id?: Prisma.BigIntNullableFilter<"users"> | bigint | number | null;
     created_at?: Prisma.DateTimeFilter<"users"> | Date | string;
     updated_at?: Prisma.DateTimeFilter<"users"> | Date | string;
+    password_reset_codes?: Prisma.Password_reset_codesListRelationFilter;
     auth_sessions?: Prisma.Auth_sessionsListRelationFilter;
     notifications?: Prisma.NotificationsListRelationFilter;
     notification_preferences?: Prisma.XOR<Prisma.Notification_preferencesNullableScalarRelationFilter, Prisma.notification_preferencesWhereInput> | null;
@@ -570,6 +573,7 @@ export type usersCreateInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -632,6 +636,7 @@ export type usersUncheckedCreateInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -692,6 +697,7 @@ export type usersUpdateInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -754,6 +760,7 @@ export type usersUncheckedUpdateInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -1041,6 +1048,18 @@ export type usersUpdateOneRequiredWithoutAssociation_announcementsNestedInput = 
     upsert?: Prisma.usersUpsertWithoutAssociation_announcementsInput;
     connect?: Prisma.usersWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutAssociation_announcementsInput, Prisma.usersUpdateWithoutAssociation_announcementsInput>, Prisma.usersUncheckedUpdateWithoutAssociation_announcementsInput>;
+};
+export type usersCreateNestedOneWithoutPassword_reset_codesInput = {
+    create?: Prisma.XOR<Prisma.usersCreateWithoutPassword_reset_codesInput, Prisma.usersUncheckedCreateWithoutPassword_reset_codesInput>;
+    connectOrCreate?: Prisma.usersCreateOrConnectWithoutPassword_reset_codesInput;
+    connect?: Prisma.usersWhereUniqueInput;
+};
+export type usersUpdateOneRequiredWithoutPassword_reset_codesNestedInput = {
+    create?: Prisma.XOR<Prisma.usersCreateWithoutPassword_reset_codesInput, Prisma.usersUncheckedCreateWithoutPassword_reset_codesInput>;
+    connectOrCreate?: Prisma.usersCreateOrConnectWithoutPassword_reset_codesInput;
+    upsert?: Prisma.usersUpsertWithoutPassword_reset_codesInput;
+    connect?: Prisma.usersWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutPassword_reset_codesInput, Prisma.usersUpdateWithoutPassword_reset_codesInput>, Prisma.usersUncheckedUpdateWithoutPassword_reset_codesInput>;
 };
 export type usersCreateNestedOneWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput = {
     create?: Prisma.XOR<Prisma.usersCreateWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput, Prisma.usersUncheckedCreateWithoutDisciplinary_actions_disciplinary_actions_decided_byTousersInput>;
@@ -1435,6 +1454,7 @@ export type usersCreateWithoutAuth_sessionsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutActorInput;
@@ -1496,6 +1516,7 @@ export type usersUncheckedCreateWithoutAuth_sessionsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutActorInput;
@@ -1568,6 +1589,7 @@ export type usersUpdateWithoutAuth_sessionsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutActorNestedInput;
@@ -1629,6 +1651,7 @@ export type usersUncheckedUpdateWithoutAuth_sessionsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutActorNestedInput;
@@ -1688,6 +1711,7 @@ export type usersCreateWithoutAssociation_administratorsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -1749,6 +1773,7 @@ export type usersUncheckedCreateWithoutAssociation_administratorsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -1821,6 +1846,7 @@ export type usersUpdateWithoutAssociation_administratorsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -1882,6 +1908,7 @@ export type usersUncheckedUpdateWithoutAssociation_administratorsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -1941,6 +1968,7 @@ export type usersCreateWithoutAssociationsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -2002,6 +2030,7 @@ export type usersUncheckedCreateWithoutAssociationsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -2074,6 +2103,7 @@ export type usersUpdateWithoutAssociationsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -2135,6 +2165,7 @@ export type usersUncheckedUpdateWithoutAssociationsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -2194,6 +2225,7 @@ export type usersCreateWithoutAssociation_announcementsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -2255,6 +2287,7 @@ export type usersUncheckedCreateWithoutAssociation_announcementsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -2327,6 +2360,7 @@ export type usersUpdateWithoutAssociation_announcementsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -2388,6 +2422,7 @@ export type usersUncheckedUpdateWithoutAssociation_announcementsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -2402,6 +2437,263 @@ export type usersUncheckedUpdateWithoutAssociation_announcementsInput = {
     match_referees_assigned_by?: Prisma.match_refereesUncheckedUpdateManyWithoutAssigned_by_userNestedInput;
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
+    associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
+    disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
+    disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
+    fines?: Prisma.finesUncheckedUpdateManyWithoutUsersNestedInput;
+    suspensions?: Prisma.suspensionsUncheckedUpdateManyWithoutUsersNestedInput;
+    team_members?: Prisma.team_membersUncheckedUpdateManyWithoutUsersNestedInput;
+    teams_teams_captain_user_idTousers?: Prisma.teamsUncheckedUpdateManyWithoutUsers_teams_captain_user_idTousersNestedInput;
+    teams_teams_created_byTousers?: Prisma.teamsUncheckedUpdateManyWithoutUsers_teams_created_byTousersNestedInput;
+    tournament_administrators?: Prisma.tournament_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
+    tournament_referees?: Prisma.tournament_refereesUncheckedUpdateManyWithoutUsersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_requested_byTousers?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_requested_byTousersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_reviewed_byTousers?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_reviewed_byTousersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_payment_updated_byTousers?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_payment_updated_byTousersNestedInput;
+    tournaments?: Prisma.tournamentsUncheckedUpdateManyWithoutUsersNestedInput;
+    user_roles?: Prisma.user_rolesUncheckedUpdateManyWithoutUsersNestedInput;
+};
+export type usersCreateWithoutPassword_reset_codesInput = {
+    id?: bigint | number;
+    id_number: string;
+    document_type: string;
+    full_name: string;
+    birth_date: Date | string;
+    birth_city?: string | null;
+    gender?: string | null;
+    email: string;
+    phone?: string | null;
+    photo_url?: string | null;
+    photo_public_id?: string | null;
+    document_front_url?: string | null;
+    document_front_public_id?: string | null;
+    document_front_format?: string | null;
+    document_back_url?: string | null;
+    document_back_public_id?: string | null;
+    document_back_format?: string | null;
+    identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
+    password_hash: string;
+    status?: string;
+    blocked_until?: Date | string | null;
+    block_reason?: string | null;
+    blocked_by?: bigint | number | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
+    notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
+    notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutActorInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsCreateNestedManyWithoutActorInput;
+    disciplinary_appeals_player?: Prisma.disciplinary_appealsCreateNestedManyWithoutPlayerInput;
+    disciplinary_appeals_reviewer?: Prisma.disciplinary_appealsCreateNestedManyWithoutReviewerInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutActorInput;
+    disciplinary_actions_reviewed?: Prisma.disciplinary_actionsCreateNestedManyWithoutReviewerInput;
+    block_source_action?: Prisma.disciplinary_actionsCreateNestedOneWithoutUsers_blocked_by_actionInput;
+    referee_availability?: Prisma.referee_availabilityCreateNestedManyWithoutRefereeInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsCreateNestedManyWithoutActorInput;
+    match_referees_assigned_by?: Prisma.match_refereesCreateNestedManyWithoutAssigned_by_userInput;
+    match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
+    association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
+    association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
+    disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
+    disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
+    fines?: Prisma.finesCreateNestedManyWithoutUsersInput;
+    suspensions?: Prisma.suspensionsCreateNestedManyWithoutUsersInput;
+    team_members?: Prisma.team_membersCreateNestedManyWithoutUsersInput;
+    teams_teams_captain_user_idTousers?: Prisma.teamsCreateNestedManyWithoutUsers_teams_captain_user_idTousersInput;
+    teams_teams_created_byTousers?: Prisma.teamsCreateNestedManyWithoutUsers_teams_created_byTousersInput;
+    tournament_administrators?: Prisma.tournament_administratorsCreateNestedManyWithoutUsersInput;
+    tournament_referees?: Prisma.tournament_refereesCreateNestedManyWithoutUsersInput;
+    tournament_team_registrations_tournament_team_registrations_requested_byTousers?: Prisma.tournament_team_registrationsCreateNestedManyWithoutUsers_tournament_team_registrations_requested_byTousersInput;
+    tournament_team_registrations_tournament_team_registrations_reviewed_byTousers?: Prisma.tournament_team_registrationsCreateNestedManyWithoutUsers_tournament_team_registrations_reviewed_byTousersInput;
+    tournament_team_registrations_tournament_team_registrations_payment_updated_byTousers?: Prisma.tournament_team_registrationsCreateNestedManyWithoutUsers_tournament_team_registrations_payment_updated_byTousersInput;
+    tournaments?: Prisma.tournamentsCreateNestedManyWithoutUsersInput;
+    user_roles?: Prisma.user_rolesCreateNestedManyWithoutUsersInput;
+};
+export type usersUncheckedCreateWithoutPassword_reset_codesInput = {
+    id?: bigint | number;
+    id_number: string;
+    document_type: string;
+    full_name: string;
+    birth_date: Date | string;
+    birth_city?: string | null;
+    gender?: string | null;
+    email: string;
+    phone?: string | null;
+    photo_url?: string | null;
+    photo_public_id?: string | null;
+    document_front_url?: string | null;
+    document_front_public_id?: string | null;
+    document_front_format?: string | null;
+    document_back_url?: string | null;
+    document_back_public_id?: string | null;
+    document_back_format?: string | null;
+    identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
+    password_hash: string;
+    status?: string;
+    blocked_until?: Date | string | null;
+    block_reason?: string | null;
+    blocked_by?: bigint | number | null;
+    block_source_action_id?: bigint | number | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
+    notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
+    notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutActorInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedCreateNestedManyWithoutActorInput;
+    disciplinary_appeals_player?: Prisma.disciplinary_appealsUncheckedCreateNestedManyWithoutPlayerInput;
+    disciplinary_appeals_reviewer?: Prisma.disciplinary_appealsUncheckedCreateNestedManyWithoutReviewerInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutActorInput;
+    disciplinary_actions_reviewed?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutReviewerInput;
+    referee_availability?: Prisma.referee_availabilityUncheckedCreateNestedManyWithoutRefereeInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedCreateNestedManyWithoutActorInput;
+    match_referees_assigned_by?: Prisma.match_refereesUncheckedCreateNestedManyWithoutAssigned_by_userInput;
+    match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
+    association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
+    association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
+    disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
+    disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
+    fines?: Prisma.finesUncheckedCreateNestedManyWithoutUsersInput;
+    suspensions?: Prisma.suspensionsUncheckedCreateNestedManyWithoutUsersInput;
+    team_members?: Prisma.team_membersUncheckedCreateNestedManyWithoutUsersInput;
+    teams_teams_captain_user_idTousers?: Prisma.teamsUncheckedCreateNestedManyWithoutUsers_teams_captain_user_idTousersInput;
+    teams_teams_created_byTousers?: Prisma.teamsUncheckedCreateNestedManyWithoutUsers_teams_created_byTousersInput;
+    tournament_administrators?: Prisma.tournament_administratorsUncheckedCreateNestedManyWithoutUsersInput;
+    tournament_referees?: Prisma.tournament_refereesUncheckedCreateNestedManyWithoutUsersInput;
+    tournament_team_registrations_tournament_team_registrations_requested_byTousers?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutUsers_tournament_team_registrations_requested_byTousersInput;
+    tournament_team_registrations_tournament_team_registrations_reviewed_byTousers?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutUsers_tournament_team_registrations_reviewed_byTousersInput;
+    tournament_team_registrations_tournament_team_registrations_payment_updated_byTousers?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutUsers_tournament_team_registrations_payment_updated_byTousersInput;
+    tournaments?: Prisma.tournamentsUncheckedCreateNestedManyWithoutUsersInput;
+    user_roles?: Prisma.user_rolesUncheckedCreateNestedManyWithoutUsersInput;
+};
+export type usersCreateOrConnectWithoutPassword_reset_codesInput = {
+    where: Prisma.usersWhereUniqueInput;
+    create: Prisma.XOR<Prisma.usersCreateWithoutPassword_reset_codesInput, Prisma.usersUncheckedCreateWithoutPassword_reset_codesInput>;
+};
+export type usersUpsertWithoutPassword_reset_codesInput = {
+    update: Prisma.XOR<Prisma.usersUpdateWithoutPassword_reset_codesInput, Prisma.usersUncheckedUpdateWithoutPassword_reset_codesInput>;
+    create: Prisma.XOR<Prisma.usersCreateWithoutPassword_reset_codesInput, Prisma.usersUncheckedCreateWithoutPassword_reset_codesInput>;
+    where?: Prisma.usersWhereInput;
+};
+export type usersUpdateToOneWithWhereWithoutPassword_reset_codesInput = {
+    where?: Prisma.usersWhereInput;
+    data: Prisma.XOR<Prisma.usersUpdateWithoutPassword_reset_codesInput, Prisma.usersUncheckedUpdateWithoutPassword_reset_codesInput>;
+};
+export type usersUpdateWithoutPassword_reset_codesInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    id_number?: Prisma.StringFieldUpdateOperationsInput | string;
+    document_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    full_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
+    blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    block_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
+    notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
+    notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutActorNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUpdateManyWithoutActorNestedInput;
+    disciplinary_appeals_player?: Prisma.disciplinary_appealsUpdateManyWithoutPlayerNestedInput;
+    disciplinary_appeals_reviewer?: Prisma.disciplinary_appealsUpdateManyWithoutReviewerNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutActorNestedInput;
+    disciplinary_actions_reviewed?: Prisma.disciplinary_actionsUpdateManyWithoutReviewerNestedInput;
+    block_source_action?: Prisma.disciplinary_actionsUpdateOneWithoutUsers_blocked_by_actionNestedInput;
+    referee_availability?: Prisma.referee_availabilityUpdateManyWithoutRefereeNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUpdateManyWithoutActorNestedInput;
+    match_referees_assigned_by?: Prisma.match_refereesUpdateManyWithoutAssigned_by_userNestedInput;
+    match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
+    association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
+    association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
+    disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
+    disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
+    fines?: Prisma.finesUpdateManyWithoutUsersNestedInput;
+    suspensions?: Prisma.suspensionsUpdateManyWithoutUsersNestedInput;
+    team_members?: Prisma.team_membersUpdateManyWithoutUsersNestedInput;
+    teams_teams_captain_user_idTousers?: Prisma.teamsUpdateManyWithoutUsers_teams_captain_user_idTousersNestedInput;
+    teams_teams_created_byTousers?: Prisma.teamsUpdateManyWithoutUsers_teams_created_byTousersNestedInput;
+    tournament_administrators?: Prisma.tournament_administratorsUpdateManyWithoutUsersNestedInput;
+    tournament_referees?: Prisma.tournament_refereesUpdateManyWithoutUsersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_requested_byTousers?: Prisma.tournament_team_registrationsUpdateManyWithoutUsers_tournament_team_registrations_requested_byTousersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_reviewed_byTousers?: Prisma.tournament_team_registrationsUpdateManyWithoutUsers_tournament_team_registrations_reviewed_byTousersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_payment_updated_byTousers?: Prisma.tournament_team_registrationsUpdateManyWithoutUsers_tournament_team_registrations_payment_updated_byTousersNestedInput;
+    tournaments?: Prisma.tournamentsUpdateManyWithoutUsersNestedInput;
+    user_roles?: Prisma.user_rolesUpdateManyWithoutUsersNestedInput;
+};
+export type usersUncheckedUpdateWithoutPassword_reset_codesInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    id_number?: Prisma.StringFieldUpdateOperationsInput | string;
+    document_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    full_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
+    blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    block_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
+    notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
+    notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutActorNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedUpdateManyWithoutActorNestedInput;
+    disciplinary_appeals_player?: Prisma.disciplinary_appealsUncheckedUpdateManyWithoutPlayerNestedInput;
+    disciplinary_appeals_reviewer?: Prisma.disciplinary_appealsUncheckedUpdateManyWithoutReviewerNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutActorNestedInput;
+    disciplinary_actions_reviewed?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutReviewerNestedInput;
+    referee_availability?: Prisma.referee_availabilityUncheckedUpdateManyWithoutRefereeNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedUpdateManyWithoutActorNestedInput;
+    match_referees_assigned_by?: Prisma.match_refereesUncheckedUpdateManyWithoutAssigned_by_userNestedInput;
+    match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
+    association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
+    association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -2447,6 +2739,7 @@ export type usersCreateWithoutDisciplinary_actions_disciplinary_actions_decided_
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -2508,6 +2801,7 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_disciplinary_actions
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -2571,6 +2865,7 @@ export type usersCreateWithoutDisciplinary_actions_reviewedInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -2632,6 +2927,7 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_reviewedInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -2695,6 +2991,7 @@ export type usersCreateWithoutDisciplinary_actions_disciplinary_actions_reported
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -2756,6 +3053,7 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_disciplinary_actions
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -2819,6 +3117,7 @@ export type usersCreateWithoutBlock_source_actionInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -2879,6 +3178,7 @@ export type usersUncheckedCreateWithoutBlock_source_actionInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -2956,6 +3256,7 @@ export type usersUpdateWithoutDisciplinary_actions_disciplinary_actions_decided_
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -3017,6 +3318,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_disciplinary_actions
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -3085,6 +3387,7 @@ export type usersUpdateWithoutDisciplinary_actions_reviewedInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -3146,6 +3449,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_reviewedInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -3214,6 +3518,7 @@ export type usersUpdateWithoutDisciplinary_actions_disciplinary_actions_reported
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -3275,6 +3580,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_disciplinary_actions
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -3381,6 +3687,7 @@ export type usersCreateWithoutFinesInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -3442,6 +3749,7 @@ export type usersUncheckedCreateWithoutFinesInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -3514,6 +3822,7 @@ export type usersUpdateWithoutFinesInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -3575,6 +3884,7 @@ export type usersUncheckedUpdateWithoutFinesInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -3634,6 +3944,7 @@ export type usersCreateWithoutMatch_referees_assigned_byInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -3695,6 +4006,7 @@ export type usersUncheckedCreateWithoutMatch_referees_assigned_byInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -3758,6 +4070,7 @@ export type usersCreateWithoutMatch_referees_replaced_refereeInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -3819,6 +4132,7 @@ export type usersUncheckedCreateWithoutMatch_referees_replaced_refereeInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -3891,6 +4205,7 @@ export type usersUpdateWithoutMatch_referees_assigned_byInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -3952,6 +4267,7 @@ export type usersUncheckedUpdateWithoutMatch_referees_assigned_byInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -4020,6 +4336,7 @@ export type usersUpdateWithoutMatch_referees_replaced_refereeInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -4081,6 +4398,7 @@ export type usersUncheckedUpdateWithoutMatch_referees_replaced_refereeInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -4140,6 +4458,7 @@ export type usersCreateWithoutReferee_availabilityInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -4201,6 +4520,7 @@ export type usersUncheckedCreateWithoutReferee_availabilityInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -4273,6 +4593,7 @@ export type usersUpdateWithoutReferee_availabilityInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -4334,6 +4655,7 @@ export type usersUncheckedUpdateWithoutReferee_availabilityInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -4393,6 +4715,7 @@ export type usersCreateWithoutReferee_assignment_eventsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -4454,6 +4777,7 @@ export type usersUncheckedCreateWithoutReferee_assignment_eventsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -4526,6 +4850,7 @@ export type usersUpdateWithoutReferee_assignment_eventsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -4587,6 +4912,7 @@ export type usersUncheckedUpdateWithoutReferee_assignment_eventsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -4646,6 +4972,7 @@ export type usersCreateWithoutSuspensionsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -4707,6 +5034,7 @@ export type usersUncheckedCreateWithoutSuspensionsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -4779,6 +5107,7 @@ export type usersUpdateWithoutSuspensionsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -4840,6 +5169,7 @@ export type usersUncheckedUpdateWithoutSuspensionsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -4899,6 +5229,7 @@ export type usersCreateWithoutDisciplinary_appeals_playerInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -4960,6 +5291,7 @@ export type usersUncheckedCreateWithoutDisciplinary_appeals_playerInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -5023,6 +5355,7 @@ export type usersCreateWithoutDisciplinary_appeals_reviewerInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -5084,6 +5417,7 @@ export type usersUncheckedCreateWithoutDisciplinary_appeals_reviewerInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -5156,6 +5490,7 @@ export type usersUpdateWithoutDisciplinary_appeals_playerInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -5217,6 +5552,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_appeals_playerInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -5285,6 +5621,7 @@ export type usersUpdateWithoutDisciplinary_appeals_reviewerInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -5346,6 +5683,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_appeals_reviewerInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -5405,6 +5743,7 @@ export type usersCreateWithoutDisciplinary_eventsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -5466,6 +5805,7 @@ export type usersUncheckedCreateWithoutDisciplinary_eventsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -5538,6 +5878,7 @@ export type usersUpdateWithoutDisciplinary_eventsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -5599,6 +5940,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_eventsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -5658,6 +6000,7 @@ export type usersCreateWithoutTeam_membersInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -5719,6 +6062,7 @@ export type usersUncheckedCreateWithoutTeam_membersInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -5791,6 +6135,7 @@ export type usersUpdateWithoutTeam_membersInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -5852,6 +6197,7 @@ export type usersUncheckedUpdateWithoutTeam_membersInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -5911,6 +6257,7 @@ export type usersCreateWithoutTeams_teams_captain_user_idTousersInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -5972,6 +6319,7 @@ export type usersUncheckedCreateWithoutTeams_teams_captain_user_idTousersInput =
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -6035,6 +6383,7 @@ export type usersCreateWithoutTeams_teams_created_byTousersInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -6096,6 +6445,7 @@ export type usersUncheckedCreateWithoutTeams_teams_created_byTousersInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -6168,6 +6518,7 @@ export type usersUpdateWithoutTeams_teams_captain_user_idTousersInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -6229,6 +6580,7 @@ export type usersUncheckedUpdateWithoutTeams_teams_captain_user_idTousersInput =
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -6297,6 +6649,7 @@ export type usersUpdateWithoutTeams_teams_created_byTousersInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -6358,6 +6711,7 @@ export type usersUncheckedUpdateWithoutTeams_teams_created_byTousersInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -6417,6 +6771,7 @@ export type usersCreateWithoutTournament_administratorsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -6478,6 +6833,7 @@ export type usersUncheckedCreateWithoutTournament_administratorsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -6550,6 +6906,7 @@ export type usersUpdateWithoutTournament_administratorsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -6611,6 +6968,7 @@ export type usersUncheckedUpdateWithoutTournament_administratorsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -6670,6 +7028,7 @@ export type usersCreateWithoutTournament_refereesInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -6731,6 +7090,7 @@ export type usersUncheckedCreateWithoutTournament_refereesInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -6803,6 +7163,7 @@ export type usersUpdateWithoutTournament_refereesInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -6864,6 +7225,7 @@ export type usersUncheckedUpdateWithoutTournament_refereesInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -6923,6 +7285,7 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -6984,6 +7347,7 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -7047,6 +7411,7 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -7108,6 +7473,7 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -7171,6 +7537,7 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -7232,6 +7599,7 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -7304,6 +7672,7 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -7365,6 +7734,7 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -7433,6 +7803,7 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -7494,6 +7865,7 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -7562,6 +7934,7 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -7623,6 +7996,7 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -7682,6 +8056,7 @@ export type usersCreateWithoutNotificationsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutActorInput;
@@ -7743,6 +8118,7 @@ export type usersUncheckedCreateWithoutNotificationsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutActorInput;
@@ -7815,6 +8191,7 @@ export type usersUpdateWithoutNotificationsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutActorNestedInput;
@@ -7876,6 +8253,7 @@ export type usersUncheckedUpdateWithoutNotificationsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutActorNestedInput;
@@ -7935,6 +8313,7 @@ export type usersCreateWithoutNotification_preferencesInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutActorInput;
@@ -7996,6 +8375,7 @@ export type usersUncheckedCreateWithoutNotification_preferencesInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutActorInput;
@@ -8068,6 +8448,7 @@ export type usersUpdateWithoutNotification_preferencesInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutActorNestedInput;
@@ -8129,6 +8510,7 @@ export type usersUncheckedUpdateWithoutNotification_preferencesInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutActorNestedInput;
@@ -8188,6 +8570,7 @@ export type usersCreateWithoutTournament_registration_eventsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -8249,6 +8632,7 @@ export type usersUncheckedCreateWithoutTournament_registration_eventsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -8321,6 +8705,7 @@ export type usersUpdateWithoutTournament_registration_eventsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -8382,6 +8767,7 @@ export type usersUncheckedUpdateWithoutTournament_registration_eventsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -8441,6 +8827,7 @@ export type usersCreateWithoutTournament_lifecycle_eventsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -8502,6 +8889,7 @@ export type usersUncheckedCreateWithoutTournament_lifecycle_eventsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -8574,6 +8962,7 @@ export type usersUpdateWithoutTournament_lifecycle_eventsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -8635,6 +9024,7 @@ export type usersUncheckedUpdateWithoutTournament_lifecycle_eventsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -8694,6 +9084,7 @@ export type usersCreateWithoutTournamentsInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -8755,6 +9146,7 @@ export type usersUncheckedCreateWithoutTournamentsInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -8827,6 +9219,7 @@ export type usersUpdateWithoutTournamentsInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -8888,6 +9281,7 @@ export type usersUncheckedUpdateWithoutTournamentsInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -8947,6 +9341,7 @@ export type usersCreateWithoutUser_rolesInput = {
     blocked_by?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
@@ -9008,6 +9403,7 @@ export type usersUncheckedCreateWithoutUser_rolesInput = {
     block_source_action_id?: bigint | number | null;
     created_at?: Date | string;
     updated_at?: Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
     notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
@@ -9080,6 +9476,7 @@ export type usersUpdateWithoutUser_rolesInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -9141,6 +9538,7 @@ export type usersUncheckedUpdateWithoutUser_rolesInput = {
     block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -9230,6 +9628,7 @@ export type usersUpdateWithoutBlock_source_actionInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
@@ -9290,6 +9689,7 @@ export type usersUncheckedUpdateWithoutBlock_source_actionInput = {
     blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
     auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
     notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
     notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
@@ -9352,6 +9752,7 @@ export type usersUncheckedUpdateManyWithoutBlock_source_actionInput = {
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type UsersCountOutputType = {
+    password_reset_codes: number;
     auth_sessions: number;
     notifications: number;
     tournament_registration_events: number;
@@ -9382,6 +9783,7 @@ export type UsersCountOutputType = {
     user_roles: number;
 };
 export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    password_reset_codes?: boolean | UsersCountOutputTypeCountPassword_reset_codesArgs;
     auth_sessions?: boolean | UsersCountOutputTypeCountAuth_sessionsArgs;
     notifications?: boolean | UsersCountOutputTypeCountNotificationsArgs;
     tournament_registration_events?: boolean | UsersCountOutputTypeCountTournament_registration_eventsArgs;
@@ -9413,6 +9815,9 @@ export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
 };
 export type UsersCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.UsersCountOutputTypeSelect<ExtArgs> | null;
+};
+export type UsersCountOutputTypeCountPassword_reset_codesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.password_reset_codesWhereInput;
 };
 export type UsersCountOutputTypeCountAuth_sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.auth_sessionsWhereInput;
@@ -9528,6 +9933,7 @@ export type usersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     block_source_action_id?: boolean;
     created_at?: boolean;
     updated_at?: boolean;
+    password_reset_codes?: boolean | Prisma.users$password_reset_codesArgs<ExtArgs>;
     auth_sessions?: boolean | Prisma.users$auth_sessionsArgs<ExtArgs>;
     notifications?: boolean | Prisma.users$notificationsArgs<ExtArgs>;
     notification_preferences?: boolean | Prisma.users$notification_preferencesArgs<ExtArgs>;
@@ -9658,6 +10064,7 @@ export type usersSelectScalar = {
 };
 export type usersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "id_number" | "document_type" | "full_name" | "birth_date" | "birth_city" | "gender" | "email" | "phone" | "photo_url" | "photo_public_id" | "document_front_url" | "document_front_public_id" | "document_front_format" | "document_back_url" | "document_back_public_id" | "document_back_format" | "identity_verified_at" | "identity_verification_status" | "identity_verification_details" | "identity_verification_checked_at" | "password_hash" | "status" | "blocked_until" | "block_reason" | "blocked_by" | "block_source_action_id" | "created_at" | "updated_at", ExtArgs["result"]["users"]>;
 export type usersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    password_reset_codes?: boolean | Prisma.users$password_reset_codesArgs<ExtArgs>;
     auth_sessions?: boolean | Prisma.users$auth_sessionsArgs<ExtArgs>;
     notifications?: boolean | Prisma.users$notificationsArgs<ExtArgs>;
     notification_preferences?: boolean | Prisma.users$notification_preferencesArgs<ExtArgs>;
@@ -9700,6 +10107,7 @@ export type usersIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type $usersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "users";
     objects: {
+        password_reset_codes: Prisma.$password_reset_codesPayload<ExtArgs>[];
         auth_sessions: Prisma.$auth_sessionsPayload<ExtArgs>[];
         notifications: Prisma.$notificationsPayload<ExtArgs>[];
         notification_preferences: Prisma.$notification_preferencesPayload<ExtArgs> | null;
@@ -9814,6 +10222,7 @@ export interface usersDelegate<ExtArgs extends runtime.Types.Extensions.Internal
 }
 export interface Prisma__usersClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
+    password_reset_codes<T extends Prisma.users$password_reset_codesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$password_reset_codesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$password_reset_codesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     auth_sessions<T extends Prisma.users$auth_sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$auth_sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$auth_sessionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     notifications<T extends Prisma.users$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$notificationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     notification_preferences<T extends Prisma.users$notification_preferencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$notification_preferencesArgs<ExtArgs>>): Prisma.Prisma__notification_preferencesClient<runtime.Types.Result.GetResult<Prisma.$notification_preferencesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
@@ -9979,6 +10388,17 @@ export type usersDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type usersDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.usersWhereInput;
     limit?: number;
+};
+export type users$password_reset_codesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.password_reset_codesSelect<ExtArgs> | null;
+    omit?: Prisma.password_reset_codesOmit<ExtArgs> | null;
+    include?: Prisma.password_reset_codesInclude<ExtArgs> | null;
+    where?: Prisma.password_reset_codesWhereInput;
+    orderBy?: Prisma.password_reset_codesOrderByWithRelationInput | Prisma.password_reset_codesOrderByWithRelationInput[];
+    cursor?: Prisma.password_reset_codesWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Password_reset_codesScalarFieldEnum | Prisma.Password_reset_codesScalarFieldEnum[];
 };
 export type users$auth_sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.auth_sessionsSelect<ExtArgs> | null;

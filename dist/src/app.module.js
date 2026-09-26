@@ -10,6 +10,7 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const schedule_1 = require("@nestjs/schedule");
+const throttler_1 = require("@nestjs/throttler");
 const associations_module_1 = require("./associations/associations.module");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
@@ -40,6 +41,7 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({ cache: true, isGlobal: true }),
             schedule_1.ScheduleModule.forRoot(),
+            throttler_1.ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),
             prisma_module_1.PrismaModule,
             auth_module_1.AuthModule,
             competition_access_module_1.CompetitionAccessModule,

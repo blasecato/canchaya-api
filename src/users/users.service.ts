@@ -21,6 +21,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserProfileDto } from './dto/update-user-profile.dto';
 import { PublicUserResponseDto } from './dto/public-user-response.dto';
 import { RegisterPlayerDto } from './dto/register-player.dto';
+import { MailService } from '../mail/mail.service';
 import { IdentityVerificationService } from './identity-verification.service';
 import { publicUserSelect, toPublicUserResponse } from './public-user.mapper';
 
@@ -56,6 +57,7 @@ export class UsersService {
     private readonly prisma: PrismaService,
     private readonly imageStorage: ImageStorageService,
     private readonly identityVerification: IdentityVerificationService,
+    private readonly mailService: MailService,
   ) {}
 
   async registerPlayer(
@@ -135,7 +137,9 @@ export class UsersService {
         return this.findUserInTransaction(transaction, created.id);
       });
 
-      return toPublicUserResponse(user);
+      const response = toPublicUserResponse(user);
+      await this.sendWelcomeEmail(response.email, response.fullName);
+      return response;
     } catch (error) {
       await Promise.all([
         this.imageStorage.deleteSafely(photoAsset ?? {}),
@@ -152,6 +156,18 @@ export class UsersService {
         );
       }
       throw error;
+    }
+  }
+
+  /** El correo de bienvenida es informativo: si falla, el registro sigue en pie. */
+  private async sendWelcomeEmail(
+    email: string,
+    fullName: string,
+  ): Promise<void> {
+    try {
+      await this.mailService.sendWelcome({ to: email, fullName });
+    } catch {
+      this.logger.error(`No fue posible enviar la bienvenida a ${email}.`);
     }
   }
 

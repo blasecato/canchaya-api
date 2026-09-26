@@ -16,6 +16,7 @@ const bcryptjs_1 = require("bcryptjs");
 const client_1 = require("../../generated/prisma/client");
 const prisma_service_1 = require("../prisma/prisma.service");
 const image_storage_service_1 = require("../uploads/image-storage.service");
+const mail_service_1 = require("../mail/mail.service");
 const identity_verification_service_1 = require("./identity-verification.service");
 const public_user_mapper_1 = require("./public-user.mapper");
 const ROLE_LABELS = {
@@ -28,11 +29,13 @@ let UsersService = UsersService_1 = class UsersService {
     prisma;
     imageStorage;
     identityVerification;
+    mailService;
     logger = new common_1.Logger(UsersService_1.name);
-    constructor(prisma, imageStorage, identityVerification) {
+    constructor(prisma, imageStorage, identityVerification, mailService) {
         this.prisma = prisma;
         this.imageStorage = imageStorage;
         this.identityVerification = identityVerification;
+        this.mailService = mailService;
     }
     async registerPlayer(dto, files) {
         this.assertValidBirthDate(dto.birthDate);
@@ -88,7 +91,9 @@ let UsersService = UsersService_1 = class UsersService {
                 });
                 return this.findUserInTransaction(transaction, created.id);
             });
-            return (0, public_user_mapper_1.toPublicUserResponse)(user);
+            const response = (0, public_user_mapper_1.toPublicUserResponse)(user);
+            await this.sendWelcomeEmail(response.email, response.fullName);
+            return response;
         }
         catch (error) {
             await Promise.all([
@@ -102,6 +107,14 @@ let UsersService = UsersService_1 = class UsersService {
                 throw new common_1.ConflictException('Ya existe una cuenta con ese documento o correo electrónico.');
             }
             throw error;
+        }
+    }
+    async sendWelcomeEmail(email, fullName) {
+        try {
+            await this.mailService.sendWelcome({ to: email, fullName });
+        }
+        catch {
+            this.logger.error(`No fue posible enviar la bienvenida a ${email}.`);
         }
     }
     assertDeclaredAgeMatchesBirthDate(birthDate, declaredAge) {
@@ -625,6 +638,7 @@ exports.UsersService = UsersService = UsersService_1 = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         image_storage_service_1.ImageStorageService,
-        identity_verification_service_1.IdentityVerificationService])
+        identity_verification_service_1.IdentityVerificationService,
+        mail_service_1.MailService])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map

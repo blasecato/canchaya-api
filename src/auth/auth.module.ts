@@ -1,14 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { MailModule } from '../mail/mail.module';
 import { AuthController } from './auth.controller';
 import { getAuthSettings, JWT_ALGORITHM } from './auth.config';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
+import { PasswordResetService } from './password-reset.service';
 
 @Module({
   imports: [
+    MailModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -32,7 +35,7 @@ import { RolesGuard } from './guards/roles.guard';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtAuthGuard, RolesGuard],
+  providers: [AuthService, PasswordResetService, JwtAuthGuard, RolesGuard],
   exports: [AuthService, JwtAuthGuard, RolesGuard],
 })
 export class AuthModule {}

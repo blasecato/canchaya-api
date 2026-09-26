@@ -10,17 +10,20 @@ exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
+const mail_module_1 = require("../mail/mail.module");
 const auth_controller_1 = require("./auth.controller");
 const auth_config_1 = require("./auth.config");
 const auth_service_1 = require("./auth.service");
 const jwt_auth_guard_1 = require("./guards/jwt-auth.guard");
 const roles_guard_1 = require("./guards/roles.guard");
+const password_reset_service_1 = require("./password-reset.service");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            mail_module_1.MailModule,
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
@@ -43,7 +46,7 @@ exports.AuthModule = AuthModule = __decorate([
             }),
         ],
         controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService, jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard],
+        providers: [auth_service_1.AuthService, password_reset_service_1.PasswordResetService, jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard],
         exports: [auth_service_1.AuthService, jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard],
     })
 ], AuthModule);

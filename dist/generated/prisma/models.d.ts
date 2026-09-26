@@ -2,6 +2,7 @@ export type * from './models/auth_sessions';
 export type * from './models/association_administrators';
 export type * from './models/associations';
 export type * from './models/association_announcements';
+export type * from './models/password_reset_codes';
 export type * from './models/disciplinary_actions';
 export type * from './models/fines';
 export type * from './models/match_referees';

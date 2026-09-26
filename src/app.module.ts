@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { AssociationsModule } from './associations/associations.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -28,6 +29,10 @@ import { UsersModule } from './users/users.module';
   imports: [
     ConfigModule.forRoot({ cache: true, isGlobal: true }),
     ScheduleModule.forRoot(),
+    // Solo los endpoints que lo piden con @UseGuards(ThrottlerGuard) quedan
+    // limitados: detrás de un proxy todo el tráfico comparte IP y un guard
+    // global castigaría a todos los usuarios por igual.
+    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 120 }]),
     PrismaModule,
     AuthModule,
     CompetitionAccessModule,

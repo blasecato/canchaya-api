@@ -10,9 +10,9 @@ export declare class PlayerMatchStatsService {
         id: bigint;
         created_at: Date;
         tournament_id: bigint;
-        match_id: bigint;
         team_id: bigint;
         player_id: bigint;
+        match_id: bigint;
         goals: number;
         assists: number;
         yellow_cards: number;
@@ -24,9 +24,9 @@ export declare class PlayerMatchStatsService {
         teamName: string;
         id: bigint;
         tournament_id: bigint;
-        match_id: bigint;
         team_id: bigint;
         player_id: bigint;
+        match_id: bigint;
         goals: number;
         assists: number;
         yellow_cards: number;
@@ -48,9 +48,9 @@ export declare class PlayerMatchStatsService {
         id: bigint;
         created_at: Date;
         tournament_id: bigint;
-        match_id: bigint;
         team_id: bigint;
         player_id: bigint;
+        match_id: bigint;
         goals: number;
         assists: number;
         yellow_cards: number;
@@ -61,9 +61,9 @@ export declare class PlayerMatchStatsService {
         id: bigint;
         created_at: Date;
         tournament_id: bigint;
-        match_id: bigint;
         team_id: bigint;
         player_id: bigint;
+        match_id: bigint;
         goals: number;
         assists: number;
         yellow_cards: number;
@@ -74,9 +74,9 @@ export declare class PlayerMatchStatsService {
         id: bigint;
         created_at: Date;
         tournament_id: bigint;
-        match_id: bigint;
         team_id: bigint;
         player_id: bigint;
+        match_id: bigint;
         goals: number;
         assists: number;
         yellow_cards: number;
