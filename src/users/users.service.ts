@@ -5,6 +5,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { hash } from 'bcryptjs';
 import { Prisma } from '../../generated/prisma/client';
@@ -68,18 +69,23 @@ export class UsersService {
     this.assertDeclaredAgeMatchesBirthDate(dto.birthDate, dto.age);
     await this.assertUserIdentifiersAreAvailable(dto.idNumber, dto.email);
 
-    // El OCR informa, no bloquea: una foto difícil no debe impedir el registro.
-    // Lo que no queda confirmado se guarda para revisión de un administrador.
     const identityCheck = await this.identityVerification.verify(
       files.documentFront,
       files.documentBack,
       dto.idNumber,
       dto.birthDate,
+      dto.fullName,
     );
     if (!identityCheck.verified) {
-      this.logger.warn(
-        `Documento sin confirmar para la cédula ${dto.idNumber}: ` +
-          `${identityCheck.outcome} (${JSON.stringify(identityCheck.details)})`,
+      if (identityCheck.details.failureReason === 'ocr_error') {
+        throw new ServiceUnavailableException(
+          'No pudimos completar la verificación del documento en este momento. Por favor, intenta nuevamente en unos minutos. Tu cuenta aún no se ha creado.',
+        );
+      }
+      throw new BadRequestException(
+        identityCheck.outcome === 'unreadable'
+          ? 'No pudimos leer tu cédula con suficiente claridad. Sube una foto más nítida de cada cara, con el documento completo, buena iluminación y sin reflejos. Verifica que el número, los nombres y la fecha de nacimiento sean legibles.'
+          : 'No pudimos confirmar que los datos de la cédula coincidan con el formulario. Revisa el número de documento, los nombres y apellidos completos y la fecha de nacimiento. Si son correctos, sube fotos más nítidas de ambas caras.',
       );
     }
 

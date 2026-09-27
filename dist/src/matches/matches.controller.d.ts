@@ -6,11 +6,12 @@ export declare class MatchesController {
     private readonly matchesService;
     constructor(matchesService: MatchesService);
     create(request: AuthenticatedRequest, createMatchDto: CreateMatchDto): Promise<{
-        status: string;
         id: bigint;
         created_at: Date;
+        status: string;
         updated_at: Date;
         tournament_id: bigint;
+        notes: string | null;
         competition_key: string | null;
         home_penalties: number | null;
         away_penalties: number | null;
@@ -23,14 +24,14 @@ export declare class MatchesController {
         home_score: number | null;
         away_score: number | null;
         duration_minutes: number;
-        notes: string | null;
     }>;
     findAll(request: AuthenticatedRequest): Promise<{
-        status: string;
         id: bigint;
         created_at: Date;
+        status: string;
         updated_at: Date;
         tournament_id: bigint;
+        notes: string | null;
         competition_key: string | null;
         home_penalties: number | null;
         away_penalties: number | null;
@@ -43,14 +44,14 @@ export declare class MatchesController {
         home_score: number | null;
         away_score: number | null;
         duration_minutes: number;
-        notes: string | null;
     }[]>;
     findOne(id: bigint, request: AuthenticatedRequest): Promise<{
-        status: string;
         id: bigint;
         created_at: Date;
+        status: string;
         updated_at: Date;
         tournament_id: bigint;
+        notes: string | null;
         competition_key: string | null;
         home_penalties: number | null;
         away_penalties: number | null;
@@ -63,14 +64,14 @@ export declare class MatchesController {
         home_score: number | null;
         away_score: number | null;
         duration_minutes: number;
-        notes: string | null;
     }>;
     update(id: bigint, request: AuthenticatedRequest, updateMatchDto: UpdateMatchDto): Promise<{
-        status: string;
         id: bigint;
         created_at: Date;
+        status: string;
         updated_at: Date;
         tournament_id: bigint;
+        notes: string | null;
         competition_key: string | null;
         home_penalties: number | null;
         away_penalties: number | null;
@@ -83,14 +84,14 @@ export declare class MatchesController {
         home_score: number | null;
         away_score: number | null;
         duration_minutes: number;
-        notes: string | null;
     }>;
     remove(id: bigint, request: AuthenticatedRequest): Promise<{
-        status: string;
         id: bigint;
         created_at: Date;
+        status: string;
         updated_at: Date;
         tournament_id: bigint;
+        notes: string | null;
         competition_key: string | null;
         home_penalties: number | null;
         away_penalties: number | null;
@@ -103,6 +104,5 @@ export declare class MatchesController {
         home_score: number | null;
         away_score: number | null;
         duration_minutes: number;
-        notes: string | null;
     }>;
 }

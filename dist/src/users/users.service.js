@@ -41,10 +41,14 @@ let UsersService = UsersService_1 = class UsersService {
         this.assertValidBirthDate(dto.birthDate);
         this.assertDeclaredAgeMatchesBirthDate(dto.birthDate, dto.age);
         await this.assertUserIdentifiersAreAvailable(dto.idNumber, dto.email);
-        const identityCheck = await this.identityVerification.verify(files.documentFront, files.documentBack, dto.idNumber, dto.birthDate);
+        const identityCheck = await this.identityVerification.verify(files.documentFront, files.documentBack, dto.idNumber, dto.birthDate, dto.fullName);
         if (!identityCheck.verified) {
-            this.logger.warn(`Documento sin confirmar para la cédula ${dto.idNumber}: ` +
-                `${identityCheck.outcome} (${JSON.stringify(identityCheck.details)})`);
+            if (identityCheck.details.failureReason === 'ocr_error') {
+                throw new common_1.ServiceUnavailableException('No pudimos completar la verificación del documento en este momento. Por favor, intenta nuevamente en unos minutos. Tu cuenta aún no se ha creado.');
+            }
+            throw new common_1.BadRequestException(identityCheck.outcome === 'unreadable'
+                ? 'No pudimos leer tu cédula con suficiente claridad. Sube una foto más nítida de cada cara, con el documento completo, buena iluminación y sin reflejos. Verifica que el número, los nombres y la fecha de nacimiento sean legibles.'
+                : 'No pudimos confirmar que los datos de la cédula coincidan con el formulario. Revisa el número de documento, los nombres y apellidos completos y la fecha de nacimiento. Si son correctos, sube fotos más nítidas de ambas caras.');
         }
         let photoAsset = null;
         let documentFrontAsset = null;

@@ -11,11 +11,12 @@ export declare class MatchesService {
     private readonly matchNotifications;
     constructor(prisma: PrismaService, access: CompetitionAccessService, refereeAssignments: RefereeAssignmentsService, matchNotifications: MatchOperationalNotificationsService);
     create(requestingUserId: bigint, dto: CreateMatchDto): Promise<{
-        status: string;
         id: bigint;
         created_at: Date;
+        status: string;
         updated_at: Date;
         tournament_id: bigint;
+        notes: string | null;
         competition_key: string | null;
         home_penalties: number | null;
         away_penalties: number | null;
@@ -28,14 +29,14 @@ export declare class MatchesService {
         home_score: number | null;
         away_score: number | null;
         duration_minutes: number;
-        notes: string | null;
     }>;
     findAll(requestingUserId: bigint): Promise<{
-        status: string;
         id: bigint;
         created_at: Date;
+        status: string;
         updated_at: Date;
         tournament_id: bigint;
+        notes: string | null;
         competition_key: string | null;
         home_penalties: number | null;
         away_penalties: number | null;
@@ -48,14 +49,14 @@ export declare class MatchesService {
         home_score: number | null;
         away_score: number | null;
         duration_minutes: number;
-        notes: string | null;
     }[]>;
     findOne(id: bigint, requestingUserId: bigint): Promise<{
-        status: string;
         id: bigint;
         created_at: Date;
+        status: string;
         updated_at: Date;
         tournament_id: bigint;
+        notes: string | null;
         competition_key: string | null;
         home_penalties: number | null;
         away_penalties: number | null;
@@ -68,14 +69,14 @@ export declare class MatchesService {
         home_score: number | null;
         away_score: number | null;
         duration_minutes: number;
-        notes: string | null;
     }>;
     update(id: bigint, requestingUserId: bigint, dto: UpdateMatchDto): Promise<{
-        status: string;
         id: bigint;
         created_at: Date;
+        status: string;
         updated_at: Date;
         tournament_id: bigint;
+        notes: string | null;
         competition_key: string | null;
         home_penalties: number | null;
         away_penalties: number | null;
@@ -88,14 +89,14 @@ export declare class MatchesService {
         home_score: number | null;
         away_score: number | null;
         duration_minutes: number;
-        notes: string | null;
     }>;
     remove(id: bigint, requestingUserId: bigint): Promise<{
-        status: string;
         id: bigint;
         created_at: Date;
+        status: string;
         updated_at: Date;
         tournament_id: bigint;
+        notes: string | null;
         competition_key: string | null;
         home_penalties: number | null;
         away_penalties: number | null;
@@ -108,7 +109,6 @@ export declare class MatchesService {
         home_score: number | null;
         away_score: number | null;
         duration_minutes: number;
-        notes: string | null;
     }>;
     private assertManagedMatchUpdate;
     private findExistingMatch;

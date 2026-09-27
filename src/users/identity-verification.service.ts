@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { dirname, join } from 'node:path';
 import sharp from 'sharp';
-import { createWorker, OEM, PSM, type Worker } from 'tesseract.js';
+import { createWorker, OEM, type Worker } from 'tesseract.js';
 import type { UploadedImageFile } from '../uploads/image-storage.types';
 import type {
   IdentityMatchQuality,
@@ -29,11 +29,7 @@ const SPANISH_MONTHS = [
   'DICIEMBRE',
 ] as const;
 
-/**
- * Las fotos llegan en cualquier orientación: de frente, de cabeza o giradas 90°
- * porque el documento se fotografió en vertical. Probamos las cuatro y nos
- * quedamos con la primera que permita leer el número de identidad.
- */
+/** Se prueban las cuatro orientaciones para leer ambas caras completas. */
 const ROTATIONS_TO_TRY = [0, 180, 90, 270] as const;
 
 /** Tesseract necesita ~300 DPI; escalamos el lado largo hasta este tamaño. */
@@ -42,28 +38,8 @@ const OCR_TARGET_LONG_EDGE = 1800;
 /** Por debajo de esto damos la lectura por inservible (foto borrosa u oscura). */
 const MIN_RECOGNIZED_CHARACTERS = 12;
 
-/**
- * Caracteres que el OCR confunde habitualmente con dígitos en una cédula.
- * Solo se aplica en el cruce tolerante, nunca en el estricto.
- */
-const DIGIT_LOOKALIKES: Record<string, string> = {
-  O: '0',
-  Q: '0',
-  D: '0',
-  U: '0',
-  I: '1',
-  L: '1',
-  T: '7',
-  '|': '1',
-  '!': '1',
-  Z: '2',
-  A: '4',
-  S: '5',
-  G: '6',
-  B: '8',
-};
-
 interface DocumentReading {
+  sides?: string[];
   /** Texto crudo concatenado de todas las lecturas aprovechables. */
   text: string;
   rotationDegrees: number | null;
@@ -79,17 +55,17 @@ export class IdentityVerificationService implements OnModuleDestroy {
 
   /**
    * Analiza ambas caras del documento y reporta si respaldan los datos
-   * escritos. Nunca lanza: el registro no se bloquea por una foto difícil, el
-   * resultado queda guardado para revisión manual.
+   * escritos. El registro debe rechazar cualquier resultado no verificado.
    */
   verify(
     front: UploadedImageFile,
     back: UploadedImageFile,
     idNumber: string,
     birthDate: string,
+    fullName = '',
   ): Promise<IdentityVerificationResult> {
     const verification = this.queue.then(() =>
-      this.performVerification(front, back, idNumber, birthDate),
+      this.performVerification(front, back, idNumber, birthDate, fullName),
     );
     this.queue = verification.then(
       () => undefined,
@@ -109,12 +85,13 @@ export class IdentityVerificationService implements OnModuleDestroy {
     back: UploadedImageFile,
     idNumber: string,
     birthDate: string,
+    fullName: string,
   ): Promise<IdentityVerificationResult> {
     const expectedId = idNumber.replace(/\D/g, '');
 
     let reading: DocumentReading;
     try {
-      reading = await this.readDocument([front, back], expectedId);
+      reading = await this.readDocument([front, back]);
     } catch (error) {
       this.logger.warn(
         `No fue posible ejecutar el OCR del documento: ${String(error)}`,
@@ -129,7 +106,13 @@ export class IdentityVerificationService implements OnModuleDestroy {
       });
     }
 
-    if (reading.characters < MIN_RECOGNIZED_CHARACTERS) {
+    if (
+      reading.characters < MIN_RECOGNIZED_CHARACTERS ||
+      !reading.sides ||
+      reading.sides.some(
+        (text) => text.replace(/\s/g, '').length < MIN_RECOGNIZED_CHARACTERS,
+      )
+    ) {
       return this.buildResult('unreadable', {
         idNumberMatch: 'none',
         birthDateMatch: 'none',
@@ -149,19 +132,58 @@ export class IdentityVerificationService implements OnModuleDestroy {
       ocrConfidence: reading.confidence,
       recognizedCharacters: reading.characters,
     };
-
-    // El número manda. La fecha solo respalda: exigir ambos duplicaba los
-    // rechazos a personas con documentos legítimos.
-    if (idNumberMatch !== 'none') {
+    const normalized = this.canonicalizeAlphanumeric(reading.text);
+    const documentMarkers = ['REPUBLICADECOLOMBIA', 'CEDULADECIUDADANIA'];
+    const sideMarkers = [
+      'APELLIDOS',
+      'NOMBRES',
+      'NACIMIENTO',
+      'EXPEDICION',
+      'REGISTRADOR',
+      'IDENTIFICACION',
+      'CEDULA',
+      'COLOMBIA',
+    ];
+    if (
+      !documentMarkers.some((marker) => normalized.includes(marker)) ||
+      reading.sides.some(
+        (text) =>
+          !sideMarkers.some((marker) =>
+            this.canonicalizeAlphanumeric(text).includes(marker),
+          ),
+      )
+    ) {
+      return this.buildResult('unreadable', {
+        ...details,
+        failureReason: 'document_not_recognized',
+      });
+    }
+    const words = new Set(
+      reading.text
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .toUpperCase()
+        .match(/[A-Z]+/g) ?? [],
+    );
+    const nameWords =
+      fullName
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .toUpperCase()
+        .match(/[A-Z]+/g) ?? [];
+    const nameMatches =
+      nameWords.length >= 2 && nameWords.every((word) => words.has(word));
+    if (
+      idNumberMatch === 'exact' &&
+      birthDateMatch === 'exact' &&
+      nameMatches
+    ) {
       return this.buildResult('verified', details);
     }
-    if (birthDateMatch === 'exact') {
-      return this.buildResult('verified', details);
-    }
-
-    // Se leyó texto pero no aparece ninguno de los dos datos: puede ser un
-    // documento ajeno o una foto parcial. Queda para revisión humana.
-    return this.buildResult('mismatch', details);
+    return this.buildResult('mismatch', {
+      ...details,
+      failureReason: 'data_not_confirmed',
+    });
   }
 
   private buildResult(
@@ -176,21 +198,16 @@ export class IdentityVerificationService implements OnModuleDestroy {
     };
   }
 
-  /**
-   * Recorre caras y rotaciones hasta encontrar el número de identidad. Si no
-   * aparece, devuelve todo el texto acumulado y la mejor lectura por confianza,
-   * para que el cruce tolerante todavía tenga una oportunidad.
-   */
+  /** Conserva únicamente las lecturas con confianza suficiente de cada cara. */
   private async readDocument(
     files: UploadedImageFile[],
-    expectedId: string,
   ): Promise<DocumentReading> {
     const worker = await this.getWorker();
     const normalizedFiles = await Promise.all(
       files.map((file) => this.normalizeForOcr(file.buffer)),
     );
 
-    const collected: string[] = [];
+    const sides = normalizedFiles.map(() => '');
     let best: { rotation: number; confidence: number; characters: number } = {
       rotation: 0,
       confidence: 0,
@@ -201,76 +218,28 @@ export class IdentityVerificationService implements OnModuleDestroy {
       let rotationText = '';
       let rotationConfidence = 0;
 
-      for (const normalized of normalizedFiles) {
+      for (const [index, normalized] of normalizedFiles.entries()) {
         const image = await this.applyRotation(normalized, rotation);
         const { data } = await worker.recognize(image, { rotateAuto: true });
         rotationText += `\n${data.text}`;
+        if ((data.confidence ?? 0) >= 40) sides[index] += `\n${data.text}`;
         rotationConfidence = Math.max(rotationConfidence, data.confidence ?? 0);
       }
 
-      collected.push(rotationText);
       const characters = rotationText.replace(/\s/g, '').length;
       if (characters > best.characters) {
         best = { rotation, confidence: rotationConfidence, characters };
       }
-
-      // Con el número ya localizado no hace falta girar más.
-      if (this.matchIdNumber(rotationText, expectedId) !== 'none') {
-        return {
-          text: collected.join('\n'),
-          rotationDegrees: rotation,
-          confidence: rotationConfidence,
-          characters,
-        };
-      }
     }
 
-    // Último intento: pasada solo de dígitos sobre la rotación más legible.
-    // Sin diccionario ni letras, Tesseract acierta mucho más en la numeración.
-    const digitsText = await this.recognizeDigitsOnly(
-      worker,
-      normalizedFiles,
-      best.rotation,
-    );
-    collected.push(digitsText);
-
-    const text = collected.join('\n');
+    const text = sides.join('\n');
     return {
+      sides,
       text,
       rotationDegrees: best.characters > 0 ? best.rotation : null,
       confidence: best.confidence || null,
       characters: text.replace(/\s/g, '').length,
     };
-  }
-
-  private async recognizeDigitsOnly(
-    worker: Worker,
-    normalizedFiles: Buffer[],
-    rotation: number,
-  ): Promise<string> {
-    try {
-      await worker.setParameters({
-        tessedit_char_whitelist: '0123456789',
-        tessedit_pageseg_mode: PSM.SPARSE_TEXT,
-      });
-      let text = '';
-      for (const normalized of normalizedFiles) {
-        const image = await this.applyRotation(normalized, rotation);
-        const { data } = await worker.recognize(image);
-        text += `\n${data.text}`;
-      }
-      return text;
-    } catch (error) {
-      this.logger.warn(`Falló la pasada numérica del OCR: ${String(error)}`);
-      return '';
-    } finally {
-      await worker
-        .setParameters({
-          tessedit_char_whitelist: '',
-          tessedit_pageseg_mode: PSM.AUTO,
-        })
-        .catch(() => undefined);
-    }
   }
 
   /**
@@ -327,15 +296,9 @@ export class IdentityVerificationService implements OnModuleDestroy {
     if (expectedId.length < 5) return 'none';
 
     // Cruce estricto: solo dígitos reales leídos por el OCR.
-    const strictDigits = recognizedText.replace(/\D/g, '');
-    if (strictDigits.includes(expectedId)) return 'exact';
-
-    // Cruce tolerante: además de resolver confusiones típicas (S/5, B/8, O/0),
-    // admite un carácter de diferencia, que es el error más frecuente.
-    const looseDigits = this.canonicalizeDigits(recognizedText);
-    if (looseDigits.includes(expectedId)) return 'fuzzy';
-    if (this.containsWithinDistance(looseDigits, expectedId, 1)) return 'fuzzy';
-
+    const candidates = recognizedText.match(/\d(?:[\d. -]*\d)?/g) ?? [];
+    if (candidates.some((value) => value.replace(/\D/g, '') === expectedId))
+      return 'exact';
     return 'none';
   }
 
@@ -345,21 +308,12 @@ export class IdentityVerificationService implements OnModuleDestroy {
   ): IdentityMatchQuality {
     const patterns = this.buildBirthDatePatterns(birthDate);
     const strict = this.canonicalizeAlphanumeric(recognizedText);
-    if (patterns.some((pattern) => strict.includes(pattern))) return 'exact';
-
-    const loose = this.canonicalizeDigits(recognizedText);
-    const numericPatterns = patterns
-      .map((pattern) => pattern.replace(/\D/g, ''))
-      .filter((pattern) => pattern.length === 8);
     if (
-      numericPatterns.some(
-        (pattern) =>
-          loose.includes(pattern) ||
-          this.containsWithinDistance(loose, pattern, 1),
-      )
-    ) {
-      return 'fuzzy';
-    }
+      patterns
+        .filter((pattern) => pattern.length >= 8)
+        .some((pattern) => strict.includes(pattern))
+    )
+      return 'exact';
 
     return 'none';
   }
@@ -373,76 +327,12 @@ export class IdentityVerificationService implements OnModuleDestroy {
       .replace(/[^A-Z0-9]/g, '');
   }
 
-  /** Igual que el anterior, pero resolviendo letras parecidas a dígitos. */
-  private canonicalizeDigits(value: string): string {
-    return this.canonicalizeAlphanumeric(value)
-      .split('')
-      .map((character) => DIGIT_LOOKALIKES[character] ?? character)
-      .join('')
-      .replace(/\D/g, '');
-  }
-
-  /**
-   * Busca `needle` dentro de `haystack` admitiendo hasta `maxDistance`
-   * sustituciones, inserciones o borrados, probando ventanas de longitud
-   * cercana a la del dato esperado.
-   */
-  private containsWithinDistance(
-    haystack: string,
-    needle: string,
-    maxDistance: number,
-  ): boolean {
-    if (needle.length === 0) return false;
-    const lengths = new Set(
-      [needle.length - 1, needle.length, needle.length + 1].filter(
-        (length) => length > 0 && length <= haystack.length,
-      ),
-    );
-
-    for (const length of lengths) {
-      for (let start = 0; start + length <= haystack.length; start += 1) {
-        const window = haystack.slice(start, start + length);
-        if (this.levenshtein(window, needle, maxDistance) <= maxDistance) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /** Distancia de edición con corte temprano para no recorrer de más. */
-  private levenshtein(a: string, b: string, limit: number): number {
-    if (Math.abs(a.length - b.length) > limit) return limit + 1;
-
-    let previous = Array.from({ length: b.length + 1 }, (_, index) => index);
-    for (let i = 1; i <= a.length; i += 1) {
-      const current = [i];
-      let rowMinimum = i;
-      for (let j = 1; j <= b.length; j += 1) {
-        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-        const value = Math.min(
-          previous[j] + 1,
-          current[j - 1] + 1,
-          previous[j - 1] + cost,
-        );
-        current.push(value);
-        rowMinimum = Math.min(rowMinimum, value);
-      }
-      if (rowMinimum > limit) return limit + 1;
-      previous = current;
-    }
-    return previous[b.length];
-  }
-
   private buildBirthDatePatterns(value: string): string[] {
     const [year, month, day] = value.split('-');
     const monthName = SPANISH_MONTHS[Number(month) - 1];
-    const shortYear = year.slice(2);
     return [
       `${day}${month}${year}`,
       `${year}${month}${day}`,
-      `${month}${day}${year}`,
-      `${day}${month}${shortYear}`,
       `${day}${monthName}${year}`,
       `${day}${monthName.slice(0, 3)}${year}`,
     ].map((pattern) => this.canonicalizeAlphanumeric(pattern));
