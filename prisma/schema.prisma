@@ -91,6 +91,24 @@ model association_announcements {
   @@index([association_id, starts_on, ends_on], map: "association_announcements_visibility_idx")
 }
 
+model home_hero_slides {
+  slug            String   @id
+  position        Int      @unique(map: "home_hero_slides_position_uk")
+  eyebrow         String
+  title           String
+  accent_title    String
+  description     String
+  cta_label       String
+  cta_to          String
+  thumbnail_title String
+  image_url       String?
+  image_public_id String?
+  updated_by      BigInt?
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime @default(now()) @db.Timestamptz(6)
+  users           users?   @relation(fields: [updated_by], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "home_hero_slides_updated_by_fkey")
+}
+
 model password_reset_codes {
   id           BigInt    @id @default(autoincrement())
   user_id      BigInt
@@ -682,6 +700,7 @@ model users {
   block_source_action_id                                                                BigInt?
   created_at                                                                            DateTime                         @default(now()) @db.Timestamptz(6)
   updated_at                                                                            DateTime                         @default(now()) @db.Timestamptz(6)
+  home_hero_slides                                                                      home_hero_slides[]
   password_reset_codes                                                                  password_reset_codes[]
   auth_sessions                                                                         auth_sessions[]
   notifications                                                                         notifications[]

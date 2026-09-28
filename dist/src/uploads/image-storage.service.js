@@ -53,6 +53,9 @@ let ImageStorageService = ImageStorageService_1 = class ImageStorageService {
     saveUserPhoto(file) {
         return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_USER_PHOTO_FOLDER, 'La foto de perfil');
     }
+    saveHomeHeroSlide(file) {
+        return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_HOME_HERO_SLIDE_FOLDER, 'La imagen del slider');
+    }
     saveSponsorLogo(file) {
         return this.uploadPublic(file, uploads_constants_1.CLOUDINARY_SPONSOR_LOGO_FOLDER, 'El logo del sponsor');
     }

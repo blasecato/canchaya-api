@@ -19,6 +19,7 @@ const competition_access_module_1 = require("./authorization/competition-access.
 const disciplinary_actions_module_1 = require("./disciplinary-actions/disciplinary-actions.module");
 const fines_module_1 = require("./fines/fines.module");
 const home_gallery_module_1 = require("./home-gallery/home-gallery.module");
+const home_hero_module_1 = require("./home-hero/home-hero.module");
 const matches_module_1 = require("./matches/matches.module");
 const notifications_module_1 = require("./notifications/notifications.module");
 const player_match_stats_module_1 = require("./player-match-stats/player-match-stats.module");
@@ -60,6 +61,7 @@ exports.AppModule = AppModule = __decorate([
             disciplinary_actions_module_1.DisciplinaryActionsModule,
             fines_module_1.FinesModule,
             home_gallery_module_1.HomeGalleryModule,
+            home_hero_module_1.HomeHeroModule,
             suspensions_module_1.SuspensionsModule,
             sponsors_module_1.SponsorsModule,
         ],

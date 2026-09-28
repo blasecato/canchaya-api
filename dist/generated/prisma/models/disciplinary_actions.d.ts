@@ -615,13 +615,6 @@ export type Disciplinary_actionsNullableScalarRelationFilter = {
     is?: Prisma.disciplinary_actionsWhereInput | null;
     isNot?: Prisma.disciplinary_actionsWhereInput | null;
 };
-export type NullableBigIntFieldUpdateOperationsInput = {
-    set?: bigint | number | null;
-    increment?: bigint | number;
-    decrement?: bigint | number;
-    multiply?: bigint | number;
-    divide?: bigint | number;
-};
 export type disciplinary_actionsCreateNestedOneWithoutFinesInput = {
     create?: Prisma.XOR<Prisma.disciplinary_actionsCreateWithoutFinesInput, Prisma.disciplinary_actionsUncheckedCreateWithoutFinesInput>;
     connectOrCreate?: Prisma.disciplinary_actionsCreateOrConnectWithoutFinesInput;

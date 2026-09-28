@@ -6,6 +6,7 @@ export type auth_sessions = Prisma.auth_sessionsModel;
 export type association_administrators = Prisma.association_administratorsModel;
 export type associations = Prisma.associationsModel;
 export type association_announcements = Prisma.association_announcementsModel;
+export type home_hero_slides = Prisma.home_hero_slidesModel;
 export type password_reset_codes = Prisma.password_reset_codesModel;
 export type disciplinary_actions = Prisma.disciplinary_actionsModel;
 export type fines = Prisma.finesModel;

@@ -395,7 +395,10 @@ let RefereeAssignmentsService = class RefereeAssignmentsService {
                 referee_id: refereeId,
                 match_id: { not: matchId },
                 assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
-                matches: { match_date: { not: null } },
+                matches: {
+                    match_date: { not: null },
+                    status: { notIn: ['played', 'cancelled'] },
+                },
             },
             select: {
                 match_id: true,

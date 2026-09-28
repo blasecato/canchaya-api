@@ -10,6 +10,7 @@ import { CompetitionAccessModule } from './authorization/competition-access.modu
 import { DisciplinaryActionsModule } from './disciplinary-actions/disciplinary-actions.module';
 import { FinesModule } from './fines/fines.module';
 import { HomeGalleryModule } from './home-gallery/home-gallery.module';
+import { HomeHeroModule } from './home-hero/home-hero.module';
 import { MatchesModule } from './matches/matches.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { PlayerMatchStatsModule } from './player-match-stats/player-match-stats.module';
@@ -51,6 +52,7 @@ import { UsersModule } from './users/users.module';
     DisciplinaryActionsModule,
     FinesModule,
     HomeGalleryModule,
+    HomeHeroModule,
     SuspensionsModule,
     SponsorsModule,
   ],

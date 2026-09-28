@@ -320,13 +320,6 @@ export type Password_reset_codesListRelationFilter = {
 export type password_reset_codesOrderByRelationAggregateInput = {
     _count?: Prisma.SortOrder;
 };
-export type IntFieldUpdateOperationsInput = {
-    set?: number;
-    increment?: number;
-    decrement?: number;
-    multiply?: number;
-    divide?: number;
-};
 export type password_reset_codesCreateNestedManyWithoutUsersInput = {
     create?: Prisma.XOR<Prisma.password_reset_codesCreateWithoutUsersInput, Prisma.password_reset_codesUncheckedCreateWithoutUsersInput> | Prisma.password_reset_codesCreateWithoutUsersInput[] | Prisma.password_reset_codesUncheckedCreateWithoutUsersInput[];
     connectOrCreate?: Prisma.password_reset_codesCreateOrConnectWithoutUsersInput | Prisma.password_reset_codesCreateOrConnectWithoutUsersInput[];

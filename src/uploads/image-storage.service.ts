@@ -20,6 +20,7 @@ import {
   CLOUDINARY_ASSOCIATION_LOGO_FOLDER,
   CLOUDINARY_IDENTITY_DOCUMENT_BACK_FOLDER,
   CLOUDINARY_IDENTITY_DOCUMENT_FRONT_FOLDER,
+  CLOUDINARY_HOME_HERO_SLIDE_FOLDER,
   CLOUDINARY_SPONSOR_LOGO_FOLDER,
   CLOUDINARY_TEAM_PHOTO_FOLDER,
   CLOUDINARY_TOURNAMENT_PHOTO_FOLDER,
@@ -109,6 +110,14 @@ export class ImageStorageService {
       file,
       CLOUDINARY_USER_PHOTO_FOLDER,
       'La foto de perfil',
+    );
+  }
+
+  saveHomeHeroSlide(file: UploadedImageFile): Promise<StoredImageAsset> {
+    return this.uploadPublic(
+      file,
+      CLOUDINARY_HOME_HERO_SLIDE_FOLDER,
+      'La imagen del slider',
     );
   }
 

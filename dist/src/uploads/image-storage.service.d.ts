@@ -11,6 +11,7 @@ export declare class ImageStorageService {
     saveTournamentPhoto(file: UploadedImageFile): Promise<StoredImageAsset>;
     saveTeamPhoto(file: UploadedImageFile): Promise<StoredImageAsset>;
     saveUserPhoto(file: UploadedImageFile): Promise<StoredImageAsset>;
+    saveHomeHeroSlide(file: UploadedImageFile): Promise<StoredImageAsset>;
     saveSponsorLogo(file: UploadedImageFile): Promise<StoredImageAsset>;
     saveIdentityDocument(file: UploadedImageFile, side: IdentityDocumentSide): Promise<StoredImageAsset>;
     delete(reference: StoredImageReference): Promise<void>;

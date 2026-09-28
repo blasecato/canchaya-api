@@ -61,7 +61,7 @@ let RefereesService = class RefereesService {
                 ]
                 : undefined,
         };
-        const [referees, allActiveReferees, directedCounts, upcomingCounts, occupiedToday, availableTodayRows,] = await Promise.all([
+        const [referees, allActiveReferees, directedCounts, upcomingCounts, occupiedToday,] = await Promise.all([
             this.prisma.users.findMany({
                 where,
                 orderBy: [{ full_name: 'asc' }, { id: 'asc' }],
@@ -105,17 +105,9 @@ let RefereesService = class RefereesService {
                 where: {
                     assignment_status: { in: [...ACTIVE_ASSIGNMENT_STATUSES] },
                     matches: {
+                        status: { notIn: ['played', 'cancelled'] },
                         match_date: { gte: startOfToday, lt: startOfTomorrow },
                     },
-                },
-                distinct: ['referee_id'],
-                select: { referee_id: true },
-            }),
-            this.prisma.referee_availability.findMany({
-                where: {
-                    status: 'active',
-                    starts_at: { lt: startOfTomorrow },
-                    ends_at: { gt: startOfToday },
                 },
                 distinct: ['referee_id'],
                 select: { referee_id: true },
@@ -130,9 +122,7 @@ let RefereesService = class RefereesService {
             item._count._all,
         ]));
         const occupiedIds = new Set(occupiedToday.map(({ referee_id }) => referee_id.toString()));
-        const declaredAvailableIds = new Set(availableTodayRows.map(({ referee_id }) => referee_id.toString()));
-        const availableToday = allActiveReferees.filter(({ id }) => declaredAvailableIds.has(id.toString()) &&
-            !occupiedIds.has(id.toString())).length;
+        const availableToday = allActiveReferees.filter(({ id }) => !occupiedIds.has(id.toString())).length;
         const items = referees.map((referee) => ({
             id: referee.id.toString(),
             fullName: referee.full_name,
@@ -143,8 +133,7 @@ let RefereesService = class RefereesService {
             photoUrl: referee.photo_url,
             directedMatches: directedByReferee.get(referee.id.toString()) ?? 0,
             upcomingMatches: upcomingByReferee.get(referee.id.toString()) ?? 0,
-            availableToday: declaredAvailableIds.has(referee.id.toString()) &&
-                !occupiedIds.has(referee.id.toString()),
+            availableToday: !occupiedIds.has(referee.id.toString()),
         }));
         return {
             items,

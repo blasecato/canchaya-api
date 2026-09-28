@@ -15,6 +15,7 @@ export declare const ModelName: {
     readonly association_administrators: "association_administrators";
     readonly associations: "associations";
     readonly association_announcements: "association_announcements";
+    readonly home_hero_slides: "home_hero_slides";
     readonly password_reset_codes: "password_reset_codes";
     readonly disciplinary_actions: "disciplinary_actions";
     readonly fines: "fines";
@@ -109,6 +110,23 @@ export declare const Association_announcementsScalarFieldEnum: {
     readonly updated_at: "updated_at";
 };
 export type Association_announcementsScalarFieldEnum = (typeof Association_announcementsScalarFieldEnum)[keyof typeof Association_announcementsScalarFieldEnum];
+export declare const Home_hero_slidesScalarFieldEnum: {
+    readonly slug: "slug";
+    readonly position: "position";
+    readonly eyebrow: "eyebrow";
+    readonly title: "title";
+    readonly accent_title: "accent_title";
+    readonly description: "description";
+    readonly cta_label: "cta_label";
+    readonly cta_to: "cta_to";
+    readonly thumbnail_title: "thumbnail_title";
+    readonly image_url: "image_url";
+    readonly image_public_id: "image_public_id";
+    readonly updated_by: "updated_by";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Home_hero_slidesScalarFieldEnum = (typeof Home_hero_slidesScalarFieldEnum)[keyof typeof Home_hero_slidesScalarFieldEnum];
 export declare const Password_reset_codesScalarFieldEnum: {
     readonly id: "id";
     readonly user_id: "user_id";

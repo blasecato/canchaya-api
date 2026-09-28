@@ -16,6 +16,7 @@ export declare const CLOUDINARY_USER_PHOTO_FOLDER = "canchaya/users/profiles";
 export declare const CLOUDINARY_IDENTITY_DOCUMENT_FRONT_FOLDER = "canchaya/users/documents/front";
 export declare const CLOUDINARY_IDENTITY_DOCUMENT_BACK_FOLDER = "canchaya/users/documents/back";
 export declare const CLOUDINARY_SPONSOR_LOGO_FOLDER = "canchaya/sponsors/logos";
+export declare const CLOUDINARY_HOME_HERO_SLIDE_FOLDER = "canchaya/home/hero";
 export declare const MAX_IMAGE_SIZE_BYTES: number;
 export declare const ALLOWED_IMAGE_MIME_TYPES: readonly ["image/jpeg", "image/png", "image/webp"];
 export type AllowedImageMimeType = (typeof ALLOWED_IMAGE_MIME_TYPES)[number];

@@ -33,8 +33,8 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User_rolesScalarFieldEnum = exports.TournamentsScalarFieldEnum = exports.Tournament_typesScalarFieldEnum = exports.Tournament_lifecycle_eventsScalarFieldEnum = exports.Tournament_registration_eventsScalarFieldEnum = exports.Notification_preferencesScalarFieldEnum = exports.NotificationsScalarFieldEnum = exports.Tournament_team_registrationsScalarFieldEnum = exports.Tournament_team_playersScalarFieldEnum = exports.Tournament_sponsorsScalarFieldEnum = exports.Tournament_refereesScalarFieldEnum = exports.Tournament_administratorsScalarFieldEnum = exports.TeamsScalarFieldEnum = exports.Team_membersScalarFieldEnum = exports.Disciplinary_eventsScalarFieldEnum = exports.Disciplinary_appealsScalarFieldEnum = exports.SuspensionsScalarFieldEnum = exports.SponsorsScalarFieldEnum = exports.RolesScalarFieldEnum = exports.Player_match_statsScalarFieldEnum = exports.Referee_assignment_eventsScalarFieldEnum = exports.Referee_availabilityScalarFieldEnum = exports.MatchesScalarFieldEnum = exports.Match_refereesScalarFieldEnum = exports.FinesScalarFieldEnum = exports.Disciplinary_actionsScalarFieldEnum = exports.Password_reset_codesScalarFieldEnum = exports.Association_announcementsScalarFieldEnum = exports.AssociationsScalarFieldEnum = exports.Association_administratorsScalarFieldEnum = exports.Auth_sessionsScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
-exports.defineExtension = exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.UsersScalarFieldEnum = void 0;
+exports.TournamentsScalarFieldEnum = exports.Tournament_typesScalarFieldEnum = exports.Tournament_lifecycle_eventsScalarFieldEnum = exports.Tournament_registration_eventsScalarFieldEnum = exports.Notification_preferencesScalarFieldEnum = exports.NotificationsScalarFieldEnum = exports.Tournament_team_registrationsScalarFieldEnum = exports.Tournament_team_playersScalarFieldEnum = exports.Tournament_sponsorsScalarFieldEnum = exports.Tournament_refereesScalarFieldEnum = exports.Tournament_administratorsScalarFieldEnum = exports.TeamsScalarFieldEnum = exports.Team_membersScalarFieldEnum = exports.Disciplinary_eventsScalarFieldEnum = exports.Disciplinary_appealsScalarFieldEnum = exports.SuspensionsScalarFieldEnum = exports.SponsorsScalarFieldEnum = exports.RolesScalarFieldEnum = exports.Player_match_statsScalarFieldEnum = exports.Referee_assignment_eventsScalarFieldEnum = exports.Referee_availabilityScalarFieldEnum = exports.MatchesScalarFieldEnum = exports.Match_refereesScalarFieldEnum = exports.FinesScalarFieldEnum = exports.Disciplinary_actionsScalarFieldEnum = exports.Password_reset_codesScalarFieldEnum = exports.Home_hero_slidesScalarFieldEnum = exports.Association_announcementsScalarFieldEnum = exports.AssociationsScalarFieldEnum = exports.Association_administratorsScalarFieldEnum = exports.Auth_sessionsScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
+exports.defineExtension = exports.JsonNullValueFilter = exports.NullsOrder = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.UsersScalarFieldEnum = exports.User_rolesScalarFieldEnum = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/client"));
 exports.PrismaClientKnownRequestError = runtime.PrismaClientKnownRequestError;
 exports.PrismaClientUnknownRequestError = runtime.PrismaClientUnknownRequestError;
@@ -65,6 +65,7 @@ exports.ModelName = {
     association_administrators: 'association_administrators',
     associations: 'associations',
     association_announcements: 'association_announcements',
+    home_hero_slides: 'home_hero_slides',
     password_reset_codes: 'password_reset_codes',
     disciplinary_actions: 'disciplinary_actions',
     fines: 'fines',
@@ -150,6 +151,22 @@ exports.Association_announcementsScalarFieldEnum = {
     first_place_prize: 'first_place_prize',
     second_place_prize: 'second_place_prize',
     created_by: 'created_by',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+};
+exports.Home_hero_slidesScalarFieldEnum = {
+    slug: 'slug',
+    position: 'position',
+    eyebrow: 'eyebrow',
+    title: 'title',
+    accent_title: 'accent_title',
+    description: 'description',
+    cta_label: 'cta_label',
+    cta_to: 'cta_to',
+    thumbnail_title: 'thumbnail_title',
+    image_url: 'image_url',
+    image_public_id: 'image_public_id',
+    updated_by: 'updated_by',
     created_at: 'created_at',
     updated_at: 'updated_at'
 };
