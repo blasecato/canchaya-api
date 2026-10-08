@@ -139,12 +139,20 @@ export class TournamentsService {
   }
 
   async findPublicStats() {
-    const [activeTournaments, associations, activePlayers] =
+    const [activeTournaments, upcomingTournaments, associations, activePlayers] =
       await this.prisma.$transaction([
         this.prisma.tournaments.count({
           where: {
             status: 'active',
             phase: { in: [...ACTIVE_TOURNAMENT_PHASES] },
+          },
+        }),
+        // Mismo criterio que el carrusel del inicio, para que la cifra y las
+        // tarjetas publicadas no se contradigan.
+        this.prisma.tournaments.count({
+          where: {
+            status: 'active',
+            phase: { in: [...HOME_FEATURED_TOURNAMENT_PHASES] },
           },
         }),
         this.prisma.associations.count({ where: { status: 'active' } }),
@@ -155,7 +163,12 @@ export class TournamentsService {
           },
         }),
       ]);
-    return { activeTournaments, associations, activePlayers };
+    return {
+      activeTournaments,
+      upcomingTournaments,
+      associations,
+      activePlayers,
+    };
   }
 
   async findCatalog(

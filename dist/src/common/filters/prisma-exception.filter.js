@@ -29,24 +29,24 @@ let PrismaExceptionFilter = PrismaExceptionFilter_1 = class PrismaExceptionFilte
     toHttpException(exception) {
         switch (exception.code) {
             case 'P2002':
-                return new common_1.ConflictException('Ya existe un registro con los valores únicos enviados.');
+                return new common_1.ConflictException('Ya existe un registro con esos datos. Revisa los campos que deben ser únicos, como el documento o el correo.');
             case 'P2003':
-                return new common_1.BadRequestException('La relación indicada no existe o todavía está siendo utilizada.');
+                return new common_1.BadRequestException('No encontramos uno de los elementos relacionados, o todavía está en uso y no se puede modificar.');
             case 'P2000':
             case 'P2004':
             case 'P2005':
             case 'P2020':
             case 'P2033':
-                return new common_1.BadRequestException('Los datos enviados incumplen una restricción de la base de datos.');
+                return new common_1.BadRequestException('Alguno de los datos enviados no es válido. Revisa el formulario e inténtalo de nuevo.');
             case 'P2011':
             case 'P2012':
             case 'P2013':
             case 'P2014':
                 return new common_1.BadRequestException('Falta un campo obligatorio.');
             case 'P2025':
-                return new common_1.NotFoundException('El registro solicitado no existe.');
+                return new common_1.NotFoundException('No encontramos lo que buscabas. Es posible que haya sido eliminado.');
             default:
-                return new common_1.InternalServerErrorException('No fue posible completar la operación en la base de datos.');
+                return new common_1.InternalServerErrorException('No pudimos completar la operación. Inténtalo de nuevo en unos minutos.');
         }
     }
 };

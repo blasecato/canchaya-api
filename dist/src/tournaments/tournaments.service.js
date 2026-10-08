@@ -61,11 +61,17 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
         return tournaments.map((tournament) => (0, tournament_catalog_mapper_1.toTournamentCatalogItemResponse)(tournament, false));
     }
     async findPublicStats() {
-        const [activeTournaments, associations, activePlayers] = await this.prisma.$transaction([
+        const [activeTournaments, upcomingTournaments, associations, activePlayers] = await this.prisma.$transaction([
             this.prisma.tournaments.count({
                 where: {
                     status: 'active',
                     phase: { in: [...tournament_lifecycle_constants_1.ACTIVE_TOURNAMENT_PHASES] },
+                },
+            }),
+            this.prisma.tournaments.count({
+                where: {
+                    status: 'active',
+                    phase: { in: [...HOME_FEATURED_TOURNAMENT_PHASES] },
                 },
             }),
             this.prisma.associations.count({ where: { status: 'active' } }),
@@ -76,7 +82,12 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
                 },
             }),
         ]);
-        return { activeTournaments, associations, activePlayers };
+        return {
+            activeTournaments,
+            upcomingTournaments,
+            associations,
+            activePlayers,
+        };
     }
     async findCatalog(query, requestingUserId) {
         const dateFrom = query.dateFrom ? new Date(query.dateFrom) : undefined;

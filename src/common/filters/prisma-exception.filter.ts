@@ -44,11 +44,11 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     switch (exception.code) {
       case 'P2002':
         return new ConflictException(
-          'Ya existe un registro con los valores únicos enviados.',
+          'Ya existe un registro con esos datos. Revisa los campos que deben ser únicos, como el documento o el correo.',
         );
       case 'P2003':
         return new BadRequestException(
-          'La relación indicada no existe o todavía está siendo utilizada.',
+          'No encontramos uno de los elementos relacionados, o todavía está en uso y no se puede modificar.',
         );
       case 'P2000':
       case 'P2004':
@@ -56,7 +56,7 @@ export class PrismaExceptionFilter implements ExceptionFilter {
       case 'P2020':
       case 'P2033':
         return new BadRequestException(
-          'Los datos enviados incumplen una restricción de la base de datos.',
+          'Alguno de los datos enviados no es válido. Revisa el formulario e inténtalo de nuevo.',
         );
       case 'P2011':
       case 'P2012':
@@ -64,10 +64,10 @@ export class PrismaExceptionFilter implements ExceptionFilter {
       case 'P2014':
         return new BadRequestException('Falta un campo obligatorio.');
       case 'P2025':
-        return new NotFoundException('El registro solicitado no existe.');
+        return new NotFoundException('No encontramos lo que buscabas. Es posible que haya sido eliminado.');
       default:
         return new InternalServerErrorException(
-          'No fue posible completar la operación en la base de datos.',
+          'No pudimos completar la operación. Inténtalo de nuevo en unos minutos.',
         );
     }
   }

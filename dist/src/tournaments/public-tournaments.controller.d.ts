@@ -7,6 +7,7 @@ export declare class PublicTournamentsController {
     findActive(): Promise<TournamentCatalogItemResponseDto[]>;
     findStats(): Promise<{
         activeTournaments: number;
+        upcomingTournaments: number;
         associations: number;
         activePlayers: number;
     }>;

@@ -18,8 +18,8 @@ const bcryptjs_1 = require("bcryptjs");
 const prisma_service_1 = require("../prisma/prisma.service");
 const public_user_mapper_1 = require("../users/public-user.mapper");
 const auth_config_1 = require("./auth.config");
-const INVALID_CREDENTIALS_MESSAGE = 'Credenciales inválidas.';
-const INVALID_TOKEN_MESSAGE = 'Token inválido, expirado o revocado.';
+const INVALID_CREDENTIALS_MESSAGE = 'El correo o la contraseña no son correctos.';
+const INVALID_TOKEN_MESSAGE = 'Tu sesión expiró. Vuelve a iniciar sesión para continuar.';
 const DUMMY_PASSWORD_HASH = '$2b$12$586Ds5J7mmi.nFhCw7LzzuvQ60P5JZcppz9zEJ/fWt8gjK.BaZzVO';
 let AuthService = class AuthService {
     prisma;

@@ -156,7 +156,7 @@ export class ImageStorageService {
           `No fue posible eliminar el recurso ${reference.publicId}: ${this.errorMessage(error)}`,
         );
         throw new ServiceUnavailableException(
-          'No fue posible eliminar la imagen del almacenamiento.',
+          'No pudimos eliminar la imagen. Inténtalo de nuevo en unos minutos.',
         );
       }
       return;

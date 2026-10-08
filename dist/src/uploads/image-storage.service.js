@@ -75,7 +75,7 @@ let ImageStorageService = ImageStorageService_1 = class ImageStorageService {
             }
             catch (error) {
                 this.logger.error(`No fue posible eliminar el recurso ${reference.publicId}: ${this.errorMessage(error)}`);
-                throw new common_1.ServiceUnavailableException('No fue posible eliminar la imagen del almacenamiento.');
+                throw new common_1.ServiceUnavailableException('No pudimos eliminar la imagen. Inténtalo de nuevo en unos minutos.');
             }
             return;
         }

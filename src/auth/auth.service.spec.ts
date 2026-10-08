@@ -174,7 +174,7 @@ describe('AuthService', () => {
         email: 'user@example.com',
         password: 'incorrect-password',
       }),
-    ).rejects.toThrow(new UnauthorizedException('Credenciales inválidas.'));
+    ).rejects.toThrow(new UnauthorizedException('El correo o la contraseña no son correctos.'));
     expect(sessionsCreate).not.toHaveBeenCalled();
   });
 
@@ -217,7 +217,9 @@ describe('AuthService', () => {
     });
 
     await expect(authService.validateAccessToken(token)).rejects.toThrow(
-      new UnauthorizedException('Token inválido, expirado o revocado.'),
+      new UnauthorizedException(
+        'Tu sesión expiró. Vuelve a iniciar sesión para continuar.',
+      ),
     );
   });
 

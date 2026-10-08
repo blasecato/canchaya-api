@@ -15,8 +15,10 @@ import { LogoutResponseDto } from './dto/logout-response.dto';
 import type { AccessTokenPayload } from './interfaces/access-token-payload.interface';
 import type { AuthenticatedSession } from './interfaces/authenticated-request.interface';
 
-const INVALID_CREDENTIALS_MESSAGE = 'Credenciales inválidas.';
-const INVALID_TOKEN_MESSAGE = 'Token inválido, expirado o revocado.';
+const INVALID_CREDENTIALS_MESSAGE =
+  'El correo o la contraseña no son correctos.';
+const INVALID_TOKEN_MESSAGE =
+  'Tu sesión expiró. Vuelve a iniciar sesión para continuar.';
 const DUMMY_PASSWORD_HASH =
   '$2b$12$586Ds5J7mmi.nFhCw7LzzuvQ60P5JZcppz9zEJ/fWt8gjK.BaZzVO';
 

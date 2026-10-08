@@ -27,6 +27,7 @@ export class PublicTournamentsController {
   @ApiOperation({ summary: 'Consultar estadísticas públicas del inicio' })
   findStats(): Promise<{
     activeTournaments: number;
+    upcomingTournaments: number;
     associations: number;
     activePlayers: number;
   }> {

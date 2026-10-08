@@ -24,6 +24,7 @@ export declare class TournamentsService {
     findFeaturedActive(): Promise<TournamentCatalogItemResponseDto[]>;
     findPublicStats(): Promise<{
         activeTournaments: number;
+        upcomingTournaments: number;
         associations: number;
         activePlayers: number;
     }>;
