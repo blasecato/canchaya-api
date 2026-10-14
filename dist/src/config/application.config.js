@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.configureApplication = configureApplication;
 const common_1 = require("@nestjs/common");
+const payload_size_exception_filter_1 = require("../common/filters/payload-size-exception.filter");
 const prisma_exception_filter_1 = require("../common/filters/prisma-exception.filter");
 const upload_exception_filter_1 = require("../common/filters/upload-exception.filter");
 const validation_messages_1 = require("../common/validation/validation-messages");
@@ -12,6 +13,7 @@ function configureApplication(app) {
         .split(',')
         .map((origin) => origin.trim());
     app.setGlobalPrefix('api');
+    app.useBodyParser('json', { limit: '4mb' });
     app.enableCors({ credentials: true, origin: corsOrigins });
     app.useStaticAssets((0, uploads_constants_1.getUploadsRootDirectory)(), {
         index: false,
@@ -24,7 +26,7 @@ function configureApplication(app) {
         whitelist: true,
         exceptionFactory: validation_messages_1.buildValidationException,
     }));
-    app.useGlobalFilters(new prisma_exception_filter_1.PrismaExceptionFilter(), new upload_exception_filter_1.UploadExceptionFilter());
+    app.useGlobalFilters(new prisma_exception_filter_1.PrismaExceptionFilter(), new upload_exception_filter_1.UploadExceptionFilter(), new payload_size_exception_filter_1.PayloadSizeExceptionFilter());
     app.useGlobalInterceptors(new api_response_interceptor_1.ApiResponseInterceptor());
 }
 //# sourceMappingURL=application.config.js.map

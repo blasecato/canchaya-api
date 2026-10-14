@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CardChargesModule } from './card-charges/card-charges.module';
 import { FairPlayModule } from './fair-play/fair-play.module';
+import { RosterImportModule } from './roster-import/roster-import.module';
 import { CompetitionAccessModule } from './authorization/competition-access.module';
 import { DisciplinaryActionsModule } from './disciplinary-actions/disciplinary-actions.module';
 import { FinesModule } from './fines/fines.module';
@@ -41,6 +42,7 @@ import { UsersModule } from './users/users.module';
     CompetitionAccessModule,
     CardChargesModule,
     FairPlayModule,
+    RosterImportModule,
     RolesModule,
     UsersModule,
     AssociationsModule,

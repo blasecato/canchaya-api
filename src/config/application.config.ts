@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import type { NestExpressApplication } from '@nestjs/platform-express';
+import { PayloadSizeExceptionFilter } from '../common/filters/payload-size-exception.filter';
 import { PrismaExceptionFilter } from '../common/filters/prisma-exception.filter';
 import { UploadExceptionFilter } from '../common/filters/upload-exception.filter';
 import { buildValidationException } from '../common/validation/validation-messages';
@@ -15,6 +16,9 @@ export function configureApplication(app: NestExpressApplication): void {
     .map((origin) => origin.trim());
 
   app.setGlobalPrefix('api');
+  // La carga masiva de plantillas envía un JSON grande (decenas de equipos con
+  // sus jugadores); el límite por defecto de 100 kB se queda corto.
+  app.useBodyParser('json', { limit: '4mb' });
   // Los carnés descargan las fotos con `fetch` para convertirlas a data URL.
   // CORS debe ejecutarse también para las respuestas estáticas de /uploads.
   app.enableCors({ credentials: true, origin: corsOrigins });
@@ -34,6 +38,10 @@ export function configureApplication(app: NestExpressApplication): void {
       exceptionFactory: buildValidationException,
     }),
   );
-  app.useGlobalFilters(new PrismaExceptionFilter(), new UploadExceptionFilter());
+  app.useGlobalFilters(
+    new PrismaExceptionFilter(),
+    new UploadExceptionFilter(),
+    new PayloadSizeExceptionFilter(),
+  );
   app.useGlobalInterceptors(new ApiResponseInterceptor());
 }
