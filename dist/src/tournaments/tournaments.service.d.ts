@@ -15,6 +15,7 @@ import type { ReviewTeamRegistrationDto } from './dto/review-team-registration.d
 import type { MyTournamentPaymentResponseDto, TournamentPaymentsResponseDto, TournamentRegistrationPaymentResponseDto, UpdateRegistrationPaymentDto } from './dto/registration-payment.dto';
 import type { CaptainTeamOptionResponseDto, TeamRegistrationResponseDto } from './dto/register-team.dto';
 import { AddTeamsResultDto } from './dto/add-teams.dto';
+import { RemoveTeamFromTournamentResultDto } from './dto/remove-team.dto';
 export declare class TournamentsService {
     private readonly prisma;
     private readonly associationsService;
@@ -33,6 +34,7 @@ export declare class TournamentsService {
     findMine(requestingUserId: bigint): Promise<TournamentCatalogItemResponseDto[]>;
     private buildCatalogPriorityFilter;
     findCaptainTeams(tournamentId: bigint, requestingUserId: bigint): Promise<CaptainTeamOptionResponseDto[]>;
+    removeTeamFromTournament(tournamentId: bigint, teamId: bigint, requestingUserId: bigint, reason?: string): Promise<RemoveTeamFromTournamentResultDto>;
     addTeamsAsManager(tournamentId: bigint, teamIds: bigint[], requestingUserId: bigint): Promise<AddTeamsResultDto>;
     registerTeam(tournamentId: bigint, teamId: bigint, requestingUserId: bigint): Promise<TeamRegistrationResponseDto>;
     findRegistrationPayments(tournamentId: bigint, requestingUserId: bigint): Promise<TournamentPaymentsResponseDto>;

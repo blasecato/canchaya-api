@@ -380,6 +380,125 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
             };
         });
     }
+    async removeTeamFromTournament(tournamentId, teamId, requestingUserId, reason) {
+        const registration = await this.prisma.tournament_team_registrations.findUnique({
+            where: {
+                tournament_id_team_id: {
+                    tournament_id: tournamentId,
+                    team_id: teamId,
+                },
+            },
+            select: {
+                request_status: true,
+                tournaments: {
+                    select: {
+                        name: true,
+                        association_id: true,
+                        phase: true,
+                        max_teams: true,
+                        competition_plan: true,
+                    },
+                },
+                teams: { select: { name: true, captain_user_id: true } },
+                _count: { select: { tournament_team_players: true } },
+            },
+        });
+        if (!registration) {
+            throw new common_1.NotFoundException('Este equipo no está inscrito en el torneo.');
+        }
+        await this.requireManagementPermission(this.prisma, registration.tournaments.association_id, requestingUserId);
+        if (!['registration', 'scheduled', 'in_progress'].includes(registration.tournaments.phase)) {
+            throw new common_1.BadRequestException('El torneo ya terminó o está archivado: los equipos inscritos no se pueden retirar.');
+        }
+        const teamMatchFilter = {
+            tournament_id: tournamentId,
+            OR: [{ home_team_id: teamId }, { away_team_id: teamId }],
+        };
+        const [matchesWithHistory, cardCharges, disciplinaryActions] = await Promise.all([
+            this.prisma.matches.count({
+                where: {
+                    ...teamMatchFilter,
+                    status: { notIn: ['scheduled', 'postponed'] },
+                },
+            }),
+            this.prisma.tournament_card_charges.count({
+                where: { tournament_id: tournamentId, team_id: teamId },
+            }),
+            this.prisma.disciplinary_actions.count({
+                where: { tournament_id: tournamentId, team_id: teamId },
+            }),
+        ]);
+        if (matchesWithHistory > 0) {
+            throw new common_1.BadRequestException(`${registration.teams.name} ya tiene partidos jugados o anulados en este torneo. Sacarlo borraría resultados, por lo que debes resolverlo desde los partidos.`);
+        }
+        if (cardCharges > 0) {
+            throw new common_1.BadRequestException(`${registration.teams.name} tiene cobros de tarjetas registrados en el torneo. Resuélvelos antes de retirarlo.`);
+        }
+        if (disciplinaryActions > 0) {
+            throw new common_1.BadRequestException(`${registration.teams.name} tiene procesos disciplinarios en el torneo y no se puede retirar.`);
+        }
+        const plan = (0, competition_engine_1.readPlan)(registration.tournaments.competition_plan);
+        const slot = plan?.slots?.find(({ teamId: assigned }) => assigned === teamId.toString());
+        const removedMatches = await this.prisma.$transaction(async (transaction) => {
+            const { count } = await transaction.matches.deleteMany({
+                where: teamMatchFilter,
+            });
+            await transaction.tournament_team_registrations.delete({
+                where: {
+                    tournament_id_team_id: {
+                        tournament_id: tournamentId,
+                        team_id: teamId,
+                    },
+                },
+            });
+            if (plan && slot) {
+                slot.teamId = null;
+                await transaction.tournaments.update({
+                    where: { id: tournamentId },
+                    data: {
+                        competition_plan: JSON.parse(JSON.stringify(plan)),
+                        updated_at: new Date(),
+                    },
+                });
+            }
+            await transaction.notifications.create({
+                data: {
+                    user_id: registration.teams.captain_user_id,
+                    type: 'tournament_registration',
+                    title: 'Tu equipo salió de un torneo',
+                    message: reason?.trim()
+                        ? `${registration.teams.name} fue retirado de ${registration.tournaments.name} por la organización: ${reason.trim()}`
+                        : `${registration.teams.name} fue retirado de ${registration.tournaments.name} por la organización.`,
+                    entity_type: 'tournament_registration',
+                    entity_id: `${tournamentId.toString()}:${teamId.toString()}`,
+                    metadata: {
+                        tournamentId: tournamentId.toString(),
+                        tournamentName: registration.tournaments.name,
+                        teamId: teamId.toString(),
+                        teamName: registration.teams.name,
+                        status: 'removed',
+                        actionUrl: `/tournaments/${tournamentId.toString()}`,
+                        actionLabel: 'Ver torneo',
+                    },
+                },
+            });
+            return count;
+        });
+        const occupied = await this.prisma.tournament_team_registrations.count({
+            where: {
+                tournament_id: tournamentId,
+                request_status: { in: ['pending', 'approved'] },
+            },
+        });
+        return {
+            teamId: teamId.toString(),
+            teamName: registration.teams.name,
+            removedMatches,
+            removedPlayers: registration._count.tournament_team_players,
+            availableSlots: Math.max(0, registration.tournaments.max_teams - occupied),
+            freedDrawSlot: Boolean(slot),
+        };
+    }
     async addTeamsAsManager(tournamentId, teamIds, requestingUserId) {
         const tournament = await this.prisma.tournaments.findUnique({
             where: { id: tournamentId },

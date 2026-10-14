@@ -66,6 +66,10 @@ import {
   AddTeamsToTournamentDto,
 } from './dto/add-teams.dto';
 import {
+  RemoveTeamFromTournamentDto,
+  RemoveTeamFromTournamentResultDto,
+} from './dto/remove-team.dto';
+import {
   CaptainTeamOptionResponseDto,
   RegisterTeamDto,
   TeamRegistrationResponseDto,
@@ -318,6 +322,28 @@ export class TournamentCatalogController {
       tournamentId,
       dto.teamIds.map((id) => BigInt(id)),
       request.auth.userId,
+    );
+  }
+
+  @Delete(':tournamentId/registrations/:teamId')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
+  @ApiOperation({
+    summary: 'Sacar un equipo del torneo',
+    description:
+      'Elimina la inscripción, su plantilla y los partidos aún no jugados. Se bloquea si el equipo ya tiene resultados, cobros o sanciones.',
+  })
+  @ApiOkResponse({ type: RemoveTeamFromTournamentResultDto })
+  removeTeam(
+    @Param('tournamentId', ParseBigIntPipe) tournamentId: bigint,
+    @Param('teamId', ParseBigIntPipe) teamId: bigint,
+    @Req() request: AuthenticatedRequest,
+    @Body() dto: RemoveTeamFromTournamentDto,
+  ): Promise<RemoveTeamFromTournamentResultDto> {
+    return this.tournamentsService.removeTeamFromTournament(
+      tournamentId,
+      teamId,
+      request.auth.userId,
+      dto.reason,
     );
   }
 

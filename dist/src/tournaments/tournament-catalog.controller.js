@@ -34,6 +34,7 @@ const tournament_sponsor_input_dto_1 = require("./dto/tournament-sponsor-input.d
 const review_team_registration_dto_1 = require("./dto/review-team-registration.dto");
 const registration_payment_dto_1 = require("./dto/registration-payment.dto");
 const add_teams_dto_1 = require("./dto/add-teams.dto");
+const remove_team_dto_1 = require("./dto/remove-team.dto");
 const register_team_dto_1 = require("./dto/register-team.dto");
 const sponsorLogoUploadOptions = {
     limits: { files: 1, fileSize: uploads_constants_1.MAX_IMAGE_SIZE_BYTES, fields: 20, parts: 22 },
@@ -90,6 +91,9 @@ let TournamentCatalogController = class TournamentCatalogController {
     }
     addTeams(tournamentId, request, dto) {
         return this.tournamentsService.addTeamsAsManager(tournamentId, dto.teamIds.map((id) => BigInt(id)), request.auth.userId);
+    }
+    removeTeam(tournamentId, teamId, request, dto) {
+        return this.tournamentsService.removeTeamFromTournament(tournamentId, teamId, request.auth.userId, dto.reason);
     }
     findMyRegistrationPayment(tournamentId, request) {
         return this.tournamentsService.findMyRegistrationPayment(tournamentId, request.auth.userId);
@@ -286,6 +290,22 @@ __decorate([
     __metadata("design:paramtypes", [BigInt, Object, add_teams_dto_1.AddTeamsToTournamentDto]),
     __metadata("design:returntype", Promise)
 ], TournamentCatalogController.prototype, "addTeams", null);
+__decorate([
+    (0, common_1.Delete)(':tournamentId/registrations/:teamId'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Sacar un equipo del torneo',
+        description: 'Elimina la inscripción, su plantilla y los partidos aún no jugados. Se bloquea si el equipo ya tiene resultados, cobros o sanciones.',
+    }),
+    (0, swagger_1.ApiOkResponse)({ type: remove_team_dto_1.RemoveTeamFromTournamentResultDto }),
+    __param(0, (0, common_1.Param)('tournamentId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Param)('teamId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(2, (0, common_1.Req)()),
+    __param(3, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, BigInt, Object, remove_team_dto_1.RemoveTeamFromTournamentDto]),
+    __metadata("design:returntype", Promise)
+], TournamentCatalogController.prototype, "removeTeam", null);
 __decorate([
     (0, common_1.Get)(':tournamentId/my-payment'),
     (0, require_roles_decorator_1.RequireRoles)('PLAYER'),
