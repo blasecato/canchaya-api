@@ -19,8 +19,10 @@ import {
   BulkPlayerRowDto,
   BulkPlayerSkippedDto,
 } from './dto/bulk-create-players.dto';
+import { ROLE_LABELS } from '../users/user-role.constants';
 import { getTemporaryPlayerPassword } from './players.constants';
 import { CreatePlayerDto } from './dto/create-player.dto';
+import { DeletePlayerResultDto } from './dto/delete-player-result.dto';
 import { ListPlayersQueryDto } from './dto/list-players-query.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 
@@ -417,6 +419,138 @@ export class PlayersService {
       });
     }
     return this.toResponse(player);
+  }
+
+  /**
+   * Borrado definitivo de un jugador. Pensado para corregir registros erróneos
+   * o de prueba, así que solo procede cuando la cuenta no deja huella: sin
+   * estadísticas, tarjetas, sanciones ni responsabilidades administrativas.
+   * Lo que sí se limpia son sus inscripciones y sus equipos, que no son
+   * historia deportiva sino vínculos.
+   */
+  async remove(
+    id: bigint,
+    requestingUserId: bigint,
+  ): Promise<DeletePlayerResultDto> {
+    if (id === requestingUserId) {
+      throw new BadRequestException('No puedes eliminar tu propia cuenta.');
+    }
+    const player = await this.prisma.users.findFirst({
+      where: { id, user_roles: { some: { role_code: 'PLAYER' } } },
+      select: {
+        id: true,
+        full_name: true,
+        photo_url: true,
+        photo_public_id: true,
+        user_roles: { select: { role_code: true } },
+      },
+    });
+    if (!player) {
+      throw new NotFoundException(
+        `El jugador con ID ${id.toString()} no existe.`,
+      );
+    }
+
+    const otherRoles = player.user_roles
+      .map(({ role_code }) => role_code)
+      .filter((role) => role !== 'PLAYER');
+    if (otherRoles.length > 0) {
+      throw new BadRequestException(
+        `${player.full_name} también tiene los roles ${otherRoles
+          .map((role) => ROLE_LABELS[role] ?? role)
+          .join(', ')}. Quita esos roles antes de eliminar la cuenta.`,
+      );
+    }
+
+    const [
+      matchStats,
+      cardCharges,
+      disciplinaryActions,
+      captainTeams,
+      createdTeams,
+      requestedRegistrations,
+      registrationEvents,
+    ] = await Promise.all([
+      this.prisma.player_match_stats.count({ where: { player_id: id } }),
+      this.prisma.tournament_card_charges.count({ where: { player_id: id } }),
+      this.prisma.disciplinary_actions.count({ where: { player_id: id } }),
+      this.prisma.teams.count({ where: { captain_user_id: id } }),
+      this.prisma.teams.count({ where: { created_by: id } }),
+      this.prisma.tournament_team_registrations.count({
+        where: { requested_by: id },
+      }),
+      this.prisma.tournament_registration_events.count({
+        where: { actor_user_id: id },
+      }),
+    ]);
+
+    const blockers: string[] = [];
+    if (matchStats > 0)
+      blockers.push(
+        `tiene estadísticas en ${matchStats} partido${matchStats === 1 ? '' : 's'}`,
+      );
+    if (cardCharges > 0)
+      blockers.push('tiene cobros de tarjetas registrados');
+    if (disciplinaryActions > 0)
+      blockers.push('tiene procesos disciplinarios');
+    if (captainTeams > 0)
+      blockers.push(
+        `es capitán de ${captainTeams} equipo${captainTeams === 1 ? '' : 's'}`,
+      );
+    if (createdTeams > 0)
+      blockers.push(
+        `creó ${createdTeams} equipo${createdTeams === 1 ? '' : 's'}`,
+      );
+    if (requestedRegistrations > 0 || registrationEvents > 0)
+      blockers.push('gestionó inscripciones de equipos a torneos');
+    if (blockers.length > 0) {
+      throw new BadRequestException(
+        `${player.full_name} no se puede eliminar porque ${blockers.join(', ')}. Bloquea la cuenta en lugar de borrarla para conservar esa información.`,
+      );
+    }
+
+    let removedTeamMemberships = 0;
+    let removedTournamentRosters = 0;
+    try {
+      await this.prisma.$transaction(async (transaction) => {
+        // La plantilla del torneo cuelga de la membresía: va primero.
+        const rosters = await transaction.tournament_team_players.deleteMany({
+          where: { player_id: id },
+        });
+        removedTournamentRosters = rosters.count;
+        const memberships = await transaction.team_members.deleteMany({
+          where: { user_id: id },
+        });
+        removedTeamMemberships = memberships.count;
+        // El borrado del usuario arrastra roles, sesiones, notificaciones,
+        // preferencias y códigos de recuperación.
+        await transaction.users.delete({ where: { id } });
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2003'
+      ) {
+        throw new BadRequestException(
+          `${player.full_name} tiene información asociada en el sistema que no se puede borrar. Bloquea la cuenta en lugar de eliminarla.`,
+        );
+      }
+      throw error;
+    }
+
+    if (player.photo_url) {
+      await this.imageStorage.deleteSafely({
+        url: player.photo_url,
+        publicId: player.photo_public_id,
+      });
+    }
+
+    return {
+      id: id.toString(),
+      fullName: player.full_name,
+      removedTeamMemberships,
+      removedTournamentRosters,
+    };
   }
 
   async block(id: bigint, requestingUserId: bigint, dto: BlockPlayerDto) {

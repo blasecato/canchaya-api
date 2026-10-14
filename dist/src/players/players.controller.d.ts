@@ -2,6 +2,7 @@ import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-requ
 import type { UploadedImageFile } from '../uploads/image-storage.types';
 import { BlockPlayerDto } from './dto/block-player.dto';
 import { BulkCreatePlayersDto, BulkCreatePlayersResponseDto } from './dto/bulk-create-players.dto';
+import { DeletePlayerResultDto } from './dto/delete-player-result.dto';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { ListPlayersQueryDto } from './dto/list-players-query.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
@@ -136,6 +137,7 @@ export declare class PlayersController {
         createdAt: string;
         updatedAt: string;
     }>;
+    remove(id: bigint, request: AuthenticatedRequest): Promise<DeletePlayerResultDto>;
     update(id: bigint, dto: UpdatePlayerDto, photo?: UploadedImageFile): Promise<{
         id: string;
         idNumber: string;

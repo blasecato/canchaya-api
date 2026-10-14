@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -38,6 +39,7 @@ import {
   BulkCreatePlayersDto,
   BulkCreatePlayersResponseDto,
 } from './dto/bulk-create-players.dto';
+import { DeletePlayerResultDto } from './dto/delete-player-result.dto';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { ListPlayersQueryDto } from './dto/list-players-query.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
@@ -154,6 +156,21 @@ export class PlayersController {
     @Req() request: AuthenticatedRequest,
   ) {
     return this.playersService.unblock(id, request.auth.userId);
+  }
+
+  @Delete(':id')
+  @RequireRoles('SUPER_ADMIN')
+  @ApiOperation({
+    summary: 'Eliminar definitivamente la cuenta de un jugador',
+    description:
+      'Solo procede si el jugador no tiene estadísticas, tarjetas, sanciones ni equipos a su cargo. Borra sus inscripciones y sus equipos.',
+  })
+  @ApiOkResponse({ type: DeletePlayerResultDto })
+  remove(
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<DeletePlayerResultDto> {
+    return this.playersService.remove(id, request.auth.userId);
   }
 
   @Patch(':id')

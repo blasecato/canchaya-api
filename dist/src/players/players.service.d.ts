@@ -4,6 +4,7 @@ import type { UploadedImageFile } from '../uploads/image-storage.types';
 import { BlockPlayerDto } from './dto/block-player.dto';
 import { BulkCreatePlayersDto, BulkCreatePlayersResponseDto } from './dto/bulk-create-players.dto';
 import { CreatePlayerDto } from './dto/create-player.dto';
+import { DeletePlayerResultDto } from './dto/delete-player-result.dto';
 import { ListPlayersQueryDto } from './dto/list-players-query.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 export declare class PlayersService {
@@ -111,6 +112,7 @@ export declare class PlayersService {
         createdAt: string;
         updatedAt: string;
     }>;
+    remove(id: bigint, requestingUserId: bigint): Promise<DeletePlayerResultDto>;
     block(id: bigint, requestingUserId: bigint, dto: BlockPlayerDto): Promise<{
         id: string;
         idNumber: string;

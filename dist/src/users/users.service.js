@@ -18,13 +18,8 @@ const prisma_service_1 = require("../prisma/prisma.service");
 const image_storage_service_1 = require("../uploads/image-storage.service");
 const mail_service_1 = require("../mail/mail.service");
 const identity_verification_service_1 = require("./identity-verification.service");
+const user_role_constants_1 = require("./user-role.constants");
 const public_user_mapper_1 = require("./public-user.mapper");
-const ROLE_LABELS = {
-    SUPER_ADMIN: 'Superadministrador',
-    ASSOCIATION_ADMIN: 'Administrador de asociación',
-    REFEREE: 'Árbitro',
-    PLAYER: 'Jugador',
-};
 let UsersService = UsersService_1 = class UsersService {
     prisma;
     imageStorage;
@@ -437,10 +432,10 @@ let UsersService = UsersService_1 = class UsersService {
                 if (rolesChanged && id !== requestingUserId) {
                     const changes = [
                         addedRoles.length > 0
-                            ? `Roles agregados: ${addedRoles.map((role) => ROLE_LABELS[role] ?? role).join(', ')}.`
+                            ? `Roles agregados: ${addedRoles.map((role) => user_role_constants_1.ROLE_LABELS[role] ?? role).join(', ')}.`
                             : null,
                         removedRoles.length > 0
-                            ? `Roles retirados: ${removedRoles.map((role) => ROLE_LABELS[role] ?? role).join(', ')}.`
+                            ? `Roles retirados: ${removedRoles.map((role) => user_role_constants_1.ROLE_LABELS[role] ?? role).join(', ')}.`
                             : null,
                     ]
                         .filter((value) => Boolean(value))

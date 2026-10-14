@@ -23,6 +23,7 @@ import { PublicUserResponseDto } from './dto/public-user-response.dto';
 import { RegisterPlayerDto } from './dto/register-player.dto';
 import { MailService } from '../mail/mail.service';
 import { IdentityVerificationService } from './identity-verification.service';
+import { ROLE_LABELS } from './user-role.constants';
 import { publicUserSelect, toPublicUserResponse } from './public-user.mapper';
 
 export type RegisterPlayerFiles = {
@@ -40,13 +41,6 @@ export type AdministratorExportItem = {
   status: string;
   roles: string[];
   associations: Array<{ name: string; permissionLevel: string }>;
-};
-
-const ROLE_LABELS: Record<string, string> = {
-  SUPER_ADMIN: 'Superadministrador',
-  ASSOCIATION_ADMIN: 'Administrador de asociación',
-  REFEREE: 'Árbitro',
-  PLAYER: 'Jugador',
 };
 
 @Injectable()

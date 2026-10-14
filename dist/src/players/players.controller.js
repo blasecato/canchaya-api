@@ -24,6 +24,7 @@ const parse_big_int_pipe_1 = require("../common/pipes/parse-big-int.pipe");
 const uploads_constants_1 = require("../uploads/uploads.constants");
 const block_player_dto_1 = require("./dto/block-player.dto");
 const bulk_create_players_dto_1 = require("./dto/bulk-create-players.dto");
+const delete_player_result_dto_1 = require("./dto/delete-player-result.dto");
 const create_player_dto_1 = require("./dto/create-player.dto");
 const list_players_query_dto_1 = require("./dto/list-players-query.dto");
 const update_player_dto_1 = require("./dto/update-player.dto");
@@ -65,6 +66,9 @@ let PlayersController = class PlayersController {
     }
     unblock(id, request) {
         return this.playersService.unblock(id, request.auth.userId);
+    }
+    remove(id, request) {
+        return this.playersService.remove(id, request.auth.userId);
     }
     update(id, dto, photo) {
         return this.playersService.update(id, dto, photo);
@@ -152,6 +156,20 @@ __decorate([
     __metadata("design:paramtypes", [BigInt, Object]),
     __metadata("design:returntype", void 0)
 ], PlayersController.prototype, "unblock", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Eliminar definitivamente la cuenta de un jugador',
+        description: 'Solo procede si el jugador no tiene estadísticas, tarjetas, sanciones ni equipos a su cargo. Borra sus inscripciones y sus equipos.',
+    }),
+    (0, swagger_1.ApiOkResponse)({ type: delete_player_result_dto_1.DeletePlayerResultDto }),
+    __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object]),
+    __metadata("design:returntype", Promise)
+], PlayersController.prototype, "remove", null);
 __decorate([
     (0, common_1.Patch)(':id'),
     (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN'),
