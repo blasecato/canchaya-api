@@ -26,6 +26,7 @@ export type * from './models/tournament_team_registrations';
 export type * from './models/notifications';
 export type * from './models/notification_preferences';
 export type * from './models/tournament_registration_events';
+export type * from './models/tournament_card_charges';
 export type * from './models/tournament_lifecycle_events';
 export type * from './models/tournament_types';
 export type * from './models/tournaments';

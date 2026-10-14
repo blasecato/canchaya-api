@@ -158,6 +158,8 @@ class AssociationTournamentResponseDto {
     registrationStartDate;
     registrationEndDate;
     registrationFee;
+    yellowCardFee;
+    redCardFee;
     currencyCode;
     grandPrize;
     secondPrize;
@@ -177,7 +179,7 @@ class AssociationTournamentResponseDto {
     createdAt;
     updatedAt;
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => String }, associationId: { required: true, type: () => String }, name: { required: true, type: () => String }, description: { required: true, type: () => String, nullable: true }, tournamentType: { required: true, type: () => require("./association-tournament-response.dto").AssociationTournamentTypeResponseDto }, sportType: { required: true, type: () => String }, modality: { required: true, type: () => String }, categoryName: { required: true, type: () => String }, categoryMinAge: { required: true, type: () => Number, nullable: true }, categoryMaxAge: { required: true, type: () => Number, nullable: true }, categoryGender: { required: true, enum: ["male", "female", "open", "mixed"] }, startDate: { required: true, type: () => String }, endDate: { required: true, type: () => String, nullable: true }, registrationStartDate: { required: true, type: () => String, nullable: true }, registrationEndDate: { required: true, type: () => String, nullable: true }, registrationFee: { required: true, type: () => String }, currencyCode: { required: true, type: () => String }, grandPrize: { required: true, type: () => String }, secondPrize: { required: true, type: () => String }, thirdPrize: { required: true, type: () => String }, maxTeams: { required: true, type: () => Number }, minPlayersPerTeam: { required: true, type: () => Number }, maxPlayersPerTeam: { required: true, type: () => Number }, registeredTeamCount: { required: true, type: () => Number }, locationName: { required: true, type: () => String, nullable: true }, locationAddress: { required: true, type: () => String, nullable: true }, rulesUrl: { required: true, type: () => String, nullable: true }, rulesContent: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, sponsors: { required: true, type: () => [require("./association-tournament-response.dto").TournamentSponsorResponseDto] }, phase: { required: true, enum: ["cancelled", "draft", "registration", "validation", "scheduled", "in_progress", "finished", "archived"] }, status: { required: true, enum: ["active", "inactive"] }, createdAt: { required: true, type: () => String }, updatedAt: { required: true, type: () => String } };
+        return { id: { required: true, type: () => String }, associationId: { required: true, type: () => String }, name: { required: true, type: () => String }, description: { required: true, type: () => String, nullable: true }, tournamentType: { required: true, type: () => require("./association-tournament-response.dto").AssociationTournamentTypeResponseDto }, sportType: { required: true, type: () => String }, modality: { required: true, type: () => String }, categoryName: { required: true, type: () => String }, categoryMinAge: { required: true, type: () => Number, nullable: true }, categoryMaxAge: { required: true, type: () => Number, nullable: true }, categoryGender: { required: true, enum: ["male", "female", "open", "mixed"] }, startDate: { required: true, type: () => String }, endDate: { required: true, type: () => String, nullable: true }, registrationStartDate: { required: true, type: () => String, nullable: true }, registrationEndDate: { required: true, type: () => String, nullable: true }, registrationFee: { required: true, type: () => String }, yellowCardFee: { required: true, type: () => String }, redCardFee: { required: true, type: () => String }, currencyCode: { required: true, type: () => String }, grandPrize: { required: true, type: () => String }, secondPrize: { required: true, type: () => String }, thirdPrize: { required: true, type: () => String }, maxTeams: { required: true, type: () => Number }, minPlayersPerTeam: { required: true, type: () => Number }, maxPlayersPerTeam: { required: true, type: () => Number }, registeredTeamCount: { required: true, type: () => Number }, locationName: { required: true, type: () => String, nullable: true }, locationAddress: { required: true, type: () => String, nullable: true }, rulesUrl: { required: true, type: () => String, nullable: true }, rulesContent: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, sponsors: { required: true, type: () => [require("./association-tournament-response.dto").TournamentSponsorResponseDto] }, phase: { required: true, enum: ["cancelled", "registration", "scheduled", "in_progress", "finished", "archived"] }, status: { required: true, enum: ["active", "inactive"] }, createdAt: { required: true, type: () => String }, updatedAt: { required: true, type: () => String } };
     }
 }
 exports.AssociationTournamentResponseDto = AssociationTournamentResponseDto;
@@ -246,6 +248,14 @@ __decorate([
     __metadata("design:type", String)
 ], AssociationTournamentResponseDto.prototype, "registrationFee", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: '5000.00', description: 'Valor por tarjeta amarilla.' }),
+    __metadata("design:type", String)
+], AssociationTournamentResponseDto.prototype, "yellowCardFee", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '15000.00', description: 'Valor por tarjeta roja.' }),
+    __metadata("design:type", String)
+], AssociationTournamentResponseDto.prototype, "redCardFee", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({ example: 'COP', minLength: 3, maxLength: 3 }),
     __metadata("design:type", String)
 ], AssociationTournamentResponseDto.prototype, "currencyCode", void 0);
@@ -311,9 +321,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)({
         enum: [
-            'draft',
             'registration',
-            'validation',
             'scheduled',
             'in_progress',
             'finished',

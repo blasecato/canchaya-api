@@ -31,7 +31,7 @@ const request = {
 const setup = () => {
   const tournament = {
     id: 1n,
-    phase: 'validation',
+    phase: 'registration',
     competition_plan: null,
     max_teams: 6,
     start_date: new Date('2026-01-01'),
@@ -45,6 +45,7 @@ const setup = () => {
   };
   const tx = {
     $queryRaw: jest.fn(),
+    $executeRaw: jest.fn().mockResolvedValue(0),
     tournaments: {
       findUnique: jest.fn().mockResolvedValue(tournament),
       update: jest.fn((data: { data: { competition_plan: CompetitionPlan } }) =>
@@ -63,6 +64,8 @@ const setup = () => {
         }) => Promise.resolve(data),
       ),
       findMany: jest.fn().mockResolvedValue([]),
+      update: jest.fn(),
+      deleteMany: jest.fn().mockResolvedValue({ count: 0 }),
     },
     tournament_team_registrations: { update: jest.fn() },
   };
@@ -134,13 +137,13 @@ describe('competition organization safeguards', () => {
     );
     expect(tx.matches.createMany).not.toHaveBeenCalled();
   });
-  it('requires validation but allows unresolved applications', async () => {
+  it('exige la fase de inscripciones pero admite solicitudes sin resolver', async () => {
     const { service, tournament } = setup();
     tournament.phase = 'in_progress';
     await expect(service.preview(1n, 2n, request)).rejects.toThrow(
-      'Validación',
+      'Inscripciones',
     );
-    tournament.phase = 'validation';
+    tournament.phase = 'registration';
     tournament.tournament_team_registrations.push({
       team_id: 7n,
       request_status: 'pending',
@@ -261,5 +264,110 @@ describe('competition organization safeguards', () => {
       }),
     );
     expect(tournamentUpdate).toHaveBeenCalled();
+  });
+
+  it('permite reorganizar un torneo en curso y conserva los partidos jugados como historial', async () => {
+    const { service, tournament, tx } = setup();
+    tournament.phase = 'in_progress';
+    tx.matches.count.mockResolvedValue(8);
+    tx.matches.deleteMany.mockResolvedValue({ count: 6 });
+    tx.$executeRaw.mockResolvedValue(2);
+    const result = await service.generate(1n, 2n, {
+      ...request,
+      reorganize: { mode: 'reset' as const },
+    });
+    // Los jugados no se borran: pierden la clave de competencia y quedan
+    // anulados para no arrastrar cobros ni sanciones al nuevo calendario.
+    expect(tx.matches.deleteMany).toHaveBeenCalledWith({
+      where: {
+        tournament_id: 1n,
+        status: { notIn: ['played', 'in_progress'] },
+      },
+    });
+    const retireSql = (tx.$executeRaw.mock.calls[0][0] as string[]).join(' ');
+    expect(retireSql).toContain('competition_key = NULL');
+    expect(retireSql).toContain("status = 'cancelled'");
+    expect(tx.matches.createMany).toHaveBeenCalled();
+    expect(tx.matches.update).not.toHaveBeenCalled();
+    expect(result.reorganization).toEqual(
+      expect.objectContaining({
+        mode: 'reset',
+        retiredMatches: 2,
+        removedMatches: 6,
+        restoredResults: 0,
+      }),
+    );
+  });
+
+  it('traslada el marcador al cruce equivalente invirtiendo la localía', async () => {
+    const { service, tournament, tx } = setup();
+    tournament.phase = 'in_progress';
+    tx.matches.count.mockResolvedValue(8);
+    tx.$executeRaw.mockResolvedValue(2);
+    tx.matches.findMany
+      .mockResolvedValueOnce([
+        {
+          id: 10n,
+          home_team_id: 1n,
+          away_team_id: 2n,
+          home_score: 3,
+          away_score: 1,
+          home_penalties: null,
+          away_penalties: null,
+          match_date: new Date('2026-02-01'),
+          status: 'played',
+        },
+        {
+          id: 11n,
+          home_team_id: 5n,
+          away_team_id: 6n,
+          home_score: 0,
+          away_score: 0,
+          home_penalties: null,
+          away_penalties: null,
+          match_date: new Date('2026-02-02'),
+          status: 'played',
+        },
+      ])
+      .mockResolvedValueOnce([
+        { id: 90n, home_team_id: 2n, away_team_id: 1n },
+      ]);
+    const result = await service.generate(1n, 2n, {
+      ...request,
+      reorganize: { mode: 'keep_results' as const },
+    });
+    expect(tx.matches.update).toHaveBeenCalledTimes(1);
+    expect(tx.matches.update.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        where: { id: 90n },
+        data: expect.objectContaining({
+          status: 'played',
+          home_score: 1,
+          away_score: 3,
+        }),
+      }),
+    );
+    expect(result.reorganization).toEqual(
+      expect.objectContaining({
+        mode: 'keep_results',
+        restoredResults: 1,
+        droppedResults: 1,
+      }),
+    );
+  });
+
+  it('no reorganiza torneos archivados o cancelados', async () => {
+    const { service, tournament, tx } = setup();
+    tx.matches.count.mockResolvedValue(8);
+    for (const phase of ['archived', 'cancelled']) {
+      tournament.phase = phase;
+      await expect(
+        service.generate(1n, 2n, {
+          ...request,
+          reorganize: { mode: 'reset' as const },
+        }),
+      ).rejects.toThrow('archivado o cancelado');
+    }
+    expect(tx.matches.createMany).not.toHaveBeenCalled();
   });
 });

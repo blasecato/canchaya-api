@@ -19,7 +19,6 @@ const tournament_eligibility_1 = require("../tournaments/tournament-eligibility"
 const MANAGEMENT_ROLES = ['SUPER_ADMIN', 'ASSOCIATION_ADMIN'];
 const ACTIVE_ROSTER_PHASES = [
     'registration',
-    'validation',
     'scheduled',
     'in_progress',
 ];
@@ -1109,6 +1108,20 @@ let TeamsService = class TeamsService {
             select: { id: true },
         });
         if (users.length !== memberIds.length) {
+            const blocked = await this.prisma.users.findMany({
+                where: {
+                    id: { in: memberIds },
+                    status: { not: 'active' },
+                    block_reason: { not: null },
+                },
+                select: { full_name: true },
+            });
+            if (blocked.length > 0) {
+                const names = blocked.map(({ full_name }) => full_name).join(', ');
+                throw new common_1.BadRequestException(blocked.length === 1
+                    ? `${names} tiene la cuenta bloqueada y no puede integrar un equipo mientras dure la sanción.`
+                    : `Estos jugadores tienen la cuenta bloqueada y no pueden integrar el equipo: ${names}.`);
+            }
             throw new common_1.BadRequestException('Todos los integrantes deben ser usuarios activos con rol de jugador.');
         }
         if (!users.some(({ id }) => id === captainId)) {

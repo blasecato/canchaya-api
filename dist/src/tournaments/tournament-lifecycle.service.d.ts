@@ -5,6 +5,7 @@ import type { TransitionTournamentDto } from './dto/transition-tournament.dto';
 export declare class TournamentLifecycleService {
     private readonly prisma;
     private readonly access;
+    private readonly logger;
     constructor(prisma: PrismaService, access: CompetitionAccessService);
     findLifecycle(tournamentId: bigint, requestingUserId: bigint): Promise<TournamentLifecycleResponseDto>;
     transition(tournamentId: bigint, requestingUserId: bigint, dto: TransitionTournamentDto): Promise<TournamentLifecycleResponseDto>;

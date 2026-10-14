@@ -58,6 +58,8 @@ class CreateTournamentDto extends tournament_sponsor_input_dto_1.TournamentSpons
     currencyCode;
     grandPrize;
     secondPrize;
+    yellowCardFee;
+    redCardFee;
     thirdPrize;
     maxTeams;
     minPlayersPerTeam;
@@ -67,7 +69,7 @@ class CreateTournamentDto extends tournament_sponsor_input_dto_1.TournamentSpons
     rulesUrl;
     status;
     static _OPENAPI_METADATA_FACTORY() {
-        return { name: { required: true, type: () => String, maxLength: 150 }, description: { required: false, type: () => String, nullable: true, maxLength: 2000 }, tournamentTypeId: { required: true, type: () => String }, sportType: { required: true, type: () => String, enum: [football_constants_1.FOOTBALL_SPORT_TYPE] }, modality: { required: true, enum: ["F\u00FAtbol 5", "F\u00FAtbol 7", "F\u00FAtbol 11"], enum: football_constants_1.FOOTBALL_MODALITIES }, categoryName: { required: false, type: () => String, maxLength: 120 }, categoryMinAge: { required: false, type: () => Number, nullable: true, minimum: 1, maximum: 120 }, categoryMaxAge: { required: false, type: () => Number, nullable: true, minimum: 1, maximum: 120 }, categoryGender: { required: false, enum: ["male", "female", "open", "mixed"], enum: tournament_category_constants_1.TOURNAMENT_CATEGORY_GENDERS }, startDate: { required: true, type: () => String, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, endDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, registrationStartDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, registrationEndDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, registrationFee: { required: false, type: () => Number, minimum: 0, maximum: 999999999999.99 }, currencyCode: { required: false, type: () => String, minLength: 3, maxLength: 3, pattern: "^[A-Z]{3}$" }, grandPrize: { required: false, type: () => Number, minimum: 0, maximum: 999999999999.99 }, secondPrize: { required: false, type: () => Number, minimum: 0, maximum: 999999999999.99 }, thirdPrize: { required: false, type: () => Number, minimum: 0, maximum: 999999999999.99 }, maxTeams: { required: true, type: () => Number, minimum: 6, maximum: 2147483647 }, minPlayersPerTeam: { required: true, type: () => Number, minimum: 1, maximum: 2147483647 }, maxPlayersPerTeam: { required: true, type: () => Number, minimum: 1, maximum: 2147483647 }, locationName: { required: false, type: () => String, nullable: true, maxLength: 200 }, locationAddress: { required: false, type: () => String, nullable: true, maxLength: 300 }, rulesUrl: { required: false, type: () => String, nullable: true, maxLength: 2048, format: "uri" }, status: { required: false, enum: ["active", "inactive"], enum: exports.TOURNAMENT_STATUSES } };
+        return { name: { required: true, type: () => String, maxLength: 150 }, description: { required: false, type: () => String, nullable: true, maxLength: 2000 }, tournamentTypeId: { required: true, type: () => String }, sportType: { required: true, type: () => String, enum: [football_constants_1.FOOTBALL_SPORT_TYPE] }, modality: { required: true, enum: ["F\u00FAtbol 5", "F\u00FAtbol 6", "F\u00FAtbol 7", "F\u00FAtbol 8", "F\u00FAtbol 9", "F\u00FAtbol 10", "F\u00FAtbol 11"], enum: football_constants_1.FOOTBALL_MODALITIES }, categoryName: { required: false, type: () => String, maxLength: 120 }, categoryMinAge: { required: false, type: () => Number, nullable: true, minimum: 1, maximum: 120 }, categoryMaxAge: { required: false, type: () => Number, nullable: true, minimum: 1, maximum: 120 }, categoryGender: { required: false, enum: ["male", "female", "open", "mixed"], enum: tournament_category_constants_1.TOURNAMENT_CATEGORY_GENDERS }, startDate: { required: true, type: () => String, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, endDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, registrationStartDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, registrationEndDate: { required: false, type: () => String, nullable: true, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }, registrationFee: { required: false, type: () => Number, minimum: 0, maximum: 999999999999.99 }, currencyCode: { required: false, type: () => String, minLength: 3, maxLength: 3, pattern: "^[A-Z]{3}$" }, grandPrize: { required: false, type: () => Number, minimum: 0, maximum: 999999999999.99 }, secondPrize: { required: false, type: () => Number, minimum: 0, maximum: 999999999999.99 }, yellowCardFee: { required: false, type: () => Number, minimum: 0, maximum: 999999999999.99 }, redCardFee: { required: false, type: () => Number, minimum: 0, maximum: 999999999999.99 }, thirdPrize: { required: false, type: () => Number, minimum: 0, maximum: 999999999999.99 }, maxTeams: { required: true, type: () => Number, minimum: 6, maximum: 2147483647 }, minPlayersPerTeam: { required: true, type: () => Number, minimum: 1, maximum: 2147483647 }, maxPlayersPerTeam: { required: true, type: () => Number, minimum: 1, maximum: 2147483647 }, locationName: { required: false, type: () => String, nullable: true, maxLength: 200 }, locationAddress: { required: false, type: () => String, nullable: true, maxLength: 300 }, rulesUrl: { required: false, type: () => String, nullable: true, maxLength: 2048, format: "uri" }, status: { required: false, enum: ["active", "inactive"], enum: exports.TOURNAMENT_STATUSES } };
     }
 }
 exports.CreateTournamentDto = CreateTournamentDto;
@@ -109,7 +111,7 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsIn)(football_constants_1.FOOTBALL_MODALITIES, {
-        message: 'La modalidad debe ser Fútbol 5, Fútbol 7 o Fútbol 11.',
+        message: 'La modalidad debe ser Fútbol 5, 6, 7, 8, 9, 10 u 11.',
     }),
     __metadata("design:type", String)
 ], CreateTournamentDto.prototype, "modality", void 0);
@@ -245,6 +247,34 @@ __decorate([
     (0, class_validator_1.Max)(999_999_999_999.99),
     __metadata("design:type", Number)
 ], CreateTournamentDto.prototype, "secondPrize", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 5000,
+        minimum: 0,
+        default: 0,
+        description: 'Valor que paga el jugador por cada tarjeta amarilla.',
+    }),
+    (0, class_transformer_1.Transform)(toNumber),
+    (0, is_optional_non_nullable_decorator_1.IsOptionalNonNullable)(),
+    (0, class_validator_1.IsNumber)({ maxDecimalPlaces: 2 }),
+    (0, class_validator_1.Min)(0),
+    (0, class_validator_1.Max)(999_999_999_999.99),
+    __metadata("design:type", Number)
+], CreateTournamentDto.prototype, "yellowCardFee", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 15000,
+        minimum: 0,
+        default: 0,
+        description: 'Valor que paga el jugador por cada tarjeta roja.',
+    }),
+    (0, class_transformer_1.Transform)(toNumber),
+    (0, is_optional_non_nullable_decorator_1.IsOptionalNonNullable)(),
+    (0, class_validator_1.IsNumber)({ maxDecimalPlaces: 2 }),
+    (0, class_validator_1.Min)(0),
+    (0, class_validator_1.Max)(999_999_999_999.99),
+    __metadata("design:type", Number)
+], CreateTournamentDto.prototype, "redCardFee", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 1000000, minimum: 0, default: 0 }),
     (0, class_transformer_1.Transform)(toNumber),

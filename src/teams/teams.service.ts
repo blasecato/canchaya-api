@@ -27,7 +27,6 @@ import {
 const MANAGEMENT_ROLES = ['SUPER_ADMIN', 'ASSOCIATION_ADMIN'] as const;
 const ACTIVE_ROSTER_PHASES = [
   'registration',
-  'validation',
   'scheduled',
   'in_progress',
 ] as const;
@@ -1355,6 +1354,23 @@ export class TeamsService {
       select: { id: true },
     });
     if (users.length !== memberIds.length) {
+      // Separa el caso de la sanción para no dejar al capitán adivinando.
+      const blocked = await this.prisma.users.findMany({
+        where: {
+          id: { in: memberIds },
+          status: { not: 'active' },
+          block_reason: { not: null },
+        },
+        select: { full_name: true },
+      });
+      if (blocked.length > 0) {
+        const names = blocked.map(({ full_name }) => full_name).join(', ');
+        throw new BadRequestException(
+          blocked.length === 1
+            ? `${names} tiene la cuenta bloqueada y no puede integrar un equipo mientras dure la sanción.`
+            : `Estos jugadores tienen la cuenta bloqueada y no pueden integrar el equipo: ${names}.`,
+        );
+      }
       throw new BadRequestException(
         'Todos los integrantes deben ser usuarios activos con rol de jugador.',
       );

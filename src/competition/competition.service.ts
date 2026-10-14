@@ -11,6 +11,7 @@ import {
   AdvanceCompetitionDto,
   CompetitionScheduleDto,
   PreviewCompetitionDto,
+  type ReorganizeMode,
 } from './competition.dto';
 import {
   competitorTeamId,
@@ -120,7 +121,7 @@ export async function assignApprovedTeamToCompetition(
   });
   const plan = readPlan(tournament.competition_plan);
   if (!plan || plan.version !== 2 || !plan.slots) return;
-  if (!['registration', 'validation', 'scheduled'].includes(tournament.phase))
+  if (!['registration', 'scheduled'].includes(tournament.phase))
     throw new BadRequestException(
       'Los lugares del sorteo ya están cerrados para nuevos equipos.',
     );
@@ -184,20 +185,56 @@ export class CompetitionService {
     const teams = tournament.tournament_team_registrations
       .filter((r) => r.request_status === 'approved')
       .map((r) => ({ id: r.team_id.toString(), name: r.teams.name }));
+    const plan = readPlan(tournament.competition_plan);
+    const [totalMatches, played] = await Promise.all([
+      this.prisma.matches.count({
+        where: { tournament_id: id, competition_key: { not: null } },
+      }),
+      this.prisma.matches.findMany({
+        where: {
+          tournament_id: id,
+          competition_key: { not: null },
+          status: { in: CompetitionService.PLAYED_STATUSES },
+        },
+        select: { home_team_id: true, away_team_id: true },
+        orderBy: { id: 'asc' },
+      }),
+    ]);
+    const playedMatches = played.length;
+    // El asistente usa estos cruces para anticipar cuántos resultados
+    // sobreviven a la reorganización antes de confirmarla.
+    const playedPairings = played.map(({ home_team_id, away_team_id }) => [
+      home_team_id.toString(),
+      away_team_id.toString(),
+    ]);
+    const hasPlan = Boolean(plan) || totalMatches > 0;
+    // Con organización previa el flujo pasa a ser una reorganización: ahí los
+    // bloqueos no aplican porque el administrador ya decidió rehacer el sorteo.
+    const canReorganize =
+      hasPlan && !['archived', 'cancelled'].includes(tournament.phase);
     const blockers: string[] = [];
-    if (tournament.phase !== 'validation')
-      blockers.push('La organización se realiza durante Validación.');
+    if (!hasPlan && tournament.phase !== 'registration')
+      blockers.push(
+        'La organización del torneo se realiza mientras está en Inscripciones.',
+      );
     if (teams.length > tournament.max_teams)
       blockers.push('Los equipos aprobados exceden el cupo del torneo.');
-    if (
-      tournament.competition_plan ||
-      (await this.prisma.matches.count({ where: { tournament_id: id } }))
-    )
+    if (hasPlan && !canReorganize)
       blockers.push(
-        'El torneo ya tiene una organización o partidos. No se sobrescribirán.',
+        'Un torneo archivado o cancelado ya no se puede reorganizar.',
       );
     return {
       teams,
+      hasPlan,
+      canReorganize,
+      totalMatches,
+      playedMatches,
+      playedPairings,
+      currentConfig: plan?.config ?? null,
+      /** Semilla del sorteo vigente: repetirla conserva el orden de equipos. */
+      currentSeed: plan?.seed ?? null,
+      currentLabel: plan ? FORMAT_LABELS[plan.config.format] : null,
+      planTeamIds: plan?.slots?.flatMap((slot) => slot.teamId ?? []) ?? [],
       capacity: tournament.max_teams,
       pendingSlots: tournament.max_teams - teams.length,
       originalType: tournament.tournament_types.name,
@@ -215,13 +252,21 @@ export class CompetitionService {
     dto: PreviewCompetitionDto,
   ) {
     const tournament = await this.tournament(client, id);
-    if (tournament.phase !== 'validation')
+    const isReorganizing = Boolean(dto.reorganize);
+    // La primera organización solo ocurre en Inscripciones; rehacerla se puede
+    // mientras el torneo siga vivo, que es cuando cambia el formato.
+    if (!isReorganizing && tournament.phase !== 'registration')
       throw new BadRequestException(
-        'Solo puedes organizar el torneo durante Validación.',
+        'Solo puedes organizar el torneo mientras está en Inscripciones.',
+      );
+    if (isReorganizing && ['archived', 'cancelled'].includes(tournament.phase))
+      throw new BadRequestException(
+        'Un torneo archivado o cancelado ya no se puede reorganizar.',
       );
     if (
-      tournament.competition_plan ||
-      (await client.matches.count({ where: { tournament_id: id } }))
+      !isReorganizing &&
+      (tournament.competition_plan ||
+        (await client.matches.count({ where: { tournament_id: id } })))
     )
       throw new ConflictException(
         'Ya existen partidos u organización. Actualiza la página.',
@@ -281,17 +326,171 @@ export class CompetitionService {
       label: FORMAT_LABELS[dto.config.format],
     };
   }
+  /** Partidos con historia real: ya se jugaron o están en juego. */
+  private static readonly PLAYED_STATUSES = ['played', 'in_progress'];
+
+  /** Resultados ya jugados, para poder trasladarlos a la organización nueva. */
+  private async collectPlayedResults(
+    tx: Prisma.TransactionClient,
+    tournamentId: bigint,
+  ) {
+    return tx.matches.findMany({
+      where: {
+        tournament_id: tournamentId,
+        status: { in: CompetitionService.PLAYED_STATUSES },
+      },
+      select: {
+        id: true,
+        home_team_id: true,
+        away_team_id: true,
+        home_score: true,
+        away_score: true,
+        home_penalties: true,
+        away_penalties: true,
+        match_date: true,
+        status: true,
+      },
+      orderBy: { id: 'asc' },
+    });
+  }
+
+  /**
+   * Saca del torneo el calendario anterior para que el sorteo nuevo pueda
+   * crear sus partidos. Los que nunca se jugaron se borran; los que ya tienen
+   * historia se conservan como registro anulado (sin clave de competencia,
+   * así no entran en tablas ni cuadros) porque de ellos cuelgan cobros de
+   * tarjetas, estadísticas y procesos disciplinarios que no se deben perder.
+   */
+  private async retireCompetitionFixtures(
+    tx: Prisma.TransactionClient,
+    tournamentId: bigint,
+    note: string,
+  ): Promise<{ removed: number; retired: number }> {
+    const { count: removed } = await tx.matches.deleteMany({
+      where: {
+        tournament_id: tournamentId,
+        status: { notIn: CompetitionService.PLAYED_STATUSES },
+      },
+    });
+    // Se usa SQL para anexar la nota sin borrar lo que el administrador
+    // hubiera escrito en el partido.
+    const retired = await tx.$executeRaw`
+      UPDATE matches
+         SET competition_key = NULL,
+             status = 'cancelled',
+             notes = CASE
+               WHEN notes IS NULL OR notes = '' THEN ${note}
+               ELSE notes || E'\n' || ${note}
+             END,
+             updated_at = now()
+       WHERE tournament_id = ${tournamentId}
+         AND status IN ('played', 'in_progress')`;
+    return { removed, retired };
+  }
+
+  /**
+   * Traslada cada resultado al partido equivalente del sorteo nuevo. Se busca
+   * el mismo par de equipos, sin importar quién quedó de local, y cada
+   * resultado se usa una sola vez: si el formato nuevo no repite ese cruce, el
+   * resultado queda solo como historial y el partido se vuelve a jugar.
+   */
+  private async restorePlayedResults(
+    tx: Prisma.TransactionClient,
+    tournamentId: bigint,
+    results: Awaited<ReturnType<CompetitionService['collectPlayedResults']>>,
+  ): Promise<{ restored: number; dropped: number }> {
+    if (results.length === 0) return { restored: 0, dropped: 0 };
+
+    const pending = await tx.matches.findMany({
+      where: {
+        tournament_id: tournamentId,
+        status: 'scheduled',
+        competition_key: { not: null },
+      },
+      select: { id: true, home_team_id: true, away_team_id: true },
+      orderBy: { id: 'asc' },
+    });
+    const used = new Set<string>();
+    let restored = 0;
+
+    for (const result of results) {
+      const pair = [result.home_team_id, result.away_team_id];
+      const match = pending.find(
+        (candidate) =>
+          !used.has(candidate.id.toString()) &&
+          pair.includes(candidate.home_team_id) &&
+          pair.includes(candidate.away_team_id),
+      );
+      if (!match) continue;
+
+      const sameSides = match.home_team_id === result.home_team_id;
+      await tx.matches.update({
+        where: { id: match.id },
+        data: {
+          status: result.status,
+          // Si el sorteo invirtió la localía, el marcador se invierte con ella.
+          home_score: sameSides ? result.home_score : result.away_score,
+          away_score: sameSides ? result.away_score : result.home_score,
+          home_penalties: sameSides
+            ? result.home_penalties
+            : result.away_penalties,
+          away_penalties: sameSides
+            ? result.away_penalties
+            : result.home_penalties,
+          match_date: result.match_date,
+          notes: 'Resultado trasladado desde la organización anterior.',
+          updated_at: new Date(),
+        },
+      });
+      used.add(match.id.toString());
+      restored += 1;
+    }
+
+    return { restored, dropped: results.length - restored };
+  }
+
   async preview(id: bigint, actor: bigint, dto: PreviewCompetitionDto) {
     await this.access.assertCanManageTournament(actor, id);
     return this.prepare(this.prisma, id, actor, dto);
   }
   async generate(id: bigint, actor: bigint, dto: PreviewCompetitionDto) {
     await this.access.assertCanManageTournament(actor, id);
+    let reorganization: {
+      mode: ReorganizeMode;
+      retiredMatches: number;
+      removedMatches: number;
+      restoredResults: number;
+      droppedResults: number;
+    } | null = null;
     await this.prisma.$transaction(
       async (tx) => {
         await tx.$queryRaw`SELECT id FROM tournaments WHERE id = ${id} FOR UPDATE`;
+        const previousResults = dto.reorganize
+          ? await this.collectPlayedResults(tx, id)
+          : [];
+        const retired = dto.reorganize
+          ? await this.retireCompetitionFixtures(
+              tx,
+              id,
+              dto.reorganize.mode === 'keep_results'
+                ? 'Partido reemplazado al reorganizar el torneo; su resultado se trasladó al nuevo calendario.'
+                : 'Partido anulado al reorganizar el torneo; se volverá a jugar en el nuevo calendario.',
+            )
+          : { removed: 0, retired: 0 };
         const { plan } = await this.prepare(tx, id, actor, dto);
         await materializeCompetitionFixtures(tx, id, plan);
+        const carried =
+          dto.reorganize?.mode === 'keep_results'
+            ? await this.restorePlayedResults(tx, id, previousResults)
+            : { restored: 0, dropped: previousResults.length };
+        if (dto.reorganize)
+          reorganization = {
+            mode: dto.reorganize.mode,
+            retiredMatches: retired.retired,
+            removedMatches: retired.removed,
+            restoredResults: carried.restored,
+            droppedResults: carried.dropped,
+          };
         await tx.tournaments.update({
           where: { id },
           data: {
@@ -324,18 +523,14 @@ export class CompetitionService {
         timeout: 30000,
       },
     );
-    return this.get(id, actor);
+    return { ...(await this.get(id, actor)), reorganization };
   }
   async get(id: bigint, actor: bigint) {
     const tournament = await this.tournament(this.prisma, id);
     if (
-      ![
-        'registration',
-        'validation',
-        'scheduled',
-        'in_progress',
-        'finished',
-      ].includes(tournament.phase)
+      !['registration', 'scheduled', 'in_progress', 'finished'].includes(
+        tournament.phase,
+      )
     )
       await this.access.assertCanViewTournament(actor, id);
     const plan = readPlan(tournament.competition_plan);

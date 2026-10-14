@@ -15,6 +15,8 @@ export type TournamentsAvgAggregateOutputType = {
     category_min_age: number | null;
     category_max_age: number | null;
     registration_fee: runtime.Decimal | null;
+    yellow_card_fee: runtime.Decimal | null;
+    red_card_fee: runtime.Decimal | null;
     grand_prize: runtime.Decimal | null;
     second_prize: runtime.Decimal | null;
     third_prize: runtime.Decimal | null;
@@ -30,6 +32,8 @@ export type TournamentsSumAggregateOutputType = {
     category_min_age: number | null;
     category_max_age: number | null;
     registration_fee: runtime.Decimal | null;
+    yellow_card_fee: runtime.Decimal | null;
+    red_card_fee: runtime.Decimal | null;
     grand_prize: runtime.Decimal | null;
     second_prize: runtime.Decimal | null;
     third_prize: runtime.Decimal | null;
@@ -55,6 +59,8 @@ export type TournamentsMinAggregateOutputType = {
     registration_start_date: Date | null;
     registration_end_date: Date | null;
     registration_fee: runtime.Decimal | null;
+    yellow_card_fee: runtime.Decimal | null;
+    red_card_fee: runtime.Decimal | null;
     currency_code: string | null;
     grand_prize: runtime.Decimal | null;
     second_prize: runtime.Decimal | null;
@@ -91,6 +97,8 @@ export type TournamentsMaxAggregateOutputType = {
     registration_start_date: Date | null;
     registration_end_date: Date | null;
     registration_fee: runtime.Decimal | null;
+    yellow_card_fee: runtime.Decimal | null;
+    red_card_fee: runtime.Decimal | null;
     currency_code: string | null;
     grand_prize: runtime.Decimal | null;
     second_prize: runtime.Decimal | null;
@@ -128,6 +136,8 @@ export type TournamentsCountAggregateOutputType = {
     registration_start_date: number;
     registration_end_date: number;
     registration_fee: number;
+    yellow_card_fee: number;
+    red_card_fee: number;
     currency_code: number;
     grand_prize: number;
     second_prize: number;
@@ -155,6 +165,8 @@ export type TournamentsAvgAggregateInputType = {
     category_min_age?: true;
     category_max_age?: true;
     registration_fee?: true;
+    yellow_card_fee?: true;
+    red_card_fee?: true;
     grand_prize?: true;
     second_prize?: true;
     third_prize?: true;
@@ -170,6 +182,8 @@ export type TournamentsSumAggregateInputType = {
     category_min_age?: true;
     category_max_age?: true;
     registration_fee?: true;
+    yellow_card_fee?: true;
+    red_card_fee?: true;
     grand_prize?: true;
     second_prize?: true;
     third_prize?: true;
@@ -195,6 +209,8 @@ export type TournamentsMinAggregateInputType = {
     registration_start_date?: true;
     registration_end_date?: true;
     registration_fee?: true;
+    yellow_card_fee?: true;
+    red_card_fee?: true;
     currency_code?: true;
     grand_prize?: true;
     second_prize?: true;
@@ -231,6 +247,8 @@ export type TournamentsMaxAggregateInputType = {
     registration_start_date?: true;
     registration_end_date?: true;
     registration_fee?: true;
+    yellow_card_fee?: true;
+    red_card_fee?: true;
     currency_code?: true;
     grand_prize?: true;
     second_prize?: true;
@@ -268,6 +286,8 @@ export type TournamentsCountAggregateInputType = {
     registration_start_date?: true;
     registration_end_date?: true;
     registration_fee?: true;
+    yellow_card_fee?: true;
+    red_card_fee?: true;
     currency_code?: true;
     grand_prize?: true;
     second_prize?: true;
@@ -334,6 +354,8 @@ export type TournamentsGroupByOutputType = {
     registration_start_date: Date | null;
     registration_end_date: Date | null;
     registration_fee: runtime.Decimal;
+    yellow_card_fee: runtime.Decimal;
+    red_card_fee: runtime.Decimal;
     currency_code: string;
     grand_prize: runtime.Decimal;
     second_prize: runtime.Decimal;
@@ -382,6 +404,8 @@ export type tournamentsWhereInput = {
     registration_start_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
     registration_end_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
     registration_fee?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFilter<"tournaments"> | string;
     grand_prize?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -427,6 +451,8 @@ export type tournamentsOrderByWithRelationInput = {
     registration_start_date?: Prisma.SortOrderInput | Prisma.SortOrder;
     registration_end_date?: Prisma.SortOrderInput | Prisma.SortOrder;
     registration_fee?: Prisma.SortOrder;
+    yellow_card_fee?: Prisma.SortOrder;
+    red_card_fee?: Prisma.SortOrder;
     currency_code?: Prisma.SortOrder;
     grand_prize?: Prisma.SortOrder;
     second_prize?: Prisma.SortOrder;
@@ -476,6 +502,8 @@ export type tournamentsWhereUniqueInput = Prisma.AtLeast<{
     registration_start_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
     registration_end_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
     registration_fee?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFilter<"tournaments"> | string;
     grand_prize?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -521,6 +549,8 @@ export type tournamentsOrderByWithAggregationInput = {
     registration_start_date?: Prisma.SortOrderInput | Prisma.SortOrder;
     registration_end_date?: Prisma.SortOrderInput | Prisma.SortOrder;
     registration_fee?: Prisma.SortOrder;
+    yellow_card_fee?: Prisma.SortOrder;
+    red_card_fee?: Prisma.SortOrder;
     currency_code?: Prisma.SortOrder;
     grand_prize?: Prisma.SortOrder;
     second_prize?: Prisma.SortOrder;
@@ -566,6 +596,8 @@ export type tournamentsScalarWhereWithAggregatesInput = {
     registration_start_date?: Prisma.DateTimeNullableWithAggregatesFilter<"tournaments"> | Date | string | null;
     registration_end_date?: Prisma.DateTimeNullableWithAggregatesFilter<"tournaments"> | Date | string | null;
     registration_fee?: Prisma.DecimalWithAggregatesFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalWithAggregatesFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalWithAggregatesFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringWithAggregatesFilter<"tournaments"> | string;
     grand_prize?: Prisma.DecimalWithAggregatesFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalWithAggregatesFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -601,6 +633,8 @@ export type tournamentsCreateInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -645,6 +679,8 @@ export type tournamentsUncheckedCreateInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -685,6 +721,8 @@ export type tournamentsUpdateInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -729,6 +767,8 @@ export type tournamentsUncheckedUpdateInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -771,6 +811,8 @@ export type tournamentsCreateManyInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -806,6 +848,8 @@ export type tournamentsUpdateManyMutationInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -842,6 +886,8 @@ export type tournamentsUncheckedUpdateManyInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -895,6 +941,8 @@ export type tournamentsCountOrderByAggregateInput = {
     registration_start_date?: Prisma.SortOrder;
     registration_end_date?: Prisma.SortOrder;
     registration_fee?: Prisma.SortOrder;
+    yellow_card_fee?: Prisma.SortOrder;
+    red_card_fee?: Prisma.SortOrder;
     currency_code?: Prisma.SortOrder;
     grand_prize?: Prisma.SortOrder;
     second_prize?: Prisma.SortOrder;
@@ -921,6 +969,8 @@ export type tournamentsAvgOrderByAggregateInput = {
     category_min_age?: Prisma.SortOrder;
     category_max_age?: Prisma.SortOrder;
     registration_fee?: Prisma.SortOrder;
+    yellow_card_fee?: Prisma.SortOrder;
+    red_card_fee?: Prisma.SortOrder;
     grand_prize?: Prisma.SortOrder;
     second_prize?: Prisma.SortOrder;
     third_prize?: Prisma.SortOrder;
@@ -946,6 +996,8 @@ export type tournamentsMaxOrderByAggregateInput = {
     registration_start_date?: Prisma.SortOrder;
     registration_end_date?: Prisma.SortOrder;
     registration_fee?: Prisma.SortOrder;
+    yellow_card_fee?: Prisma.SortOrder;
+    red_card_fee?: Prisma.SortOrder;
     currency_code?: Prisma.SortOrder;
     grand_prize?: Prisma.SortOrder;
     second_prize?: Prisma.SortOrder;
@@ -982,6 +1034,8 @@ export type tournamentsMinOrderByAggregateInput = {
     registration_start_date?: Prisma.SortOrder;
     registration_end_date?: Prisma.SortOrder;
     registration_fee?: Prisma.SortOrder;
+    yellow_card_fee?: Prisma.SortOrder;
+    red_card_fee?: Prisma.SortOrder;
     currency_code?: Prisma.SortOrder;
     grand_prize?: Prisma.SortOrder;
     second_prize?: Prisma.SortOrder;
@@ -1008,6 +1062,8 @@ export type tournamentsSumOrderByAggregateInput = {
     category_min_age?: Prisma.SortOrder;
     category_max_age?: Prisma.SortOrder;
     registration_fee?: Prisma.SortOrder;
+    yellow_card_fee?: Prisma.SortOrder;
+    red_card_fee?: Prisma.SortOrder;
     grand_prize?: Prisma.SortOrder;
     second_prize?: Prisma.SortOrder;
     third_prize?: Prisma.SortOrder;
@@ -1206,6 +1262,8 @@ export type tournamentsCreateWithoutAssociationsInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1248,6 +1306,8 @@ export type tournamentsUncheckedCreateWithoutAssociationsInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1314,6 +1374,8 @@ export type tournamentsScalarWhereInput = {
     registration_start_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
     registration_end_date?: Prisma.DateTimeNullableFilter<"tournaments"> | Date | string | null;
     registration_fee?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFilter<"tournaments"> | string;
     grand_prize?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFilter<"tournaments"> | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1349,6 +1411,8 @@ export type tournamentsCreateWithoutTournament_administratorsInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1392,6 +1456,8 @@ export type tournamentsUncheckedCreateWithoutTournament_administratorsInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1444,6 +1510,8 @@ export type tournamentsUpdateWithoutTournament_administratorsInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1487,6 +1555,8 @@ export type tournamentsUncheckedUpdateWithoutTournament_administratorsInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1526,6 +1596,8 @@ export type tournamentsCreateWithoutTournament_refereesInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1569,6 +1641,8 @@ export type tournamentsUncheckedCreateWithoutTournament_refereesInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1621,6 +1695,8 @@ export type tournamentsUpdateWithoutTournament_refereesInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1664,6 +1740,8 @@ export type tournamentsUncheckedUpdateWithoutTournament_refereesInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1703,6 +1781,8 @@ export type tournamentsCreateWithoutTournament_sponsorsInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1746,6 +1826,8 @@ export type tournamentsUncheckedCreateWithoutTournament_sponsorsInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1798,6 +1880,8 @@ export type tournamentsUpdateWithoutTournament_sponsorsInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1841,6 +1925,8 @@ export type tournamentsUncheckedUpdateWithoutTournament_sponsorsInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1880,6 +1966,8 @@ export type tournamentsCreateWithoutTournament_team_registrationsInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1923,6 +2011,8 @@ export type tournamentsUncheckedCreateWithoutTournament_team_registrationsInput 
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -1975,6 +2065,8 @@ export type tournamentsUpdateWithoutTournament_team_registrationsInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2018,6 +2110,8 @@ export type tournamentsUncheckedUpdateWithoutTournament_team_registrationsInput 
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2057,6 +2151,8 @@ export type tournamentsCreateWithoutTournament_lifecycle_eventsInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2100,6 +2196,8 @@ export type tournamentsUncheckedCreateWithoutTournament_lifecycle_eventsInput = 
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2152,6 +2250,8 @@ export type tournamentsUpdateWithoutTournament_lifecycle_eventsInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2195,6 +2295,8 @@ export type tournamentsUncheckedUpdateWithoutTournament_lifecycle_eventsInput = 
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2234,6 +2336,8 @@ export type tournamentsCreateWithoutTournament_typesInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2276,6 +2380,8 @@ export type tournamentsUncheckedCreateWithoutTournament_typesInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2337,6 +2443,8 @@ export type tournamentsCreateWithoutUsersInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2380,6 +2488,8 @@ export type tournamentsUncheckedCreateWithoutUsersInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2441,6 +2551,8 @@ export type tournamentsCreateManyAssociationsInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2476,6 +2588,8 @@ export type tournamentsUpdateWithoutAssociationsInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2518,6 +2632,8 @@ export type tournamentsUncheckedUpdateWithoutAssociationsInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2559,6 +2675,8 @@ export type tournamentsUncheckedUpdateManyWithoutAssociationsInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2595,6 +2713,8 @@ export type tournamentsCreateManyTournament_typesInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2630,6 +2750,8 @@ export type tournamentsUpdateWithoutTournament_typesInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2672,6 +2794,8 @@ export type tournamentsUncheckedUpdateWithoutTournament_typesInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2713,6 +2837,8 @@ export type tournamentsUncheckedUpdateManyWithoutTournament_typesInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2750,6 +2876,8 @@ export type tournamentsCreateManyUsersInput = {
     registration_start_date?: Date | string | null;
     registration_end_date?: Date | string | null;
     registration_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: string;
     grand_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2784,6 +2912,8 @@ export type tournamentsUpdateWithoutUsersInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2827,6 +2957,8 @@ export type tournamentsUncheckedUpdateWithoutUsersInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2868,6 +3000,8 @@ export type tournamentsUncheckedUpdateManyWithoutUsersInput = {
     registration_start_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_end_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
     registration_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    yellow_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
+    red_card_fee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     currency_code?: Prisma.StringFieldUpdateOperationsInput | string;
     grand_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
     second_prize?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string;
@@ -2936,6 +3070,8 @@ export type tournamentsSelect<ExtArgs extends runtime.Types.Extensions.InternalA
     registration_start_date?: boolean;
     registration_end_date?: boolean;
     registration_fee?: boolean;
+    yellow_card_fee?: boolean;
+    red_card_fee?: boolean;
     currency_code?: boolean;
     grand_prize?: boolean;
     second_prize?: boolean;
@@ -2982,6 +3118,8 @@ export type tournamentsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
     registration_start_date?: boolean;
     registration_end_date?: boolean;
     registration_fee?: boolean;
+    yellow_card_fee?: boolean;
+    red_card_fee?: boolean;
     currency_code?: boolean;
     grand_prize?: boolean;
     second_prize?: boolean;
@@ -3022,6 +3160,8 @@ export type tournamentsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
     registration_start_date?: boolean;
     registration_end_date?: boolean;
     registration_fee?: boolean;
+    yellow_card_fee?: boolean;
+    red_card_fee?: boolean;
     currency_code?: boolean;
     grand_prize?: boolean;
     second_prize?: boolean;
@@ -3062,6 +3202,8 @@ export type tournamentsSelectScalar = {
     registration_start_date?: boolean;
     registration_end_date?: boolean;
     registration_fee?: boolean;
+    yellow_card_fee?: boolean;
+    red_card_fee?: boolean;
     currency_code?: boolean;
     grand_prize?: boolean;
     second_prize?: boolean;
@@ -3081,7 +3223,7 @@ export type tournamentsSelectScalar = {
     created_at?: boolean;
     updated_at?: boolean;
 };
-export type tournamentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "association_id" | "name" | "competition_plan" | "description" | "tournament_type_id" | "sport_type" | "modality" | "category_name" | "category_min_age" | "category_max_age" | "category_gender" | "start_date" | "end_date" | "registration_start_date" | "registration_end_date" | "registration_fee" | "currency_code" | "grand_prize" | "second_prize" | "third_prize" | "max_teams" | "min_players_per_team" | "max_players_per_team" | "location_name" | "location_address" | "rules_url" | "rules_content" | "photo_url" | "photo_public_id" | "phase" | "status" | "created_by" | "created_at" | "updated_at", ExtArgs["result"]["tournaments"]>;
+export type tournamentsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "association_id" | "name" | "competition_plan" | "description" | "tournament_type_id" | "sport_type" | "modality" | "category_name" | "category_min_age" | "category_max_age" | "category_gender" | "start_date" | "end_date" | "registration_start_date" | "registration_end_date" | "registration_fee" | "yellow_card_fee" | "red_card_fee" | "currency_code" | "grand_prize" | "second_prize" | "third_prize" | "max_teams" | "min_players_per_team" | "max_players_per_team" | "location_name" | "location_address" | "rules_url" | "rules_content" | "photo_url" | "photo_public_id" | "phase" | "status" | "created_by" | "created_at" | "updated_at", ExtArgs["result"]["tournaments"]>;
 export type tournamentsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     tournament_administrators?: boolean | Prisma.tournaments$tournament_administratorsArgs<ExtArgs>;
     tournament_referees?: boolean | Prisma.tournaments$tournament_refereesArgs<ExtArgs>;
@@ -3133,6 +3275,8 @@ export type $tournamentsPayload<ExtArgs extends runtime.Types.Extensions.Interna
         registration_start_date: Date | null;
         registration_end_date: Date | null;
         registration_fee: runtime.Decimal;
+        yellow_card_fee: runtime.Decimal;
+        red_card_fee: runtime.Decimal;
         currency_code: string;
         grand_prize: runtime.Decimal;
         second_prize: runtime.Decimal;
@@ -3233,6 +3377,8 @@ export interface tournamentsFieldRefs {
     readonly registration_start_date: Prisma.FieldRef<"tournaments", 'DateTime'>;
     readonly registration_end_date: Prisma.FieldRef<"tournaments", 'DateTime'>;
     readonly registration_fee: Prisma.FieldRef<"tournaments", 'Decimal'>;
+    readonly yellow_card_fee: Prisma.FieldRef<"tournaments", 'Decimal'>;
+    readonly red_card_fee: Prisma.FieldRef<"tournaments", 'Decimal'>;
     readonly currency_code: Prisma.FieldRef<"tournaments", 'String'>;
     readonly grand_prize: Prisma.FieldRef<"tournaments", 'Decimal'>;
     readonly second_prize: Prisma.FieldRef<"tournaments", 'Decimal'>;

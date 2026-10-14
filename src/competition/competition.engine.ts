@@ -24,7 +24,20 @@ export interface CompetitionConfig {
   groups: number;
   qualifiers: number; // Per group for groups; total for league.
   finalLegs: number;
+  /**
+   * Equipos que clasifican además de los puestos fijos, tomados por mejor
+   * ubicación entre los siguientes de cada grupo (los «mejores terceros»).
+   */
+  extraQualifiers?: number;
+  /**
+   * Qué hacer con esos equipos extra: entrar directo al cuadro o disputar una
+   * ronda previa de repechaje entre ellos.
+   */
+  extraQualifierMode?: ExtraQualifierMode;
 }
+
+export const EXTRA_QUALIFIER_MODES = ['direct', 'play_in'] as const;
+export type ExtraQualifierMode = (typeof EXTRA_QUALIFIER_MODES)[number];
 export interface Fixture {
   key: string;
   home: string;
@@ -86,8 +99,13 @@ const fail = (message: string): never => {
 };
 export const hasGroups = (format: Format) => format.startsWith('groups_');
 export const hasFinalLeague = (format: Format) => format.endsWith('_final');
-export const DIRECT_KNOCKOUT_SIZES = [8, 16, 32] as const;
+export const DIRECT_KNOCKOUT_SIZES = [4, 8, 16, 32] as const;
 export const GROUP_KNOCKOUT_QUALIFIER_SIZES = [2, 4, 8, 16, 32] as const;
+/** Clasificados totales: los puestos fijos por grupo más los extras elegidos. */
+export const advancingTeams = (config: CompetitionConfig) =>
+  config.qualifiers * (hasGroups(config.format) ? config.groups : 1) +
+  (config.extraQualifiers ?? 0);
+
 export const isPowerOfTwo = (count: number) =>
   Number.isInteger(count) && count > 0 && Number.isInteger(Math.log2(count));
 
@@ -100,8 +118,8 @@ export function groupKnockoutConfigs(count: number): CompetitionConfig[] {
     GROUP_KNOCKOUT_QUALIFIER_SIZES.at(-1)!,
   );
   for (let groups = 2; groups <= maximumGroups; groups++) {
-    if (count % groups !== 0) continue;
-    const teamsPerGroup = count / groups;
+    // Los grupos pueden quedar disparejos: manda el tamaño del más pequeño.
+    const teamsPerGroup = Math.floor(count / groups);
     const maximumQualifiers = Math.min(
       teamsPerGroup - 1,
       Math.floor(GROUP_KNOCKOUT_QUALIFIER_SIZES.at(-1)! / groups),
@@ -137,29 +155,28 @@ export function groupKnockoutConfigs(count: number): CompetitionConfig[] {
 }
 
 export function validateConfig(config: CompetitionConfig, count: number) {
-  if (!Number.isInteger(count) || count < 6)
-    fail('Se necesitan al menos seis equipos aprobados.');
+  const minimumTeams = config.format === 'knockout' ? 4 : 6;
+  if (!Number.isInteger(count) || count < minimumTeams)
+    fail(
+      `Se necesitan al menos ${minimumTeams} equipos aprobados para este formato.`,
+    );
   if (
     !FORMATS.includes(config.format) ||
-    ![1, 2].includes(config.legs) ||
+    ![1, 2, 3].includes(config.legs) ||
     ![1, 2].includes(config.finalLegs)
   )
-    fail('Elige un formato válido y una o dos vueltas.');
+    fail('Elige un formato válido y entre una y tres vueltas.');
   if (!Number.isInteger(config.groups) || !Number.isInteger(config.qualifiers))
     fail('Los grupos y clasificados deben ser enteros.');
   if (hasGroups(config.format)) {
     if (config.groups < 2 || config.groups > Math.floor(count / 3))
       fail('Cada grupo debe tener al menos tres equipos.');
-    if (config.format === 'groups_knockout' && count % config.groups !== 0)
+    // Los grupos pueden quedar disparejos (21 equipos en 4 grupos: 6, 5, 5, 5).
+    // Lo que no puede pasar es que el grupo más chico clasifique a todos.
+    const smallestGroup = Math.floor(count / config.groups);
+    if (config.qualifiers < 1 || config.qualifiers >= smallestGroup)
       fail(
-        `Los ${count} equipos deben repartirse en grupos del mismo tamaño para este formato.`,
-      );
-    if (
-      config.qualifiers < 1 ||
-      config.qualifiers >= Math.floor(count / config.groups)
-    )
-      fail(
-        'Debe clasificar al menos uno y quedar eliminado al menos uno por grupo.',
+        `Con ${config.groups} grupos el más pequeño tendría ${smallestGroup} equipos: debe clasificar al menos uno y quedar eliminado al menos uno.`,
       );
   } else if (config.groups !== 1) fail('Este formato utiliza un solo grupo.');
   if (
@@ -169,31 +186,53 @@ export function validateConfig(config: CompetitionConfig, count: number) {
     )
   )
     fail(
-      'La eliminación directa está disponible únicamente para 8, 16 o 32 equipos.',
+      'La eliminación directa necesita 4, 8, 16 o 32 equipos. Con otra cantidad usa un formato con fase de grupos o de liga.',
     );
   if (['league', 'knockout'].includes(config.format)) {
     if (config.qualifiers !== 1)
       fail('Este formato no requiere clasificación a una segunda etapa.');
   } else {
-    const advancing =
-      config.qualifiers * (hasGroups(config.format) ? config.groups : 1);
+    const extras = config.extraQualifiers ?? 0;
+    const advancing = advancingTeams(config);
+    if (!Number.isInteger(extras) || extras < 0)
+      fail('Los clasificados adicionales deben ser un número entero.');
+    if (extras > 0 && !hasGroups(config.format))
+      fail('Los clasificados adicionales solo aplican a los formatos por grupos.');
+    // Los extras salen del siguiente puesto de cada grupo: no puede pedirse
+    // más de uno por grupo.
+    if (extras > config.groups)
+      fail(
+        `Solo puede haber ${config.groups} clasificado${config.groups === 1 ? '' : 's'} adicional${config.groups === 1 ? '' : 'es'}: uno por grupo como máximo.`,
+      );
+    if (
+      extras > 0 &&
+      !EXTRA_QUALIFIER_MODES.includes(
+        (config.extraQualifierMode ?? 'direct') as ExtraQualifierMode,
+      )
+    )
+      fail('Indica si los clasificados adicionales entran directo o por repechaje.');
     if (
       advancing < (hasFinalLeague(config.format) ? 3 : 2) ||
-      advancing >= count
+      advancing > count
     )
       fail('La cantidad de clasificados no es válida para la etapa final.');
-    if (config.format === 'league_knockout' && !isPowerOfTwo(advancing))
+
+    const playIn = extras > 0 && config.extraQualifierMode === 'play_in';
+    // Con repechaje, la llave arranca después de la ronda previa: los extras
+    // y una cantidad igual de clasificados se juegan el cupo entre ellos.
+    const bracketSize = playIn ? advancing - extras : advancing;
+    if (config.format === 'league_knockout' && !isPowerOfTwo(bracketSize))
       fail(
         'La fase eliminatoria del formato mixto debe clasificar una potencia de dos: 2, 4, 8, 16, 32…',
       );
     if (
       config.format === 'groups_knockout' &&
       !GROUP_KNOCKOUT_QUALIFIER_SIZES.includes(
-        advancing as (typeof GROUP_KNOCKOUT_QUALIFIER_SIZES)[number],
+        bracketSize as (typeof GROUP_KNOCKOUT_QUALIFIER_SIZES)[number],
       )
     )
       fail(
-        `Esta configuración clasifica ${advancing} equipos (${config.groups} grupos × ${config.qualifiers} por grupo). La eliminación directa debe iniciar con 2, 4, 8, 16 o 32 equipos.`,
+        `Esta configuración deja ${bracketSize} equipos en el cuadro (${config.groups} grupos × ${config.qualifiers} por grupo${extras > 0 ? ` + ${extras} adicional${extras === 1 ? '' : 'es'}` : ''}). La eliminación directa debe iniciar con 2, 4, 8, 16 o 32 equipos.`,
       );
   }
   // Bound generated work rather than imposing an arbitrary team limit.
@@ -242,18 +281,20 @@ export function roundRobin(
     }
     rotation.splice(1, 0, rotation.pop()!);
   }
-  return legs === 1
-    ? first
-    : [
-        ...first,
-        ...first.map((f) => ({
-          ...f,
-          key: `${f.key}:return`,
-          home: f.away,
-          away: f.home,
-          round: f.round + rounds,
+  // Cada vuelta adicional invierte la localía y continúa la numeración de
+  // fechas, de modo que 3 vueltas quedan ida, vuelta y desempate.
+  const legFixtures = Array.from({ length: Math.max(1, legs) }, (_leg, index) =>
+    index === 0
+      ? first
+      : first.map((fixture) => ({
+          ...fixture,
+          key: `${fixture.key}:leg${index + 1}`,
+          home: index % 2 ? fixture.away : fixture.home,
+          away: index % 2 ? fixture.home : fixture.away,
+          round: fixture.round + rounds * index,
         })),
-      ];
+  );
+  return legFixtures.flat();
 }
 export function pointsStage(
   ids: string[],
@@ -387,6 +428,53 @@ function medalStage(
     resolved: false,
   };
 }
+/**
+ * Ronda previa de repechaje: los clasificados adicionales y los últimos cupos
+ * se juegan el pase, mientras el resto espera en el cuadro. Los que esperan
+ * entran como descansos para que la etapa siguiente los arrastre.
+ */
+export function playInStage(
+  waiting: string[],
+  contenders: string[],
+  id: number,
+): CompetitionStage {
+  const fixtures: Fixture[] = [];
+  const pairs = Array.from(
+    { length: Math.floor(contenders.length / 2) },
+    (_item, index) =>
+      [contenders[index], contenders[contenders.length - 1 - index]] as const,
+  );
+  const sideNames = ['Lado izquierdo', 'Lado derecho'] as const;
+  const groups = sideNames.map((name) => ({ name, teams: [] as string[] }));
+  const leftPairCount = Math.ceil(pairs.length / 2);
+
+  pairs.forEach(([home, away], index) => {
+    const group = groups[index < leftPairCount ? 0 : 1];
+    group.teams.push(home, away);
+    fixtures.push({
+      key: `${id}:playin:${index}`,
+      home,
+      away,
+      round: 1,
+      group: group.name,
+    });
+  });
+
+  waiting.forEach((teamId, index) => {
+    groups[index % groups.length].teams.push(teamId);
+  });
+
+  return {
+    id,
+    label: 'Repechaje',
+    kind: 'knockout',
+    groups: groups.filter(({ teams }) => teams.length > 0),
+    fixtures,
+    byes: [...waiting],
+    resolved: false,
+  };
+}
+
 export function firstStage(config: CompetitionConfig, ids: string[]) {
   return config.format === 'knockout'
     ? knockoutStage(ids, 1)
@@ -409,18 +497,25 @@ export function estimate(config: CompetitionConfig, count: number) {
     config.format === 'knockout'
       ? count - 1
       : sizes.reduce((sum, n) => sum + ((n * (n - 1)) / 2) * config.legs, 0);
-  const qualified =
-    config.qualifiers * (hasGroups(config.format) ? config.groups : 1);
+  const qualified = ['league', 'knockout'].includes(config.format)
+    ? 0
+    : advancingTeams(config);
+  const extras = config.extraQualifiers ?? 0;
+  const playIn = extras > 0 && config.extraQualifierMode === 'play_in';
+  // Con repechaje se juega una ronda previa entre los extras y los últimos
+  // cupos; después el cuadro arranca con los equipos que quedan.
+  const playInMatches = playIn ? extras : 0;
+  const bracketSize = playIn ? qualified - extras : qualified;
   const extra = ['league', 'knockout'].includes(config.format)
     ? 0
     : hasFinalLeague(config.format)
       ? ((qualified * (qualified - 1)) / 2) * config.finalLegs
-      : qualified - 1;
+      : Math.max(0, bracketSize - 1) + playInMatches;
   const eliminationEntrants =
     config.format === 'knockout'
       ? count
       : config.format.endsWith('_knockout')
-        ? qualified
+        ? bracketSize
         : 0;
   const thirdPlaceMatch =
     eliminationEntrants >= 4 && isPowerOfTwo(eliminationEntrants) ? 1 : 0;
@@ -429,7 +524,7 @@ export function estimate(config: CompetitionConfig, count: number) {
     minimumMatches:
       config.format === 'knockout' ? 1 : (Math.min(...sizes) - 1) * config.legs,
     groupSizes: config.format === 'knockout' ? [] : sizes,
-    qualified: ['league', 'knockout'].includes(config.format) ? 0 : qualified,
+    qualified,
     byes: 0,
   };
 }
@@ -583,21 +678,62 @@ export function resolveStage(
     return { next: null, champion: tables[0][0].teamId };
   // Rank first, group second: for two groups this produces A1–B2 and B1–A2.
   qualified = Array.from({ length: plan.config.qualifiers }, (_, rank) =>
-    tables.map((table) => table[rank].teamId),
-  ).flat();
+    tables.map((table) => table[rank]?.teamId).filter(Boolean),
+  ).flat() as string[];
+
+  const extras = plan.config.extraQualifiers ?? 0;
+  // Los adicionales salen del siguiente puesto de cada grupo, ordenados entre
+  // sí: son los «mejores terceros» cuando clasifican dos por grupo.
+  const bestRemaining = extras
+    ? rankAcrossGroups(tables, plan.config.qualifiers).slice(0, extras)
+    : [];
+
+  if (extras > 0 && plan.config.extraQualifierMode === 'play_in') {
+    // Repechaje: los adicionales y los últimos clasificados se juegan el cupo
+    // en una ronda previa; el resto espera en el cuadro principal.
+    const defenders = qualified.slice(-extras);
+    const direct = qualified.slice(0, qualified.length - extras);
+    return {
+      next: playInStage([...direct], [...defenders, ...bestRemaining], current.id + 1),
+      champion: null,
+    };
+  }
+
+  const finalists = [...qualified, ...bestRemaining];
   return {
     next: hasFinalLeague(plan.config.format)
       ? pointsStage(
-          qualified,
+          finalists,
           1,
           plan.config.finalLegs,
           current.id + 1,
           'Liguilla final',
         )
-      : knockoutStage(qualified, current.id + 1),
+      : knockoutStage(finalists, current.id + 1),
     champion: null,
   };
 }
+/**
+ * Ordena entre sí a los equipos que ocupan el mismo puesto en cada grupo, para
+ * elegir los «mejores terceros» con un criterio comparable: puntos, diferencia
+ * de gol y goles a favor.
+ */
+export function rankAcrossGroups(
+  tables: Standing[][],
+  position: number,
+): string[] {
+  return tables
+    .map((table) => table[position])
+    .filter((standing): standing is Standing => Boolean(standing))
+    .sort(
+      (left, right) =>
+        right.points - left.points ||
+        right.goalsFor - right.goalsAgainst - (left.goalsFor - left.goalsAgainst) ||
+        right.goalsFor - left.goalsFor,
+    )
+    .map(({ teamId }) => teamId);
+}
+
 export function suggestions(count: number) {
   if (count < 6) return [];
   const configs: CompetitionConfig[] = [
@@ -629,7 +765,7 @@ export function suggestions(count: number) {
     .filter((config) => estimate(config, count).totalMatches <= 10000)
     .map((config) => ({
       config,
-      label: `${FORMAT_LABELS[config.format]}${config.format === 'groups_knockout' ? ` · ${config.groups} grupos de ${count / config.groups} · pasan ${config.qualifiers} por grupo` : hasGroups(config.format) ? ` · ${config.groups} grupos` : config.format === 'league' ? ` · ${config.legs} vuelta${config.legs === 1 ? '' : 's'}` : ''}`,
+      label: `${FORMAT_LABELS[config.format]}${config.format === 'groups_knockout' ? ` · ${config.groups} grupos · pasan ${config.qualifiers} por grupo` : hasGroups(config.format) ? ` · ${config.groups} grupos` : config.format === 'league' ? ` · ${config.legs} vuelta${config.legs === 1 ? '' : 's'}` : ''}`,
       ...estimate(config, count),
     }));
 }

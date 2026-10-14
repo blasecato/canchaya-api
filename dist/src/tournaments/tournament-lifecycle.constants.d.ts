@@ -1,6 +1,6 @@
-export declare const TOURNAMENT_PHASES: readonly ["draft", "registration", "validation", "scheduled", "in_progress", "finished", "archived", "cancelled"];
+export declare const TOURNAMENT_PHASES: readonly ["registration", "scheduled", "in_progress", "finished", "archived", "cancelled"];
 export type TournamentPhase = (typeof TOURNAMENT_PHASES)[number];
-export declare const PUBLIC_TOURNAMENT_PHASES: readonly ["registration", "validation", "scheduled", "in_progress", "finished"];
+export declare const PUBLIC_TOURNAMENT_PHASES: readonly ["registration", "scheduled", "in_progress", "finished"];
 export declare const ACTIVE_TOURNAMENT_PHASES: readonly ["registration", "in_progress"];
 export declare const TOURNAMENT_PHASE_LABELS: Record<TournamentPhase, string>;
 export declare const TOURNAMENT_FORWARD_TRANSITIONS: Readonly<Partial<Record<TournamentPhase, TournamentPhase>>>;

@@ -94,7 +94,8 @@ export class CreateTournamentDto extends TournamentSponsorsInputDto {
   @IsString()
   @IsNotEmpty()
   @IsIn(FOOTBALL_MODALITIES, {
-    message: 'La modalidad debe ser Fútbol 5, Fútbol 7 o Fútbol 11.',
+    message:
+      'La modalidad debe ser Fútbol 5, 6, 7, 8, 9, 10 u 11.',
   })
   modality!: FootballModality;
 
@@ -217,6 +218,32 @@ export class CreateTournamentDto extends TournamentSponsorsInputDto {
   @Min(0)
   @Max(999_999_999_999.99)
   secondPrize?: number;
+
+  @ApiPropertyOptional({
+    example: 5000,
+    minimum: 0,
+    default: 0,
+    description: 'Valor que paga el jugador por cada tarjeta amarilla.',
+  })
+  @Transform(toNumber)
+  @IsOptionalNonNullable()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(999_999_999_999.99)
+  yellowCardFee?: number;
+
+  @ApiPropertyOptional({
+    example: 15000,
+    minimum: 0,
+    default: 0,
+    description: 'Valor que paga el jugador por cada tarjeta roja.',
+  })
+  @Transform(toNumber)
+  @IsOptionalNonNullable()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(999_999_999_999.99)
+  redCardFee?: number;
 
   @ApiPropertyOptional({ example: 1000000, minimum: 0, default: 0 })
   @Transform(toNumber)

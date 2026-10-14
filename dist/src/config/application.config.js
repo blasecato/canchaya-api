@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.configureApplication = configureApplication;
 const common_1 = require("@nestjs/common");
 const prisma_exception_filter_1 = require("../common/filters/prisma-exception.filter");
+const upload_exception_filter_1 = require("../common/filters/upload-exception.filter");
+const validation_messages_1 = require("../common/validation/validation-messages");
 const api_response_interceptor_1 = require("../common/interceptors/api-response.interceptor");
 const uploads_constants_1 = require("../uploads/uploads.constants");
 function configureApplication(app) {
@@ -20,8 +22,9 @@ function configureApplication(app) {
         forbidNonWhitelisted: true,
         transform: true,
         whitelist: true,
+        exceptionFactory: validation_messages_1.buildValidationException,
     }));
-    app.useGlobalFilters(new prisma_exception_filter_1.PrismaExceptionFilter());
+    app.useGlobalFilters(new prisma_exception_filter_1.PrismaExceptionFilter(), new upload_exception_filter_1.UploadExceptionFilter());
     app.useGlobalInterceptors(new api_response_interceptor_1.ApiResponseInterceptor());
 }
 //# sourceMappingURL=application.config.js.map

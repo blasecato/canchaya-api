@@ -1,11 +1,13 @@
 import { CompetitionAccessService } from '../authorization/competition-access.service';
+import { CardChargesService } from '../card-charges/card-charges.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePlayerMatchStatDto } from './dto/create-player-match-stat.dto';
 import { UpdatePlayerMatchStatDto } from './dto/update-player-match-stat.dto';
 export declare class PlayerMatchStatsService {
     private readonly prisma;
     private readonly access;
-    constructor(prisma: PrismaService, access: CompetitionAccessService);
+    private readonly cardCharges;
+    constructor(prisma: PrismaService, access: CompetitionAccessService, cardCharges: CardChargesService);
     create(requestingUserId: bigint, dto: CreatePlayerMatchStatDto): Promise<{
         id: bigint;
         created_at: Date;

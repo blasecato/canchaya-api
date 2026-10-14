@@ -33,6 +33,7 @@ const update_tournament_rules_dto_1 = require("./dto/update-tournament-rules.dto
 const tournament_sponsor_input_dto_1 = require("./dto/tournament-sponsor-input.dto");
 const review_team_registration_dto_1 = require("./dto/review-team-registration.dto");
 const registration_payment_dto_1 = require("./dto/registration-payment.dto");
+const add_teams_dto_1 = require("./dto/add-teams.dto");
 const register_team_dto_1 = require("./dto/register-team.dto");
 const sponsorLogoUploadOptions = {
     limits: { files: 1, fileSize: uploads_constants_1.MAX_IMAGE_SIZE_BYTES, fields: 20, parts: 22 },
@@ -86,6 +87,9 @@ let TournamentCatalogController = class TournamentCatalogController {
     }
     registerTeam(tournamentId, request, dto) {
         return this.tournamentsService.registerTeam(tournamentId, BigInt(dto.teamId), request.auth.userId);
+    }
+    addTeams(tournamentId, request, dto) {
+        return this.tournamentsService.addTeamsAsManager(tournamentId, dto.teamIds.map((id) => BigInt(id)), request.auth.userId);
     }
     findMyRegistrationPayment(tournamentId, request) {
         return this.tournamentsService.findMyRegistrationPayment(tournamentId, request.auth.userId);
@@ -267,6 +271,21 @@ __decorate([
     __metadata("design:paramtypes", [BigInt, Object, register_team_dto_1.RegisterTeamDto]),
     __metadata("design:returntype", Promise)
 ], TournamentCatalogController.prototype, "registerTeam", null);
+__decorate([
+    (0, common_1.Post)(':tournamentId/registrations/bulk'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Agregar varios equipos al torneo desde la organización',
+        description: 'Los equipos quedan aprobados. Los que no cumplen se informan con su motivo.',
+    }),
+    (0, swagger_1.ApiOkResponse)({ type: add_teams_dto_1.AddTeamsResultDto }),
+    __param(0, (0, common_1.Param)('tournamentId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object, add_teams_dto_1.AddTeamsToTournamentDto]),
+    __metadata("design:returntype", Promise)
+], TournamentCatalogController.prototype, "addTeams", null);
 __decorate([
     (0, common_1.Get)(':tournamentId/my-payment'),
     (0, require_roles_decorator_1.RequireRoles)('PLAYER'),

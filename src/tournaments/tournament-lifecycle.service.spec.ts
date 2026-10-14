@@ -29,7 +29,7 @@ it('uses a supported notification type when advancing to validation', async () =
   await service['notifyLifecycleChange'](
     transaction as unknown as Prisma.TransactionClient,
     snapshot,
-    'validation',
+    'scheduled',
     1n,
     null,
   );
@@ -46,14 +46,14 @@ it('uses a supported notification type when advancing to validation', async () =
       entity_id: '62',
       metadata: {
         fromPhase: 'registration',
-        toPhase: 'validation',
+        toPhase: 'scheduled',
         tournamentId: '62',
       },
     });
   }
 });
 
-it('allows entering validation without registrations so the organizer can draw placeholders', () => {
+it('exige el calendario confirmado para pasar de inscripciones a programado', () => {
   const service = new TournamentLifecycleService(
     {} as PrismaService,
     {} as CompetitionAccessService,
@@ -65,8 +65,10 @@ it('allows entering validation without registrations so the organizer can draw p
     status: 'active',
     registrations: [],
     matches: [],
-  } as Parameters<(typeof service)['findBlockers']>[0];
-  expect(service['findBlockers'](snapshot, 'validation')).toEqual([]);
+  } as unknown as Parameters<(typeof service)['findBlockers']>[0];
+  expect(service['findBlockers'](snapshot, 'scheduled')).toEqual([
+    'Organiza y confirma el calendario o el cuadro antes de marcar el torneo como programado.',
+  ]);
 });
 
 it('allows scheduling with placeholders and moves completion checks to start', () => {
@@ -77,7 +79,7 @@ it('allows scheduling with placeholders and moves completion checks to start', (
   const snapshot = {
     id: 1n,
     name: 'Copa anticipada',
-    phase: 'validation',
+    phase: 'registration',
     status: 'active',
     maxTeams: 6,
     minPlayersPerTeam: 1,
@@ -112,7 +114,7 @@ it('allows scheduling with placeholders and moves completion checks to start', (
       originalType: 'Eliminación directa',
       changeReason: null,
     },
-  } as Parameters<(typeof service)['findBlockers']>[0];
+  } as unknown as Parameters<(typeof service)['findBlockers']>[0];
   expect(service['findBlockers'](snapshot, 'scheduled')).toEqual([]);
   expect(service['findBlockers'](snapshot, 'in_progress')).toEqual(
     expect.arrayContaining([
@@ -132,12 +134,12 @@ it('requires a confirmed organization before scheduling', () => {
   const snapshot = {
     id: 1n,
     name: 'Copa sin organización',
-    phase: 'validation',
+    phase: 'registration',
     status: 'active',
     registrations: [],
     matches: [],
     competitionPlan: null,
-  } as Parameters<(typeof service)['findBlockers']>[0];
+  } as unknown as Parameters<(typeof service)['findBlockers']>[0];
   expect(service['findBlockers'](snapshot, 'scheduled')).toEqual([
     expect.stringContaining('Organiza y confirma'),
   ]);

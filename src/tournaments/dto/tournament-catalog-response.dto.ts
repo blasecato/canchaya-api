@@ -7,6 +7,15 @@ export class TournamentCatalogAssociationDto {
 
   @ApiProperty({ example: 'Liga Deportiva Laboyana' })
   name!: string;
+
+  @ApiProperty({ nullable: true, example: '/uploads/associations/logo.png' })
+  logoUrl!: string | null;
+
+  @ApiProperty({
+    example: 'Laura Martínez',
+    description: 'Administrador principal de la organización.',
+  })
+  ownerName!: string;
 }
 
 export class TournamentCatalogItemResponseDto extends AssociationTournamentResponseDto {

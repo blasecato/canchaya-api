@@ -42,6 +42,8 @@ export declare class AssociationTournamentResponseDto {
     registrationStartDate: string | null;
     registrationEndDate: string | null;
     registrationFee: string;
+    yellowCardFee: string;
+    redCardFee: string;
     currencyCode: string;
     grandPrize: string;
     secondPrize: string;
@@ -56,7 +58,7 @@ export declare class AssociationTournamentResponseDto {
     rulesContent: string | null;
     photoUrl: string | null;
     sponsors: TournamentSponsorResponseDto[];
-    phase: 'draft' | 'registration' | 'validation' | 'scheduled' | 'in_progress' | 'finished' | 'archived' | 'cancelled';
+    phase: 'registration' | 'scheduled' | 'in_progress' | 'finished' | 'archived' | 'cancelled';
     status: 'active' | 'inactive';
     createdAt: string;
     updatedAt: string;

@@ -43,7 +43,8 @@ export class CreateTeamDto {
   })
   @IsOptional()
   @IsIn(FOOTBALL_MODALITIES, {
-    message: 'La modalidad debe ser Fútbol 5, Fútbol 7 o Fútbol 11.',
+    message:
+      'La modalidad debe ser Fútbol 5, 6, 7, 8, 9, 10 u 11.',
   })
   modality?: FootballModality | null;
 

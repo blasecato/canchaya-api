@@ -30,6 +30,7 @@ export type tournament_team_registrations = Prisma.tournament_team_registrations
 export type notifications = Prisma.notificationsModel;
 export type notification_preferences = Prisma.notification_preferencesModel;
 export type tournament_registration_events = Prisma.tournament_registration_eventsModel;
+export type tournament_card_charges = Prisma.tournament_card_chargesModel;
 export type tournament_lifecycle_events = Prisma.tournament_lifecycle_eventsModel;
 export type tournament_types = Prisma.tournament_typesModel;
 export type tournaments = Prisma.tournamentsModel;

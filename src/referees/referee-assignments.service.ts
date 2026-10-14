@@ -14,7 +14,6 @@ import { RespondRefereeAssignmentDto } from './dto/respond-referee-assignment.dt
 const ACTIVE_ASSIGNMENT_STATUSES = ['pending', 'accepted'] as const;
 const REFEREE_ASSIGNMENT_WINDOW_MINUTES = 60;
 const ASSIGNABLE_TOURNAMENT_PHASES = [
-  'validation',
   'scheduled',
   'in_progress',
 ] as const;

@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PlayerMatchStatsModule = void 0;
 const common_1 = require("@nestjs/common");
 const auth_module_1 = require("../auth/auth.module");
+const card_charges_module_1 = require("../card-charges/card-charges.module");
 const player_match_stats_controller_1 = require("./player-match-stats.controller");
 const player_match_stats_service_1 = require("./player-match-stats.service");
 let PlayerMatchStatsModule = class PlayerMatchStatsModule {
@@ -16,7 +17,7 @@ let PlayerMatchStatsModule = class PlayerMatchStatsModule {
 exports.PlayerMatchStatsModule = PlayerMatchStatsModule;
 exports.PlayerMatchStatsModule = PlayerMatchStatsModule = __decorate([
     (0, common_1.Module)({
-        imports: [auth_module_1.AuthModule],
+        imports: [auth_module_1.AuthModule, card_charges_module_1.CardChargesModule],
         controllers: [player_match_stats_controller_1.PlayerMatchStatsController],
         providers: [player_match_stats_service_1.PlayerMatchStatsService],
         exports: [player_match_stats_service_1.PlayerMatchStatsService],

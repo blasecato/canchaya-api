@@ -12,6 +12,8 @@ export const tournamentCatalogItemSelect = {
     select: {
       id: true,
       name: true,
+      logo_url: true,
+      users: { select: { full_name: true } },
     },
   },
 } satisfies Prisma.tournamentsSelect;
@@ -29,6 +31,8 @@ export function toTournamentCatalogItemResponse(
     association: {
       id: tournament.associations.id.toString(),
       name: tournament.associations.name,
+      logoUrl: tournament.associations.logo_url,
+      ownerName: tournament.associations.users.full_name,
     },
     canManage,
   };

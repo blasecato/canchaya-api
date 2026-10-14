@@ -129,6 +129,12 @@ export class AssociationTournamentResponseDto {
   @ApiProperty({ example: '150000.00', type: String })
   registrationFee!: string;
 
+  @ApiProperty({ example: '5000.00', description: 'Valor por tarjeta amarilla.' })
+  yellowCardFee!: string;
+
+  @ApiProperty({ example: '15000.00', description: 'Valor por tarjeta roja.' })
+  redCardFee!: string;
+
   @ApiProperty({ example: 'COP', minLength: 3, maxLength: 3 })
   currencyCode!: string;
 
@@ -180,9 +186,7 @@ export class AssociationTournamentResponseDto {
 
   @ApiProperty({
     enum: [
-      'draft',
       'registration',
-      'validation',
       'scheduled',
       'in_progress',
       'finished',
@@ -192,9 +196,7 @@ export class AssociationTournamentResponseDto {
     example: 'registration',
   })
   phase!:
-    | 'draft'
     | 'registration'
-    | 'validation'
     | 'scheduled'
     | 'in_progress'
     | 'finished'

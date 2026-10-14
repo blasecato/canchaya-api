@@ -156,6 +156,7 @@ export type tournament_team_playersWhereInput = {
     player_match_stats?: Prisma.Player_match_statsListRelationFilter;
     team_members?: Prisma.XOR<Prisma.Team_membersScalarRelationFilter, Prisma.team_membersWhereInput>;
     tournament_team_registrations?: Prisma.XOR<Prisma.Tournament_team_registrationsScalarRelationFilter, Prisma.tournament_team_registrationsWhereInput>;
+    tournament_card_charges?: Prisma.Tournament_card_chargesListRelationFilter;
 };
 export type tournament_team_playersOrderByWithRelationInput = {
     tournament_id?: Prisma.SortOrder;
@@ -170,6 +171,7 @@ export type tournament_team_playersOrderByWithRelationInput = {
     player_match_stats?: Prisma.player_match_statsOrderByRelationAggregateInput;
     team_members?: Prisma.team_membersOrderByWithRelationInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsOrderByWithRelationInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesOrderByRelationAggregateInput;
 };
 export type tournament_team_playersWhereUniqueInput = Prisma.AtLeast<{
     tournament_id_team_id_jersey_number?: Prisma.tournament_team_playersTournament_idTeam_idJersey_numberCompoundUniqueInput;
@@ -190,6 +192,7 @@ export type tournament_team_playersWhereUniqueInput = Prisma.AtLeast<{
     player_match_stats?: Prisma.Player_match_statsListRelationFilter;
     team_members?: Prisma.XOR<Prisma.Team_membersScalarRelationFilter, Prisma.team_membersWhereInput>;
     tournament_team_registrations?: Prisma.XOR<Prisma.Tournament_team_registrationsScalarRelationFilter, Prisma.tournament_team_registrationsWhereInput>;
+    tournament_card_charges?: Prisma.Tournament_card_chargesListRelationFilter;
 }, "tournament_id_team_id_player_id" | "tournament_id_team_id_jersey_number" | "tournament_id_player_id">;
 export type tournament_team_playersOrderByWithAggregationInput = {
     tournament_id?: Prisma.SortOrder;
@@ -229,6 +232,7 @@ export type tournament_team_playersCreateInput = {
     player_match_stats?: Prisma.player_match_statsCreateNestedManyWithoutTournament_team_playersInput;
     team_members: Prisma.team_membersCreateNestedOneWithoutTournament_team_playersInput;
     tournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutTournament_team_playersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesCreateNestedManyWithoutTournament_team_playersInput;
 };
 export type tournament_team_playersUncheckedCreateInput = {
     tournament_id: bigint | number;
@@ -241,6 +245,7 @@ export type tournament_team_playersUncheckedCreateInput = {
     created_at?: Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutTournament_team_playersInput;
     player_match_stats?: Prisma.player_match_statsUncheckedCreateNestedManyWithoutTournament_team_playersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedCreateNestedManyWithoutTournament_team_playersInput;
 };
 export type tournament_team_playersUpdateInput = {
     jersey_number?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
@@ -252,6 +257,7 @@ export type tournament_team_playersUpdateInput = {
     player_match_stats?: Prisma.player_match_statsUpdateManyWithoutTournament_team_playersNestedInput;
     team_members?: Prisma.team_membersUpdateOneRequiredWithoutTournament_team_playersNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutTournament_team_playersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUpdateManyWithoutTournament_team_playersNestedInput;
 };
 export type tournament_team_playersUncheckedUpdateInput = {
     tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -264,6 +270,7 @@ export type tournament_team_playersUncheckedUpdateInput = {
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
     player_match_stats?: Prisma.player_match_statsUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
 };
 export type tournament_team_playersCreateManyInput = {
     tournament_id: bigint | number;
@@ -463,6 +470,18 @@ export type tournament_team_playersUncheckedUpdateManyWithoutTournament_team_reg
     updateMany?: Prisma.tournament_team_playersUpdateManyWithWhereWithoutTournament_team_registrationsInput | Prisma.tournament_team_playersUpdateManyWithWhereWithoutTournament_team_registrationsInput[];
     deleteMany?: Prisma.tournament_team_playersScalarWhereInput | Prisma.tournament_team_playersScalarWhereInput[];
 };
+export type tournament_team_playersCreateNestedOneWithoutTournament_card_chargesInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_playersCreateWithoutTournament_card_chargesInput, Prisma.tournament_team_playersUncheckedCreateWithoutTournament_card_chargesInput>;
+    connectOrCreate?: Prisma.tournament_team_playersCreateOrConnectWithoutTournament_card_chargesInput;
+    connect?: Prisma.tournament_team_playersWhereUniqueInput;
+};
+export type tournament_team_playersUpdateOneRequiredWithoutTournament_card_chargesNestedInput = {
+    create?: Prisma.XOR<Prisma.tournament_team_playersCreateWithoutTournament_card_chargesInput, Prisma.tournament_team_playersUncheckedCreateWithoutTournament_card_chargesInput>;
+    connectOrCreate?: Prisma.tournament_team_playersCreateOrConnectWithoutTournament_card_chargesInput;
+    upsert?: Prisma.tournament_team_playersUpsertWithoutTournament_card_chargesInput;
+    connect?: Prisma.tournament_team_playersWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.tournament_team_playersUpdateToOneWithWhereWithoutTournament_card_chargesInput, Prisma.tournament_team_playersUpdateWithoutTournament_card_chargesInput>, Prisma.tournament_team_playersUncheckedUpdateWithoutTournament_card_chargesInput>;
+};
 export type tournament_team_playersCreateWithoutDisciplinary_actionsInput = {
     jersey_number?: number | null;
     position?: string | null;
@@ -472,6 +491,7 @@ export type tournament_team_playersCreateWithoutDisciplinary_actionsInput = {
     player_match_stats?: Prisma.player_match_statsCreateNestedManyWithoutTournament_team_playersInput;
     team_members: Prisma.team_membersCreateNestedOneWithoutTournament_team_playersInput;
     tournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutTournament_team_playersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesCreateNestedManyWithoutTournament_team_playersInput;
 };
 export type tournament_team_playersUncheckedCreateWithoutDisciplinary_actionsInput = {
     tournament_id: bigint | number;
@@ -483,6 +503,7 @@ export type tournament_team_playersUncheckedCreateWithoutDisciplinary_actionsInp
     registration_status?: string;
     created_at?: Date | string;
     player_match_stats?: Prisma.player_match_statsUncheckedCreateNestedManyWithoutTournament_team_playersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedCreateNestedManyWithoutTournament_team_playersInput;
 };
 export type tournament_team_playersCreateOrConnectWithoutDisciplinary_actionsInput = {
     where: Prisma.tournament_team_playersWhereUniqueInput;
@@ -506,6 +527,7 @@ export type tournament_team_playersUpdateWithoutDisciplinary_actionsInput = {
     player_match_stats?: Prisma.player_match_statsUpdateManyWithoutTournament_team_playersNestedInput;
     team_members?: Prisma.team_membersUpdateOneRequiredWithoutTournament_team_playersNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutTournament_team_playersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUpdateManyWithoutTournament_team_playersNestedInput;
 };
 export type tournament_team_playersUncheckedUpdateWithoutDisciplinary_actionsInput = {
     tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -517,6 +539,7 @@ export type tournament_team_playersUncheckedUpdateWithoutDisciplinary_actionsInp
     registration_status?: Prisma.StringFieldUpdateOperationsInput | string;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     player_match_stats?: Prisma.player_match_statsUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
 };
 export type tournament_team_playersCreateWithoutPlayer_match_statsInput = {
     jersey_number?: number | null;
@@ -527,6 +550,7 @@ export type tournament_team_playersCreateWithoutPlayer_match_statsInput = {
     disciplinary_actions?: Prisma.disciplinary_actionsCreateNestedManyWithoutTournament_team_playersInput;
     team_members: Prisma.team_membersCreateNestedOneWithoutTournament_team_playersInput;
     tournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutTournament_team_playersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesCreateNestedManyWithoutTournament_team_playersInput;
 };
 export type tournament_team_playersUncheckedCreateWithoutPlayer_match_statsInput = {
     tournament_id: bigint | number;
@@ -538,6 +562,7 @@ export type tournament_team_playersUncheckedCreateWithoutPlayer_match_statsInput
     registration_status?: string;
     created_at?: Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutTournament_team_playersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedCreateNestedManyWithoutTournament_team_playersInput;
 };
 export type tournament_team_playersCreateOrConnectWithoutPlayer_match_statsInput = {
     where: Prisma.tournament_team_playersWhereUniqueInput;
@@ -561,6 +586,7 @@ export type tournament_team_playersUpdateWithoutPlayer_match_statsInput = {
     disciplinary_actions?: Prisma.disciplinary_actionsUpdateManyWithoutTournament_team_playersNestedInput;
     team_members?: Prisma.team_membersUpdateOneRequiredWithoutTournament_team_playersNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutTournament_team_playersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUpdateManyWithoutTournament_team_playersNestedInput;
 };
 export type tournament_team_playersUncheckedUpdateWithoutPlayer_match_statsInput = {
     tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -572,6 +598,7 @@ export type tournament_team_playersUncheckedUpdateWithoutPlayer_match_statsInput
     registration_status?: Prisma.StringFieldUpdateOperationsInput | string;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
 };
 export type tournament_team_playersCreateWithoutTeam_membersInput = {
     jersey_number?: number | null;
@@ -582,6 +609,7 @@ export type tournament_team_playersCreateWithoutTeam_membersInput = {
     disciplinary_actions?: Prisma.disciplinary_actionsCreateNestedManyWithoutTournament_team_playersInput;
     player_match_stats?: Prisma.player_match_statsCreateNestedManyWithoutTournament_team_playersInput;
     tournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutTournament_team_playersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesCreateNestedManyWithoutTournament_team_playersInput;
 };
 export type tournament_team_playersUncheckedCreateWithoutTeam_membersInput = {
     tournament_id: bigint | number;
@@ -592,6 +620,7 @@ export type tournament_team_playersUncheckedCreateWithoutTeam_membersInput = {
     created_at?: Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutTournament_team_playersInput;
     player_match_stats?: Prisma.player_match_statsUncheckedCreateNestedManyWithoutTournament_team_playersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedCreateNestedManyWithoutTournament_team_playersInput;
 };
 export type tournament_team_playersCreateOrConnectWithoutTeam_membersInput = {
     where: Prisma.tournament_team_playersWhereUniqueInput;
@@ -636,6 +665,7 @@ export type tournament_team_playersCreateWithoutTournament_team_registrationsInp
     disciplinary_actions?: Prisma.disciplinary_actionsCreateNestedManyWithoutTournament_team_playersInput;
     player_match_stats?: Prisma.player_match_statsCreateNestedManyWithoutTournament_team_playersInput;
     team_members: Prisma.team_membersCreateNestedOneWithoutTournament_team_playersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesCreateNestedManyWithoutTournament_team_playersInput;
 };
 export type tournament_team_playersUncheckedCreateWithoutTournament_team_registrationsInput = {
     player_id: bigint | number;
@@ -646,6 +676,7 @@ export type tournament_team_playersUncheckedCreateWithoutTournament_team_registr
     created_at?: Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutTournament_team_playersInput;
     player_match_stats?: Prisma.player_match_statsUncheckedCreateNestedManyWithoutTournament_team_playersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedCreateNestedManyWithoutTournament_team_playersInput;
 };
 export type tournament_team_playersCreateOrConnectWithoutTournament_team_registrationsInput = {
     where: Prisma.tournament_team_playersWhereUniqueInput;
@@ -668,6 +699,65 @@ export type tournament_team_playersUpdateManyWithWhereWithoutTournament_team_reg
     where: Prisma.tournament_team_playersScalarWhereInput;
     data: Prisma.XOR<Prisma.tournament_team_playersUpdateManyMutationInput, Prisma.tournament_team_playersUncheckedUpdateManyWithoutTournament_team_registrationsInput>;
 };
+export type tournament_team_playersCreateWithoutTournament_card_chargesInput = {
+    jersey_number?: number | null;
+    position?: string | null;
+    is_captain?: boolean;
+    registration_status?: string;
+    created_at?: Date | string;
+    disciplinary_actions?: Prisma.disciplinary_actionsCreateNestedManyWithoutTournament_team_playersInput;
+    player_match_stats?: Prisma.player_match_statsCreateNestedManyWithoutTournament_team_playersInput;
+    team_members: Prisma.team_membersCreateNestedOneWithoutTournament_team_playersInput;
+    tournament_team_registrations: Prisma.tournament_team_registrationsCreateNestedOneWithoutTournament_team_playersInput;
+};
+export type tournament_team_playersUncheckedCreateWithoutTournament_card_chargesInput = {
+    tournament_id: bigint | number;
+    team_id: bigint | number;
+    player_id: bigint | number;
+    jersey_number?: number | null;
+    position?: string | null;
+    is_captain?: boolean;
+    registration_status?: string;
+    created_at?: Date | string;
+    disciplinary_actions?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutTournament_team_playersInput;
+    player_match_stats?: Prisma.player_match_statsUncheckedCreateNestedManyWithoutTournament_team_playersInput;
+};
+export type tournament_team_playersCreateOrConnectWithoutTournament_card_chargesInput = {
+    where: Prisma.tournament_team_playersWhereUniqueInput;
+    create: Prisma.XOR<Prisma.tournament_team_playersCreateWithoutTournament_card_chargesInput, Prisma.tournament_team_playersUncheckedCreateWithoutTournament_card_chargesInput>;
+};
+export type tournament_team_playersUpsertWithoutTournament_card_chargesInput = {
+    update: Prisma.XOR<Prisma.tournament_team_playersUpdateWithoutTournament_card_chargesInput, Prisma.tournament_team_playersUncheckedUpdateWithoutTournament_card_chargesInput>;
+    create: Prisma.XOR<Prisma.tournament_team_playersCreateWithoutTournament_card_chargesInput, Prisma.tournament_team_playersUncheckedCreateWithoutTournament_card_chargesInput>;
+    where?: Prisma.tournament_team_playersWhereInput;
+};
+export type tournament_team_playersUpdateToOneWithWhereWithoutTournament_card_chargesInput = {
+    where?: Prisma.tournament_team_playersWhereInput;
+    data: Prisma.XOR<Prisma.tournament_team_playersUpdateWithoutTournament_card_chargesInput, Prisma.tournament_team_playersUncheckedUpdateWithoutTournament_card_chargesInput>;
+};
+export type tournament_team_playersUpdateWithoutTournament_card_chargesInput = {
+    jersey_number?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    is_captain?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    registration_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    disciplinary_actions?: Prisma.disciplinary_actionsUpdateManyWithoutTournament_team_playersNestedInput;
+    player_match_stats?: Prisma.player_match_statsUpdateManyWithoutTournament_team_playersNestedInput;
+    team_members?: Prisma.team_membersUpdateOneRequiredWithoutTournament_team_playersNestedInput;
+    tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutTournament_team_playersNestedInput;
+};
+export type tournament_team_playersUncheckedUpdateWithoutTournament_card_chargesInput = {
+    tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    team_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    player_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    jersey_number?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    is_captain?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    registration_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    disciplinary_actions?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
+    player_match_stats?: Prisma.player_match_statsUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
+};
 export type tournament_team_playersCreateManyTeam_membersInput = {
     tournament_id: bigint | number;
     jersey_number?: number | null;
@@ -685,6 +775,7 @@ export type tournament_team_playersUpdateWithoutTeam_membersInput = {
     disciplinary_actions?: Prisma.disciplinary_actionsUpdateManyWithoutTournament_team_playersNestedInput;
     player_match_stats?: Prisma.player_match_statsUpdateManyWithoutTournament_team_playersNestedInput;
     tournament_team_registrations?: Prisma.tournament_team_registrationsUpdateOneRequiredWithoutTournament_team_playersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUpdateManyWithoutTournament_team_playersNestedInput;
 };
 export type tournament_team_playersUncheckedUpdateWithoutTeam_membersInput = {
     tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -695,6 +786,7 @@ export type tournament_team_playersUncheckedUpdateWithoutTeam_membersInput = {
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
     player_match_stats?: Prisma.player_match_statsUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
 };
 export type tournament_team_playersUncheckedUpdateManyWithoutTeam_membersInput = {
     tournament_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -721,6 +813,7 @@ export type tournament_team_playersUpdateWithoutTournament_team_registrationsInp
     disciplinary_actions?: Prisma.disciplinary_actionsUpdateManyWithoutTournament_team_playersNestedInput;
     player_match_stats?: Prisma.player_match_statsUpdateManyWithoutTournament_team_playersNestedInput;
     team_members?: Prisma.team_membersUpdateOneRequiredWithoutTournament_team_playersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUpdateManyWithoutTournament_team_playersNestedInput;
 };
 export type tournament_team_playersUncheckedUpdateWithoutTournament_team_registrationsInput = {
     player_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -731,6 +824,7 @@ export type tournament_team_playersUncheckedUpdateWithoutTournament_team_registr
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     disciplinary_actions?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
     player_match_stats?: Prisma.player_match_statsUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedUpdateManyWithoutTournament_team_playersNestedInput;
 };
 export type tournament_team_playersUncheckedUpdateManyWithoutTournament_team_registrationsInput = {
     player_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
@@ -743,10 +837,12 @@ export type tournament_team_playersUncheckedUpdateManyWithoutTournament_team_reg
 export type Tournament_team_playersCountOutputType = {
     disciplinary_actions: number;
     player_match_stats: number;
+    tournament_card_charges: number;
 };
 export type Tournament_team_playersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     disciplinary_actions?: boolean | Tournament_team_playersCountOutputTypeCountDisciplinary_actionsArgs;
     player_match_stats?: boolean | Tournament_team_playersCountOutputTypeCountPlayer_match_statsArgs;
+    tournament_card_charges?: boolean | Tournament_team_playersCountOutputTypeCountTournament_card_chargesArgs;
 };
 export type Tournament_team_playersCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.Tournament_team_playersCountOutputTypeSelect<ExtArgs> | null;
@@ -756,6 +852,9 @@ export type Tournament_team_playersCountOutputTypeCountDisciplinary_actionsArgs<
 };
 export type Tournament_team_playersCountOutputTypeCountPlayer_match_statsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.player_match_statsWhereInput;
+};
+export type Tournament_team_playersCountOutputTypeCountTournament_card_chargesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.tournament_card_chargesWhereInput;
 };
 export type tournament_team_playersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     tournament_id?: boolean;
@@ -770,6 +869,7 @@ export type tournament_team_playersSelect<ExtArgs extends runtime.Types.Extensio
     player_match_stats?: boolean | Prisma.tournament_team_players$player_match_statsArgs<ExtArgs>;
     team_members?: boolean | Prisma.team_membersDefaultArgs<ExtArgs>;
     tournament_team_registrations?: boolean | Prisma.tournament_team_registrationsDefaultArgs<ExtArgs>;
+    tournament_card_charges?: boolean | Prisma.tournament_team_players$tournament_card_chargesArgs<ExtArgs>;
     _count?: boolean | Prisma.Tournament_team_playersCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["tournament_team_players"]>;
 export type tournament_team_playersSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -812,6 +912,7 @@ export type tournament_team_playersInclude<ExtArgs extends runtime.Types.Extensi
     player_match_stats?: boolean | Prisma.tournament_team_players$player_match_statsArgs<ExtArgs>;
     team_members?: boolean | Prisma.team_membersDefaultArgs<ExtArgs>;
     tournament_team_registrations?: boolean | Prisma.tournament_team_registrationsDefaultArgs<ExtArgs>;
+    tournament_card_charges?: boolean | Prisma.tournament_team_players$tournament_card_chargesArgs<ExtArgs>;
     _count?: boolean | Prisma.Tournament_team_playersCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type tournament_team_playersIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -829,6 +930,7 @@ export type $tournament_team_playersPayload<ExtArgs extends runtime.Types.Extens
         player_match_stats: Prisma.$player_match_statsPayload<ExtArgs>[];
         team_members: Prisma.$team_membersPayload<ExtArgs>;
         tournament_team_registrations: Prisma.$tournament_team_registrationsPayload<ExtArgs>;
+        tournament_card_charges: Prisma.$tournament_card_chargesPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         tournament_id: bigint;
@@ -895,6 +997,7 @@ export interface Prisma__tournament_team_playersClient<T, Null = never, ExtArgs 
     player_match_stats<T extends Prisma.tournament_team_players$player_match_statsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_team_players$player_match_statsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$player_match_statsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     team_members<T extends Prisma.team_membersDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.team_membersDefaultArgs<ExtArgs>>): Prisma.Prisma__team_membersClient<runtime.Types.Result.GetResult<Prisma.$team_membersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     tournament_team_registrations<T extends Prisma.tournament_team_registrationsDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_team_registrationsDefaultArgs<ExtArgs>>): Prisma.Prisma__tournament_team_registrationsClient<runtime.Types.Result.GetResult<Prisma.$tournament_team_registrationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    tournament_card_charges<T extends Prisma.tournament_team_players$tournament_card_chargesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tournament_team_players$tournament_card_chargesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tournament_card_chargesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
     catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
     finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;
@@ -1030,6 +1133,17 @@ export type tournament_team_players$player_match_statsArgs<ExtArgs extends runti
     take?: number;
     skip?: number;
     distinct?: Prisma.Player_match_statsScalarFieldEnum | Prisma.Player_match_statsScalarFieldEnum[];
+};
+export type tournament_team_players$tournament_card_chargesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.tournament_card_chargesSelect<ExtArgs> | null;
+    omit?: Prisma.tournament_card_chargesOmit<ExtArgs> | null;
+    include?: Prisma.tournament_card_chargesInclude<ExtArgs> | null;
+    where?: Prisma.tournament_card_chargesWhereInput;
+    orderBy?: Prisma.tournament_card_chargesOrderByWithRelationInput | Prisma.tournament_card_chargesOrderByWithRelationInput[];
+    cursor?: Prisma.tournament_card_chargesWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Tournament_card_chargesScalarFieldEnum | Prisma.Tournament_card_chargesScalarFieldEnum[];
 };
 export type tournament_team_playersDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.tournament_team_playersSelect<ExtArgs> | null;

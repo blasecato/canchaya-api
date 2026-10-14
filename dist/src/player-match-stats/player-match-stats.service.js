@@ -12,13 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PlayerMatchStatsService = void 0;
 const common_1 = require("@nestjs/common");
 const competition_access_service_1 = require("../authorization/competition-access.service");
+const card_charges_service_1 = require("../card-charges/card-charges.service");
 const prisma_service_1 = require("../prisma/prisma.service");
 let PlayerMatchStatsService = class PlayerMatchStatsService {
     prisma;
     access;
-    constructor(prisma, access) {
+    cardCharges;
+    constructor(prisma, access, cardCharges) {
         this.prisma = prisma;
         this.access = access;
+        this.cardCharges = cardCharges;
     }
     async create(requestingUserId, dto) {
         const matchId = BigInt(dto.matchId);
@@ -28,18 +31,29 @@ let PlayerMatchStatsService = class PlayerMatchStatsService {
         await this.access.resolveMatchWriteAccess(requestingUserId, matchId);
         await this.access.assertTournamentInPhases(tournamentId, ['in_progress'], 'Las estadísticas solo se pueden registrar mientras el torneo está En curso.');
         await this.assertValidContext(matchId, tournamentId, teamId, playerId);
-        return this.prisma.player_match_stats.create({
-            data: {
-                match_id: matchId,
-                tournament_id: tournamentId,
-                team_id: teamId,
-                player_id: playerId,
-                goals: dto.goals,
-                assists: dto.assists,
-                yellow_cards: dto.yellowCards,
-                red_cards: dto.redCards,
-                minutes_played: dto.minutesPlayed,
-            },
+        return this.prisma.$transaction(async (transaction) => {
+            const created = await transaction.player_match_stats.create({
+                data: {
+                    match_id: matchId,
+                    tournament_id: tournamentId,
+                    team_id: teamId,
+                    player_id: playerId,
+                    goals: dto.goals,
+                    assists: dto.assists,
+                    yellow_cards: dto.yellowCards,
+                    red_cards: dto.redCards,
+                    minutes_played: dto.minutesPlayed,
+                },
+            });
+            await this.cardCharges.syncMatchCards(transaction, {
+                tournamentId,
+                teamId,
+                playerId,
+                matchId,
+                yellowCards: dto.yellowCards ?? 0,
+                redCards: dto.redCards ?? 0,
+            });
+            return created;
         });
     }
     async findAll(requestingUserId) {
@@ -155,26 +169,46 @@ let PlayerMatchStatsService = class PlayerMatchStatsService {
             await this.access.resolveMatchWriteAccess(requestingUserId, matchId);
         }
         await this.assertValidContext(matchId, tournamentId, teamId, playerId);
-        return this.prisma.player_match_stats.update({
-            where: { id },
-            data: {
-                match_id: dto.matchId !== undefined ? matchId : undefined,
-                tournament_id: dto.tournamentId !== undefined ? tournamentId : undefined,
-                team_id: dto.teamId !== undefined ? teamId : undefined,
-                player_id: dto.playerId !== undefined ? playerId : undefined,
-                goals: dto.goals,
-                assists: dto.assists,
-                yellow_cards: dto.yellowCards,
-                red_cards: dto.redCards,
-                minutes_played: dto.minutesPlayed,
-            },
+        return this.prisma.$transaction(async (transaction) => {
+            const updated = await transaction.player_match_stats.update({
+                where: { id },
+                data: {
+                    match_id: dto.matchId !== undefined ? matchId : undefined,
+                    tournament_id: dto.tournamentId !== undefined ? tournamentId : undefined,
+                    team_id: dto.teamId !== undefined ? teamId : undefined,
+                    player_id: dto.playerId !== undefined ? playerId : undefined,
+                    goals: dto.goals,
+                    assists: dto.assists,
+                    yellow_cards: dto.yellowCards,
+                    red_cards: dto.redCards,
+                    minutes_played: dto.minutesPlayed,
+                },
+            });
+            if (current.match_id !== updated.match_id || current.player_id !== updated.player_id) {
+                await this.cardCharges.removeMatchCards(transaction, current.match_id, current.player_id);
+            }
+            await this.cardCharges.syncMatchCards(transaction, {
+                tournamentId: updated.tournament_id,
+                teamId: updated.team_id,
+                playerId: updated.player_id,
+                matchId: updated.match_id,
+                yellowCards: updated.yellow_cards,
+                redCards: updated.red_cards,
+            });
+            return updated;
         });
     }
     async remove(id, requestingUserId) {
         const stat = await this.findExisting(id);
         await this.access.resolveMatchWriteAccess(requestingUserId, stat.match_id);
         await this.access.assertTournamentInPhases(stat.tournament_id, ['in_progress'], 'Las estadísticas quedan bloqueadas cuando el torneo no está En curso.');
-        return this.prisma.player_match_stats.delete({ where: { id } });
+        return this.prisma.$transaction(async (transaction) => {
+            const deleted = await transaction.player_match_stats.delete({
+                where: { id },
+            });
+            await this.cardCharges.removeMatchCards(transaction, deleted.match_id, deleted.player_id);
+            return deleted;
+        });
     }
     async findExisting(id) {
         const stat = await this.prisma.player_match_stats.findUnique({
@@ -222,6 +256,7 @@ exports.PlayerMatchStatsService = PlayerMatchStatsService;
 exports.PlayerMatchStatsService = PlayerMatchStatsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        competition_access_service_1.CompetitionAccessService])
+        competition_access_service_1.CompetitionAccessService,
+        card_charges_service_1.CardChargesService])
 ], PlayerMatchStatsService);
 //# sourceMappingURL=player-match-stats.service.js.map

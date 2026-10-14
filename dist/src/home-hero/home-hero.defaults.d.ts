@@ -2,7 +2,7 @@ export declare const DEFAULT_HOME_HERO_SLIDES: readonly [{
     readonly slug: "asprofutpi";
     readonly position: 1;
     readonly eyebrow: "⚽ La casa del fútbol y más";
-    readonly title: "Organización Promotora de Torneos";
+    readonly title: "Asociaciòn Promotora de Torneos";
     readonly accentTitle: "de Fútbol de Pitalito";
     readonly description: "Ligas, copas relámpago y torneos empresariales de fútbol en Pitalito.";
     readonly ctaLabel: "Ver torneos";

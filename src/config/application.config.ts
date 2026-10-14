@@ -1,6 +1,8 @@
 import { ValidationPipe } from '@nestjs/common';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { PrismaExceptionFilter } from '../common/filters/prisma-exception.filter';
+import { UploadExceptionFilter } from '../common/filters/upload-exception.filter';
+import { buildValidationException } from '../common/validation/validation-messages';
 import { ApiResponseInterceptor } from '../common/interceptors/api-response.interceptor';
 import {
   getUploadsRootDirectory,
@@ -28,8 +30,10 @@ export function configureApplication(app: NestExpressApplication): void {
       forbidNonWhitelisted: true,
       transform: true,
       whitelist: true,
+      // Los mensajes llegan al usuario: se traducen antes de responder.
+      exceptionFactory: buildValidationException,
     }),
   );
-  app.useGlobalFilters(new PrismaExceptionFilter());
+  app.useGlobalFilters(new PrismaExceptionFilter(), new UploadExceptionFilter());
   app.useGlobalInterceptors(new ApiResponseInterceptor());
 }

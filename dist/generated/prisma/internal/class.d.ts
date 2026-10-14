@@ -114,6 +114,9 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get tournament_registration_events(): Prisma.tournament_registration_eventsDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    get tournament_card_charges(): Prisma.tournament_card_chargesDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
     get tournament_lifecycle_events(): Prisma.tournament_lifecycle_eventsDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;

@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdvanceCompetitionDto = exports.PreviewCompetitionDto = exports.CompetitionScheduleDto = exports.CompetitionConfigDto = void 0;
+exports.AdvanceCompetitionDto = exports.PreviewCompetitionDto = exports.ReorganizeOptionsDto = exports.REORGANIZE_MODES = exports.CompetitionScheduleDto = exports.CompetitionConfigDto = void 0;
 const openapi = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
@@ -21,8 +21,10 @@ class CompetitionConfigDto {
     groups;
     qualifiers;
     finalLegs;
+    extraQualifiers;
+    extraQualifierMode;
     static _OPENAPI_METADATA_FACTORY() {
-        return { format: { required: true, enum: ["league", "league_knockout", "knockout", "groups_knockout", "league_final", "groups_final"], enum: competition_engine_1.FORMATS }, legs: { required: true, type: () => Number, enum: [1, 2] }, groups: { required: true, type: () => Number, minimum: 1, maximum: 10000 }, qualifiers: { required: true, type: () => Number, minimum: 1, maximum: 10000 }, finalLegs: { required: true, type: () => Number, enum: [1, 2] } };
+        return { format: { required: true, enum: ["league", "league_knockout", "knockout", "groups_knockout", "league_final", "groups_final"], enum: competition_engine_1.FORMATS }, legs: { required: true, type: () => Number, enum: [1, 2, 3] }, groups: { required: true, type: () => Number, minimum: 1, maximum: 10000 }, qualifiers: { required: true, type: () => Number, minimum: 1, maximum: 10000 }, finalLegs: { required: true, type: () => Number, enum: [1, 2] }, extraQualifiers: { required: false, type: () => Number, minimum: 0, maximum: 32 }, extraQualifierMode: { required: false, enum: ["direct", "play_in"], enum: competition_engine_1.EXTRA_QUALIFIER_MODES } };
     }
 }
 exports.CompetitionConfigDto = CompetitionConfigDto;
@@ -31,7 +33,7 @@ __decorate([
     __metadata("design:type", String)
 ], CompetitionConfigDto.prototype, "format", void 0);
 __decorate([
-    (0, class_validator_1.IsIn)([1, 2]),
+    (0, class_validator_1.IsIn)([1, 2, 3]),
     __metadata("design:type", Number)
 ], CompetitionConfigDto.prototype, "legs", void 0);
 __decorate([
@@ -50,6 +52,18 @@ __decorate([
     (0, class_validator_1.IsIn)([1, 2]),
     __metadata("design:type", Number)
 ], CompetitionConfigDto.prototype, "finalLegs", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.Min)(0),
+    (0, class_validator_1.Max)(32),
+    __metadata("design:type", Number)
+], CompetitionConfigDto.prototype, "extraQualifiers", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)(competition_engine_1.EXTRA_QUALIFIER_MODES),
+    __metadata("design:type", String)
+], CompetitionConfigDto.prototype, "extraQualifierMode", void 0);
 class CompetitionScheduleDto {
     startAt;
     durationMinutes;
@@ -97,14 +111,27 @@ __decorate([
     (0, class_validator_1.MaxLength)(200),
     __metadata("design:type", String)
 ], CompetitionScheduleDto.prototype, "venue", void 0);
+exports.REORGANIZE_MODES = ['reset', 'keep_results'];
+class ReorganizeOptionsDto {
+    mode;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { mode: { required: true, enum: ["reset", "keep_results"], enum: exports.REORGANIZE_MODES } };
+    }
+}
+exports.ReorganizeOptionsDto = ReorganizeOptionsDto;
+__decorate([
+    (0, class_validator_1.IsIn)(exports.REORGANIZE_MODES),
+    __metadata("design:type", String)
+], ReorganizeOptionsDto.prototype, "mode", void 0);
 class PreviewCompetitionDto {
     config;
+    reorganize;
     schedule;
     seed;
     teamIds;
     changeReason;
     static _OPENAPI_METADATA_FACTORY() {
-        return { config: { required: true, type: () => require("./competition.dto").CompetitionConfigDto }, schedule: { required: true, type: () => require("./competition.dto").CompetitionScheduleDto }, seed: { required: true, type: () => String, format: "uuid" }, teamIds: { required: true, type: () => [String], uniqueItems: true, maxItems: 10001 }, changeReason: { required: false, type: () => String, maxLength: 1000 } };
+        return { config: { required: true, type: () => require("./competition.dto").CompetitionConfigDto }, reorganize: { required: false, type: () => require("./competition.dto").ReorganizeOptionsDto }, schedule: { required: true, type: () => require("./competition.dto").CompetitionScheduleDto }, seed: { required: true, type: () => String, format: "uuid" }, teamIds: { required: true, type: () => [String], uniqueItems: true, maxItems: 10001 }, changeReason: { required: false, type: () => String, maxLength: 1000 } };
     }
 }
 exports.PreviewCompetitionDto = PreviewCompetitionDto;
@@ -114,6 +141,12 @@ __decorate([
     (0, class_transformer_1.Type)(() => CompetitionConfigDto),
     __metadata("design:type", CompetitionConfigDto)
 ], PreviewCompetitionDto.prototype, "config", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => ReorganizeOptionsDto),
+    __metadata("design:type", ReorganizeOptionsDto)
+], PreviewCompetitionDto.prototype, "reorganize", void 0);
 __decorate([
     (0, class_validator_1.IsDefined)(),
     (0, class_validator_1.ValidateNested)(),

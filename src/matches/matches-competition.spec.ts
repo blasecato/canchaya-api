@@ -87,7 +87,7 @@ it('freezes fixtures after the draw and results after resolving the stage', asyn
 it('does not allow results before the tournament starts', async () => {
   await expect(
     validate(
-      transaction(plan, 'validation'),
+      transaction(plan, 'registration'),
       1n,
       stage.fixtures[0].key,
       {},

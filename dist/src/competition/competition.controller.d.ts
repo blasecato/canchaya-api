@@ -62,6 +62,15 @@ export declare class CompetitionController {
             id: string;
             name: string;
         }[];
+        hasPlan: boolean;
+        canReorganize: boolean;
+        totalMatches: number;
+        playedMatches: number;
+        playedPairings: string[][];
+        currentConfig: import("./competition.engine").CompetitionConfig | null;
+        currentSeed: string | null;
+        currentLabel: string | null;
+        planTeamIds: string[];
         capacity: number;
         pendingSlots: number;
         originalType: string;
@@ -92,6 +101,7 @@ export declare class CompetitionController {
         label: string;
     }>;
     generate(id: bigint, req: AuthenticatedRequest, dto: PreviewCompetitionDto): Promise<{
+        reorganization: null;
         plan: null;
         stages: never[];
         teams: never[];
@@ -99,6 +109,7 @@ export declare class CompetitionController {
         canAdvance: boolean;
         advanceBlocker: null;
     } | {
+        reorganization: null;
         plan: import("./competition.engine").CompetitionPlan;
         label: string;
         teams: {

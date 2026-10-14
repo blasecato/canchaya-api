@@ -22,7 +22,7 @@ class TournamentTransitionOptionResponseDto {
     warnings;
     requiresReason;
     static _OPENAPI_METADATA_FACTORY() {
-        return { phase: { required: true, enum: ["cancelled", "draft", "registration", "validation", "scheduled", "in_progress", "finished", "archived"] }, label: { required: true, type: () => String }, allowed: { required: true, type: () => Boolean }, blockers: { required: true, type: () => [String] }, warnings: { required: true, type: () => [String] }, requiresReason: { required: true, type: () => Boolean } };
+        return { phase: { required: true, enum: ["cancelled", "registration", "scheduled", "in_progress", "finished", "archived"] }, label: { required: true, type: () => String }, allowed: { required: true, type: () => Boolean }, blockers: { required: true, type: () => [String] }, warnings: { required: true, type: () => [String] }, requiresReason: { required: true, type: () => Boolean } };
     }
 }
 exports.TournamentTransitionOptionResponseDto = TournamentTransitionOptionResponseDto;
@@ -63,7 +63,7 @@ class TournamentLifecycleEventResponseDto {
     actorUserId;
     actorName;
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => String }, fromPhase: { required: true, nullable: true, enum: ["cancelled", "draft", "registration", "validation", "scheduled", "in_progress", "finished", "archived"] }, toPhase: { required: true, enum: ["cancelled", "draft", "registration", "validation", "scheduled", "in_progress", "finished", "archived"] }, reason: { required: true, type: () => String, nullable: true }, createdAt: { required: true, type: () => String }, actorUserId: { required: true, type: () => String }, actorName: { required: true, type: () => String } };
+        return { id: { required: true, type: () => String }, fromPhase: { required: true, nullable: true, enum: ["cancelled", "registration", "scheduled", "in_progress", "finished", "archived"] }, toPhase: { required: true, enum: ["cancelled", "registration", "scheduled", "in_progress", "finished", "archived"] }, reason: { required: true, type: () => String, nullable: true }, createdAt: { required: true, type: () => String }, actorUserId: { required: true, type: () => String }, actorName: { required: true, type: () => String } };
     }
 }
 exports.TournamentLifecycleEventResponseDto = TournamentLifecycleEventResponseDto;
@@ -103,7 +103,7 @@ class TournamentLifecycleResponseDto {
     paymentSummary;
     history;
     static _OPENAPI_METADATA_FACTORY() {
-        return { tournamentId: { required: true, type: () => String }, currentPhase: { required: true, enum: ["cancelled", "draft", "registration", "validation", "scheduled", "in_progress", "finished", "archived"] }, currentPhaseLabel: { required: true, type: () => String }, transitions: { required: true, type: () => [require("./tournament-lifecycle-response.dto").TournamentTransitionOptionResponseDto] }, paymentSummary: { required: true, type: () => require("./registration-payment.dto").TournamentPaymentSummaryResponseDto }, history: { required: true, type: () => [require("./tournament-lifecycle-response.dto").TournamentLifecycleEventResponseDto] } };
+        return { tournamentId: { required: true, type: () => String }, currentPhase: { required: true, enum: ["cancelled", "registration", "scheduled", "in_progress", "finished", "archived"] }, currentPhaseLabel: { required: true, type: () => String }, transitions: { required: true, type: () => [require("./tournament-lifecycle-response.dto").TournamentTransitionOptionResponseDto] }, paymentSummary: { required: true, type: () => require("./registration-payment.dto").TournamentPaymentSummaryResponseDto }, history: { required: true, type: () => [require("./tournament-lifecycle-response.dto").TournamentLifecycleEventResponseDto] } };
     }
 }
 exports.TournamentLifecycleResponseDto = TournamentLifecycleResponseDto;

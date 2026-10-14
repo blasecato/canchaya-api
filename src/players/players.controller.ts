@@ -18,6 +18,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiExtraModels,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
   getSchemaPath,
@@ -33,6 +34,10 @@ import {
   MAX_IMAGE_SIZE_BYTES,
 } from '../uploads/uploads.constants';
 import { BlockPlayerDto } from './dto/block-player.dto';
+import {
+  BulkCreatePlayersDto,
+  BulkCreatePlayersResponseDto,
+} from './dto/bulk-create-players.dto';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { ListPlayersQueryDto } from './dto/list-players-query.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
@@ -95,7 +100,7 @@ export class PlayersController {
   }
 
   @Post()
-  @RequireRoles('SUPER_ADMIN')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
   @UseInterceptors(FileInterceptor('photo', playerPhotoUploadOptions))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -114,8 +119,22 @@ export class PlayersController {
     return this.playersService.create(dto, photo);
   }
 
+  @Post('bulk')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
+  @ApiOperation({
+    summary: 'Registrar varios jugadores a partir de un archivo',
+    description:
+      'Omite los jugadores que ya existen y devuelve el resumen de lo cargado.',
+  })
+  @ApiOkResponse({ type: BulkCreatePlayersResponseDto })
+  bulkCreate(
+    @Body() dto: BulkCreatePlayersDto,
+  ): Promise<BulkCreatePlayersResponseDto> {
+    return this.playersService.bulkCreate(dto);
+  }
+
   @Patch(':id/block')
-  @RequireRoles('SUPER_ADMIN')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
   @ApiOperation({
     summary: 'Bloquear temporalmente un jugador y revocar sus sesiones',
   })
@@ -128,10 +147,13 @@ export class PlayersController {
   }
 
   @Patch(':id/unblock')
-  @RequireRoles('SUPER_ADMIN')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
   @ApiOperation({ summary: 'Levantar el bloqueo de un jugador' })
-  unblock(@Param('id', ParseBigIntPipe) id: bigint) {
-    return this.playersService.unblock(id);
+  unblock(
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Req() request: AuthenticatedRequest,
+  ) {
+    return this.playersService.unblock(id, request.auth.userId);
   }
 
   @Patch(':id')

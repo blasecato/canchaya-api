@@ -7,7 +7,11 @@ export interface CompetitionConfig {
     groups: number;
     qualifiers: number;
     finalLegs: number;
+    extraQualifiers?: number;
+    extraQualifierMode?: ExtraQualifierMode;
 }
+export declare const EXTRA_QUALIFIER_MODES: readonly ["direct", "play_in"];
+export type ExtraQualifierMode = (typeof EXTRA_QUALIFIER_MODES)[number];
 export interface Fixture {
     key: string;
     home: string;
@@ -69,8 +73,9 @@ export interface Standing {
 }
 export declare const hasGroups: (format: Format) => boolean;
 export declare const hasFinalLeague: (format: Format) => boolean;
-export declare const DIRECT_KNOCKOUT_SIZES: readonly [8, 16, 32];
+export declare const DIRECT_KNOCKOUT_SIZES: readonly [4, 8, 16, 32];
 export declare const GROUP_KNOCKOUT_QUALIFIER_SIZES: readonly [2, 4, 8, 16, 32];
+export declare const advancingTeams: (config: CompetitionConfig) => number;
 export declare const isPowerOfTwo: (count: number) => boolean;
 export declare function groupKnockoutConfigs(count: number): CompetitionConfig[];
 export declare function validateConfig(config: CompetitionConfig, count: number): void;
@@ -85,6 +90,7 @@ export declare function knockoutStage(ids: string[], id: number, previousSides?:
     name: string;
     teams: string[];
 }[]): CompetitionStage;
+export declare function playInStage(waiting: string[], contenders: string[], id: number): CompetitionStage;
 export declare function firstStage(config: CompetitionConfig, ids: string[]): CompetitionStage;
 export declare function estimate(config: CompetitionConfig, count: number): {
     totalMatches: number;
@@ -98,6 +104,7 @@ export declare function resolveStage(plan: CompetitionPlan, scores: Score[]): {
     next: CompetitionStage | null;
     champion: string | null;
 };
+export declare function rankAcrossGroups(tables: Standing[][], position: number): string[];
 export declare function suggestions(count: number): {
     totalMatches: number;
     minimumMatches: number;

@@ -27,7 +27,7 @@ class CreateTeamDto {
     memberUserIds;
     status;
     static _OPENAPI_METADATA_FACTORY() {
-        return { name: { required: true, type: () => String, maxLength: 120 }, sportType: { required: true, type: () => String, enum: [football_constants_1.FOOTBALL_SPORT_TYPE] }, modality: { required: false, nullable: true, enum: ["F\u00FAtbol 5", "F\u00FAtbol 7", "F\u00FAtbol 11"], enum: football_constants_1.FOOTBALL_MODALITIES }, primaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, secondaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, captainUserId: { required: false, type: () => String }, memberUserIds: { required: false, type: () => [String], uniqueItems: true }, status: { required: false, type: () => String, enum: ['active', 'inactive'] } };
+        return { name: { required: true, type: () => String, maxLength: 120 }, sportType: { required: true, type: () => String, enum: [football_constants_1.FOOTBALL_SPORT_TYPE] }, modality: { required: false, nullable: true, enum: ["F\u00FAtbol 5", "F\u00FAtbol 6", "F\u00FAtbol 7", "F\u00FAtbol 8", "F\u00FAtbol 9", "F\u00FAtbol 10", "F\u00FAtbol 11"], enum: football_constants_1.FOOTBALL_MODALITIES }, primaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, secondaryColor: { required: false, type: () => String, nullable: true, pattern: "^#?([0-9A-F]{3}|[0-9A-F]{4}|[0-9A-F]{6}|[0-9A-F]{8})$" }, captainUserId: { required: false, type: () => String }, memberUserIds: { required: false, type: () => [String], uniqueItems: true }, status: { required: false, type: () => String, enum: ['active', 'inactive'] } };
     }
 }
 exports.CreateTeamDto = CreateTeamDto;
@@ -57,7 +57,7 @@ __decorate([
     }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsIn)(football_constants_1.FOOTBALL_MODALITIES, {
-        message: 'La modalidad debe ser Fútbol 5, Fútbol 7 o Fútbol 11.',
+        message: 'La modalidad debe ser Fútbol 5, 6, 7, 8, 9, 10 u 11.',
     }),
     __metadata("design:type", Object)
 ], CreateTeamDto.prototype, "modality", void 0);

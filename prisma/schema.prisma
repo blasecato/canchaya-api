@@ -158,6 +158,7 @@ model disciplinary_actions {
   @@index([match_id], map: "disciplinary_actions_match_idx")
   @@index([decision_status], map: "disciplinary_actions_status_idx")
   @@index([tournament_id, player_id], map: "disciplinary_actions_tournament_player_idx")
+  @@index([tournament_id, team_id], map: "disciplinary_actions_tournament_team_idx")
   @@index([review_started_by], map: "disciplinary_actions_reviewer_idx")
 }
 
@@ -236,6 +237,7 @@ model matches {
   tournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrations tournament_team_registrations @relation("matches_tournament_id_home_team_idTotournament_team_registrations", fields: [tournament_id, home_team_id], references: [tournament_id, team_id], onUpdate: NoAction, map: "matches_home_team_fkey")
   player_match_stats                                                                              player_match_stats[]
   referee_assignment_events                                                                       referee_assignment_events[]
+  tournament_card_charges                                                                         tournament_card_charges[]
 
   @@unique([id, tournament_id], map: "matches_id_tournament_uk")
   @@unique([tournament_id, competition_key], map: "matches_competition_key_uk")
@@ -297,6 +299,7 @@ model player_match_stats {
 
   @@unique([match_id, player_id], map: "player_match_stats_match_player_uk")
   @@index([player_id], map: "player_match_stats_player_idx")
+  @@index([tournament_id, team_id], map: "player_match_stats_tournament_team_idx")
 }
 
 model roles {
@@ -485,6 +488,7 @@ model tournament_team_players {
   player_match_stats            player_match_stats[]
   team_members                  team_members                  @relation(fields: [team_id, player_id], references: [team_id, user_id], onUpdate: NoAction, map: "tournament_team_players_member_fkey")
   tournament_team_registrations tournament_team_registrations @relation(fields: [tournament_id, team_id], references: [tournament_id, team_id], onDelete: Cascade, onUpdate: NoAction, map: "tournament_team_players_registration_fkey")
+  tournament_card_charges       tournament_card_charges[]
 
   @@id([tournament_id, team_id, player_id])
   @@unique([tournament_id, team_id, jersey_number], map: "tournament_team_players_jersey_uk")
@@ -579,6 +583,31 @@ model tournament_registration_events {
   @@index([tournament_id, team_id, created_at], map: "tournament_registration_events_registration_idx")
 }
 
+model tournament_card_charges {
+  id                      BigInt                  @id @default(autoincrement())
+  tournament_id           BigInt
+  team_id                 BigInt
+  player_id               BigInt
+  match_id                BigInt
+  card_type               String
+  quantity                Int
+  unit_amount             Decimal                 @db.Decimal(14, 2)
+  total_amount            Decimal                 @db.Decimal(14, 2)
+  currency_code           String                  @default("COP") @db.Char(3)
+  payment_status          String                  @default("pending")
+  paid_at                 DateTime?               @db.Timestamptz(6)
+  paid_by                 BigInt?
+  notes                   String?
+  created_at              DateTime                @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime                @default(now()) @db.Timestamptz(6)
+  tournament_team_players tournament_team_players @relation(fields: [tournament_id, team_id, player_id], references: [tournament_id, team_id, player_id], onDelete: Cascade, onUpdate: NoAction, map: "tournament_card_charges_roster_fkey")
+  matches                 matches                 @relation(fields: [match_id, tournament_id], references: [id, tournament_id], onDelete: Cascade, onUpdate: NoAction, map: "tournament_card_charges_match_fkey")
+  users                   users?                  @relation(fields: [paid_by], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "tournament_card_charges_paid_by_fkey")
+
+  @@unique([match_id, player_id, card_type], map: "tournament_card_charges_entry_uk")
+  @@index([tournament_id, team_id, payment_status], map: "tournament_card_charges_pending_idx")
+}
+
 model tournament_lifecycle_events {
   id            BigInt      @id @default(autoincrement())
   tournament_id BigInt
@@ -625,6 +654,8 @@ model tournaments {
   registration_start_date       DateTime?                       @db.Date
   registration_end_date         DateTime?                       @db.Date
   registration_fee              Decimal                         @default(0) @db.Decimal(14, 2)
+  yellow_card_fee               Decimal                         @default(0) @db.Decimal(14, 2)
+  red_card_fee                  Decimal                         @default(0) @db.Decimal(14, 2)
   currency_code                 String                          @default("COP") @db.Char(3)
   grand_prize                   Decimal                         @default(0) @db.Decimal(14, 2)
   second_prize                  Decimal                         @default(0) @db.Decimal(14, 2)
@@ -638,7 +669,7 @@ model tournaments {
   rules_content                 String?                         @db.Text
   photo_url                     String?
   photo_public_id               String?
-  phase                         String                          @default("draft")
+  phase                         String                          @default("registration")
   status                        String                          @default("active")
   created_by                    BigInt
   created_at                    DateTime                        @default(now()) @db.Timestamptz(6)
@@ -733,6 +764,7 @@ model users {
   tournament_team_registrations_tournament_team_registrations_payment_updated_byTousers tournament_team_registrations[]  @relation("tournament_team_registrations_payment_updated_byTousers")
   tournaments                                                                           tournaments[]
   user_roles                                                                            user_roles[]
+  tournament_card_charges                                                               tournament_card_charges[]
 
   @@index([block_source_action_id], map: "users_block_source_action_idx")
 }

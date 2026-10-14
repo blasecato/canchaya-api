@@ -204,7 +204,7 @@ describe('competition formats', () => {
     };
 
     expect(() => validateConfig(config, 20)).toThrow(
-      'clasifica 10 equipos',
+      'deja 10 equipos en el cuadro',
     );
     expect(() =>
       validateConfig({ ...config, groups: 4, qualifiers: 2 }, 20),
@@ -377,7 +377,7 @@ describe('competition formats', () => {
         { format: 'league', legs: 1, groups: 1, qualifiers: 1, finalLegs: 1 },
         5,
       ),
-    ).toThrow('seis');
+    ).toThrow('al menos 6 equipos');
     expect(() =>
       validateConfig(
         {

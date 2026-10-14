@@ -1,7 +1,10 @@
+/**
+ * Ciclo de vida del torneo. Al crearse ya queda en inscripciones: los equipos
+ * pueden anotarse desde el primer momento, sin esperar una fecha ni una
+ * revisión previa.
+ */
 export const TOURNAMENT_PHASES = [
-  'draft',
   'registration',
-  'validation',
   'scheduled',
   'in_progress',
   'finished',
@@ -17,7 +20,6 @@ export type TournamentPhase = (typeof TOURNAMENT_PHASES)[number];
  */
 export const PUBLIC_TOURNAMENT_PHASES = [
   'registration',
-  'validation',
   'scheduled',
   'in_progress',
   'finished',
@@ -29,9 +31,7 @@ export const ACTIVE_TOURNAMENT_PHASES = [
 ] as const satisfies readonly TournamentPhase[];
 
 export const TOURNAMENT_PHASE_LABELS: Record<TournamentPhase, string> = {
-  draft: 'Borrador',
   registration: 'Inscripciones',
-  validation: 'Validación',
   scheduled: 'Programado',
   in_progress: 'En curso',
   finished: 'Finalizado',
@@ -42,18 +42,14 @@ export const TOURNAMENT_PHASE_LABELS: Record<TournamentPhase, string> = {
 export const TOURNAMENT_FORWARD_TRANSITIONS: Readonly<
   Partial<Record<TournamentPhase, TournamentPhase>>
 > = {
-  draft: 'registration',
-  registration: 'validation',
-  validation: 'scheduled',
+  registration: 'scheduled',
   scheduled: 'in_progress',
   in_progress: 'finished',
   finished: 'archived',
 };
 
 export const TOURNAMENT_CANCELLABLE_PHASES: readonly TournamentPhase[] = [
-  'draft',
   'registration',
-  'validation',
   'scheduled',
   'in_progress',
 ];

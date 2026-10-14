@@ -41,6 +41,8 @@ export declare const associationTournamentResponseSelect: {
     registration_start_date: true;
     registration_end_date: true;
     registration_fee: true;
+    yellow_card_fee: true;
+    red_card_fee: true;
     currency_code: true;
     grand_prize: true;
     second_prize: true;

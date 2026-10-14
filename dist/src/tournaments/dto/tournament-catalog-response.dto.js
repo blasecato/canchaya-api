@@ -16,8 +16,10 @@ const association_tournament_response_dto_1 = require("../../associations/dto/as
 class TournamentCatalogAssociationDto {
     id;
     name;
+    logoUrl;
+    ownerName;
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => String }, name: { required: true, type: () => String } };
+        return { id: { required: true, type: () => String }, name: { required: true, type: () => String }, logoUrl: { required: true, type: () => String, nullable: true }, ownerName: { required: true, type: () => String } };
     }
 }
 exports.TournamentCatalogAssociationDto = TournamentCatalogAssociationDto;
@@ -29,6 +31,17 @@ __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Liga Deportiva Laboyana' }),
     __metadata("design:type", String)
 ], TournamentCatalogAssociationDto.prototype, "name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ nullable: true, example: '/uploads/associations/logo.png' }),
+    __metadata("design:type", Object)
+], TournamentCatalogAssociationDto.prototype, "logoUrl", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        example: 'Laura Martínez',
+        description: 'Administrador principal de la organización.',
+    }),
+    __metadata("design:type", String)
+], TournamentCatalogAssociationDto.prototype, "ownerName", void 0);
 class TournamentCatalogItemResponseDto extends association_tournament_response_dto_1.AssociationTournamentResponseDto {
     association;
     canManage;

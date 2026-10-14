@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var TournamentLifecycleService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TournamentLifecycleService = void 0;
 const common_1 = require("@nestjs/common");
@@ -17,9 +18,10 @@ const competition_engine_1 = require("../competition/competition.engine");
 const prisma_service_1 = require("../prisma/prisma.service");
 const tournament_lifecycle_constants_1 = require("./tournament-lifecycle.constants");
 const tournament_eligibility_1 = require("./tournament-eligibility");
-let TournamentLifecycleService = class TournamentLifecycleService {
+let TournamentLifecycleService = TournamentLifecycleService_1 = class TournamentLifecycleService {
     prisma;
     access;
+    logger = new common_1.Logger(TournamentLifecycleService_1.name);
     constructor(prisma, access) {
         this.prisma = prisma;
         this.access = access;
@@ -444,17 +446,17 @@ let TournamentLifecycleService = class TournamentLifecycleService {
         });
     }
     toPhase(value) {
-        if (!(0, tournament_lifecycle_constants_1.isTournamentPhase)(value)) {
-            throw new common_1.BadRequestException(`El torneo tiene una fase no reconocida: ${value}.`);
-        }
-        return value;
+        if ((0, tournament_lifecycle_constants_1.isTournamentPhase)(value))
+            return value;
+        this.logger.warn(`Fase retirada encontrada en un registro antiguo: ${value}. Se muestra como Inscripciones.`);
+        return 'registration';
     }
     toNullablePhase(value) {
         return value === null ? null : this.toPhase(value);
     }
 };
 exports.TournamentLifecycleService = TournamentLifecycleService;
-exports.TournamentLifecycleService = TournamentLifecycleService = __decorate([
+exports.TournamentLifecycleService = TournamentLifecycleService = TournamentLifecycleService_1 = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         competition_access_service_1.CompetitionAccessService])

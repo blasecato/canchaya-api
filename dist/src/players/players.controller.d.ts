@@ -1,6 +1,7 @@
 import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-request.interface';
 import type { UploadedImageFile } from '../uploads/image-storage.types';
 import { BlockPlayerDto } from './dto/block-player.dto';
+import { BulkCreatePlayersDto, BulkCreatePlayersResponseDto } from './dto/bulk-create-players.dto';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { ListPlayersQueryDto } from './dto/list-players-query.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
@@ -82,6 +83,7 @@ export declare class PlayersController {
         createdAt: string;
         updatedAt: string;
     }>;
+    bulkCreate(dto: BulkCreatePlayersDto): Promise<BulkCreatePlayersResponseDto>;
     block(id: bigint, request: AuthenticatedRequest, dto: BlockPlayerDto): Promise<{
         id: string;
         idNumber: string;
@@ -108,7 +110,7 @@ export declare class PlayersController {
         createdAt: string;
         updatedAt: string;
     }>;
-    unblock(id: bigint): Promise<{
+    unblock(id: bigint, request: AuthenticatedRequest): Promise<{
         id: string;
         idNumber: string;
         documentType: string;

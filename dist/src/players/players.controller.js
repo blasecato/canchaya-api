@@ -23,6 +23,7 @@ const roles_guard_1 = require("../auth/guards/roles.guard");
 const parse_big_int_pipe_1 = require("../common/pipes/parse-big-int.pipe");
 const uploads_constants_1 = require("../uploads/uploads.constants");
 const block_player_dto_1 = require("./dto/block-player.dto");
+const bulk_create_players_dto_1 = require("./dto/bulk-create-players.dto");
 const create_player_dto_1 = require("./dto/create-player.dto");
 const list_players_query_dto_1 = require("./dto/list-players-query.dto");
 const update_player_dto_1 = require("./dto/update-player.dto");
@@ -56,11 +57,14 @@ let PlayersController = class PlayersController {
     create(dto, photo) {
         return this.playersService.create(dto, photo);
     }
+    bulkCreate(dto) {
+        return this.playersService.bulkCreate(dto);
+    }
     block(id, request, dto) {
         return this.playersService.block(id, request.auth.userId, dto);
     }
-    unblock(id) {
-        return this.playersService.unblock(id);
+    unblock(id, request) {
+        return this.playersService.unblock(id, request.auth.userId);
     }
     update(id, dto, photo) {
         return this.playersService.update(id, dto, photo);
@@ -91,7 +95,7 @@ __decorate([
 ], PlayersController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Post)(),
-    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('photo', playerPhotoUploadOptions)),
     (0, swagger_1.ApiConsumes)('multipart/form-data'),
     (0, swagger_1.ApiBody)({
@@ -111,8 +115,21 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], PlayersController.prototype, "create", null);
 __decorate([
+    (0, common_1.Post)('bulk'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Registrar varios jugadores a partir de un archivo',
+        description: 'Omite los jugadores que ya existen y devuelve el resumen de lo cargado.',
+    }),
+    (0, swagger_1.ApiOkResponse)({ type: bulk_create_players_dto_1.BulkCreatePlayersResponseDto }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [bulk_create_players_dto_1.BulkCreatePlayersDto]),
+    __metadata("design:returntype", Promise)
+], PlayersController.prototype, "bulkCreate", null);
+__decorate([
     (0, common_1.Patch)(':id/block'),
-    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
     (0, swagger_1.ApiOperation)({
         summary: 'Bloquear temporalmente un jugador y revocar sus sesiones',
     }),
@@ -126,12 +143,13 @@ __decorate([
 ], PlayersController.prototype, "block", null);
 __decorate([
     (0, common_1.Patch)(':id/unblock'),
-    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
     (0, swagger_1.ApiOperation)({ summary: 'Levantar el bloqueo de un jugador' }),
     openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [BigInt]),
+    __metadata("design:paramtypes", [BigInt, Object]),
     __metadata("design:returntype", void 0)
 ], PlayersController.prototype, "unblock", null);
 __decorate([

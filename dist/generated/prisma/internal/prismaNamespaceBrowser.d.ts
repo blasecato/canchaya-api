@@ -39,6 +39,7 @@ export declare const ModelName: {
     readonly notifications: "notifications";
     readonly notification_preferences: "notification_preferences";
     readonly tournament_registration_events: "tournament_registration_events";
+    readonly tournament_card_charges: "tournament_card_charges";
     readonly tournament_lifecycle_events: "tournament_lifecycle_events";
     readonly tournament_types: "tournament_types";
     readonly tournaments: "tournaments";
@@ -432,6 +433,25 @@ export declare const Tournament_registration_eventsScalarFieldEnum: {
     readonly created_at: "created_at";
 };
 export type Tournament_registration_eventsScalarFieldEnum = (typeof Tournament_registration_eventsScalarFieldEnum)[keyof typeof Tournament_registration_eventsScalarFieldEnum];
+export declare const Tournament_card_chargesScalarFieldEnum: {
+    readonly id: "id";
+    readonly tournament_id: "tournament_id";
+    readonly team_id: "team_id";
+    readonly player_id: "player_id";
+    readonly match_id: "match_id";
+    readonly card_type: "card_type";
+    readonly quantity: "quantity";
+    readonly unit_amount: "unit_amount";
+    readonly total_amount: "total_amount";
+    readonly currency_code: "currency_code";
+    readonly payment_status: "payment_status";
+    readonly paid_at: "paid_at";
+    readonly paid_by: "paid_by";
+    readonly notes: "notes";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Tournament_card_chargesScalarFieldEnum = (typeof Tournament_card_chargesScalarFieldEnum)[keyof typeof Tournament_card_chargesScalarFieldEnum];
 export declare const Tournament_lifecycle_eventsScalarFieldEnum: {
     readonly id: "id";
     readonly tournament_id: "tournament_id";
@@ -471,6 +491,8 @@ export declare const TournamentsScalarFieldEnum: {
     readonly registration_start_date: "registration_start_date";
     readonly registration_end_date: "registration_end_date";
     readonly registration_fee: "registration_fee";
+    readonly yellow_card_fee: "yellow_card_fee";
+    readonly red_card_fee: "red_card_fee";
     readonly currency_code: "currency_code";
     readonly grand_prize: "grand_prize";
     readonly second_prize: "second_prize";

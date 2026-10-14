@@ -121,6 +121,8 @@ describe('TournamentsService', () => {
     registration_start_date: new Date('2026-08-01T00:00:00.000Z'),
     registration_end_date: new Date('2026-09-10T00:00:00.000Z'),
     registration_fee: 150000,
+    yellow_card_fee: 5000,
+    red_card_fee: 15000,
     currency_code: 'COP',
     grand_prize: 1000000,
     second_prize: 500000,
@@ -132,7 +134,7 @@ describe('TournamentsService', () => {
     location_address: 'Carrera 5 # 10-20',
     rules_url: 'https://example.com/reglamento.pdf',
     photo_url: '/uploads/tournaments/old-photo.png',
-    phase: 'draft',
+    phase: 'registration',
     status: 'active',
     created_at: new Date('2026-08-20T12:00:00.000Z'),
     updated_at: new Date('2026-08-21T12:00:00.000Z'),
@@ -366,6 +368,8 @@ describe('TournamentsService', () => {
           registration_start_date: new Date('2026-08-01'),
           registration_end_date: new Date('2026-09-10'),
           registration_fee: createDto.registrationFee,
+          yellow_card_fee: createDto.yellowCardFee,
+          red_card_fee: createDto.redCardFee,
           currency_code: createDto.currencyCode,
           grand_prize: createDto.grandPrize,
           second_prize: createDto.secondPrize,
@@ -378,7 +382,7 @@ describe('TournamentsService', () => {
           rules_url: createDto.rulesUrl,
           photo_url: '/uploads/tournaments/new-photo.png',
           photo_public_id: 'public:/uploads/tournaments/new-photo.png',
-          phase: 'draft',
+          phase: 'registration',
           status: createDto.status,
           created_by: requestingUserId,
         },
@@ -554,13 +558,16 @@ describe('TournamentsService', () => {
       );
     });
 
-    it('oculta borradores a usuarios sin permiso de gestión', async () => {
+    it('oculta los torneos archivados a usuarios sin permiso de gestión', async () => {
       getAssociationPermissions.mockResolvedValue({
         ...managerPermissions,
         canManageTournaments: false,
         permissionLevel: 'viewer',
       });
-      tournamentsFindUnique.mockResolvedValue(tournamentRecord);
+      tournamentsFindUnique.mockResolvedValue({
+        ...tournamentRecord,
+        phase: 'archived',
+      });
 
       await expect(
         service.findOne(associationId, tournamentId, requestingUserId),
@@ -586,6 +593,21 @@ describe('TournamentsService', () => {
   });
 
   describe('update', () => {
+    it('guarda el valor de las tarjetas al editar el torneo', async () => {
+      tournamentsFindUnique.mockResolvedValue(tournamentRecord);
+      transactionTournamentFindUnique.mockResolvedValue(tournamentRecord);
+      transactionTournamentUpdate.mockResolvedValue(tournamentRecord);
+
+      await service.update(associationId, tournamentId, requestingUserId, {
+        yellowCardFee: 7000,
+        redCardFee: 21000,
+      });
+
+      const data = transactionTournamentUpdate.mock.calls[0][0].data;
+      expect(data.yellow_card_fee).toBe(7000);
+      expect(data.red_card_fee).toBe(21000);
+    });
+
     it('reconsulta y actualiza por ID compuesto dentro de la transacción', async () => {
       tournamentsFindUnique.mockResolvedValue(tournamentRecord);
       transactionTournamentFindUnique.mockResolvedValue(tournamentRecord);
@@ -711,6 +733,8 @@ describe('TournamentsService', () => {
           registration_start_date: undefined,
           registration_end_date: undefined,
           registration_fee: undefined,
+          yellow_card_fee: undefined,
+          red_card_fee: undefined,
           currency_code: undefined,
           grand_prize: undefined,
           second_prize: undefined,
@@ -765,7 +789,7 @@ describe('TournamentsService', () => {
   });
 
   describe('remove', () => {
-    it('elimina un borrador sin inscripciones mediante ID compuesto y limpia su foto', async () => {
+    it('elimina un torneo en inscripciones y sin equipos mediante ID compuesto, y limpia su foto', async () => {
       transactionTournamentFindUnique.mockResolvedValue(tournamentRecord);
       transactionRegistrationCount.mockResolvedValue(0);
       transactionTournamentDelete.mockResolvedValue(tournamentRecord);
@@ -787,10 +811,10 @@ describe('TournamentsService', () => {
       );
     });
 
-    it('no elimina torneos que ya salieron de borrador', async () => {
+    it('no elimina torneos que ya salieron de inscripciones', async () => {
       transactionTournamentFindUnique.mockResolvedValue({
         ...tournamentRecord,
-        phase: 'registration',
+        phase: 'scheduled',
       });
 
       await expect(
@@ -802,7 +826,7 @@ describe('TournamentsService', () => {
       expect(deleteByPublicUrl).not.toHaveBeenCalled();
     });
 
-    it('no elimina un borrador que ya tiene inscripciones', async () => {
+    it('no elimina un torneo que ya tiene equipos inscritos', async () => {
       transactionTournamentFindUnique.mockResolvedValue(tournamentRecord);
       transactionRegistrationCount.mockResolvedValue(1);
 

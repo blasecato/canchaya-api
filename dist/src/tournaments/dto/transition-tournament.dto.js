@@ -20,7 +20,7 @@ class TransitionTournamentDto {
     phase;
     reason;
     static _OPENAPI_METADATA_FACTORY() {
-        return { phase: { required: true, enum: ["cancelled", "draft", "registration", "validation", "scheduled", "in_progress", "finished", "archived"], enum: tournament_lifecycle_constants_1.TOURNAMENT_PHASES }, reason: { required: false, type: () => String, maxLength: 1000 } };
+        return { phase: { required: true, enum: ["cancelled", "registration", "scheduled", "in_progress", "finished", "archived"], enum: tournament_lifecycle_constants_1.TOURNAMENT_PHASES }, reason: { required: false, type: () => String, maxLength: 1000 } };
     }
 }
 exports.TransitionTournamentDto = TransitionTournamentDto;

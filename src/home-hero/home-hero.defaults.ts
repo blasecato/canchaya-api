@@ -7,7 +7,7 @@ export const DEFAULT_HOME_HERO_SLIDES = [
     slug: 'asprofutpi',
     position: 1,
     eyebrow: '⚽ La casa del fútbol y más',
-    title: 'Organización Promotora de Torneos',
+    title: 'Asociaciòn Promotora de Torneos',
     accentTitle: 'de Fútbol de Pitalito',
     description:
       'Ligas, copas relámpago y torneos empresariales de fútbol en Pitalito.',

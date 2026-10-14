@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CompetitionAccessService } from '../authorization/competition-access.service';
+import { CardChargesService } from '../card-charges/card-charges.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePlayerMatchStatDto } from './dto/create-player-match-stat.dto';
 import { UpdatePlayerMatchStatDto } from './dto/update-player-match-stat.dto';
@@ -14,6 +15,7 @@ export class PlayerMatchStatsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly access: CompetitionAccessService,
+    private readonly cardCharges: CardChargesService,
   ) {}
 
   async create(requestingUserId: bigint, dto: CreatePlayerMatchStatDto) {
@@ -30,18 +32,30 @@ export class PlayerMatchStatsService {
     );
     await this.assertValidContext(matchId, tournamentId, teamId, playerId);
 
-    return this.prisma.player_match_stats.create({
-      data: {
-        match_id: matchId,
-        tournament_id: tournamentId,
-        team_id: teamId,
-        player_id: playerId,
-        goals: dto.goals,
-        assists: dto.assists,
-        yellow_cards: dto.yellowCards,
-        red_cards: dto.redCards,
-        minutes_played: dto.minutesPlayed,
-      },
+    return this.prisma.$transaction(async (transaction) => {
+      const created = await transaction.player_match_stats.create({
+        data: {
+          match_id: matchId,
+          tournament_id: tournamentId,
+          team_id: teamId,
+          player_id: playerId,
+          goals: dto.goals,
+          assists: dto.assists,
+          yellow_cards: dto.yellowCards,
+          red_cards: dto.redCards,
+          minutes_played: dto.minutesPlayed,
+        },
+      });
+      // Las tarjetas del acta generan la deuda del jugador en el mismo paso.
+      await this.cardCharges.syncMatchCards(transaction, {
+        tournamentId,
+        teamId,
+        playerId,
+        matchId,
+        yellowCards: dto.yellowCards ?? 0,
+        redCards: dto.redCards ?? 0,
+      });
+      return created;
     });
   }
 
@@ -205,20 +219,39 @@ export class PlayerMatchStatsService {
     }
     await this.assertValidContext(matchId, tournamentId, teamId, playerId);
 
-    return this.prisma.player_match_stats.update({
-      where: { id },
-      data: {
-        match_id: dto.matchId !== undefined ? matchId : undefined,
-        tournament_id:
-          dto.tournamentId !== undefined ? tournamentId : undefined,
-        team_id: dto.teamId !== undefined ? teamId : undefined,
-        player_id: dto.playerId !== undefined ? playerId : undefined,
-        goals: dto.goals,
-        assists: dto.assists,
-        yellow_cards: dto.yellowCards,
-        red_cards: dto.redCards,
-        minutes_played: dto.minutesPlayed,
-      },
+    return this.prisma.$transaction(async (transaction) => {
+      const updated = await transaction.player_match_stats.update({
+        where: { id },
+        data: {
+          match_id: dto.matchId !== undefined ? matchId : undefined,
+          tournament_id:
+            dto.tournamentId !== undefined ? tournamentId : undefined,
+          team_id: dto.teamId !== undefined ? teamId : undefined,
+          player_id: dto.playerId !== undefined ? playerId : undefined,
+          goals: dto.goals,
+          assists: dto.assists,
+          yellow_cards: dto.yellowCards,
+          red_cards: dto.redCards,
+          minutes_played: dto.minutesPlayed,
+        },
+      });
+      // Corregir el acta ajusta la deuda pendiente; lo ya cobrado no se toca.
+      if (current.match_id !== updated.match_id || current.player_id !== updated.player_id) {
+        await this.cardCharges.removeMatchCards(
+          transaction,
+          current.match_id,
+          current.player_id,
+        );
+      }
+      await this.cardCharges.syncMatchCards(transaction, {
+        tournamentId: updated.tournament_id,
+        teamId: updated.team_id,
+        playerId: updated.player_id,
+        matchId: updated.match_id,
+        yellowCards: updated.yellow_cards,
+        redCards: updated.red_cards,
+      });
+      return updated;
     });
   }
 
@@ -230,7 +263,17 @@ export class PlayerMatchStatsService {
       ['in_progress'],
       'Las estadísticas quedan bloqueadas cuando el torneo no está En curso.',
     );
-    return this.prisma.player_match_stats.delete({ where: { id } });
+    return this.prisma.$transaction(async (transaction) => {
+      const deleted = await transaction.player_match_stats.delete({
+        where: { id },
+      });
+      await this.cardCharges.removeMatchCards(
+        transaction,
+        deleted.match_id,
+        deleted.player_id,
+      );
+      return deleted;
+    });
   }
 
   private async findExisting(id: bigint) {

@@ -41,7 +41,7 @@ let MatchesService = class MatchesService {
         const homeTeamId = BigInt(dto.homeTeamId);
         const awayTeamId = BigInt(dto.awayTeamId);
         await this.access.assertCanManageTournament(requestingUserId, tournamentId);
-        await this.assertTournamentPhase(tournamentId, ['validation'], 'Los enfrentamientos solo se pueden crear durante la fase de Validación.');
+        await this.assertTournamentPhase(tournamentId, ['registration'], 'Los enfrentamientos solo se pueden crear mientras el torneo está en Inscripciones.');
         if ((dto.status !== undefined && dto.status !== 'scheduled') ||
             dto.homeScore != null ||
             dto.awayScore != null ||
@@ -56,7 +56,7 @@ let MatchesService = class MatchesService {
             const tournament = await transaction.tournaments.findUniqueOrThrow({
                 where: { id: tournamentId },
             });
-            if (tournament.phase !== 'validation' || tournament.competition_plan)
+            if (tournament.phase !== 'registration' || tournament.competition_plan)
                 throw new common_1.BadRequestException('Los partidos de una competencia organizada se generan desde sus etapas.');
             const match = await transaction.matches.create({
                 data: {
@@ -256,7 +256,7 @@ let MatchesService = class MatchesService {
     }
     async remove(id, requestingUserId) {
         const tournamentId = await this.access.assertCanManageMatch(requestingUserId, id);
-        await this.assertTournamentPhase(tournamentId, ['validation', 'scheduled'], 'Los partidos solo se pueden eliminar antes de iniciar el torneo.');
+        await this.assertTournamentPhase(tournamentId, ['registration', 'scheduled'], 'Los partidos solo se pueden eliminar antes de iniciar el torneo.');
         return this.prisma.$transaction(async (transaction) => {
             await transaction.$queryRaw `SELECT id FROM tournaments WHERE id = ${tournamentId} FOR UPDATE`;
             const tournament = await transaction.tournaments.findUniqueOrThrow({
@@ -266,7 +266,7 @@ let MatchesService = class MatchesService {
                 where: { id },
             });
             if (current.competition_key ||
-                !['validation', 'scheduled'].includes(tournament.phase))
+                !['registration', 'scheduled'].includes(tournament.phase))
                 throw new common_1.BadRequestException('No puedes eliminar un partido de una competencia organizada. Puedes reprogramarlo.');
             await this.matchNotifications.notifyMatchChanged(id, notification_events_1.OPERATIONAL_NOTIFICATION_EVENTS.MATCH_CANCELLED, [], transaction);
             return transaction.matches.delete({ where: { id } });
@@ -276,7 +276,7 @@ let MatchesService = class MatchesService {
         const tournament = await tx.tournaments.findUniqueOrThrow({
             where: { id: tournamentId },
         });
-        if (!['validation', 'scheduled', 'in_progress'].includes(tournament.phase))
+        if (!['registration', 'scheduled', 'in_progress'].includes(tournament.phase))
             throw new common_1.BadRequestException('El torneo ya no permite modificar partidos.');
         if (tournament.phase !== 'in_progress' &&
             (home !== null ||
@@ -351,10 +351,10 @@ let MatchesService = class MatchesService {
             }
             return;
         }
-        if (!['validation', 'scheduled', 'in_progress'].includes(tournament.phase)) {
+        if (!['registration', 'scheduled', 'in_progress'].includes(tournament.phase)) {
             throw new common_1.BadRequestException('Los partidos solo se pueden editar durante Validación, Programado o En curso.');
         }
-        if (['validation', 'scheduled'].includes(tournament.phase)) {
+        if (['registration', 'scheduled'].includes(tournament.phase)) {
             if (dto.homeScore != null ||
                 dto.awayScore != null ||
                 (dto.status !== undefined &&

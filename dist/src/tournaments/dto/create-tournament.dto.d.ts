@@ -21,6 +21,8 @@ export declare class CreateTournamentDto extends TournamentSponsorsInputDto {
     currencyCode?: string;
     grandPrize?: number;
     secondPrize?: number;
+    yellowCardFee?: number;
+    redCardFee?: number;
     thirdPrize?: number;
     maxTeams: number;
     minPlayersPerTeam: number;

@@ -10,6 +10,8 @@ exports.tournamentCatalogItemSelect = {
         select: {
             id: true,
             name: true,
+            logo_url: true,
+            users: { select: { full_name: true } },
         },
     },
 };
@@ -19,6 +21,8 @@ function toTournamentCatalogItemResponse(tournament, canManage = false) {
         association: {
             id: tournament.associations.id.toString(),
             name: tournament.associations.name,
+            logoUrl: tournament.associations.logo_url,
+            ownerName: tournament.associations.users.full_name,
         },
         canManage,
     };

@@ -14,6 +14,7 @@ import { TournamentSponsorInputDto } from './dto/tournament-sponsor-input.dto';
 import type { ReviewTeamRegistrationDto } from './dto/review-team-registration.dto';
 import type { MyTournamentPaymentResponseDto, TournamentPaymentsResponseDto, TournamentRegistrationPaymentResponseDto, UpdateRegistrationPaymentDto } from './dto/registration-payment.dto';
 import type { CaptainTeamOptionResponseDto, TeamRegistrationResponseDto } from './dto/register-team.dto';
+import { AddTeamsResultDto } from './dto/add-teams.dto';
 export declare class TournamentsService {
     private readonly prisma;
     private readonly associationsService;
@@ -30,7 +31,9 @@ export declare class TournamentsService {
     }>;
     findCatalog(query: ListTournamentsQueryDto, requestingUserId?: bigint): Promise<TournamentCatalogPageResponseDto>;
     findMine(requestingUserId: bigint): Promise<TournamentCatalogItemResponseDto[]>;
+    private buildCatalogPriorityFilter;
     findCaptainTeams(tournamentId: bigint, requestingUserId: bigint): Promise<CaptainTeamOptionResponseDto[]>;
+    addTeamsAsManager(tournamentId: bigint, teamIds: bigint[], requestingUserId: bigint): Promise<AddTeamsResultDto>;
     registerTeam(tournamentId: bigint, teamId: bigint, requestingUserId: bigint): Promise<TeamRegistrationResponseDto>;
     findRegistrationPayments(tournamentId: bigint, requestingUserId: bigint): Promise<TournamentPaymentsResponseDto>;
     findMyRegistrationPayment(tournamentId: bigint, requestingUserId: bigint): Promise<MyTournamentPaymentResponseDto>;
@@ -86,6 +89,8 @@ export declare class TournamentsService {
     private requireManagementPermission;
     private requireTournamentManagementPermission;
     private assertTournamentUpdateAllowed;
+    private assertCapacityFitsRegistrations;
+    private assertRosterLimitsFitApprovedTeams;
     private assertValidCategoryAgeRange;
     private assertRulesEditable;
     private assertSponsorsEditable;
@@ -99,6 +104,7 @@ export declare class TournamentsService {
     private assertTournamentCapacityWithinType;
     private assertTeamRosterWithinTournamentLimits;
     private toEligibilityRules;
+    private assertNoBlockedPlayers;
     private toEligibilityPlayer;
     private assertTeamCategoryEligibility;
     private uploadSponsorLogos;

@@ -2,6 +2,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ImageStorageService } from '../uploads/image-storage.service';
 import type { UploadedImageFile } from '../uploads/image-storage.types';
 import { BlockPlayerDto } from './dto/block-player.dto';
+import { BulkCreatePlayersDto, BulkCreatePlayersResponseDto } from './dto/bulk-create-players.dto';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { ListPlayersQueryDto } from './dto/list-players-query.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
@@ -83,6 +84,7 @@ export declare class PlayersService {
         createdAt: string;
         updatedAt: string;
     }>;
+    bulkCreate(dto: BulkCreatePlayersDto): Promise<BulkCreatePlayersResponseDto>;
     update(id: bigint, dto: UpdatePlayerDto, photo?: UploadedImageFile): Promise<{
         id: string;
         idNumber: string;
@@ -135,7 +137,9 @@ export declare class PlayersService {
         createdAt: string;
         updatedAt: string;
     }>;
-    unblock(id: bigint): Promise<{
+    private findBlockNotificationRecipients;
+    private notifyBlockRecipients;
+    unblock(id: bigint, requestingUserId: bigint): Promise<{
         id: string;
         idNumber: string;
         documentType: string;

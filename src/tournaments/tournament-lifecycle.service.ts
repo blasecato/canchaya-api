@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client';
@@ -75,6 +76,8 @@ type LifecycleSnapshot = {
 
 @Injectable()
 export class TournamentLifecycleService {
+  private readonly logger = new Logger(TournamentLifecycleService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly access: CompetitionAccessService,
@@ -652,13 +655,19 @@ export class TournamentLifecycleService {
     });
   }
 
+  /**
+   * Los torneos y los eventos creados antes de simplificar el ciclo de vida
+   * guardan fases que ya no existen (borrador, validación). En lugar de romper
+   * la pantalla, se presentan como Inscripciones, que es donde arranca el ciclo
+   * actual. Cuando no queden registros antiguos, esta tolerancia deja de usarse.
+   */
   private toPhase(value: string): TournamentPhase {
-    if (!isTournamentPhase(value)) {
-      throw new BadRequestException(
-        `El torneo tiene una fase no reconocida: ${value}.`,
-      );
-    }
-    return value;
+    if (isTournamentPhase(value)) return value;
+
+    this.logger.warn(
+      `Fase retirada encontrada en un registro antiguo: ${value}. Se muestra como Inscripciones.`,
+    );
+    return 'registration';
   }
 
   private toNullablePhase(value: string | null): TournamentPhase | null {

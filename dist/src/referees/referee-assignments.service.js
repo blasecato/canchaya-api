@@ -17,7 +17,6 @@ const prisma_service_1 = require("../prisma/prisma.service");
 const ACTIVE_ASSIGNMENT_STATUSES = ['pending', 'accepted'];
 const REFEREE_ASSIGNMENT_WINDOW_MINUTES = 60;
 const ASSIGNABLE_TOURNAMENT_PHASES = [
-    'validation',
     'scheduled',
     'in_progress',
 ];

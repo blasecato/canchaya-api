@@ -62,6 +62,10 @@ import {
   UpdateRegistrationPaymentDto,
 } from './dto/registration-payment.dto';
 import {
+  AddTeamsResultDto,
+  AddTeamsToTournamentDto,
+} from './dto/add-teams.dto';
+import {
   CaptainTeamOptionResponseDto,
   RegisterTeamDto,
   TeamRegistrationResponseDto,
@@ -293,6 +297,26 @@ export class TournamentCatalogController {
     return this.tournamentsService.registerTeam(
       tournamentId,
       BigInt(dto.teamId),
+      request.auth.userId,
+    );
+  }
+
+  @Post(':tournamentId/registrations/bulk')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
+  @ApiOperation({
+    summary: 'Agregar varios equipos al torneo desde la organización',
+    description:
+      'Los equipos quedan aprobados. Los que no cumplen se informan con su motivo.',
+  })
+  @ApiOkResponse({ type: AddTeamsResultDto })
+  addTeams(
+    @Param('tournamentId', ParseBigIntPipe) tournamentId: bigint,
+    @Req() request: AuthenticatedRequest,
+    @Body() dto: AddTeamsToTournamentDto,
+  ): Promise<AddTeamsResultDto> {
+    return this.tournamentsService.addTeamsAsManager(
+      tournamentId,
+      dto.teamIds.map((id) => BigInt(id)),
       request.auth.userId,
     );
   }

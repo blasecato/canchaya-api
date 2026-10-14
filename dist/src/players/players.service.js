@@ -14,6 +14,15 @@ const common_1 = require("@nestjs/common");
 const bcryptjs_1 = require("bcryptjs");
 const prisma_service_1 = require("../prisma/prisma.service");
 const image_storage_service_1 = require("../uploads/image-storage.service");
+const players_constants_1 = require("./players.constants");
+const BLOCK_DURATION_LABELS = {
+    one_week: '1 semana',
+    one_month: '1 mes',
+    three_months: '3 meses',
+    six_months: '6 meses',
+    nine_months: '9 meses',
+    one_year: '1 año',
+};
 const playerSelect = {
     id: true,
     id_number: true,
@@ -232,6 +241,98 @@ let PlayersService = class PlayersService {
             throw error;
         }
     }
+    async bulkCreate(dto) {
+        const temporaryPassword = (0, players_constants_1.getTemporaryPlayerPassword)();
+        const skipped = [];
+        const pending = [];
+        const seenDocuments = new Set();
+        const seenEmails = new Set();
+        dto.players.forEach((player) => {
+            this.assertValidBirthDate(player.birthDate);
+            const idNumber = player.idNumber.trim();
+            const email = player.email.trim().toLowerCase();
+            if (seenDocuments.has(idNumber) || seenEmails.has(email)) {
+                skipped.push({
+                    row: player.row,
+                    idNumber,
+                    fullName: player.fullName.trim(),
+                    reason: 'duplicate_in_file',
+                    detail: 'El archivo trae este jugador más de una vez.',
+                });
+                return;
+            }
+            seenDocuments.add(idNumber);
+            seenEmails.add(email);
+            pending.push({ ...player, idNumber, email });
+        });
+        if (pending.length > 0) {
+            const existing = await this.prisma.users.findMany({
+                where: {
+                    OR: [
+                        { id_number: { in: pending.map(({ idNumber }) => idNumber) } },
+                        {
+                            email: {
+                                in: pending.map(({ email }) => email),
+                                mode: 'insensitive',
+                            },
+                        },
+                    ],
+                },
+                select: { id_number: true, email: true },
+            });
+            const takenDocuments = new Set(existing.map(({ id_number }) => id_number));
+            const takenEmails = new Set(existing.map(({ email }) => email.toLowerCase()));
+            for (let index = pending.length - 1; index >= 0; index -= 1) {
+                const player = pending[index];
+                const documentTaken = takenDocuments.has(player.idNumber);
+                const emailTaken = takenEmails.has(player.email);
+                if (!documentTaken && !emailTaken)
+                    continue;
+                skipped.push({
+                    row: player.row,
+                    idNumber: player.idNumber,
+                    fullName: player.fullName.trim(),
+                    reason: documentTaken ? 'duplicate_document' : 'duplicate_email',
+                    detail: documentTaken
+                        ? 'Ya existe una cuenta con ese número de documento.'
+                        : 'Ya existe una cuenta con ese correo electrónico.',
+                });
+                pending.splice(index, 1);
+            }
+        }
+        let created = 0;
+        if (pending.length > 0) {
+            const passwordHash = await (0, bcryptjs_1.hash)(temporaryPassword, 12);
+            await this.prisma.$transaction(async (transaction) => {
+                for (const player of pending) {
+                    const user = await transaction.users.create({
+                        data: {
+                            id_number: player.idNumber,
+                            document_type: player.documentType.trim(),
+                            full_name: player.fullName.trim(),
+                            birth_date: new Date(player.birthDate),
+                            gender: player.gender,
+                            email: player.email,
+                            phone: player.phone?.trim() || null,
+                            password_hash: passwordHash,
+                            status: 'active',
+                        },
+                        select: { id: true },
+                    });
+                    await transaction.user_roles.create({
+                        data: { user_id: user.id, role_code: 'PLAYER' },
+                    });
+                    created += 1;
+                }
+            });
+        }
+        return {
+            received: dto.players.length,
+            created,
+            skipped: skipped.sort((left, right) => left.row - right.row),
+            temporaryPassword,
+        };
+    }
     async update(id, dto, photo) {
         const current = await this.prisma.users.findFirst({
             where: { id, user_roles: { some: { role_code: 'PLAYER' } } },
@@ -285,6 +386,10 @@ let PlayersService = class PlayersService {
         await this.ensurePlayer(id);
         const now = new Date();
         const blockedUntil = this.calculateBlockedUntil(now, dto.duration);
+        const actor = await this.prisma.users.findUnique({
+            where: { id: requestingUserId },
+            select: { full_name: true },
+        });
         const player = await this.prisma.$transaction(async (transaction) => {
             const updated = await transaction.users.update({
                 where: { id },
@@ -306,24 +411,115 @@ let PlayersService = class PlayersService {
                 data: {
                     user_id: id,
                     type: 'system',
-                    title: 'Tu cuenta fue bloqueada temporalmente',
-                    message: `Tu cuenta fue bloqueada hasta el ${this.formatBlockDate(blockedUntil)}. Motivo: ${dto.reason.trim()}`,
+                    title: `Tu cuenta fue bloqueada por ${BLOCK_DURATION_LABELS[dto.duration]}`,
+                    message: `Tu cuenta fue bloqueada por ${BLOCK_DURATION_LABELS[dto.duration]}, hasta el ${this.formatBlockDate(blockedUntil)}. Durante ese tiempo no podrás integrar equipos nuevos ni inscribirte en otros torneos. Motivo: ${dto.reason.trim()}`,
                     entity_type: 'user_block',
                     entity_id: id.toString(),
                     metadata: {
                         reason: dto.reason.trim(),
+                        duration: dto.duration,
+                        durationLabel: BLOCK_DURATION_LABELS[dto.duration],
                         blockedUntil: blockedUntil.toISOString(),
                         actionUrl: '/profile',
                         actionLabel: 'Ver mi perfil',
                     },
                 },
             });
+            await this.notifyBlockRecipients(transaction, id, requestingUserId, {
+                title: 'Un jugador fue bloqueado',
+                message: `${updated.full_name} fue bloqueado por ${BLOCK_DURATION_LABELS[dto.duration]}, hasta el ${this.formatBlockDate(blockedUntil)}. Bloqueo registrado por ${actor?.full_name ?? 'un administrador'}. No podrá integrar equipos nuevos ni inscribirse en otros torneos. Motivo: ${dto.reason.trim()}`,
+                metadata: {
+                    reason: dto.reason.trim(),
+                    duration: dto.duration,
+                    durationLabel: BLOCK_DURATION_LABELS[dto.duration],
+                    blockedUntil: blockedUntil.toISOString(),
+                    playerId: id.toString(),
+                    playerName: updated.full_name,
+                    blockedBy: requestingUserId.toString(),
+                    blockedByName: actor?.full_name ?? null,
+                    actionUrl: '/players',
+                    actionLabel: 'Ver jugadores',
+                },
+            });
             return updated;
         });
         return this.toResponse(player);
     }
-    async unblock(id) {
+    async findBlockNotificationRecipients(transaction, playerId, actorUserId) {
+        const [superAdministrators, rosterEntries] = await Promise.all([
+            transaction.users.findMany({
+                where: {
+                    status: 'active',
+                    user_roles: { some: { role_code: 'SUPER_ADMIN' } },
+                },
+                select: { id: true },
+            }),
+            transaction.tournament_team_players.findMany({
+                where: {
+                    player_id: playerId,
+                    tournament_team_registrations: {
+                        request_status: { in: ['pending', 'changes_requested', 'approved'] },
+                        tournaments: {
+                            status: 'active',
+                            phase: { notIn: ['finished', 'archived', 'cancelled'] },
+                        },
+                    },
+                },
+                select: {
+                    tournament_team_registrations: {
+                        select: { tournaments: { select: { association_id: true } } },
+                    },
+                },
+            }),
+        ]);
+        const associationIds = [
+            ...new Set(rosterEntries.map(({ tournament_team_registrations }) => tournament_team_registrations.tournaments.association_id)),
+        ];
+        const associationStaff = associationIds.length
+            ? await transaction.associations.findMany({
+                where: { id: { in: associationIds } },
+                select: {
+                    owner_user_id: true,
+                    association_administrators: {
+                        where: { status: 'active' },
+                        select: { user_id: true },
+                    },
+                },
+            })
+            : [];
+        const recipients = new Set([
+            actorUserId,
+            ...superAdministrators.map(({ id }) => id),
+        ]);
+        associationStaff.forEach((association) => {
+            recipients.add(association.owner_user_id);
+            association.association_administrators.forEach(({ user_id }) => recipients.add(user_id));
+        });
+        recipients.delete(playerId);
+        return [...recipients];
+    }
+    async notifyBlockRecipients(transaction, playerId, actorUserId, notification) {
+        const recipients = await this.findBlockNotificationRecipients(transaction, playerId, actorUserId);
+        if (recipients.length === 0)
+            return;
+        await transaction.notifications.createMany({
+            data: recipients.map((userId) => ({
+                user_id: userId,
+                type: 'system',
+                title: notification.title,
+                message: notification.message,
+                entity_type: 'user_block',
+                entity_id: playerId.toString(),
+                metadata: notification.metadata,
+            })),
+        });
+    }
+    async unblock(id, requestingUserId) {
         await this.ensurePlayer(id);
+        const actor = await this.prisma.users.findUnique({
+            where: { id: requestingUserId },
+            select: { full_name: true },
+        });
         const player = await this.prisma.$transaction(async (transaction) => {
             const updated = await transaction.users.update({
                 where: { id },
@@ -349,6 +545,18 @@ let PlayersService = class PlayersService {
                         actionUrl: '/profile',
                         actionLabel: 'Ver mi perfil',
                     },
+                },
+            });
+            await this.notifyBlockRecipients(transaction, id, requestingUserId, {
+                title: 'Se levantó el bloqueo de un jugador',
+                message: `${updated.full_name} puede volver a usar su cuenta. Bloqueo retirado por ${actor?.full_name ?? 'un administrador'}.`,
+                metadata: {
+                    playerId: id.toString(),
+                    playerName: updated.full_name,
+                    unblockedBy: requestingUserId.toString(),
+                    unblockedByName: actor?.full_name ?? null,
+                    actionUrl: '/players',
+                    actionLabel: 'Ver jugadores',
                 },
             });
             return updated;

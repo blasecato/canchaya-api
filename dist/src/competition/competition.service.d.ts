@@ -24,6 +24,15 @@ export declare class CompetitionService {
             id: string;
             name: string;
         }[];
+        hasPlan: boolean;
+        canReorganize: boolean;
+        totalMatches: number;
+        playedMatches: number;
+        playedPairings: string[][];
+        currentConfig: import("./competition.engine").CompetitionConfig | null;
+        currentSeed: string | null;
+        currentLabel: string | null;
+        planTeamIds: string[];
         capacity: number;
         pendingSlots: number;
         originalType: string;
@@ -42,6 +51,10 @@ export declare class CompetitionService {
         }[];
     }>;
     private prepare;
+    private static readonly PLAYED_STATUSES;
+    private collectPlayedResults;
+    private retireCompetitionFixtures;
+    private restorePlayedResults;
     preview(id: bigint, actor: bigint, dto: PreviewCompetitionDto): Promise<{
         plan: CompetitionPlan;
         fixtures: import("./competition.engine").Fixture[];
@@ -55,6 +68,7 @@ export declare class CompetitionService {
         label: string;
     }>;
     generate(id: bigint, actor: bigint, dto: PreviewCompetitionDto): Promise<{
+        reorganization: null;
         plan: null;
         stages: never[];
         teams: never[];
@@ -62,6 +76,7 @@ export declare class CompetitionService {
         canAdvance: boolean;
         advanceBlocker: null;
     } | {
+        reorganization: null;
         plan: CompetitionPlan;
         label: string;
         teams: {

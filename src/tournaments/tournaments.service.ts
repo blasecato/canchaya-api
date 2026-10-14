@@ -58,6 +58,11 @@ import {
 } from './tournament-catalog.mapper';
 import { TOURNAMENT_CATEGORY_GENDERS } from './tournament-category.constants';
 import {
+  AddTeamsResultDto,
+  AddedTeamDto,
+  RejectedTeamDto,
+} from './dto/add-teams.dto';
+import {
   formatTournamentEligibilityError,
   getTournamentEligibilityIssues,
   type TournamentEligibilityPlayer,
@@ -99,12 +104,11 @@ type RegistrationPaymentRecord = {
 };
 
 /**
- * Torneos que el inicio público muestra como próximos: los más recientes que
- * ya salieron de borrador y siguen vigentes.
+ * Torneos que el inicio público muestra como próximos: los publicados que
+ * todavía no terminan.
  */
 const HOME_FEATURED_TOURNAMENT_PHASES = [
   'registration',
-  'validation',
   'scheduled',
   'in_progress',
 ] as const satisfies readonly TournamentPhase[];
@@ -268,16 +272,74 @@ export class TournamentsService {
           : undefined,
     };
     const skip = (query.page - 1) * query.pageSize;
-    const [total, tournaments] = await this.prisma.$transaction([
-      this.prisma.tournaments.count({ where }),
-      this.prisma.tournaments.findMany({
-        where,
-        orderBy: [{ start_date: 'asc' }, { id: 'asc' }],
-        skip,
-        take: query.pageSize,
-        select: tournamentCatalogItemSelect,
-      }),
-    ]);
+    // Cada rol ve primero lo suyo: el administrador sus organizaciones y el
+    // jugador los torneos donde compite. El orden se resuelve en la base para
+    // que la paginación siga siendo correcta.
+    const priority = this.buildCatalogPriorityFilter(
+      requestingRoleCodes,
+      requestingUserId,
+    );
+    const orderBy: Prisma.tournamentsOrderByWithRelationInput[] =
+      priority?.kind === 'player'
+        ? [{ created_at: 'desc' }, { id: 'desc' }]
+        : [{ start_date: 'asc' }, { id: 'asc' }];
+
+    let total: number;
+    let tournaments: Prisma.tournamentsGetPayload<{
+      select: typeof tournamentCatalogItemSelect;
+    }>[];
+
+    if (!priority) {
+      [total, tournaments] = await this.prisma.$transaction([
+        this.prisma.tournaments.count({ where }),
+        this.prisma.tournaments.findMany({
+          where,
+          orderBy,
+          skip,
+          take: query.pageSize,
+          select: tournamentCatalogItemSelect,
+        }),
+      ]);
+    } else {
+      const priorityWhere: Prisma.tournamentsWhereInput = {
+        AND: [where, priority.filter],
+      };
+      const restWhere: Prisma.tournamentsWhereInput = {
+        AND: [where, { NOT: priority.filter }],
+      };
+      const [count, priorityTotal] = await this.prisma.$transaction([
+        this.prisma.tournaments.count({ where }),
+        this.prisma.tournaments.count({ where: priorityWhere }),
+      ]);
+      total = count;
+
+      const priorityTake = Math.max(
+        0,
+        Math.min(query.pageSize, priorityTotal - skip),
+      );
+      const priorityItems =
+        priorityTake > 0
+          ? await this.prisma.tournaments.findMany({
+              where: priorityWhere,
+              orderBy,
+              skip,
+              take: priorityTake,
+              select: tournamentCatalogItemSelect,
+            })
+          : [];
+      const restTake = query.pageSize - priorityItems.length;
+      const restItems =
+        restTake > 0
+          ? await this.prisma.tournaments.findMany({
+              where: restWhere,
+              orderBy,
+              skip: Math.max(0, skip - priorityTotal),
+              take: restTake,
+              select: tournamentCatalogItemSelect,
+            })
+          : [];
+      tournaments = [...priorityItems, ...restItems];
+    }
 
     const managedAssociationIds =
       requestingUserId === undefined
@@ -362,6 +424,55 @@ export class TournamentsService {
     );
   }
 
+  /**
+   * Filtro que define qué torneos van primero en el catálogo según el rol.
+   * Devuelve null cuando no hay preferencia y basta el orden general.
+   */
+  private buildCatalogPriorityFilter(
+    roleCodes: Set<string>,
+    requestingUserId?: bigint,
+  ): { kind: 'manager' | 'player'; filter: Prisma.tournamentsWhereInput } | null {
+    if (requestingUserId === undefined) return null;
+
+    if (roleCodes.has('ASSOCIATION_ADMIN')) {
+      return {
+        kind: 'manager',
+        filter: {
+          associations: {
+            OR: [
+              { owner_user_id: requestingUserId },
+              {
+                association_administrators: {
+                  some: { user_id: requestingUserId, status: 'active' },
+                },
+              },
+            ],
+          },
+        },
+      };
+    }
+
+    if (roleCodes.has('PLAYER')) {
+      return {
+        kind: 'player',
+        filter: {
+          tournament_team_registrations: {
+            some: {
+              request_status: { in: ['pending', 'approved'] },
+              teams: {
+                team_members: {
+                  some: { user_id: requestingUserId, status: 'active' },
+                },
+              },
+            },
+          },
+        },
+      };
+    }
+
+    return null;
+  }
+
   async findCaptainTeams(
     tournamentId: bigint,
     requestingUserId: bigint,
@@ -439,6 +550,224 @@ export class TournamentsService {
     });
   }
 
+  /**
+   * Alta directa de equipos por parte de la organización. A diferencia de la
+   * inscripción del capitán, aquí el equipo queda aprobado de una vez; los que
+   * no cumplen se informan uno por uno en lugar de abortar todo el lote.
+   */
+  async addTeamsAsManager(
+    tournamentId: bigint,
+    teamIds: bigint[],
+    requestingUserId: bigint,
+  ): Promise<AddTeamsResultDto> {
+    const tournament = await this.prisma.tournaments.findUnique({
+      where: { id: tournamentId },
+      select: {
+        association_id: true,
+        name: true,
+        max_teams: true,
+        min_players_per_team: true,
+        max_players_per_team: true,
+        registration_fee: true,
+        start_date: true,
+        category_name: true,
+        category_min_age: true,
+        category_max_age: true,
+        category_gender: true,
+        _count: {
+          select: {
+            tournament_team_registrations: {
+              where: { request_status: { in: ['pending', 'approved'] } },
+            },
+          },
+        },
+      },
+    });
+    if (!tournament) {
+      throw new NotFoundException('El torneo solicitado no existe.');
+    }
+    await this.requireManagementPermission(
+      this.prisma,
+      tournament.association_id,
+      requestingUserId,
+    );
+
+    const unique = [...new Set(teamIds.map((id) => id.toString()))].map(
+      (id) => BigInt(id),
+    );
+    const [teams, registered] = await Promise.all([
+      this.prisma.teams.findMany({
+        where: { id: { in: unique } },
+        select: {
+          id: true,
+          name: true,
+          status: true,
+          captain_user_id: true,
+          team_members: {
+            where: { status: 'active' },
+            select: {
+              user_id: true,
+              users: {
+                select: {
+                  full_name: true,
+                  birth_date: true,
+                  gender: true,
+                  status: true,
+                  block_reason: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+      this.prisma.tournament_team_registrations.findMany({
+        where: { tournament_id: tournamentId, team_id: { in: unique } },
+        select: { team_id: true },
+      }),
+    ]);
+
+    const teamsById = new Map(teams.map((team) => [team.id.toString(), team]));
+    const alreadyRegistered = new Set(
+      registered.map(({ team_id }) => team_id.toString()),
+    );
+    const added: AddedTeamDto[] = [];
+    const rejected: RejectedTeamDto[] = [];
+    let occupied = tournament._count.tournament_team_registrations;
+
+    for (const teamId of unique) {
+      const key = teamId.toString();
+      const team = teamsById.get(key);
+      if (!team || team.status !== 'active') {
+        rejected.push({
+          teamId: key,
+          teamName: team?.name ?? `Equipo ${key}`,
+          reason: 'El equipo no existe o está inactivo.',
+        });
+        continue;
+      }
+      if (alreadyRegistered.has(key)) {
+        rejected.push({
+          teamId: key,
+          teamName: team.name,
+          reason: 'Ya estaba inscrito en este torneo.',
+        });
+        continue;
+      }
+      if (occupied >= tournament.max_teams) {
+        rejected.push({
+          teamId: key,
+          teamName: team.name,
+          reason: 'El torneo se quedó sin cupos disponibles.',
+        });
+        continue;
+      }
+
+      const blocked = team.team_members
+        .filter(({ users }) => users.status !== 'active' && users.block_reason)
+        .map(({ users }) => users.full_name);
+      if (blocked.length > 0) {
+        rejected.push({
+          teamId: key,
+          teamName: team.name,
+          reason: `Tiene jugadores con la cuenta bloqueada: ${blocked.join(', ')}.`,
+        });
+        continue;
+      }
+
+      const memberCount = team.team_members.length;
+      if (
+        memberCount < tournament.min_players_per_team ||
+        memberCount > tournament.max_players_per_team
+      ) {
+        rejected.push({
+          teamId: key,
+          teamName: team.name,
+          reason: `Tiene ${memberCount} jugador${memberCount === 1 ? '' : 'es'} y el torneo exige entre ${tournament.min_players_per_team} y ${tournament.max_players_per_team}.`,
+        });
+        continue;
+      }
+
+      const issues = getTournamentEligibilityIssues(
+        this.toEligibilityRules(tournament),
+        team.team_members.map(({ users }) => this.toEligibilityPlayer(users)),
+      );
+      if (issues.length > 0) {
+        rejected.push({
+          teamId: key,
+          teamName: team.name,
+          reason: issues.join(' '),
+        });
+        continue;
+      }
+
+      await this.prisma.$transaction(async (transaction) => {
+        await transaction.tournament_team_registrations.create({
+          data: {
+            tournament_id: tournamentId,
+            association_id: tournament.association_id,
+            team_id: teamId,
+            requested_by: requestingUserId,
+            request_status: 'approved',
+            reviewed_by: requestingUserId,
+            reviewed_at: new Date(),
+            review_notes: 'Equipo agregado por la organización.',
+            payment_status: tournament.registration_fee.equals(0)
+              ? 'paid'
+              : 'unpaid',
+          },
+        });
+        await transaction.tournament_registration_events.create({
+          data: {
+            tournament_id: tournamentId,
+            team_id: teamId,
+            actor_user_id: requestingUserId,
+            event_type: 'approved',
+            message: 'Equipo agregado directamente por la organización.',
+          },
+        });
+        await transaction.tournament_team_players.createMany({
+          data: team.team_members.map(({ user_id }) => ({
+            tournament_id: tournamentId,
+            team_id: teamId,
+            player_id: user_id,
+            is_captain: user_id === team.captain_user_id,
+            registration_status: 'approved',
+          })),
+          skipDuplicates: true,
+        });
+        await assignApprovedTeamToCompetition(transaction, tournamentId, teamId);
+        await transaction.notifications.create({
+          data: {
+            user_id: team.captain_user_id,
+            type: 'tournament_registration',
+            title: 'Tu equipo fue inscrito en un torneo',
+            message: `${team.name} quedó inscrito en ${tournament.name}.`,
+            entity_type: 'tournament_registration',
+            entity_id: `${tournamentId.toString()}:${key}`,
+            metadata: {
+              tournamentId: tournamentId.toString(),
+              tournamentName: tournament.name,
+              teamId: key,
+              teamName: team.name,
+              status: 'approved',
+              actionUrl: `/tournaments/${tournamentId.toString()}`,
+              actionLabel: 'Ver torneo',
+            },
+          },
+        });
+      });
+
+      occupied += 1;
+      added.push({ teamId: key, teamName: team.name });
+    }
+
+    return {
+      added,
+      rejected,
+      availableSlots: Math.max(0, tournament.max_teams - occupied),
+    };
+  }
+
   async registerTeam(
     tournamentId: bigint,
     teamId: bigint,
@@ -482,7 +811,13 @@ export class TournamentsService {
             select: {
               user_id: true,
               users: {
-                select: { full_name: true, birth_date: true, gender: true },
+                select: {
+                  full_name: true,
+                  birth_date: true,
+                  gender: true,
+                  status: true,
+                  block_reason: true,
+                },
               },
             },
           },
@@ -503,6 +838,7 @@ export class TournamentsService {
       );
     }
 
+    this.assertNoBlockedPlayers(team.team_members);
     this.assertTeamRosterWithinTournamentLimits(
       team.team_members.length,
       tournament.min_players_per_team,
@@ -515,9 +851,11 @@ export class TournamentsService {
 
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
+    // Un torneo en curso sigue admitiendo equipos: la ventana la marcan las
+    // fechas de inscripción, no la fase.
     const registrationsAreOpen =
       tournament.status === 'active' &&
-      ['registration', 'validation', 'scheduled'].includes(tournament.phase) &&
+      ['registration', 'scheduled', 'in_progress'].includes(tournament.phase) &&
       (!tournament.registration_start_date ||
         tournament.registration_start_date <= today) &&
       (!tournament.registration_end_date ||
@@ -1055,13 +1393,13 @@ export class TournamentsService {
       reviewedAt: registration.reviewed_at?.toISOString() ?? null,
       canReview:
         canManage &&
-        ['registration', 'validation', 'scheduled'].includes(
+        ['registration', 'scheduled', 'in_progress'].includes(
           registration.tournaments.phase,
         ) &&
         registration.request_status === 'pending',
       canResubmit:
         isCaptain &&
-        ['registration', 'validation', 'scheduled'].includes(
+        ['registration', 'scheduled', 'in_progress'].includes(
           registration.tournaments.phase,
         ) &&
         registration.request_status === 'changes_requested',
@@ -1150,12 +1488,12 @@ export class TournamentsService {
       );
     }
     if (
-      !['registration', 'validation', 'scheduled'].includes(
+      !['registration', 'scheduled', 'in_progress'].includes(
         registration.tournaments.phase,
       )
     ) {
       throw new BadRequestException(
-        'Las plantillas se pueden revisar hasta antes de iniciar el torneo.',
+        'Las plantillas ya no se pueden revisar: el torneo terminó.',
       );
     }
     if (
@@ -1333,12 +1671,12 @@ export class TournamentsService {
       );
     }
     if (
-      !['registration', 'validation', 'scheduled'].includes(
+      !['registration', 'scheduled', 'in_progress'].includes(
         registration.tournaments.phase,
       )
     ) {
       throw new BadRequestException(
-        'La plantilla ya está cerrada y no admite nuevos cambios.',
+        'La plantilla ya está cerrada: el torneo terminó.',
       );
     }
     this.assertTeamRosterWithinTournamentLimits(
@@ -2038,6 +2376,8 @@ export class TournamentsService {
                 createTournamentDto.registrationEndDate,
               ),
               registration_fee: createTournamentDto.registrationFee,
+              yellow_card_fee: createTournamentDto.yellowCardFee,
+              red_card_fee: createTournamentDto.redCardFee,
               currency_code: createTournamentDto.currencyCode,
               grand_prize: createTournamentDto.grandPrize,
               second_prize: createTournamentDto.secondPrize,
@@ -2050,7 +2390,7 @@ export class TournamentsService {
               rules_url: createTournamentDto.rulesUrl,
               photo_url: photoAsset?.url,
               photo_public_id: photoAsset?.publicId,
-              phase: 'draft',
+              phase: 'registration',
               status: createTournamentDto.status,
               created_by: requestingUserId,
             },
@@ -2062,8 +2402,8 @@ export class TournamentsService {
               tournament_id: createdTournament.id,
               actor_user_id: requestingUserId,
               from_phase: null,
-              to_phase: 'draft',
-              reason: 'Torneo creado en estado Borrador.',
+              to_phase: 'registration',
+              reason: 'Torneo creado con inscripciones abiertas.',
             },
           });
 
@@ -2262,6 +2602,8 @@ export class TournamentsService {
                 updateTournamentDto.registrationEndDate,
               ),
               registration_fee: updateTournamentDto.registrationFee,
+              yellow_card_fee: updateTournamentDto.yellowCardFee,
+              red_card_fee: updateTournamentDto.redCardFee,
               currency_code: updateTournamentDto.currencyCode,
               grand_prize: updateTournamentDto.grandPrize,
               second_prize: updateTournamentDto.secondPrize,
@@ -2345,9 +2687,11 @@ export class TournamentsService {
           tournamentId,
         );
 
-        if (tournament.phase !== 'draft') {
+        // Sin fase de borrador, el torneo recién creado nace en inscripciones:
+        // se puede eliminar mientras siga ahí y nadie se haya anotado.
+        if (tournament.phase !== 'registration') {
           throw new BadRequestException(
-            'Solo se puede eliminar permanentemente un torneo en borrador.',
+            'Solo se puede eliminar un torneo que sigue en inscripciones. Si ya avanzó, cancélalo en lugar de eliminarlo.',
           );
         }
 
@@ -2465,76 +2809,86 @@ export class TournamentsService {
     }
   }
 
+  /**
+   * La edición queda abierta durante todo el torneo: es normal que lleguen
+   * equipos después de iniciar y que haya que ajustar cupos, categoría o
+   * formato sobre la marcha. En lugar de bloquear por fase, se verifica que el
+   * cambio no deje al torneo en un estado imposible.
+   */
   private async assertTournamentUpdateAllowed(
     client: Prisma.TransactionClient,
     tournament: AssociationTournamentResponseRecord,
     dto: UpdateTournamentDto,
   ): Promise<void> {
-    if (['finished', 'archived', 'cancelled'].includes(tournament.phase)) {
+    if (['archived', 'cancelled'].includes(tournament.phase)) {
       throw new BadRequestException(
-        'Un torneo finalizado, archivado o cancelado ya no admite edición general.',
+        'Un torneo archivado o cancelado ya no se puede editar. Reactívalo si necesitas cambiar su información.',
       );
     }
 
-    const structuralChanges = [
-      dto.tournamentTypeId !== undefined &&
-        BigInt(dto.tournamentTypeId) !== tournament.tournament_types.id,
-      dto.sportType !== undefined && dto.sportType !== tournament.sport_type,
-      dto.modality !== undefined && dto.modality !== tournament.modality,
-      dto.categoryName !== undefined &&
-        dto.categoryName !== tournament.category_name,
-      dto.categoryMinAge !== undefined &&
-        dto.categoryMinAge !== tournament.category_min_age,
-      dto.categoryMaxAge !== undefined &&
-        dto.categoryMaxAge !== tournament.category_max_age,
-      dto.categoryGender !== undefined &&
-        dto.categoryGender !== tournament.category_gender,
-      dto.maxTeams !== undefined && dto.maxTeams !== tournament.max_teams,
-      dto.minPlayersPerTeam !== undefined &&
-        dto.minPlayersPerTeam !== tournament.min_players_per_team,
-      dto.maxPlayersPerTeam !== undefined &&
-        dto.maxPlayersPerTeam !== tournament.max_players_per_team,
-    ].some(Boolean);
-    const paymentConfigurationChanges = [
-      dto.registrationFee !== undefined &&
-        Number(dto.registrationFee) !== Number(tournament.registration_fee),
-      dto.currencyCode !== undefined &&
-        dto.currencyCode !== tournament.currency_code.trim(),
-    ].some(Boolean);
+    await this.assertCapacityFitsRegistrations(client, tournament, dto);
+    await this.assertRosterLimitsFitApprovedTeams(client, tournament, dto);
+  }
 
-    if (['validation', 'scheduled', 'in_progress'].includes(tournament.phase)) {
-      const registrationChanges = [
-        this.dateChanged(
-          dto.registrationStartDate,
-          tournament.registration_start_date,
-        ),
-        this.dateChanged(
-          dto.registrationEndDate,
-          tournament.registration_end_date,
-        ),
-        paymentConfigurationChanges,
-      ].some(Boolean);
-      if (structuralChanges || registrationChanges) {
-        throw new BadRequestException(
-          'La configuración de participantes e inscripciones queda bloqueada desde la fase de Validación.',
-        );
-      }
+  /** El cupo nuevo no puede ser menor que los equipos ya aprobados. */
+  private async assertCapacityFitsRegistrations(
+    client: Prisma.TransactionClient,
+    tournament: AssociationTournamentResponseRecord,
+    dto: UpdateTournamentDto,
+  ): Promise<void> {
+    if (dto.maxTeams === undefined || dto.maxTeams === tournament.max_teams) {
       return;
     }
 
-    if (
-      tournament.phase === 'registration' &&
-      (structuralChanges || paymentConfigurationChanges)
-    ) {
-      const registrations = await client.tournament_team_registrations.count({
-        where: { tournament_id: tournament.id },
-      });
-      if (registrations > 0) {
-        throw new BadRequestException(
-          'No puedes cambiar el formato, la categoría, los cupos, el rango de jugadores, el valor ni la moneda después de recibir inscripciones.',
-        );
-      }
+    const approved = await client.tournament_team_registrations.count({
+      where: { tournament_id: tournament.id, request_status: 'approved' },
+    });
+
+    if (dto.maxTeams < approved) {
+      throw new BadRequestException(
+        `El torneo ya tiene ${approved} equipo${approved === 1 ? '' : 's'} aprobado${approved === 1 ? '' : 's'}: el cupo no puede quedar por debajo de esa cantidad.`,
+      );
     }
+  }
+
+  /**
+   * Cambiar el rango de jugadores no debe dejar plantillas ya aprobadas fuera
+   * de norma: se avisa cuántas quedarían incumpliendo antes de guardar.
+   */
+  private async assertRosterLimitsFitApprovedTeams(
+    client: Prisma.TransactionClient,
+    tournament: AssociationTournamentResponseRecord,
+    dto: UpdateTournamentDto,
+  ): Promise<void> {
+    const nextMinimum = dto.minPlayersPerTeam ?? tournament.min_players_per_team;
+    const nextMaximum = dto.maxPlayersPerTeam ?? tournament.max_players_per_team;
+    const limitsChanged =
+      nextMinimum !== tournament.min_players_per_team ||
+      nextMaximum !== tournament.max_players_per_team;
+    if (!limitsChanged) return;
+
+    const approvedRosters = await client.tournament_team_registrations.findMany({
+      where: { tournament_id: tournament.id, request_status: 'approved' },
+      select: {
+        teams: { select: { name: true } },
+        _count: { select: { tournament_team_players: true } },
+      },
+    });
+
+    const offending = approvedRosters.filter(
+      ({ _count }) =>
+        _count.tournament_team_players < nextMinimum ||
+        _count.tournament_team_players > nextMaximum,
+    );
+    if (offending.length === 0) return;
+
+    const names = offending
+      .slice(0, 3)
+      .map(({ teams }) => teams.name)
+      .join(', ');
+    throw new BadRequestException(
+      `Con ese rango de jugadores quedarían fuera de norma ${offending.length} equipo${offending.length === 1 ? '' : 's'} ya aprobado${offending.length === 1 ? '' : 's'} (${names}${offending.length > 3 ? '…' : ''}). Ajusta las plantillas primero o deja un rango que las incluya.`,
+    );
   }
 
   private assertValidCategoryAgeRange(
@@ -2548,10 +2902,11 @@ export class TournamentsService {
     }
   }
 
+  /** El reglamento acompaña al torneo: solo se cierra al archivarlo o cancelarlo. */
   private assertRulesEditable(phase: string): void {
-    if (!['draft', 'registration', 'validation', 'scheduled'].includes(phase)) {
+    if (['archived', 'cancelled'].includes(phase)) {
       throw new BadRequestException(
-        'El reglamento no se puede editar después de iniciar, finalizar, archivar o cancelar el torneo.',
+        'El reglamento de un torneo archivado o cancelado ya no se puede editar.',
       );
     }
   }
@@ -2785,6 +3140,28 @@ export class TournamentsService {
       maxAge: tournament.category_max_age,
       gender: tournament.category_gender,
     };
+  }
+
+  /**
+   * Un jugador sancionado no entra a competencias nuevas. Las inscripciones
+   * que ya tenía se respetan: el bloqueo no lo retira de un torneo en marcha.
+   */
+  private assertNoBlockedPlayers(
+    members: Array<{
+      users: { full_name: string; status: string; block_reason: string | null };
+    }>,
+  ): void {
+    const blocked = members
+      .filter(({ users }) => users.status !== 'active' && users.block_reason)
+      .map(({ users }) => users.full_name);
+
+    if (blocked.length === 0) return;
+
+    throw new BadRequestException(
+      blocked.length === 1
+        ? `${blocked[0]} tiene la cuenta bloqueada y no puede inscribirse en un torneo. Retíralo de la plantilla o espera a que termine la sanción.`
+        : `Estos integrantes tienen la cuenta bloqueada y no pueden inscribirse en un torneo: ${blocked.join(', ')}.`,
+    );
   }
 
   private toEligibilityPlayer(player: {

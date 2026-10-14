@@ -2,6 +2,8 @@ import { AssociationTournamentResponseDto } from '../../associations/dto/associa
 export declare class TournamentCatalogAssociationDto {
     id: string;
     name: string;
+    logoUrl: string | null;
+    ownerName: string;
 }
 export declare class TournamentCatalogItemResponseDto extends AssociationTournamentResponseDto {
     association: TournamentCatalogAssociationDto;

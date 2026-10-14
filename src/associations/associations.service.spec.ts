@@ -559,6 +559,8 @@ describe('AssociationsService', () => {
       registration_start_date: new Date('2026-08-01T00:00:00.000Z'),
       registration_end_date: null,
       registration_fee: { toString: () => '150000.50' },
+      yellow_card_fee: { toString: () => '5000.00' },
+      red_card_fee: { toString: () => '15000.00' },
       currency_code: 'COP',
       grand_prize: { toString: () => '5000000' },
       second_prize: { toString: () => '2500000' },
@@ -612,6 +614,8 @@ describe('AssociationsService', () => {
           registrationStartDate: '2026-08-01',
           registrationEndDate: null,
           registrationFee: '150000.50',
+          yellowCardFee: '5000.00',
+          redCardFee: '15000.00',
           currencyCode: 'COP',
           grandPrize: '5000000',
           secondPrize: '2500000',
@@ -648,7 +652,6 @@ describe('AssociationsService', () => {
           phase: {
             in: [
               'registration',
-              'validation',
               'scheduled',
               'in_progress',
               'finished',

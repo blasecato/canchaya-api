@@ -15,6 +15,8 @@ const associations_module_1 = require("./associations/associations.module");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const auth_module_1 = require("./auth/auth.module");
+const card_charges_module_1 = require("./card-charges/card-charges.module");
+const fair_play_module_1 = require("./fair-play/fair-play.module");
 const competition_access_module_1 = require("./authorization/competition-access.module");
 const disciplinary_actions_module_1 = require("./disciplinary-actions/disciplinary-actions.module");
 const fines_module_1 = require("./fines/fines.module");
@@ -46,6 +48,8 @@ exports.AppModule = AppModule = __decorate([
             prisma_module_1.PrismaModule,
             auth_module_1.AuthModule,
             competition_access_module_1.CompetitionAccessModule,
+            card_charges_module_1.CardChargesModule,
+            fair_play_module_1.FairPlayModule,
             roles_module_1.RolesModule,
             users_module_1.UsersModule,
             associations_module_1.AssociationsModule,

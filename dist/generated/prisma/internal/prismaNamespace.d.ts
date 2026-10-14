@@ -188,6 +188,7 @@ export declare const ModelName: {
     readonly notifications: "notifications";
     readonly notification_preferences: "notification_preferences";
     readonly tournament_registration_events: "tournament_registration_events";
+    readonly tournament_card_charges: "tournament_card_charges";
     readonly tournament_lifecycle_events: "tournament_lifecycle_events";
     readonly tournament_types: "tournament_types";
     readonly tournaments: "tournaments";
@@ -205,7 +206,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "auth_sessions" | "association_administrators" | "associations" | "association_announcements" | "home_hero_slides" | "password_reset_codes" | "disciplinary_actions" | "fines" | "match_referees" | "matches" | "referee_availability" | "referee_assignment_events" | "player_match_stats" | "roles" | "sponsors" | "suspensions" | "disciplinary_appeals" | "disciplinary_events" | "team_members" | "teams" | "tournament_administrators" | "tournament_referees" | "tournament_sponsors" | "tournament_team_players" | "tournament_team_registrations" | "notifications" | "notification_preferences" | "tournament_registration_events" | "tournament_lifecycle_events" | "tournament_types" | "tournaments" | "user_roles" | "users";
+        modelProps: "auth_sessions" | "association_administrators" | "associations" | "association_announcements" | "home_hero_slides" | "password_reset_codes" | "disciplinary_actions" | "fines" | "match_referees" | "matches" | "referee_availability" | "referee_assignment_events" | "player_match_stats" | "roles" | "sponsors" | "suspensions" | "disciplinary_appeals" | "disciplinary_events" | "team_members" | "teams" | "tournament_administrators" | "tournament_referees" | "tournament_sponsors" | "tournament_team_players" | "tournament_team_registrations" | "notifications" | "notification_preferences" | "tournament_registration_events" | "tournament_card_charges" | "tournament_lifecycle_events" | "tournament_types" | "tournaments" | "user_roles" | "users";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -2281,6 +2282,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        tournament_card_charges: {
+            payload: Prisma.$tournament_card_chargesPayload<ExtArgs>;
+            fields: Prisma.tournament_card_chargesFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.tournament_card_chargesFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_card_chargesPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.tournament_card_chargesFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_card_chargesPayload>;
+                };
+                findFirst: {
+                    args: Prisma.tournament_card_chargesFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_card_chargesPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.tournament_card_chargesFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_card_chargesPayload>;
+                };
+                findMany: {
+                    args: Prisma.tournament_card_chargesFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_card_chargesPayload>[];
+                };
+                create: {
+                    args: Prisma.tournament_card_chargesCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_card_chargesPayload>;
+                };
+                createMany: {
+                    args: Prisma.tournament_card_chargesCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.tournament_card_chargesCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_card_chargesPayload>[];
+                };
+                delete: {
+                    args: Prisma.tournament_card_chargesDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_card_chargesPayload>;
+                };
+                update: {
+                    args: Prisma.tournament_card_chargesUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_card_chargesPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.tournament_card_chargesDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.tournament_card_chargesUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.tournament_card_chargesUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_card_chargesPayload>[];
+                };
+                upsert: {
+                    args: Prisma.tournament_card_chargesUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$tournament_card_chargesPayload>;
+                };
+                aggregate: {
+                    args: Prisma.Tournament_card_chargesAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateTournament_card_charges>;
+                };
+                groupBy: {
+                    args: Prisma.tournament_card_chargesGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Tournament_card_chargesGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.tournament_card_chargesCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Tournament_card_chargesCountAggregateOutputType> | number;
+                };
+            };
+        };
         tournament_lifecycle_events: {
             payload: Prisma.$tournament_lifecycle_eventsPayload<ExtArgs>;
             fields: Prisma.tournament_lifecycle_eventsFieldRefs;
@@ -3061,6 +3136,25 @@ export declare const Tournament_registration_eventsScalarFieldEnum: {
     readonly created_at: "created_at";
 };
 export type Tournament_registration_eventsScalarFieldEnum = (typeof Tournament_registration_eventsScalarFieldEnum)[keyof typeof Tournament_registration_eventsScalarFieldEnum];
+export declare const Tournament_card_chargesScalarFieldEnum: {
+    readonly id: "id";
+    readonly tournament_id: "tournament_id";
+    readonly team_id: "team_id";
+    readonly player_id: "player_id";
+    readonly match_id: "match_id";
+    readonly card_type: "card_type";
+    readonly quantity: "quantity";
+    readonly unit_amount: "unit_amount";
+    readonly total_amount: "total_amount";
+    readonly currency_code: "currency_code";
+    readonly payment_status: "payment_status";
+    readonly paid_at: "paid_at";
+    readonly paid_by: "paid_by";
+    readonly notes: "notes";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Tournament_card_chargesScalarFieldEnum = (typeof Tournament_card_chargesScalarFieldEnum)[keyof typeof Tournament_card_chargesScalarFieldEnum];
 export declare const Tournament_lifecycle_eventsScalarFieldEnum: {
     readonly id: "id";
     readonly tournament_id: "tournament_id";
@@ -3100,6 +3194,8 @@ export declare const TournamentsScalarFieldEnum: {
     readonly registration_start_date: "registration_start_date";
     readonly registration_end_date: "registration_end_date";
     readonly registration_fee: "registration_fee";
+    readonly yellow_card_fee: "yellow_card_fee";
+    readonly red_card_fee: "red_card_fee";
     readonly currency_code: "currency_code";
     readonly grand_prize: "grand_prize";
     readonly second_prize: "second_prize";
@@ -3255,6 +3351,7 @@ export type GlobalOmitConfig = {
     notifications?: Prisma.notificationsOmit;
     notification_preferences?: Prisma.notification_preferencesOmit;
     tournament_registration_events?: Prisma.tournament_registration_eventsOmit;
+    tournament_card_charges?: Prisma.tournament_card_chargesOmit;
     tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsOmit;
     tournament_types?: Prisma.tournament_typesOmit;
     tournaments?: Prisma.tournamentsOmit;
