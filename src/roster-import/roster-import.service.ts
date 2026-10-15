@@ -193,10 +193,34 @@ export class RosterImportService {
     return duplicated;
   }
 
+  /**
+   * Hoja que no se guarda. Cada jugador conserva su propio motivo cuando ya se
+   * revisó: lo que invalidó la hoja no sirve para explicar fila por fila.
+   */
   private rejectSheet(
     sheet: RosterImportTeamDto,
     detail: string,
+    reviewed?: {
+      prepared: PreparedPlayer[];
+      rejected: RosterImportPlayerResultDto[];
+    },
   ): RosterImportTeamResultDto {
+    const players = reviewed
+      ? [
+          // Los que sí cumplían quedan fuera por culpa de la hoja, no suyo.
+          ...reviewed.prepared.map((player) =>
+            this.toPlayerResult(
+              player.source,
+              'rejected',
+              'Este jugador cumple los requisitos, pero la hoja completa no se pudo cargar.',
+            ),
+          ),
+          ...reviewed.rejected,
+        ].sort((left, right) => left.row - right.row)
+      : sheet.players.map((player) =>
+          this.toPlayerResult(player, 'rejected', detail),
+        );
+
     return {
       sheetName: sheet.sheetName,
       teamName: sheet.teamName.trim(),
@@ -205,11 +229,9 @@ export class RosterImportService {
       detail,
       playersCreated: 0,
       playersLinked: 0,
-      playersRejected: sheet.players.length,
+      playersRejected: players.length,
       rosterSize: 0,
-      players: sheet.players.map((player) => ({
-        ...this.toPlayerResult(player, 'rejected', detail),
-      })),
+      players,
     };
   }
 
@@ -299,15 +321,17 @@ export class RosterImportService {
         sheet,
         `La plantilla queda con ${rosterSize} jugador${rosterSize === 1 ? '' : 'es'} y el torneo exige mínimo ${tournament.min_players_per_team}.${
           rejected.length > 0
-            ? ` Revisa primero los ${rejected.length} jugador${rejected.length === 1 ? '' : 'es'} con error de esta hoja.`
+            ? ` Corrige los ${rejected.length} jugador${rejected.length === 1 ? '' : 'es'} con error que se listan abajo y vuelve a cargar la hoja.`
             : ''
         }`,
+        { prepared, rejected },
       );
     }
     if (rosterSize > tournament.max_players_per_team) {
       return this.rejectSheet(
         sheet,
         `La plantilla queda con ${rosterSize} jugadores y el torneo permite máximo ${tournament.max_players_per_team}.`,
+        { prepared, rejected },
       );
     }
 
@@ -319,6 +343,7 @@ export class RosterImportService {
       return this.rejectSheet(
         sheet,
         'Ningún jugador de esta hoja se pudo cargar, así que el equipo no se creó.',
+        { prepared, rejected },
       );
     }
 

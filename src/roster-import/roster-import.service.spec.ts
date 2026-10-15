@@ -208,8 +208,38 @@ describe('RosterImportService', () => {
     expect(result.teams[0].outcome).toBe('rejected');
     expect(result.teams[0].detail).toContain('mínimo 2');
     expect(result.playersRejected).toBe(2);
+    // Cada fila conserva su propio motivo, no el de la hoja.
+    expect(result.teams[0].players.map(({ detail }) => detail)).toEqual([
+      expect.stringContaining('Niño Pérez tendrá'),
+      expect.stringContaining('Niña Gómez tendrá'),
+    ]);
     expect(tx.users.create).not.toHaveBeenCalled();
     expect(tx.teams.create).not.toHaveBeenCalled();
+  });
+
+  it('separa a los jugadores correctos de los que fallan cuando la hoja no se guarda', async () => {
+    const { service } = setup({
+      tournament: { category_gender: 'female', min_players_per_team: 3 },
+    });
+    const result = await service.import(
+      7n,
+      {
+        teams: [
+          sheet('Mixto', [
+            player(1, { gender: 'female', fullName: 'Ana Ruiz' }),
+            player(2, { gender: 'male', fullName: 'Juan Torres' }),
+            player(3, { position: 'bateador', fullName: 'Luis Díaz' }),
+          ]),
+        ],
+      },
+      9n,
+    );
+
+    const [ana, juan, luis] = result.teams[0].players;
+    expect(result.teams[0].outcome).toBe('rejected');
+    expect(ana.detail).toContain('la hoja completa no se pudo cargar');
+    expect(juan.detail).toContain('no cumple la rama');
+    expect(luis.detail).toContain('bateador');
   });
 
   it('avisa cuándo el jugador ya está inscrito con otro equipo del torneo', async () => {
