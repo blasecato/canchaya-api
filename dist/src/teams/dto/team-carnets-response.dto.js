@@ -9,16 +9,60 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TeamCarnetsResponseDto = exports.TeamCarnetPlayerResponseDto = exports.TeamCarnetTournamentResponseDto = void 0;
+exports.TeamCarnetsResponseDto = exports.TeamCarnetPlayerResponseDto = exports.TeamCarnetTournamentResponseDto = exports.TeamCarnetSponsorResponseDto = exports.TeamCarnetOrganizationResponseDto = void 0;
 const openapi = require("@nestjs/swagger");
 const swagger_1 = require("@nestjs/swagger");
+class TeamCarnetOrganizationResponseDto {
+    id;
+    name;
+    logoUrl;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { id: { required: true, type: () => String }, name: { required: true, type: () => String }, logoUrl: { required: true, type: () => String, nullable: true } };
+    }
+}
+exports.TeamCarnetOrganizationResponseDto = TeamCarnetOrganizationResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '1', type: String }),
+    __metadata("design:type", String)
+], TeamCarnetOrganizationResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Liga Deportiva Laboyana' }),
+    __metadata("design:type", String)
+], TeamCarnetOrganizationResponseDto.prototype, "name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '/uploads/associations/logo.webp', nullable: true }),
+    __metadata("design:type", Object)
+], TeamCarnetOrganizationResponseDto.prototype, "logoUrl", void 0);
+class TeamCarnetSponsorResponseDto {
+    id;
+    name;
+    logoUrl;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { id: { required: true, type: () => String }, name: { required: true, type: () => String }, logoUrl: { required: true, type: () => String, nullable: true } };
+    }
+}
+exports.TeamCarnetSponsorResponseDto = TeamCarnetSponsorResponseDto;
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '4', type: String }),
+    __metadata("design:type", String)
+], TeamCarnetSponsorResponseDto.prototype, "id", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 'Almacén El Gol' }),
+    __metadata("design:type", String)
+], TeamCarnetSponsorResponseDto.prototype, "name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: '/uploads/sponsors/logo.webp', nullable: true }),
+    __metadata("design:type", Object)
+], TeamCarnetSponsorResponseDto.prototype, "logoUrl", void 0);
 class TeamCarnetTournamentResponseDto {
     id;
     name;
     startDate;
     endDate;
+    organization;
+    sponsors;
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => String }, name: { required: true, type: () => String }, startDate: { required: true, type: () => String }, endDate: { required: true, type: () => String, nullable: true } };
+        return { id: { required: true, type: () => String }, name: { required: true, type: () => String }, startDate: { required: true, type: () => String }, endDate: { required: true, type: () => String, nullable: true }, organization: { required: true, type: () => require("./team-carnets-response.dto").TeamCarnetOrganizationResponseDto }, sponsors: { required: true, type: () => [require("./team-carnets-response.dto").TeamCarnetSponsorResponseDto] } };
     }
 }
 exports.TeamCarnetTournamentResponseDto = TeamCarnetTournamentResponseDto;
@@ -38,6 +82,14 @@ __decorate([
     (0, swagger_1.ApiProperty)({ example: '2026-10-16', format: 'date', nullable: true }),
     __metadata("design:type", Object)
 ], TeamCarnetTournamentResponseDto.prototype, "endDate", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: TeamCarnetOrganizationResponseDto }),
+    __metadata("design:type", TeamCarnetOrganizationResponseDto)
+], TeamCarnetTournamentResponseDto.prototype, "organization", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ type: TeamCarnetSponsorResponseDto, isArray: true }),
+    __metadata("design:type", Array)
+], TeamCarnetTournamentResponseDto.prototype, "sponsors", void 0);
 class TeamCarnetPlayerResponseDto {
     id;
     fullName;
@@ -102,10 +154,12 @@ class TeamCarnetsResponseDto {
     primaryColor;
     secondaryColor;
     photoUrl;
+    organization;
+    sponsors;
     tournaments;
     players;
     static _OPENAPI_METADATA_FACTORY() {
-        return { teamId: { required: true, type: () => String }, teamName: { required: true, type: () => String }, sportType: { required: true, type: () => String }, modality: { required: true, type: () => String, nullable: true }, primaryColor: { required: true, type: () => String, nullable: true }, secondaryColor: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, tournaments: { required: true, type: () => [require("./team-carnets-response.dto").TeamCarnetTournamentResponseDto] }, players: { required: true, type: () => [require("./team-carnets-response.dto").TeamCarnetPlayerResponseDto] } };
+        return { teamId: { required: true, type: () => String }, teamName: { required: true, type: () => String }, sportType: { required: true, type: () => String }, modality: { required: true, type: () => String, nullable: true }, primaryColor: { required: true, type: () => String, nullable: true }, secondaryColor: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, organization: { required: true, type: () => require("./team-carnets-response.dto").TeamCarnetOrganizationResponseDto, nullable: true }, sponsors: { required: true, type: () => [require("./team-carnets-response.dto").TeamCarnetSponsorResponseDto] }, tournaments: { required: true, type: () => [require("./team-carnets-response.dto").TeamCarnetTournamentResponseDto] }, players: { required: true, type: () => [require("./team-carnets-response.dto").TeamCarnetPlayerResponseDto] } };
     }
 }
 exports.TeamCarnetsResponseDto = TeamCarnetsResponseDto;
@@ -137,6 +191,22 @@ __decorate([
     (0, swagger_1.ApiProperty)({ example: '/uploads/teams/team.webp', nullable: true }),
     __metadata("design:type", Object)
 ], TeamCarnetsResponseDto.prototype, "photoUrl", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        type: TeamCarnetOrganizationResponseDto,
+        nullable: true,
+        description: 'Organización del torneo más reciente: es la que se imprime en el carné.',
+    }),
+    __metadata("design:type", Object)
+], TeamCarnetsResponseDto.prototype, "organization", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        type: TeamCarnetSponsorResponseDto,
+        isArray: true,
+        description: 'Patrocinadores del torneo que se imprimen al respaldo del carné.',
+    }),
+    __metadata("design:type", Array)
+], TeamCarnetsResponseDto.prototype, "sponsors", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ type: TeamCarnetTournamentResponseDto, isArray: true }),
     __metadata("design:type", Array)

@@ -3,11 +3,12 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { RequireRoles } from '../auth/decorators/require-roles.decorator';
@@ -16,6 +17,7 @@ import { ParseBigIntPipe } from '../common/pipes/parse-big-int.pipe';
 import {
   AdvanceCompetitionDto,
   PreviewCompetitionDto,
+  UpdateCompetitionLineupDto,
 } from './competition.dto';
 import { CompetitionService } from './competition.service';
 
@@ -52,6 +54,21 @@ export class CompetitionController {
   ) {
     return this.service.generate(id, req.auth.userId, dto);
   }
+  @Patch('lineup')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
+  @ApiOperation({
+    summary: 'Reacomodar los equipos dentro del sorteo',
+    description:
+      'Cambia qué equipo ocupa cada lugar del sorteo. Los partidos se reasignan al titular nuevo; si hay partidos jugados se exige confirmación.',
+  })
+  updateLineup(
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Req() request: AuthenticatedRequest,
+    @Body() dto: UpdateCompetitionLineupDto,
+  ) {
+    return this.service.updateLineup(id, request.auth.userId, dto);
+  }
+
   @Post('advance') @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN') advance(
     @Param('id', ParseBigIntPipe) id: bigint,
     @Req() req: AuthenticatedRequest,

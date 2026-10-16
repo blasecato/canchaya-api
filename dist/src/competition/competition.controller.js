@@ -39,6 +39,9 @@ let CompetitionController = class CompetitionController {
     generate(id, req, dto) {
         return this.service.generate(id, req.auth.userId, dto);
     }
+    updateLineup(id, request, dto) {
+        return this.service.updateLineup(id, request.auth.userId, dto);
+    }
     advance(id, req, dto) {
         return this.service.advance(id, req.auth.userId, dto);
     }
@@ -85,6 +88,21 @@ __decorate([
     __metadata("design:paramtypes", [BigInt, Object, competition_dto_1.PreviewCompetitionDto]),
     __metadata("design:returntype", void 0)
 ], CompetitionController.prototype, "generate", null);
+__decorate([
+    (0, common_1.Patch)('lineup'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Reacomodar los equipos dentro del sorteo',
+        description: 'Cambia qué equipo ocupa cada lugar del sorteo. Los partidos se reasignan al titular nuevo; si hay partidos jugados se exige confirmación.',
+    }),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object, competition_dto_1.UpdateCompetitionLineupDto]),
+    __metadata("design:returntype", void 0)
+], CompetitionController.prototype, "updateLineup", null);
 __decorate([
     (0, common_1.Post)('advance'),
     (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),

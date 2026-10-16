@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AdvanceCompetitionDto = exports.PreviewCompetitionDto = exports.ReorganizeOptionsDto = exports.REORGANIZE_MODES = exports.CompetitionScheduleDto = exports.CompetitionConfigDto = void 0;
+exports.AdvanceCompetitionDto = exports.UpdateCompetitionLineupDto = exports.CompetitionSlotAssignmentDto = exports.PreviewCompetitionDto = exports.ReorganizeOptionsDto = exports.REORGANIZE_MODES = exports.CompetitionScheduleDto = exports.CompetitionConfigDto = void 0;
 const openapi = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
@@ -170,6 +170,51 @@ __decorate([
     (0, class_validator_1.MaxLength)(1000),
     __metadata("design:type", String)
 ], PreviewCompetitionDto.prototype, "changeReason", void 0);
+class CompetitionSlotAssignmentDto {
+    slotId;
+    teamId;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { slotId: { required: true, type: () => String, maxLength: 40 }, teamId: { required: false, type: () => String, nullable: true } };
+    }
+}
+exports.CompetitionSlotAssignmentDto = CompetitionSlotAssignmentDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(40),
+    __metadata("design:type", String)
+], CompetitionSlotAssignmentDto.prototype, "slotId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, is_big_int_string_decorator_1.IsBigIntString)(),
+    __metadata("design:type", Object)
+], CompetitionSlotAssignmentDto.prototype, "teamId", void 0);
+class UpdateCompetitionLineupDto {
+    slots;
+    confirmPlayedMatches;
+    reason;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { slots: { required: true, type: () => [require("./competition.dto").CompetitionSlotAssignmentDto], maxItems: 10001 }, confirmPlayedMatches: { required: false, type: () => Boolean, enum: [true] }, reason: { required: false, type: () => String, maxLength: 500 } };
+    }
+}
+exports.UpdateCompetitionLineupDto = UpdateCompetitionLineupDto;
+__decorate([
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayMaxSize)(10001),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => CompetitionSlotAssignmentDto),
+    __metadata("design:type", Array)
+], UpdateCompetitionLineupDto.prototype, "slots", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)([true]),
+    __metadata("design:type", Boolean)
+], UpdateCompetitionLineupDto.prototype, "confirmPlayedMatches", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(500),
+    __metadata("design:type", String)
+], UpdateCompetitionLineupDto.prototype, "reason", void 0);
 class AdvanceCompetitionDto {
     expectedStage;
     schedule;

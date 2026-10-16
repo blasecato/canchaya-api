@@ -1,7 +1,7 @@
 import { Prisma } from '../../generated/prisma/client';
 import { CompetitionAccessService } from '../authorization/competition-access.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { AdvanceCompetitionDto, CompetitionScheduleDto, PreviewCompetitionDto } from './competition.dto';
+import { AdvanceCompetitionDto, CompetitionScheduleDto, PreviewCompetitionDto, UpdateCompetitionLineupDto } from './competition.dto';
 import { type CompetitionPlan, type CompetitionStage } from './competition.engine';
 export declare function scheduleFixtures(stage: CompetitionStage, schedule: CompetitionScheduleDto): {
     matchDate: string | null;
@@ -77,6 +77,85 @@ export declare class CompetitionService {
         advanceBlocker: null;
     } | {
         reorganization: null;
+        plan: CompetitionPlan;
+        label: string;
+        teams: {
+            id: string;
+            teamId: string | null;
+            name: string;
+            placeholder: boolean;
+        }[];
+        stages: {
+            tables: {
+                group: string;
+                rows: import("./competition.engine").Standing[];
+            }[];
+            matches: {
+                id: string | null;
+                matchDate: string | null;
+                venue: string | null;
+                status: string;
+                homeScore: number | null;
+                awayScore: number | null;
+                homePenalties: number | null;
+                awayPenalties: number | null;
+                refereeName: string | null;
+                refereeStatus: string | null;
+                key: string;
+                home: string;
+                away: string;
+                round: number;
+                group: string;
+                durationMinutes?: number;
+            }[];
+            id: number;
+            label: string;
+            kind: "points" | "knockout";
+            groups: {
+                name: string;
+                teams: string[];
+            }[];
+            fixtures: import("./competition.engine").Fixture[];
+            byes: string[];
+            resolved: boolean;
+        }[];
+        canAdvance: boolean;
+        advanceBlocker: string | null;
+    }>;
+    updateLineup(id: bigint, actor: bigint, dto: UpdateCompetitionLineupDto): Promise<{
+        lineup: {
+            movedTeams: number;
+            updatedMatches: number;
+            playedMatches: number;
+            freedSlots: number;
+            removedMatches?: undefined;
+        } | {
+            movedTeams: number;
+            updatedMatches: number;
+            removedMatches: number;
+            playedMatches: number;
+            freedSlots?: undefined;
+        };
+        plan: null;
+        stages: never[];
+        teams: never[];
+        label: null;
+        canAdvance: boolean;
+        advanceBlocker: null;
+    } | {
+        lineup: {
+            movedTeams: number;
+            updatedMatches: number;
+            playedMatches: number;
+            freedSlots: number;
+            removedMatches?: undefined;
+        } | {
+            movedTeams: number;
+            updatedMatches: number;
+            removedMatches: number;
+            playedMatches: number;
+            freedSlots?: undefined;
+        };
         plan: CompetitionPlan;
         label: string;
         teams: {

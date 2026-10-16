@@ -29,6 +29,15 @@ export declare class PreviewCompetitionDto {
     teamIds: string[];
     changeReason?: string;
 }
+export declare class CompetitionSlotAssignmentDto {
+    slotId: string;
+    teamId?: string | null;
+}
+export declare class UpdateCompetitionLineupDto {
+    slots: CompetitionSlotAssignmentDto[];
+    confirmPlayedMatches?: boolean;
+    reason?: string;
+}
 export declare class AdvanceCompetitionDto {
     expectedStage: number;
     schedule: CompetitionScheduleDto;

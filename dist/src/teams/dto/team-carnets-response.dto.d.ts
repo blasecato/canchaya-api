@@ -1,8 +1,20 @@
+export declare class TeamCarnetOrganizationResponseDto {
+    id: string;
+    name: string;
+    logoUrl: string | null;
+}
+export declare class TeamCarnetSponsorResponseDto {
+    id: string;
+    name: string;
+    logoUrl: string | null;
+}
 export declare class TeamCarnetTournamentResponseDto {
     id: string;
     name: string;
     startDate: string;
     endDate: string | null;
+    organization: TeamCarnetOrganizationResponseDto;
+    sponsors: TeamCarnetSponsorResponseDto[];
 }
 export declare class TeamCarnetPlayerResponseDto {
     id: string;
@@ -24,6 +36,8 @@ export declare class TeamCarnetsResponseDto {
     primaryColor: string | null;
     secondaryColor: string | null;
     photoUrl: string | null;
+    organization: TeamCarnetOrganizationResponseDto | null;
+    sponsors: TeamCarnetSponsorResponseDto[];
     tournaments: TeamCarnetTournamentResponseDto[];
     players: TeamCarnetPlayerResponseDto[];
 }

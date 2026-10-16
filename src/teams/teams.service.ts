@@ -874,6 +874,18 @@ export class TeamsService {
                 name: true,
                 start_date: true,
                 end_date: true,
+                associations: {
+                  select: { id: true, name: true, logo_url: true },
+                },
+                tournament_sponsors: {
+                  where: { status: 'active' },
+                  orderBy: [{ sponsors: { name: 'asc' } }],
+                  select: {
+                    sponsors: {
+                      select: { id: true, name: true, logo_url: true },
+                    },
+                  },
+                },
               },
             },
           },
@@ -887,6 +899,28 @@ export class TeamsService {
       );
     }
 
+    const carnetOrganizations = team.tournament_team_registrations.map(
+      ({ tournaments }) => ({
+        id: tournaments.associations.id.toString(),
+        name: tournaments.associations.name,
+        logoUrl: tournaments.associations.logo_url,
+      }),
+    );
+    const toSponsors = (
+      rows: { sponsors: { id: bigint; name: string; logo_url: string | null } }[],
+    ) =>
+      rows.map(({ sponsors }) => ({
+        id: sponsors.id.toString(),
+        name: sponsors.name,
+        logoUrl: sponsors.logo_url,
+      }));
+    // Los patrocinadores del respaldo son los del torneo más reciente, el mismo
+    // criterio con el que se elige la organización.
+    const carnetSponsors = toSponsors(
+      team.tournament_team_registrations[0]?.tournaments.tournament_sponsors ??
+        [],
+    );
+
     return {
       teamId: team.id.toString(),
       teamName: team.name,
@@ -895,12 +929,22 @@ export class TeamsService {
       primaryColor: team.primary_color,
       secondaryColor: team.secondary_color,
       photoUrl: team.photo_url,
+      // El carné lleva el escudo de la organización que administra el torneo;
+      // con varios torneos se usa el más reciente, que es el primero del orden.
+      organization: carnetOrganizations[0] ?? null,
+      sponsors: carnetSponsors,
       tournaments: team.tournament_team_registrations.map(
         ({ tournaments }) => ({
           id: tournaments.id.toString(),
           name: tournaments.name,
           startDate: tournaments.start_date.toISOString().slice(0, 10),
           endDate: tournaments.end_date?.toISOString().slice(0, 10) ?? null,
+          organization: {
+            id: tournaments.associations.id.toString(),
+            name: tournaments.associations.name,
+            logoUrl: tournaments.associations.logo_url,
+          },
+          sponsors: toSponsors(tournaments.tournament_sponsors),
         }),
       ),
       players: team.team_members.map(

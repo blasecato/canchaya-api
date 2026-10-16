@@ -392,6 +392,151 @@ let CompetitionService = class CompetitionService {
         });
         return { ...(await this.get(id, actor)), reorganization };
     }
+    async updateLineup(id, actor, dto) {
+        await this.access.assertCanManageTournament(actor, id);
+        const summary = await this.prisma.$transaction(async (tx) => {
+            await tx.$queryRaw `SELECT id FROM tournaments WHERE id = ${id} FOR UPDATE`;
+            const tournament = await this.tournament(tx, id);
+            if (['archived', 'cancelled'].includes(tournament.phase))
+                throw new common_1.BadRequestException('Un torneo archivado o cancelado ya no se puede reacomodar.');
+            const plan = (0, competition_engine_1.readPlan)(tournament.competition_plan);
+            if (!plan || plan.version !== 2 || !plan.slots)
+                throw new common_1.BadRequestException('Este torneo todavía no tiene un sorteo que se pueda reacomodar.');
+            const approved = tournament.tournament_team_registrations
+                .filter((row) => row.request_status === 'approved')
+                .map((row) => ({
+                id: row.team_id.toString(),
+                name: row.teams.name,
+            }));
+            const approvedById = new Map(approved.map((team) => [team.id, team]));
+            const slotIds = new Set(plan.slots.map(({ id: slotId }) => slotId));
+            const assignments = new Map();
+            for (const slot of dto.slots) {
+                if (!slotIds.has(slot.slotId))
+                    throw new common_1.BadRequestException('La distribución enviada no coincide con el sorteo actual. Actualiza la página.');
+                const teamId = slot.teamId ?? null;
+                if (teamId && !approvedById.has(teamId))
+                    throw new common_1.BadRequestException('Solo puedes ubicar equipos aprobados en este torneo.');
+                assignments.set(slot.slotId, teamId);
+            }
+            const seen = new Map();
+            for (const [slotId, teamId] of assignments) {
+                if (!teamId)
+                    continue;
+                const previous = seen.get(teamId);
+                if (previous)
+                    throw new common_1.BadRequestException(`${approvedById.get(teamId)?.name ?? 'Un equipo'} quedó ubicado en dos lugares del sorteo. Déjalo en uno solo.`);
+                seen.set(teamId, slotId);
+            }
+            const next = plan.slots.map((slot) => ({
+                ...slot,
+                teamId: assignments.has(slot.id)
+                    ? (assignments.get(slot.id) ?? null)
+                    : slot.teamId,
+            }));
+            const placed = new Set(next.flatMap(({ teamId }) => teamId ?? []));
+            const unplaced = approved.filter((team) => !placed.has(team.id));
+            if (unplaced.length > 0)
+                throw new common_1.BadRequestException(`Falta ubicar ${unplaced.length === 1 ? 'un equipo' : `${unplaced.length} equipos`} en el sorteo: ${unplaced
+                    .map(({ name }) => name)
+                    .join(', ')}.`);
+            const changedSlots = next.filter((slot, index) => slot.teamId !== plan.slots[index].teamId);
+            if (changedSlots.length === 0)
+                return {
+                    movedTeams: 0,
+                    updatedMatches: 0,
+                    playedMatches: 0,
+                    freedSlots: 0,
+                };
+            const fixtures = plan.stages.flatMap((stage) => stage.fixtures.map((fixture) => ({
+                key: fixture.key,
+                home: fixture.home,
+                away: fixture.away,
+            })));
+            const slotTeam = new Map(next.map((slot) => [slot.id, slot.teamId]));
+            const touchedKeys = fixtures
+                .filter((fixture) => changedSlots.some(({ id: slotId }) => slotId === fixture.home || slotId === fixture.away))
+                .map(({ key }) => key);
+            const playedMatches = await tx.matches.count({
+                where: {
+                    tournament_id: id,
+                    competition_key: { in: touchedKeys },
+                    status: { in: CompetitionService_1.PLAYED_STATUSES },
+                },
+            });
+            if (playedMatches > 0 && !dto.confirmPlayedMatches)
+                throw new common_1.ConflictException(`Este cambio afecta ${playedMatches} partido${playedMatches === 1 ? ' ya jugado' : 's ya jugados'}: su marcador quedará a nombre del equipo que ocupe ese lugar. Confirma para continuar.`);
+            let updatedMatches = 0;
+            let removedMatches = 0;
+            for (const fixture of fixtures) {
+                if (!touchedKeys.includes(fixture.key))
+                    continue;
+                const homeTeamId = slotTeam.get(fixture.home) ?? null;
+                const awayTeamId = slotTeam.get(fixture.away) ?? null;
+                if (!homeTeamId || !awayTeamId) {
+                    const { count } = await tx.matches.deleteMany({
+                        where: {
+                            tournament_id: id,
+                            competition_key: fixture.key,
+                            status: { notIn: CompetitionService_1.PLAYED_STATUSES },
+                        },
+                    });
+                    removedMatches += count;
+                    continue;
+                }
+                const { count } = await tx.matches.updateMany({
+                    where: { tournament_id: id, competition_key: fixture.key },
+                    data: {
+                        home_team_id: BigInt(homeTeamId),
+                        away_team_id: BigInt(awayTeamId),
+                        updated_at: new Date(),
+                    },
+                });
+                updatedMatches += count;
+            }
+            plan.slots = next;
+            for (const stage of plan.stages.slice(0, 1))
+                for (const group of stage.groups)
+                    for (const competitorId of group.teams) {
+                        const teamId = slotTeam.get(competitorId);
+                        if (!teamId)
+                            continue;
+                        await tx.tournament_team_registrations.update({
+                            where: {
+                                tournament_id_team_id: {
+                                    tournament_id: id,
+                                    team_id: BigInt(teamId),
+                                },
+                            },
+                            data: {
+                                group_name: group.name,
+                                seed: plan.teamIds.indexOf(competitorId) + 1,
+                                updated_at: new Date(),
+                            },
+                        });
+                    }
+            await tx.tournaments.update({
+                where: { id },
+                data: {
+                    competition_plan: JSON.parse(JSON.stringify({
+                        ...plan,
+                        lineupReason: dto.reason?.trim() || null,
+                    })),
+                    updated_at: new Date(),
+                },
+            });
+            return {
+                movedTeams: changedSlots.length,
+                updatedMatches,
+                removedMatches,
+                playedMatches,
+            };
+        }, {
+            isolationLevel: client_1.Prisma.TransactionIsolationLevel.Serializable,
+            timeout: 30000,
+        });
+        return { ...(await this.get(id, actor)), lineup: summary };
+    }
     async get(id, actor) {
         const tournament = await this.tournament(this.prisma, id);
         if (!['registration', 'scheduled', 'in_progress', 'finished'].includes(tournament.phase))

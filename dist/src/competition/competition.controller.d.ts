@@ -1,5 +1,5 @@
 import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-request.interface';
-import { AdvanceCompetitionDto, PreviewCompetitionDto } from './competition.dto';
+import { AdvanceCompetitionDto, PreviewCompetitionDto, UpdateCompetitionLineupDto } from './competition.dto';
 import { CompetitionService } from './competition.service';
 export declare class CompetitionController {
     private readonly service;
@@ -110,6 +110,85 @@ export declare class CompetitionController {
         advanceBlocker: null;
     } | {
         reorganization: null;
+        plan: import("./competition.engine").CompetitionPlan;
+        label: string;
+        teams: {
+            id: string;
+            teamId: string | null;
+            name: string;
+            placeholder: boolean;
+        }[];
+        stages: {
+            tables: {
+                group: string;
+                rows: import("./competition.engine").Standing[];
+            }[];
+            matches: {
+                id: string | null;
+                matchDate: string | null;
+                venue: string | null;
+                status: string;
+                homeScore: number | null;
+                awayScore: number | null;
+                homePenalties: number | null;
+                awayPenalties: number | null;
+                refereeName: string | null;
+                refereeStatus: string | null;
+                key: string;
+                home: string;
+                away: string;
+                round: number;
+                group: string;
+                durationMinutes?: number;
+            }[];
+            id: number;
+            label: string;
+            kind: "points" | "knockout";
+            groups: {
+                name: string;
+                teams: string[];
+            }[];
+            fixtures: import("./competition.engine").Fixture[];
+            byes: string[];
+            resolved: boolean;
+        }[];
+        canAdvance: boolean;
+        advanceBlocker: string | null;
+    }>;
+    updateLineup(id: bigint, request: AuthenticatedRequest, dto: UpdateCompetitionLineupDto): Promise<{
+        lineup: {
+            movedTeams: number;
+            updatedMatches: number;
+            playedMatches: number;
+            freedSlots: number;
+            removedMatches?: undefined;
+        } | {
+            movedTeams: number;
+            updatedMatches: number;
+            removedMatches: number;
+            playedMatches: number;
+            freedSlots?: undefined;
+        };
+        plan: null;
+        stages: never[];
+        teams: never[];
+        label: null;
+        canAdvance: boolean;
+        advanceBlocker: null;
+    } | {
+        lineup: {
+            movedTeams: number;
+            updatedMatches: number;
+            playedMatches: number;
+            freedSlots: number;
+            removedMatches?: undefined;
+        } | {
+            movedTeams: number;
+            updatedMatches: number;
+            removedMatches: number;
+            playedMatches: number;
+            freedSlots?: undefined;
+        };
         plan: import("./competition.engine").CompetitionPlan;
         label: string;
         teams: {

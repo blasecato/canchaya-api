@@ -717,6 +717,18 @@ let TeamsService = class TeamsService {
                                 name: true,
                                 start_date: true,
                                 end_date: true,
+                                associations: {
+                                    select: { id: true, name: true, logo_url: true },
+                                },
+                                tournament_sponsors: {
+                                    where: { status: 'active' },
+                                    orderBy: [{ sponsors: { name: 'asc' } }],
+                                    select: {
+                                        sponsors: {
+                                            select: { id: true, name: true, logo_url: true },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -726,6 +738,18 @@ let TeamsService = class TeamsService {
         if (!team || team.status !== 'active') {
             throw new common_1.NotFoundException(`El equipo con ID ${id.toString()} no existe.`);
         }
+        const carnetOrganizations = team.tournament_team_registrations.map(({ tournaments }) => ({
+            id: tournaments.associations.id.toString(),
+            name: tournaments.associations.name,
+            logoUrl: tournaments.associations.logo_url,
+        }));
+        const toSponsors = (rows) => rows.map(({ sponsors }) => ({
+            id: sponsors.id.toString(),
+            name: sponsors.name,
+            logoUrl: sponsors.logo_url,
+        }));
+        const carnetSponsors = toSponsors(team.tournament_team_registrations[0]?.tournaments.tournament_sponsors ??
+            []);
         return {
             teamId: team.id.toString(),
             teamName: team.name,
@@ -734,11 +758,19 @@ let TeamsService = class TeamsService {
             primaryColor: team.primary_color,
             secondaryColor: team.secondary_color,
             photoUrl: team.photo_url,
+            organization: carnetOrganizations[0] ?? null,
+            sponsors: carnetSponsors,
             tournaments: team.tournament_team_registrations.map(({ tournaments }) => ({
                 id: tournaments.id.toString(),
                 name: tournaments.name,
                 startDate: tournaments.start_date.toISOString().slice(0, 10),
                 endDate: tournaments.end_date?.toISOString().slice(0, 10) ?? null,
+                organization: {
+                    id: tournaments.associations.id.toString(),
+                    name: tournaments.associations.name,
+                    logoUrl: tournaments.associations.logo_url,
+                },
+                sponsors: toSponsors(tournaments.tournament_sponsors),
             })),
             players: team.team_members.map(({ user_id, users, tournament_team_players }) => ({
                 id: user_id.toString(),

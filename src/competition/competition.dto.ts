@@ -76,6 +76,29 @@ export class PreviewCompetitionDto {
   teamIds!: string[];
   @IsOptional() @IsString() @MaxLength(1000) changeReason?: string;
 }
+/** Un lugar del sorteo y el equipo que lo ocupa; `null` lo deja libre. */
+export class CompetitionSlotAssignmentDto {
+  @IsString() @MaxLength(40) slotId!: string;
+
+  @IsOptional() @IsBigIntString() teamId?: string | null;
+}
+
+export class UpdateCompetitionLineupDto {
+  @IsArray()
+  @ArrayMaxSize(10001)
+  @ValidateNested({ each: true })
+  @Type(() => CompetitionSlotAssignmentDto)
+  slots!: CompetitionSlotAssignmentDto[];
+
+  /**
+   * Confirma que se aceptan los avisos sobre partidos ya jugados. Sin esto, un
+   * cambio que afecte resultados se rechaza explicando qué pasaría.
+   */
+  @IsOptional() @IsIn([true]) confirmPlayedMatches?: boolean;
+
+  @IsOptional() @IsString() @MaxLength(500) reason?: string;
+}
+
 export class AdvanceCompetitionDto {
   @IsInt() @Min(1) expectedStage!: number;
   @IsDefined()

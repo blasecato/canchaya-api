@@ -11,6 +11,7 @@ import {
   AdvanceCompetitionDto,
   CompetitionScheduleDto,
   PreviewCompetitionDto,
+  UpdateCompetitionLineupDto,
   type ReorganizeMode,
 } from './competition.dto';
 import {
@@ -525,6 +526,212 @@ export class CompetitionService {
     );
     return { ...(await this.get(id, actor)), reorganization };
   }
+  /**
+   * Reasigna qué equipo ocupa cada lugar del sorteo. Los partidos siguen a su
+   * lugar: al cambiar el titular de un puesto, sus partidos pasan al equipo
+   * nuevo con el marcador que ya tuvieran. Por eso un cambio que toque
+   * partidos jugados exige confirmación explícita del administrador.
+   */
+  async updateLineup(
+    id: bigint,
+    actor: bigint,
+    dto: UpdateCompetitionLineupDto,
+  ) {
+    await this.access.assertCanManageTournament(actor, id);
+
+    const summary = await this.prisma.$transaction(
+      async (tx) => {
+        await tx.$queryRaw`SELECT id FROM tournaments WHERE id = ${id} FOR UPDATE`;
+        const tournament = await this.tournament(tx, id);
+        if (['archived', 'cancelled'].includes(tournament.phase))
+          throw new BadRequestException(
+            'Un torneo archivado o cancelado ya no se puede reacomodar.',
+          );
+
+        const plan = readPlan(tournament.competition_plan);
+        if (!plan || plan.version !== 2 || !plan.slots)
+          throw new BadRequestException(
+            'Este torneo todavía no tiene un sorteo que se pueda reacomodar.',
+          );
+
+        const approved = tournament.tournament_team_registrations
+          .filter((row) => row.request_status === 'approved')
+          .map((row) => ({
+            id: row.team_id.toString(),
+            name: row.teams.name,
+          }));
+        const approvedById = new Map(approved.map((team) => [team.id, team]));
+        const slotIds = new Set(plan.slots.map(({ id: slotId }) => slotId));
+
+        // 1. La petición debe hablar de lugares que existen y de equipos
+        //    aprobados; cualquier otra cosa es un error del cliente.
+        const assignments = new Map<string, string | null>();
+        for (const slot of dto.slots) {
+          if (!slotIds.has(slot.slotId))
+            throw new BadRequestException(
+              'La distribución enviada no coincide con el sorteo actual. Actualiza la página.',
+            );
+          const teamId = slot.teamId ?? null;
+          if (teamId && !approvedById.has(teamId))
+            throw new BadRequestException(
+              'Solo puedes ubicar equipos aprobados en este torneo.',
+            );
+          assignments.set(slot.slotId, teamId);
+        }
+
+        // 2. Ningún equipo puede quedar en dos lugares.
+        const seen = new Map<string, string>();
+        for (const [slotId, teamId] of assignments) {
+          if (!teamId) continue;
+          const previous = seen.get(teamId);
+          if (previous)
+            throw new BadRequestException(
+              `${approvedById.get(teamId)?.name ?? 'Un equipo'} quedó ubicado en dos lugares del sorteo. Déjalo en uno solo.`,
+            );
+          seen.set(teamId, slotId);
+        }
+
+        const next = plan.slots.map((slot) => ({
+          ...slot,
+          teamId: assignments.has(slot.id)
+            ? (assignments.get(slot.id) ?? null)
+            : slot.teamId,
+        }));
+
+        // 3. Los equipos aprobados que quedaron sin lugar se informan, porque
+        //    quedarían fuera de la competencia sin que nadie lo note.
+        const placed = new Set(next.flatMap(({ teamId }) => teamId ?? []));
+        const unplaced = approved.filter((team) => !placed.has(team.id));
+        if (unplaced.length > 0)
+          throw new BadRequestException(
+            `Falta ubicar ${unplaced.length === 1 ? 'un equipo' : `${unplaced.length} equipos`} en el sorteo: ${unplaced
+              .map(({ name }) => name)
+              .join(', ')}.`,
+          );
+
+        const changedSlots = next.filter(
+          (slot, index) => slot.teamId !== plan.slots![index].teamId,
+        );
+        if (changedSlots.length === 0)
+          return {
+            movedTeams: 0,
+            updatedMatches: 0,
+            playedMatches: 0,
+            freedSlots: 0,
+          };
+
+        // 4. Los partidos del torneo se reasignan al titular nuevo de cada
+        //    lugar. Se avisa cuántos ya se habían jugado.
+        const fixtures = plan.stages.flatMap((stage) =>
+          stage.fixtures.map((fixture) => ({
+            key: fixture.key,
+            home: fixture.home,
+            away: fixture.away,
+          })),
+        );
+        const slotTeam = new Map(next.map((slot) => [slot.id, slot.teamId]));
+        const touchedKeys = fixtures
+          .filter(
+            (fixture) =>
+              changedSlots.some(
+                ({ id: slotId }) =>
+                  slotId === fixture.home || slotId === fixture.away,
+              ),
+          )
+          .map(({ key }) => key);
+
+        const playedMatches = await tx.matches.count({
+          where: {
+            tournament_id: id,
+            competition_key: { in: touchedKeys },
+            status: { in: CompetitionService.PLAYED_STATUSES },
+          },
+        });
+        if (playedMatches > 0 && !dto.confirmPlayedMatches)
+          throw new ConflictException(
+            `Este cambio afecta ${playedMatches} partido${playedMatches === 1 ? ' ya jugado' : 's ya jugados'}: su marcador quedará a nombre del equipo que ocupe ese lugar. Confirma para continuar.`,
+          );
+
+        let updatedMatches = 0;
+        let removedMatches = 0;
+        for (const fixture of fixtures) {
+          if (!touchedKeys.includes(fixture.key)) continue;
+          const homeTeamId = slotTeam.get(fixture.home) ?? null;
+          const awayTeamId = slotTeam.get(fixture.away) ?? null;
+          if (!homeTeamId || !awayTeamId) {
+            // El lugar quedó libre: el partido deja de tener rival y se retira.
+            const { count } = await tx.matches.deleteMany({
+              where: {
+                tournament_id: id,
+                competition_key: fixture.key,
+                status: { notIn: CompetitionService.PLAYED_STATUSES },
+              },
+            });
+            removedMatches += count;
+            continue;
+          }
+          const { count } = await tx.matches.updateMany({
+            where: { tournament_id: id, competition_key: fixture.key },
+            data: {
+              home_team_id: BigInt(homeTeamId),
+              away_team_id: BigInt(awayTeamId),
+              updated_at: new Date(),
+            },
+          });
+          updatedMatches += count;
+        }
+
+        // 5. Grupo y número de sorteo de cada inscripción siguen al equipo.
+        plan.slots = next;
+        for (const stage of plan.stages.slice(0, 1))
+          for (const group of stage.groups)
+            for (const competitorId of group.teams) {
+              const teamId = slotTeam.get(competitorId);
+              if (!teamId) continue;
+              await tx.tournament_team_registrations.update({
+                where: {
+                  tournament_id_team_id: {
+                    tournament_id: id,
+                    team_id: BigInt(teamId),
+                  },
+                },
+                data: {
+                  group_name: group.name,
+                  seed: plan.teamIds.indexOf(competitorId) + 1,
+                  updated_at: new Date(),
+                },
+              });
+            }
+
+        await tx.tournaments.update({
+          where: { id },
+          data: {
+            competition_plan: JSON.parse(
+              JSON.stringify({
+                ...plan,
+                lineupReason: dto.reason?.trim() || null,
+              }),
+            ) as Prisma.InputJsonValue,
+            updated_at: new Date(),
+          },
+        });
+
+        return {
+          movedTeams: changedSlots.length,
+          updatedMatches,
+          removedMatches,
+          playedMatches,
+        };
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+        timeout: 30000,
+      },
+    );
+
+    return { ...(await this.get(id, actor)), lineup: summary };
+  }
+
   async get(id: bigint, actor: bigint) {
     const tournament = await this.tournament(this.prisma, id);
     if (
