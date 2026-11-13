@@ -133,6 +133,9 @@ let TournamentsService = TournamentsService_1 = class TournamentsService {
                 ? { OR: [publicVisibility, managementVisibility] }
                 : publicVisibility;
         const where = {
+            name: query.search
+                ? { contains: query.search, mode: 'insensitive' }
+                : undefined,
             association_id: query.associationId
                 ? BigInt(query.associationId)
                 : undefined,

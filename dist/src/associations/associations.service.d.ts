@@ -1,3 +1,4 @@
+import { PublicAssociationResponseDto } from './dto/public-association-response.dto';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ImageStorageService } from '../uploads/image-storage.service';
@@ -15,6 +16,7 @@ export declare class AssociationsService {
     constructor(prisma: PrismaService, imageStorage: ImageStorageService);
     create(createAssociationDto: CreateAssociationDto, logo: UploadedImageFile, cover: UploadedImageFile, requestingUserId: bigint): Promise<AssociationResponseDto>;
     findAll(requestingUserId?: bigint): Promise<AssociationResponseDto[]>;
+    findPublicDirectory(): Promise<PublicAssociationResponseDto[]>;
     private hasRole;
     private pinFeaturedAssociation;
     findMine(requestingUserId: bigint): Promise<AssociationResponseDto[]>;

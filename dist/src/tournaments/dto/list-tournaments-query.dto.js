@@ -19,6 +19,7 @@ const tournament_lifecycle_constants_1 = require("../tournament-lifecycle.consta
 const tournament_category_constants_1 = require("../tournament-category.constants");
 const trimString = ({ value }) => typeof value === 'string' ? value.trim() : value;
 class ListTournamentsQueryDto {
+    search;
     associationId;
     managedOnly;
     tournamentTypeId;
@@ -30,10 +31,22 @@ class ListTournamentsQueryDto {
     page = 1;
     pageSize = 10;
     static _OPENAPI_METADATA_FACTORY() {
-        return { associationId: { required: false, type: () => String }, managedOnly: { required: false, type: () => Boolean }, tournamentTypeId: { required: false, type: () => String }, category: { required: false, type: () => String, maxLength: 120 }, categoryGender: { required: false, enum: ["male", "female", "open", "mixed"], enum: tournament_category_constants_1.TOURNAMENT_CATEGORY_GENDERS }, dateFrom: { required: false, type: () => String }, dateTo: { required: false, type: () => String }, phase: { required: false, enum: ["cancelled", "registration", "scheduled", "in_progress", "finished", "archived"], enum: tournament_lifecycle_constants_1.TOURNAMENT_PHASES }, page: { required: true, type: () => Object, default: 1, minimum: 1 }, pageSize: { required: true, type: () => Object, default: 10, minimum: 1, maximum: 10 } };
+        return { search: { required: false, type: () => String, maxLength: 120 }, associationId: { required: false, type: () => String }, managedOnly: { required: false, type: () => Boolean }, tournamentTypeId: { required: false, type: () => String }, category: { required: false, type: () => String, maxLength: 120 }, categoryGender: { required: false, enum: ["open", "male", "female", "mixed"], enum: tournament_category_constants_1.TOURNAMENT_CATEGORY_GENDERS }, dateFrom: { required: false, type: () => String }, dateTo: { required: false, type: () => String }, phase: { required: false, enum: ["cancelled", "registration", "scheduled", "in_progress", "finished", "archived"], enum: tournament_lifecycle_constants_1.TOURNAMENT_PHASES }, page: { required: true, type: () => Object, default: 1, minimum: 1 }, pageSize: { required: true, type: () => Object, default: 10, minimum: 1, maximum: 10 } };
     }
 }
 exports.ListTournamentsQueryDto = ListTournamentsQueryDto;
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 'Copa',
+        maxLength: 120,
+        description: 'Busca por nombre del torneo, sin distinguir mayúsculas.',
+    }),
+    (0, class_transformer_1.Transform)(trimString),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(120),
+    __metadata("design:type", String)
+], ListTournamentsQueryDto.prototype, "search", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: '1', type: String }),
     (0, class_transformer_1.Transform)(trimString),

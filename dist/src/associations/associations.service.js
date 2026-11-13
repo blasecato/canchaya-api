@@ -94,6 +94,26 @@ let AssociationsService = AssociationsService_1 = class AssociationsService {
         const response = await this.toAssociationResponsesWithTeamCounts(associations);
         return isPlayer ? this.pinFeaturedAssociation(response) : response;
     }
+    async findPublicDirectory() {
+        const associations = await this.prisma.associations.findMany({
+            where: { status: 'active' },
+            orderBy: { name: 'asc' },
+            select: {
+                id: true,
+                name: true,
+                city: true,
+                logo_url: true,
+                users: { select: { full_name: true } },
+            },
+        });
+        return associations.map((association) => ({
+            id: association.id.toString(),
+            name: association.name,
+            city: association.city,
+            logoUrl: association.logo_url,
+            ownerName: association.users.full_name,
+        }));
+    }
     async hasRole(userId, roleCode) {
         return Boolean(await this.prisma.user_roles.findFirst({
             where: { user_id: userId, role_code: roleCode },

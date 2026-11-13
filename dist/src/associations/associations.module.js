@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AssociationsModule = void 0;
+const public_associations_controller_1 = require("./public-associations.controller");
 const common_1 = require("@nestjs/common");
 const auth_module_1 = require("../auth/auth.module");
 const uploads_module_1 = require("../uploads/uploads.module");
@@ -24,6 +25,7 @@ exports.AssociationsModule = AssociationsModule = __decorate([
             associations_controller_1.AssociationsController,
             association_announcements_controller_1.AssociationAnnouncementsController,
             association_announcements_controller_1.PublicAssociationAnnouncementsController,
+            public_associations_controller_1.PublicAssociationsController,
         ],
         providers: [associations_service_1.AssociationsService, association_announcements_service_1.AssociationAnnouncementsService],
         exports: [associations_service_1.AssociationsService],
