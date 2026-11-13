@@ -1,3 +1,4 @@
+import { PublicAssociationResponseDto } from './dto/public-association-response.dto';
 import {
   BadRequestException,
   ForbiddenException,
@@ -149,6 +150,29 @@ export class AssociationsService {
       await this.toAssociationResponsesWithTeamCounts(associations);
 
     return isPlayer ? this.pinFeaturedAssociation(response) : response;
+  }
+
+  /** Directorio público: organizaciones activas con su administrador. */
+  async findPublicDirectory(): Promise<PublicAssociationResponseDto[]> {
+    const associations = await this.prisma.associations.findMany({
+      where: { status: 'active' },
+      orderBy: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        city: true,
+        logo_url: true,
+        users: { select: { full_name: true } },
+      },
+    });
+
+    return associations.map((association) => ({
+      id: association.id.toString(),
+      name: association.name,
+      city: association.city,
+      logoUrl: association.logo_url,
+      ownerName: association.users.full_name,
+    }));
   }
 
   private async hasRole(userId: bigint, roleCode: string): Promise<boolean> {

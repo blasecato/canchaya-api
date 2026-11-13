@@ -25,6 +25,17 @@ const trimString = ({ value }: TransformFnParams): unknown =>
   typeof value === 'string' ? value.trim() : value;
 
 export class ListTournamentsQueryDto {
+  @ApiPropertyOptional({
+    example: 'Copa',
+    maxLength: 120,
+    description: 'Busca por nombre del torneo, sin distinguir mayúsculas.',
+  })
+  @Transform(trimString)
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  search?: string;
+
   @ApiPropertyOptional({ example: '1', type: String })
   @Transform(trimString)
   @IsOptional()

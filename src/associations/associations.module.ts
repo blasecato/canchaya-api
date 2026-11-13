@@ -1,3 +1,4 @@
+import { PublicAssociationsController } from './public-associations.controller';
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { UploadsModule } from '../uploads/uploads.module';
@@ -15,6 +16,7 @@ import { AssociationAnnouncementsService } from './association-announcements.ser
     AssociationsController,
     AssociationAnnouncementsController,
     PublicAssociationAnnouncementsController,
+    PublicAssociationsController,
   ],
   providers: [AssociationsService, AssociationAnnouncementsService],
   exports: [AssociationsService],

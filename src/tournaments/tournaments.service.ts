@@ -239,6 +239,9 @@ export class TournamentsService {
         : publicVisibility;
 
     const where: Prisma.tournamentsWhereInput = {
+      name: query.search
+        ? { contains: query.search, mode: 'insensitive' }
+        : undefined,
       association_id: query.associationId
         ? BigInt(query.associationId)
         : undefined,
