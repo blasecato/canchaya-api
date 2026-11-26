@@ -163,6 +163,7 @@ export declare const ModelName: {
     readonly auth_sessions: "auth_sessions";
     readonly association_administrators: "association_administrators";
     readonly associations: "associations";
+    readonly competition_templates: "competition_templates";
     readonly association_announcements: "association_announcements";
     readonly home_hero_slides: "home_hero_slides";
     readonly password_reset_codes: "password_reset_codes";
@@ -206,7 +207,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "auth_sessions" | "association_administrators" | "associations" | "association_announcements" | "home_hero_slides" | "password_reset_codes" | "disciplinary_actions" | "fines" | "match_referees" | "matches" | "referee_availability" | "referee_assignment_events" | "player_match_stats" | "roles" | "sponsors" | "suspensions" | "disciplinary_appeals" | "disciplinary_events" | "team_members" | "teams" | "tournament_administrators" | "tournament_referees" | "tournament_sponsors" | "tournament_team_players" | "tournament_team_registrations" | "notifications" | "notification_preferences" | "tournament_registration_events" | "tournament_card_charges" | "tournament_lifecycle_events" | "tournament_types" | "tournaments" | "user_roles" | "users";
+        modelProps: "auth_sessions" | "association_administrators" | "associations" | "competition_templates" | "association_announcements" | "home_hero_slides" | "password_reset_codes" | "disciplinary_actions" | "fines" | "match_referees" | "matches" | "referee_availability" | "referee_assignment_events" | "player_match_stats" | "roles" | "sponsors" | "suspensions" | "disciplinary_appeals" | "disciplinary_events" | "team_members" | "teams" | "tournament_administrators" | "tournament_referees" | "tournament_sponsors" | "tournament_team_players" | "tournament_team_registrations" | "notifications" | "notification_preferences" | "tournament_registration_events" | "tournament_card_charges" | "tournament_lifecycle_events" | "tournament_types" | "tournaments" | "user_roles" | "users";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -429,6 +430,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 count: {
                     args: Prisma.associationsCountArgs<ExtArgs>;
                     result: runtime.Types.Utils.Optional<Prisma.AssociationsCountAggregateOutputType> | number;
+                };
+            };
+        };
+        competition_templates: {
+            payload: Prisma.$competition_templatesPayload<ExtArgs>;
+            fields: Prisma.competition_templatesFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.competition_templatesFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$competition_templatesPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.competition_templatesFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$competition_templatesPayload>;
+                };
+                findFirst: {
+                    args: Prisma.competition_templatesFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$competition_templatesPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.competition_templatesFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$competition_templatesPayload>;
+                };
+                findMany: {
+                    args: Prisma.competition_templatesFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$competition_templatesPayload>[];
+                };
+                create: {
+                    args: Prisma.competition_templatesCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$competition_templatesPayload>;
+                };
+                createMany: {
+                    args: Prisma.competition_templatesCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.competition_templatesCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$competition_templatesPayload>[];
+                };
+                delete: {
+                    args: Prisma.competition_templatesDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$competition_templatesPayload>;
+                };
+                update: {
+                    args: Prisma.competition_templatesUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$competition_templatesPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.competition_templatesDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.competition_templatesUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.competition_templatesUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$competition_templatesPayload>[];
+                };
+                upsert: {
+                    args: Prisma.competition_templatesUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$competition_templatesPayload>;
+                };
+                aggregate: {
+                    args: Prisma.Competition_templatesAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateCompetition_templates>;
+                };
+                groupBy: {
+                    args: Prisma.competition_templatesGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Competition_templatesGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.competition_templatesCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.Competition_templatesCountAggregateOutputType> | number;
                 };
             };
         };
@@ -2793,6 +2868,18 @@ export declare const AssociationsScalarFieldEnum: {
     readonly updated_at: "updated_at";
 };
 export type AssociationsScalarFieldEnum = (typeof AssociationsScalarFieldEnum)[keyof typeof AssociationsScalarFieldEnum];
+export declare const Competition_templatesScalarFieldEnum: {
+    readonly id: "id";
+    readonly association_id: "association_id";
+    readonly name: "name";
+    readonly description: "description";
+    readonly mode: "mode";
+    readonly blueprints: "blueprints";
+    readonly created_by: "created_by";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Competition_templatesScalarFieldEnum = (typeof Competition_templatesScalarFieldEnum)[keyof typeof Competition_templatesScalarFieldEnum];
 export declare const Association_announcementsScalarFieldEnum: {
     readonly id: "id";
     readonly association_id: "association_id";
@@ -3094,6 +3181,7 @@ export declare const Tournament_team_registrationsScalarFieldEnum: {
     readonly group_name: "group_name";
     readonly seed: "seed";
     readonly points: "points";
+    readonly lineup: "lineup";
     readonly created_at: "created_at";
     readonly updated_at: "updated_at";
 };
@@ -3259,6 +3347,10 @@ export declare const SortOrder: {
     readonly desc: "desc";
 };
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
+export declare const JsonNullValueInput: {
+    readonly JsonNull: runtime.JsonNullClass;
+};
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
 export declare const NullableJsonNullValueInput: {
     readonly DbNull: runtime.DbNullClass;
     readonly JsonNull: runtime.JsonNullClass;
@@ -3286,12 +3378,12 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>;
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>;
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>;
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>;
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>;
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>;
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>;
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>;
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>;
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>;
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>;
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>;
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>;
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>;
@@ -3326,6 +3418,7 @@ export type GlobalOmitConfig = {
     auth_sessions?: Prisma.auth_sessionsOmit;
     association_administrators?: Prisma.association_administratorsOmit;
     associations?: Prisma.associationsOmit;
+    competition_templates?: Prisma.competition_templatesOmit;
     association_announcements?: Prisma.association_announcementsOmit;
     home_hero_slides?: Prisma.home_hero_slidesOmit;
     password_reset_codes?: Prisma.password_reset_codesOmit;

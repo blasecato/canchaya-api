@@ -13,7 +13,7 @@ export declare class RefereesController {
         items: {
             id: string;
             fullName: string;
-            email: string;
+            email: string | null;
             phone: string | null;
             idNumber: string;
             documentType: string;

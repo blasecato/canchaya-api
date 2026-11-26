@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -16,6 +17,7 @@ import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-requ
 import { ParseBigIntPipe } from '../common/pipes/parse-big-int.pipe';
 import {
   AdvanceCompetitionDto,
+  CreateCompetitionTemplateDto,
   PreviewCompetitionDto,
   UpdateCompetitionLineupDto,
 } from './competition.dto';
@@ -75,5 +77,37 @@ export class CompetitionController {
     @Body() dto: AdvanceCompetitionDto,
   ) {
     return this.service.advance(id, req.auth.userId, dto);
+  }
+
+  @Get('templates')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
+  @ApiOperation({ summary: 'Listar plantillas de formato guardadas' })
+  listTemplates(
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    return this.service.listTemplates(id, req.auth.userId);
+  }
+
+  @Post('templates')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
+  @ApiOperation({ summary: 'Guardar formato como plantilla reutilizable' })
+  createTemplate(
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Req() req: AuthenticatedRequest,
+    @Body() dto: CreateCompetitionTemplateDto,
+  ) {
+    return this.service.createTemplate(id, req.auth.userId, dto);
+  }
+
+  @Delete('templates/:templateId')
+  @RequireRoles('SUPER_ADMIN', 'ASSOCIATION_ADMIN')
+  @ApiOperation({ summary: 'Eliminar una plantilla guardada' })
+  deleteTemplate(
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Param('templateId', ParseBigIntPipe) templateId: bigint,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    return this.service.deleteTemplate(id, templateId, req.auth.userId);
   }
 }

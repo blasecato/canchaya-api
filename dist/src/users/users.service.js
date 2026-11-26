@@ -32,12 +32,17 @@ let UsersService = UsersService_1 = class UsersService {
         this.identityVerification = identityVerification;
         this.mailService = mailService;
     }
-    async registerPlayer(dto, files) {
+    async registerPlayer(dto, files = {}) {
         this.assertValidBirthDate(dto.birthDate);
-        this.assertDeclaredAgeMatchesBirthDate(dto.birthDate, dto.age);
-        await this.assertUserIdentifiersAreAvailable(dto.idNumber, dto.email);
-        const identityCheck = await this.identityVerification.verify(files.documentFront, files.documentBack, dto.idNumber, dto.birthDate, dto.fullName);
-        if (!identityCheck.verified) {
+        if (dto.age !== undefined) {
+            this.assertDeclaredAgeMatchesBirthDate(dto.birthDate, dto.age);
+        }
+        await this.assertUserIdentifiersAreAvailable(dto.idNumber, dto.phone, dto.email);
+        const hasDocumentPhotos = Boolean(files.documentFront && files.documentBack);
+        const identityCheck = hasDocumentPhotos
+            ? await this.identityVerification.verify(files.documentFront, files.documentBack, dto.idNumber, dto.birthDate, dto.fullName)
+            : null;
+        if (identityCheck && !identityCheck.verified) {
             this.logger.warn(`Documento sin confirmar para la cédula ${dto.idNumber}: ` +
                 `${identityCheck.outcome} (${JSON.stringify(identityCheck.details)})`);
         }
@@ -45,12 +50,13 @@ let UsersService = UsersService_1 = class UsersService {
         let documentFrontAsset = null;
         let documentBackAsset = null;
         try {
-            photoAsset = await this.imageStorage.saveUserPhoto(files.photo);
-            documentFrontAsset = await this.imageStorage.saveIdentityDocument(files.documentFront, 'front');
-            documentBackAsset = await this.imageStorage.saveIdentityDocument(files.documentBack, 'back');
-            const persistedPhoto = photoAsset;
-            const persistedDocumentFront = documentFrontAsset;
-            const persistedDocumentBack = documentBackAsset;
+            if (files.photo) {
+                photoAsset = await this.imageStorage.saveUserPhoto(files.photo);
+            }
+            if (files.documentFront && files.documentBack) {
+                documentFrontAsset = await this.imageStorage.saveIdentityDocument(files.documentFront, 'front');
+                documentBackAsset = await this.imageStorage.saveIdentityDocument(files.documentBack, 'back');
+            }
             const user = await this.prisma.$transaction(async (transaction) => {
                 const created = await transaction.users.create({
                     data: {
@@ -58,24 +64,28 @@ let UsersService = UsersService_1 = class UsersService {
                         document_type: 'CC',
                         full_name: dto.fullName,
                         birth_date: new Date(dto.birthDate),
-                        birth_city: dto.birthCity,
+                        birth_city: dto.birthCity ?? null,
                         gender: dto.gender,
-                        email: dto.email,
-                        phone: dto.phone || null,
-                        photo_url: persistedPhoto.url,
-                        photo_public_id: persistedPhoto.publicId,
-                        document_front_url: persistedDocumentFront.url,
-                        document_front_public_id: persistedDocumentFront.publicId,
-                        document_front_format: persistedDocumentFront.format,
-                        document_back_url: persistedDocumentBack.url,
-                        document_back_public_id: persistedDocumentBack.publicId,
-                        document_back_format: persistedDocumentBack.format,
-                        identity_verified_at: identityCheck.verified ? new Date() : null,
-                        identity_verification_status: identityCheck.verified
+                        email: dto.email ?? null,
+                        phone: dto.phone,
+                        photo_url: photoAsset?.url ?? null,
+                        photo_public_id: photoAsset?.publicId ?? null,
+                        document_front_url: documentFrontAsset?.url ?? null,
+                        document_front_public_id: documentFrontAsset?.publicId ?? null,
+                        document_front_format: documentFrontAsset?.format ?? null,
+                        document_back_url: documentBackAsset?.url ?? null,
+                        document_back_public_id: documentBackAsset?.publicId ?? null,
+                        document_back_format: documentBackAsset?.format ?? null,
+                        identity_verified_at: identityCheck === null || identityCheck.verified
+                            ? new Date()
+                            : null,
+                        identity_verification_status: identityCheck === null || identityCheck.verified
                             ? 'verified'
                             : 'pending_review',
-                        identity_verification_details: identityCheck.details,
-                        identity_verification_checked_at: new Date(),
+                        identity_verification_details: identityCheck
+                            ? identityCheck.details
+                            : client_1.Prisma.JsonNull,
+                        identity_verification_checked_at: identityCheck ? new Date() : null,
                         password_hash: await (0, bcryptjs_1.hash)(dto.password, 12),
                         status: 'active',
                     },
@@ -87,7 +97,9 @@ let UsersService = UsersService_1 = class UsersService {
                 return this.findUserInTransaction(transaction, created.id);
             });
             const response = (0, public_user_mapper_1.toPublicUserResponse)(user);
-            await this.sendWelcomeEmail(response.email, response.fullName);
+            if (response.email) {
+                await this.sendWelcomeEmail(response.email, response.fullName);
+            }
             return response;
         }
         catch (error) {
@@ -98,8 +110,8 @@ let UsersService = UsersService_1 = class UsersService {
             ]);
             if (error instanceof client_1.Prisma.PrismaClientKnownRequestError &&
                 error.code === 'P2002') {
-                await this.assertUserIdentifiersAreAvailable(dto.idNumber, dto.email);
-                throw new common_1.ConflictException('Ya existe una cuenta con ese documento o correo electrónico.');
+                await this.assertUserIdentifiersAreAvailable(dto.idNumber, dto.phone, dto.email);
+                throw new common_1.ConflictException('Ya existe una cuenta con ese documento, teléfono o correo electrónico.');
             }
             throw error;
         }
@@ -124,22 +136,39 @@ let UsersService = UsersService_1 = class UsersService {
             throw new common_1.BadRequestException(`La edad indicada no coincide con la fecha de nacimiento. Para esa fecha la edad actual es ${expectedAge} años.`);
         }
     }
-    async assertUserIdentifiersAreAvailable(idNumber, email) {
-        const [documentOwner, emailOwner] = await Promise.all([
+    async assertUserIdentifiersAreAvailable(idNumber, phone, email) {
+        const phoneVariants = [
+            phone,
+            `+57${phone}`,
+            `+57 ${phone}`,
+            `57${phone}`,
+            `+57 ${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6)}`,
+            `${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6)}`,
+        ];
+        const [documentOwner, phoneOwner, emailOwner] = await Promise.all([
             this.prisma.users.findUnique({
                 where: { id_number: idNumber },
                 select: { id: true },
             }),
             this.prisma.users.findFirst({
-                where: { email: { equals: email, mode: 'insensitive' } },
+                where: { phone: { in: phoneVariants } },
                 select: { id: true },
             }),
+            email
+                ? this.prisma.users.findFirst({
+                    where: { email: { equals: email, mode: 'insensitive' } },
+                    select: { id: true },
+                })
+                : Promise.resolve(null),
         ]);
         if (documentOwner && emailOwner) {
             throw new common_1.ConflictException('Ya existe una cuenta con ese número de identidad y ese correo electrónico.');
         }
         if (documentOwner) {
             throw new common_1.ConflictException('Ya existe una cuenta con ese número de identidad.');
+        }
+        if (phoneOwner) {
+            throw new common_1.ConflictException('Ya existe una cuenta registrada con ese número de teléfono celular.');
         }
         if (emailOwner) {
             throw new common_1.ConflictException('Ya existe una cuenta con ese correo electrónico.');

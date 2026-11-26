@@ -20,7 +20,7 @@ export declare class RefereeAssignmentsController {
         referee: {
             id: string;
             fullName: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
         };
         match: {
@@ -57,7 +57,7 @@ export declare class RefereeAssignmentsController {
         referee: {
             id: string;
             fullName: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
         };
         match: {
@@ -94,7 +94,7 @@ export declare class RefereeAssignmentsController {
         referee: {
             id: string;
             fullName: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
         };
         match: {
@@ -131,7 +131,7 @@ export declare class RefereeAssignmentsController {
         referee: {
             id: string;
             fullName: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
         };
         match: {

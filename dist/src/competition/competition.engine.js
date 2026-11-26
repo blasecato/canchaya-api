@@ -550,7 +550,7 @@ function readPlan(value) {
     return value &&
         typeof value === 'object' &&
         'version' in value &&
-        (value.version === 1 || value.version === 2)
+        (value.version === 1 || value.version === 2 || value.version === 3)
         ? value
         : null;
 }
@@ -565,6 +565,6 @@ function assignedTeamIds(plan) {
         .filter((teamId) => teamId !== null);
 }
 function hasUnfilledSlots(plan) {
-    return (plan.version === 2 && Boolean(plan.slots?.some(({ teamId }) => !teamId)));
+    return (plan.version >= 2 && Boolean(plan.slots?.some(({ teamId }) => !teamId)));
 }
 //# sourceMappingURL=competition.engine.js.map

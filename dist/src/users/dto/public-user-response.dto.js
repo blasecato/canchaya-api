@@ -33,7 +33,7 @@ class PublicUserResponseDto {
     createdAt;
     updatedAt;
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => String }, idNumber: { required: true, type: () => String }, documentType: { required: true, type: () => String }, fullName: { required: true, type: () => String }, birthDate: { required: true, type: () => String }, birthCity: { required: true, type: () => String, nullable: true }, gender: { required: true, nullable: true, enum: ["male", "female", "non_binary", "prefer_not_to_say"] }, email: { required: true, type: () => String }, phone: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, hasIdentityDocuments: { required: true, type: () => Boolean }, status: { required: true, type: () => String }, blockReason: { required: true, type: () => String, nullable: true }, blockedUntil: { required: true, type: () => String, nullable: true }, identityVerificationStatus: { required: true, enum: ["verified", "pending_review"] }, roles: { required: true, type: () => [String] }, createdAt: { required: true, type: () => String }, updatedAt: { required: true, type: () => String } };
+        return { id: { required: true, type: () => String }, idNumber: { required: true, type: () => String }, documentType: { required: true, type: () => String }, fullName: { required: true, type: () => String }, birthDate: { required: true, type: () => String }, birthCity: { required: true, type: () => String, nullable: true }, gender: { required: true, nullable: true, enum: ["male", "female", "non_binary", "prefer_not_to_say"] }, email: { required: true, type: () => String, nullable: true }, phone: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, hasIdentityDocuments: { required: true, type: () => Boolean }, status: { required: true, type: () => String }, blockReason: { required: true, type: () => String, nullable: true }, blockedUntil: { required: true, type: () => String, nullable: true }, identityVerificationStatus: { required: true, enum: ["verified", "pending_review"] }, roles: { required: true, type: () => [String] }, createdAt: { required: true, type: () => String }, updatedAt: { required: true, type: () => String } };
     }
 }
 exports.PublicUserResponseDto = PublicUserResponseDto;
@@ -66,8 +66,8 @@ __decorate([
     __metadata("design:type", Object)
 ], PublicUserResponseDto.prototype, "gender", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'maria@example.com', format: 'email' }),
-    __metadata("design:type", String)
+    (0, swagger_1.ApiProperty)({ example: 'maria@example.com', format: 'email', nullable: true }),
+    __metadata("design:type", Object)
 ], PublicUserResponseDto.prototype, "email", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: '+573001234567', nullable: true }),

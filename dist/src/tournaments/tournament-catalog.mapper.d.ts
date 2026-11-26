@@ -7,6 +7,10 @@ export declare const tournamentCatalogItemSelect: {
             id: true;
             name: true;
             logo_url: true;
+            city: true;
+            address: true;
+            phone: true;
+            email: true;
             users: {
                 select: {
                     full_name: true;

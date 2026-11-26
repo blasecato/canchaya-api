@@ -20,7 +20,7 @@ export declare class PlayersService {
             birthDate: string;
             gender: string | null;
             age: number;
-            email: string;
+            email: string | null;
             phone: string | null;
             photoUrl: string | null;
             status: string;
@@ -67,7 +67,7 @@ export declare class PlayersService {
         birthDate: string;
         gender: string | null;
         age: number;
-        email: string;
+        email: string | null;
         phone: string | null;
         photoUrl: string | null;
         status: string;
@@ -94,7 +94,7 @@ export declare class PlayersService {
         birthDate: string;
         gender: string | null;
         age: number;
-        email: string;
+        email: string | null;
         phone: string | null;
         photoUrl: string | null;
         status: string;
@@ -121,7 +121,7 @@ export declare class PlayersService {
         birthDate: string;
         gender: string | null;
         age: number;
-        email: string;
+        email: string | null;
         phone: string | null;
         photoUrl: string | null;
         status: string;
@@ -149,7 +149,7 @@ export declare class PlayersService {
         birthDate: string;
         gender: string | null;
         age: number;
-        email: string;
+        email: string | null;
         phone: string | null;
         photoUrl: string | null;
         status: string;

@@ -4,13 +4,13 @@ export declare const DOCUMENT_TYPES: readonly ["CC", "TI", "CE", "PA"];
 export declare class RosterImportPlayerDto {
     row: number;
     fullName: string;
-    email: string;
-    phone?: string;
+    email?: string;
+    phone: string;
     documentType: string;
     idNumber: string;
     birthDate: string;
     gender: string;
-    position: string;
+    position?: string;
     jerseyNumber?: number;
     isCaptain?: boolean;
 }

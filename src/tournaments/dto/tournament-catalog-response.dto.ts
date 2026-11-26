@@ -11,6 +11,18 @@ export class TournamentCatalogAssociationDto {
   @ApiProperty({ nullable: true, example: '/uploads/associations/logo.png' })
   logoUrl!: string | null;
 
+  @ApiProperty({ nullable: true, example: 'Pitalito' })
+  city!: string | null;
+
+  @ApiProperty({ nullable: true, example: 'Calle 5 # 4-20, Centro' })
+  address!: string | null;
+
+  @ApiProperty({ nullable: true, example: '3001234567' })
+  phone!: string | null;
+
+  @ApiProperty({ nullable: true, example: 'contacto@organizacion.com' })
+  email!: string | null;
+
   @ApiProperty({
     example: 'Laura Martínez',
     description: 'Administrador principal de la organización.',

@@ -11,16 +11,16 @@ import { RegisterPlayerDto } from './dto/register-player.dto';
 import { MailService } from '../mail/mail.service';
 import { IdentityVerificationService } from './identity-verification.service';
 export type RegisterPlayerFiles = {
-    photo: UploadedImageFile;
-    documentFront: UploadedImageFile;
-    documentBack: UploadedImageFile;
+    photo?: UploadedImageFile;
+    documentFront?: UploadedImageFile;
+    documentBack?: UploadedImageFile;
 };
 export type AdministratorExportItem = {
     fullName: string;
     documentType: string;
     idNumber: string;
     phone: string | null;
-    email: string;
+    email: string | null;
     status: string;
     roles: string[];
     associations: Array<{
@@ -35,7 +35,7 @@ export declare class UsersService {
     private readonly mailService;
     private readonly logger;
     constructor(prisma: PrismaService, imageStorage: ImageStorageService, identityVerification: IdentityVerificationService, mailService: MailService);
-    registerPlayer(dto: RegisterPlayerDto, files: RegisterPlayerFiles): Promise<PublicUserResponseDto>;
+    registerPlayer(dto: RegisterPlayerDto, files?: RegisterPlayerFiles): Promise<PublicUserResponseDto>;
     private sendWelcomeEmail;
     private assertDeclaredAgeMatchesBirthDate;
     private assertUserIdentifiersAreAvailable;
@@ -43,7 +43,7 @@ export declare class UsersService {
         id: bigint;
         created_at: Date;
         status: string;
-        email: string;
+        email: string | null;
         phone: string | null;
         updated_at: Date;
         photo_url: string | null;
@@ -78,7 +78,7 @@ export declare class UsersService {
             fullName: string;
             birthDate: string;
             birthCity: string | null;
-            email: string;
+            email: string | null;
             phone: string | null;
             photoUrl: string | null;
             status: string;
@@ -111,7 +111,7 @@ export declare class UsersService {
         id: bigint;
         created_at: Date;
         status: string;
-        email: string;
+        email: string | null;
         phone: string | null;
         updated_at: Date;
         photo_url: string | null;
@@ -145,7 +145,7 @@ export declare class UsersService {
         id: bigint;
         created_at: Date;
         status: string;
-        email: string;
+        email: string | null;
         phone: string | null;
         updated_at: Date;
         photo_url: string | null;

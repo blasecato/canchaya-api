@@ -17,9 +17,13 @@ class TournamentCatalogAssociationDto {
     id;
     name;
     logoUrl;
+    city;
+    address;
+    phone;
+    email;
     ownerName;
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => String }, name: { required: true, type: () => String }, logoUrl: { required: true, type: () => String, nullable: true }, ownerName: { required: true, type: () => String } };
+        return { id: { required: true, type: () => String }, name: { required: true, type: () => String }, logoUrl: { required: true, type: () => String, nullable: true }, city: { required: true, type: () => String, nullable: true }, address: { required: true, type: () => String, nullable: true }, phone: { required: true, type: () => String, nullable: true }, email: { required: true, type: () => String, nullable: true }, ownerName: { required: true, type: () => String } };
     }
 }
 exports.TournamentCatalogAssociationDto = TournamentCatalogAssociationDto;
@@ -35,6 +39,22 @@ __decorate([
     (0, swagger_1.ApiProperty)({ nullable: true, example: '/uploads/associations/logo.png' }),
     __metadata("design:type", Object)
 ], TournamentCatalogAssociationDto.prototype, "logoUrl", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ nullable: true, example: 'Pitalito' }),
+    __metadata("design:type", Object)
+], TournamentCatalogAssociationDto.prototype, "city", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ nullable: true, example: 'Calle 5 # 4-20, Centro' }),
+    __metadata("design:type", Object)
+], TournamentCatalogAssociationDto.prototype, "address", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ nullable: true, example: '3001234567' }),
+    __metadata("design:type", Object)
+], TournamentCatalogAssociationDto.prototype, "phone", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ nullable: true, example: 'contacto@organizacion.com' }),
+    __metadata("design:type", Object)
+], TournamentCatalogAssociationDto.prototype, "email", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         example: 'Laura Martínez',

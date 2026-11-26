@@ -104,7 +104,8 @@ export declare class TeamsService {
         items: {
             id: string;
             fullName: string;
-            email: string;
+            email: string | null;
+            phone: string | null;
         }[];
         page: number;
         pageSize: number;

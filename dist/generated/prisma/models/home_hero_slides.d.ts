@@ -453,13 +453,6 @@ export type IntFieldUpdateOperationsInput = {
     multiply?: number;
     divide?: number;
 };
-export type NullableBigIntFieldUpdateOperationsInput = {
-    set?: bigint | number | null;
-    increment?: bigint | number;
-    decrement?: bigint | number;
-    multiply?: bigint | number;
-    divide?: bigint | number;
-};
 export type home_hero_slidesCreateNestedManyWithoutUsersInput = {
     create?: Prisma.XOR<Prisma.home_hero_slidesCreateWithoutUsersInput, Prisma.home_hero_slidesUncheckedCreateWithoutUsersInput> | Prisma.home_hero_slidesCreateWithoutUsersInput[] | Prisma.home_hero_slidesUncheckedCreateWithoutUsersInput[];
     connectOrCreate?: Prisma.home_hero_slidesCreateOrConnectWithoutUsersInput | Prisma.home_hero_slidesCreateOrConnectWithoutUsersInput[];

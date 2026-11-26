@@ -23,8 +23,8 @@ export class PublicUserResponseDto {
   @ApiProperty({ enum: USER_GENDERS, nullable: true })
   gender!: UserGender | null;
 
-  @ApiProperty({ example: 'maria@example.com', format: 'email' })
-  email!: string;
+  @ApiProperty({ example: 'maria@example.com', format: 'email', nullable: true })
+  email!: string | null;
 
   @ApiProperty({ example: '+573001234567', nullable: true })
   phone!: string | null;

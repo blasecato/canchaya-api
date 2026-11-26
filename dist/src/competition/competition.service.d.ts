@@ -1,8 +1,9 @@
 import { Prisma } from '../../generated/prisma/client';
 import { CompetitionAccessService } from '../authorization/competition-access.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { AdvanceCompetitionDto, CompetitionScheduleDto, PreviewCompetitionDto, UpdateCompetitionLineupDto } from './competition.dto';
-import { type CompetitionPlan, type CompetitionStage } from './competition.engine';
+import { AdvanceCompetitionDto, CompetitionScheduleDto, CreateCompetitionTemplateDto, PreviewCompetitionDto, UpdateCompetitionLineupDto } from './competition.dto';
+import { type CompetitionConfig, type CompetitionPlan, type CompetitionStage } from './competition.engine';
+import { type StageBlueprint } from './competition.pipeline';
 export declare function scheduleFixtures(stage: CompetitionStage, schedule: CompetitionScheduleDto): {
     matchDate: string | null;
     key: string;
@@ -29,7 +30,9 @@ export declare class CompetitionService {
         totalMatches: number;
         playedMatches: number;
         playedPairings: string[][];
-        currentConfig: import("./competition.engine").CompetitionConfig | null;
+        currentConfig: CompetitionConfig | null;
+        currentBlueprints: StageBlueprint[] | null;
+        currentOrganizationMode: "planned" | "on_the_fly";
         currentSeed: string | null;
         currentLabel: string | null;
         planTeamIds: string[];
@@ -46,8 +49,18 @@ export declare class CompetitionService {
             groupSizes: number[];
             qualified: number;
             byes: number;
-            config: import("./competition.engine").CompetitionConfig;
+            config: CompetitionConfig;
             label: string;
+        }[];
+        templates: {
+            id: string;
+            name: string;
+            description: string | null;
+            mode: "planned" | "on_the_fly";
+            blueprints: StageBlueprint[];
+            label: string;
+            isGlobal: boolean;
+            createdAt: string;
         }[];
     }>;
     private prepare;
@@ -75,6 +88,8 @@ export declare class CompetitionService {
         label: null;
         canAdvance: boolean;
         advanceBlocker: null;
+        needsNextStageConfig?: undefined;
+        canFinishHere?: undefined;
     } | {
         reorganization: null;
         plan: CompetitionPlan;
@@ -118,9 +133,13 @@ export declare class CompetitionService {
             fixtures: import("./competition.engine").Fixture[];
             byes: string[];
             resolved: boolean;
+            blueprintIndex?: number;
+            isPlayIn?: boolean;
         }[];
         canAdvance: boolean;
         advanceBlocker: string | null;
+        needsNextStageConfig: boolean;
+        canFinishHere: boolean;
     }>;
     updateLineup(id: bigint, actor: bigint, dto: UpdateCompetitionLineupDto): Promise<{
         lineup: {
@@ -142,6 +161,8 @@ export declare class CompetitionService {
         label: null;
         canAdvance: boolean;
         advanceBlocker: null;
+        needsNextStageConfig?: undefined;
+        canFinishHere?: undefined;
     } | {
         lineup: {
             movedTeams: number;
@@ -197,9 +218,13 @@ export declare class CompetitionService {
             fixtures: import("./competition.engine").Fixture[];
             byes: string[];
             resolved: boolean;
+            blueprintIndex?: number;
+            isPlayIn?: boolean;
         }[];
         canAdvance: boolean;
         advanceBlocker: string | null;
+        needsNextStageConfig: boolean;
+        canFinishHere: boolean;
     }>;
     get(id: bigint, actor: bigint): Promise<{
         plan: null;
@@ -208,6 +233,8 @@ export declare class CompetitionService {
         label: null;
         canAdvance: boolean;
         advanceBlocker: null;
+        needsNextStageConfig?: undefined;
+        canFinishHere?: undefined;
     } | {
         plan: CompetitionPlan;
         label: string;
@@ -250,9 +277,13 @@ export declare class CompetitionService {
             fixtures: import("./competition.engine").Fixture[];
             byes: string[];
             resolved: boolean;
+            blueprintIndex?: number;
+            isPlayIn?: boolean;
         }[];
         canAdvance: boolean;
         advanceBlocker: string | null;
+        needsNextStageConfig: boolean;
+        canFinishHere: boolean;
     }>;
     advance(id: bigint, actor: bigint, dto: AdvanceCompetitionDto): Promise<{
         plan: null;
@@ -261,6 +292,8 @@ export declare class CompetitionService {
         label: null;
         canAdvance: boolean;
         advanceBlocker: null;
+        needsNextStageConfig?: undefined;
+        canFinishHere?: undefined;
     } | {
         plan: CompetitionPlan;
         label: string;
@@ -303,9 +336,38 @@ export declare class CompetitionService {
             fixtures: import("./competition.engine").Fixture[];
             byes: string[];
             resolved: boolean;
+            blueprintIndex?: number;
+            isPlayIn?: boolean;
         }[];
         canAdvance: boolean;
         advanceBlocker: string | null;
+        needsNextStageConfig: boolean;
+        canFinishHere: boolean;
+    }>;
+    private findTemplatesForAssociation;
+    listTemplates(tournamentId: bigint, actor: bigint): Promise<{
+        id: string;
+        name: string;
+        description: string | null;
+        mode: "planned" | "on_the_fly";
+        blueprints: StageBlueprint[];
+        label: string;
+        isGlobal: boolean;
+        createdAt: string;
+    }[]>;
+    createTemplate(tournamentId: bigint, actor: bigint, dto: CreateCompetitionTemplateDto): Promise<{
+        id: string;
+        name: string;
+        description: string | null;
+        mode: "planned" | "on_the_fly";
+        blueprints: StageBlueprint[];
+        label: string;
+        isGlobal: boolean;
+        createdAt: string;
+    }>;
+    deleteTemplate(tournamentId: bigint, templateId: bigint, actor: bigint): Promise<{
+        deleted: boolean;
+        id: string;
     }>;
     private scores;
     private checkDates;

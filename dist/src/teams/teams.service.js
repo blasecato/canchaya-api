@@ -261,6 +261,7 @@ let TeamsService = class TeamsService {
             OR: query.search
                 ? [
                     { full_name: { contains: query.search, mode: 'insensitive' } },
+                    { phone: { contains: query.search, mode: 'insensitive' } },
                     { email: { contains: query.search, mode: 'insensitive' } },
                 ]
                 : undefined,
@@ -273,7 +274,7 @@ let TeamsService = class TeamsService {
                 orderBy: [{ full_name: 'asc' }, { id: 'asc' }],
                 skip,
                 take: query.pageSize,
-                select: { id: true, full_name: true, email: true },
+                select: { id: true, full_name: true, email: true, phone: true },
             }),
         ]);
         return {
@@ -281,6 +282,7 @@ let TeamsService = class TeamsService {
                 id: player.id.toString(),
                 fullName: player.full_name,
                 email: player.email,
+                phone: player.phone,
             })),
             page: query.page,
             pageSize: query.pageSize,

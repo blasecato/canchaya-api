@@ -316,7 +316,9 @@ export class PlayersService {
       });
       const takenDocuments = new Set(existing.map(({ id_number }) => id_number));
       const takenEmails = new Set(
-        existing.map(({ email }) => email.toLowerCase()),
+        existing
+          .map(({ email }) => email?.toLowerCase())
+          .filter((value): value is string => Boolean(value)),
       );
 
       for (let index = pending.length - 1; index >= 0; index -= 1) {

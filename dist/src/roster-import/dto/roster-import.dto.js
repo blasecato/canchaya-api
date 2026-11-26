@@ -14,16 +14,30 @@ const openapi = require("@nestjs/swagger");
 const swagger_1 = require("@nestjs/swagger");
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+const phone_util_1 = require("../../common/utils/phone.util");
 const user_gender_constants_1 = require("../../users/user-gender.constants");
 exports.MAX_SHEETS_PER_IMPORT = 40;
 exports.MAX_PLAYERS_PER_SHEET = 60;
 exports.DOCUMENT_TYPES = ['CC', 'TI', 'CE', 'PA'];
+const trimOptional = ({ value }) => {
+    if (typeof value !== 'string')
+        return value;
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : undefined;
+};
+const normalizeOptionalEmail = ({ value }) => {
+    if (typeof value !== 'string')
+        return value;
+    const trimmed = value.trim().toLowerCase();
+    return trimmed.length > 0 ? trimmed : undefined;
+};
+const transformPhone = ({ value }) => typeof value === 'string' ? (0, phone_util_1.normalizeColombianPhone)(value) : value;
 class RosterImportPlayerDto {
     row;
     fullName;
     email;
     phone;
-    documentType;
+    documentType = 'CC';
     idNumber;
     birthDate;
     gender;
@@ -31,7 +45,7 @@ class RosterImportPlayerDto {
     jerseyNumber;
     isCaptain;
     static _OPENAPI_METADATA_FACTORY() {
-        return { row: { required: true, type: () => Number, minimum: 1, maximum: 100000 }, fullName: { required: true, type: () => String, minLength: 3, maxLength: 150 }, email: { required: true, type: () => String, maxLength: 180, format: "email" }, phone: { required: false, type: () => String, maxLength: 40 }, documentType: { required: true, type: () => String, enum: exports.DOCUMENT_TYPES }, idNumber: { required: true, type: () => String, minLength: 4, maxLength: 30 }, birthDate: { required: true, type: () => String }, gender: { required: true, type: () => String, enum: user_gender_constants_1.USER_GENDERS }, position: { required: true, type: () => String, maxLength: 60 }, jerseyNumber: { required: false, type: () => Number, minimum: 0, maximum: 999 }, isCaptain: { required: false, type: () => Boolean } };
+        return { row: { required: true, type: () => Number, minimum: 1, maximum: 100000 }, fullName: { required: true, type: () => String, minLength: 3, maxLength: 150 }, email: { required: false, type: () => String, maxLength: 180, format: "email" }, phone: { required: true, type: () => String, pattern: "^3\\d{9}$" }, documentType: { required: true, type: () => String, default: "CC", enum: exports.DOCUMENT_TYPES }, idNumber: { required: true, type: () => String, minLength: 4, maxLength: 30 }, birthDate: { required: true, type: () => String }, gender: { required: true, type: () => String, enum: user_gender_constants_1.USER_GENDERS }, position: { required: false, type: () => String, maxLength: 60 }, jerseyNumber: { required: false, type: () => Number, minimum: 0, maximum: 999 }, isCaptain: { required: false, type: () => Boolean } };
     }
 }
 exports.RosterImportPlayerDto = RosterImportPlayerDto;
@@ -50,20 +64,31 @@ __decorate([
     __metadata("design:type", String)
 ], RosterImportPlayerDto.prototype, "fullName", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'maria.perez@correo.com' }),
+    (0, swagger_1.ApiPropertyOptional)({ example: 'maria.perez@correo.com' }),
+    (0, class_transformer_1.Transform)(normalizeOptionalEmail),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEmail)({}, { message: 'El correo electrónico no es válido.' }),
     (0, class_validator_1.MaxLength)(180),
     __metadata("design:type", String)
 ], RosterImportPlayerDto.prototype, "email", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ example: '3001234567' }),
-    (0, class_validator_1.IsOptional)(),
+    (0, swagger_1.ApiProperty)({ example: '3001234567' }),
+    (0, class_transformer_1.Transform)(transformPhone),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MaxLength)(40),
+    (0, class_validator_1.Matches)(/^3\d{9}$/, {
+        message: 'El teléfono debe ser un celular colombiano de 10 dígitos iniciando en 3 (sin +57).',
+    }),
     __metadata("design:type", String)
 ], RosterImportPlayerDto.prototype, "phone", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ enum: exports.DOCUMENT_TYPES }),
+    (0, swagger_1.ApiPropertyOptional)({ enum: exports.DOCUMENT_TYPES, default: 'CC' }),
+    (0, class_transformer_1.Transform)(({ value }) => {
+        if (typeof value !== 'string')
+            return 'CC';
+        const normalized = value.trim().toUpperCase();
+        return normalized.length > 0 ? normalized : 'CC';
+    }),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsIn)(exports.DOCUMENT_TYPES, {
         message: `El tipo de documento debe ser ${exports.DOCUMENT_TYPES.join(', ')}.`,
     }),
@@ -87,7 +112,9 @@ __decorate([
     __metadata("design:type", String)
 ], RosterImportPlayerDto.prototype, "gender", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Delantero' }),
+    (0, swagger_1.ApiPropertyOptional)({ example: 'Delantero' }),
+    (0, class_transformer_1.Transform)(trimOptional),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MaxLength)(60),
     __metadata("design:type", String)
@@ -116,14 +143,14 @@ class RosterImportTeamDto {
 }
 exports.RosterImportTeamDto = RosterImportTeamDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Deportivo Pitalito', description: 'Nombre de la hoja.' }),
+    (0, swagger_1.ApiProperty)({ example: 'Nombre equipo 1', description: 'Nombre de la hoja.' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(1),
     (0, class_validator_1.MaxLength)(120),
     __metadata("design:type", String)
 ], RosterImportTeamDto.prototype, "sheetName", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Deportivo Pitalito' }),
+    (0, swagger_1.ApiProperty)({ example: 'Nombre equipo 1' }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(2),
     (0, class_validator_1.MaxLength)(120),

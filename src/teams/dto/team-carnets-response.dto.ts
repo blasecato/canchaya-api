@@ -61,8 +61,8 @@ export class TeamCarnetPlayerResponseDto {
   @ApiProperty({ example: '+57 300 123 4567', nullable: true })
   phone!: string | null;
 
-  @ApiProperty({ example: 'jugador@canchaya.test' })
-  email!: string;
+  @ApiProperty({ example: 'jugador@canchaya.test', nullable: true })
+  email!: string | null;
 
   @ApiProperty({ example: '/uploads/users/player.webp', nullable: true })
   photoUrl!: string | null;

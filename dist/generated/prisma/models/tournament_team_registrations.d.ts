@@ -87,6 +87,7 @@ export type Tournament_team_registrationsCountAggregateOutputType = {
     group_name: number;
     seed: number;
     points: number;
+    lineup: number;
     created_at: number;
     updated_at: number;
     _all: number;
@@ -170,6 +171,7 @@ export type Tournament_team_registrationsCountAggregateInputType = {
     group_name?: true;
     seed?: true;
     points?: true;
+    lineup?: true;
     created_at?: true;
     updated_at?: true;
     _all?: true;
@@ -219,6 +221,7 @@ export type Tournament_team_registrationsGroupByOutputType = {
     group_name: string | null;
     seed: number | null;
     points: number;
+    lineup: runtime.JsonValue | null;
     created_at: Date;
     updated_at: Date;
     _count: Tournament_team_registrationsCountAggregateOutputType | null;
@@ -250,6 +253,7 @@ export type tournament_team_registrationsWhereInput = {
     group_name?: Prisma.StringNullableFilter<"tournament_team_registrations"> | string | null;
     seed?: Prisma.IntNullableFilter<"tournament_team_registrations"> | number | null;
     points?: Prisma.IntFilter<"tournament_team_registrations"> | number;
+    lineup?: Prisma.JsonNullableFilter<"tournament_team_registrations">;
     created_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
     updated_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.MatchesListRelationFilter;
@@ -279,6 +283,7 @@ export type tournament_team_registrationsOrderByWithRelationInput = {
     group_name?: Prisma.SortOrderInput | Prisma.SortOrder;
     seed?: Prisma.SortOrderInput | Prisma.SortOrder;
     points?: Prisma.SortOrder;
+    lineup?: Prisma.SortOrderInput | Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
     updated_at?: Prisma.SortOrder;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesOrderByRelationAggregateInput;
@@ -312,6 +317,7 @@ export type tournament_team_registrationsWhereUniqueInput = Prisma.AtLeast<{
     group_name?: Prisma.StringNullableFilter<"tournament_team_registrations"> | string | null;
     seed?: Prisma.IntNullableFilter<"tournament_team_registrations"> | number | null;
     points?: Prisma.IntFilter<"tournament_team_registrations"> | number;
+    lineup?: Prisma.JsonNullableFilter<"tournament_team_registrations">;
     created_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
     updated_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.MatchesListRelationFilter;
@@ -341,6 +347,7 @@ export type tournament_team_registrationsOrderByWithAggregationInput = {
     group_name?: Prisma.SortOrderInput | Prisma.SortOrder;
     seed?: Prisma.SortOrderInput | Prisma.SortOrder;
     points?: Prisma.SortOrder;
+    lineup?: Prisma.SortOrderInput | Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
     updated_at?: Prisma.SortOrder;
     _count?: Prisma.tournament_team_registrationsCountOrderByAggregateInput;
@@ -369,6 +376,7 @@ export type tournament_team_registrationsScalarWhereWithAggregatesInput = {
     group_name?: Prisma.StringNullableWithAggregatesFilter<"tournament_team_registrations"> | string | null;
     seed?: Prisma.IntNullableWithAggregatesFilter<"tournament_team_registrations"> | number | null;
     points?: Prisma.IntWithAggregatesFilter<"tournament_team_registrations"> | number;
+    lineup?: Prisma.JsonNullableWithAggregatesFilter<"tournament_team_registrations">;
     created_at?: Prisma.DateTimeWithAggregatesFilter<"tournament_team_registrations"> | Date | string;
     updated_at?: Prisma.DateTimeWithAggregatesFilter<"tournament_team_registrations"> | Date | string;
 };
@@ -383,6 +391,7 @@ export type tournament_team_registrationsCreateInput = {
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -412,6 +421,7 @@ export type tournament_team_registrationsUncheckedCreateInput = {
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -430,6 +440,7 @@ export type tournament_team_registrationsUpdateInput = {
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -459,6 +470,7 @@ export type tournament_team_registrationsUncheckedUpdateInput = {
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -483,6 +495,7 @@ export type tournament_team_registrationsCreateManyInput = {
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
 };
@@ -497,6 +510,7 @@ export type tournament_team_registrationsUpdateManyMutationInput = {
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -517,6 +531,7 @@ export type tournament_team_registrationsUncheckedUpdateManyInput = {
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -553,6 +568,7 @@ export type tournament_team_registrationsCountOrderByAggregateInput = {
     group_name?: Prisma.SortOrder;
     seed?: Prisma.SortOrder;
     points?: Prisma.SortOrder;
+    lineup?: Prisma.SortOrder;
     created_at?: Prisma.SortOrder;
     updated_at?: Prisma.SortOrder;
 };
@@ -867,6 +883,7 @@ export type tournament_team_registrationsCreateWithoutMatches_matches_tournament
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
@@ -895,6 +912,7 @@ export type tournament_team_registrationsUncheckedCreateWithoutMatches_matches_t
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsInput;
@@ -916,6 +934,7 @@ export type tournament_team_registrationsCreateWithoutMatches_matches_tournament
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -944,6 +963,7 @@ export type tournament_team_registrationsUncheckedCreateWithoutMatches_matches_t
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -974,6 +994,7 @@ export type tournament_team_registrationsUpdateWithoutMatches_matches_tournament
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
@@ -1002,6 +1023,7 @@ export type tournament_team_registrationsUncheckedUpdateWithoutMatches_matches_t
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_home_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_home_team_idTotournament_team_registrationsNestedInput;
@@ -1028,6 +1050,7 @@ export type tournament_team_registrationsUpdateWithoutMatches_matches_tournament
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1056,6 +1079,7 @@ export type tournament_team_registrationsUncheckedUpdateWithoutMatches_matches_t
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1073,6 +1097,7 @@ export type tournament_team_registrationsCreateWithoutTeamsInput = {
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1100,6 +1125,7 @@ export type tournament_team_registrationsUncheckedCreateWithoutTeamsInput = {
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1148,6 +1174,7 @@ export type tournament_team_registrationsScalarWhereInput = {
     group_name?: Prisma.StringNullableFilter<"tournament_team_registrations"> | string | null;
     seed?: Prisma.IntNullableFilter<"tournament_team_registrations"> | number | null;
     points?: Prisma.IntFilter<"tournament_team_registrations"> | number;
+    lineup?: Prisma.JsonNullableFilter<"tournament_team_registrations">;
     created_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
     updated_at?: Prisma.DateTimeFilter<"tournament_team_registrations"> | Date | string;
 };
@@ -1162,6 +1189,7 @@ export type tournament_team_registrationsCreateWithoutTournament_team_playersInp
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1190,6 +1218,7 @@ export type tournament_team_registrationsUncheckedCreateWithoutTournament_team_p
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1220,6 +1249,7 @@ export type tournament_team_registrationsUpdateWithoutTournament_team_playersInp
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1248,6 +1278,7 @@ export type tournament_team_registrationsUncheckedUpdateWithoutTournament_team_p
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1265,6 +1296,7 @@ export type tournament_team_registrationsCreateWithoutTournament_registration_ev
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1293,6 +1325,7 @@ export type tournament_team_registrationsUncheckedCreateWithoutTournament_regist
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1323,6 +1356,7 @@ export type tournament_team_registrationsUpdateWithoutTournament_registration_ev
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1351,6 +1385,7 @@ export type tournament_team_registrationsUncheckedUpdateWithoutTournament_regist
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1368,6 +1403,7 @@ export type tournament_team_registrationsCreateWithoutTournamentsInput = {
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1394,6 +1430,7 @@ export type tournament_team_registrationsUncheckedCreateWithoutTournamentsInput 
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1433,6 +1470,7 @@ export type tournament_team_registrationsCreateWithoutUsers_tournament_team_regi
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1460,6 +1498,7 @@ export type tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1486,6 +1525,7 @@ export type tournament_team_registrationsCreateWithoutUsers_tournament_team_regi
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1513,6 +1553,7 @@ export type tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1539,6 +1580,7 @@ export type tournament_team_registrationsCreateWithoutUsers_tournament_team_regi
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1566,6 +1608,7 @@ export type tournament_team_registrationsUncheckedCreateWithoutUsers_tournament_
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedCreateNestedManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsInput;
@@ -1636,6 +1679,7 @@ export type tournament_team_registrationsCreateManyTeamsInput = {
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
 };
@@ -1650,6 +1694,7 @@ export type tournament_team_registrationsUpdateWithoutTeamsInput = {
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1677,6 +1722,7 @@ export type tournament_team_registrationsUncheckedUpdateWithoutTeamsInput = {
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1700,6 +1746,7 @@ export type tournament_team_registrationsUncheckedUpdateManyWithoutTeamsInput = 
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -1718,6 +1765,7 @@ export type tournament_team_registrationsCreateManyTournamentsInput = {
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
 };
@@ -1732,6 +1780,7 @@ export type tournament_team_registrationsUpdateWithoutTournamentsInput = {
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1758,6 +1807,7 @@ export type tournament_team_registrationsUncheckedUpdateWithoutTournamentsInput 
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1780,6 +1830,7 @@ export type tournament_team_registrationsUncheckedUpdateManyWithoutTournamentsIn
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -1799,6 +1850,7 @@ export type tournament_team_registrationsCreateManyUsers_tournament_team_registr
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
 };
@@ -1818,6 +1870,7 @@ export type tournament_team_registrationsCreateManyUsers_tournament_team_registr
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
 };
@@ -1837,6 +1890,7 @@ export type tournament_team_registrationsCreateManyUsers_tournament_team_registr
     group_name?: string | null;
     seed?: number | null;
     points?: number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Date | string;
     updated_at?: Date | string;
 };
@@ -1851,6 +1905,7 @@ export type tournament_team_registrationsUpdateWithoutUsers_tournament_team_regi
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1878,6 +1933,7 @@ export type tournament_team_registrationsUncheckedUpdateWithoutUsers_tournament_
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1901,6 +1957,7 @@ export type tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournam
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -1915,6 +1972,7 @@ export type tournament_team_registrationsUpdateWithoutUsers_tournament_team_regi
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1942,6 +2000,7 @@ export type tournament_team_registrationsUncheckedUpdateWithoutUsers_tournament_
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -1965,6 +2024,7 @@ export type tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournam
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -1979,6 +2039,7 @@ export type tournament_team_registrationsUpdateWithoutUsers_tournament_team_regi
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -2006,6 +2067,7 @@ export type tournament_team_registrationsUncheckedUpdateWithoutUsers_tournament_
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: Prisma.matchesUncheckedUpdateManyWithoutTournament_team_registrations_matches_tournament_id_away_team_idTotournament_team_registrationsNestedInput;
@@ -2029,6 +2091,7 @@ export type tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournam
     group_name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     points?: Prisma.IntFieldUpdateOperationsInput | number;
+    lineup?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -2076,6 +2139,7 @@ export type tournament_team_registrationsSelect<ExtArgs extends runtime.Types.Ex
     group_name?: boolean;
     seed?: boolean;
     points?: boolean;
+    lineup?: boolean;
     created_at?: boolean;
     updated_at?: boolean;
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: boolean | Prisma.tournament_team_registrations$matches_matches_tournament_id_away_team_idTotournament_team_registrationsArgs<ExtArgs>;
@@ -2106,6 +2170,7 @@ export type tournament_team_registrationsSelectCreateManyAndReturn<ExtArgs exten
     group_name?: boolean;
     seed?: boolean;
     points?: boolean;
+    lineup?: boolean;
     created_at?: boolean;
     updated_at?: boolean;
     users_tournament_team_registrations_requested_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
@@ -2131,6 +2196,7 @@ export type tournament_team_registrationsSelectUpdateManyAndReturn<ExtArgs exten
     group_name?: boolean;
     seed?: boolean;
     points?: boolean;
+    lineup?: boolean;
     created_at?: boolean;
     updated_at?: boolean;
     users_tournament_team_registrations_requested_byTousers?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
@@ -2156,10 +2222,11 @@ export type tournament_team_registrationsSelectScalar = {
     group_name?: boolean;
     seed?: boolean;
     points?: boolean;
+    lineup?: boolean;
     created_at?: boolean;
     updated_at?: boolean;
 };
-export type tournament_team_registrationsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"tournament_id" | "association_id" | "team_id" | "requested_by" | "request_status" | "reviewed_by" | "review_notes" | "reviewed_at" | "payment_status" | "amount_paid" | "payment_notes" | "payment_updated_by" | "payment_updated_at" | "group_name" | "seed" | "points" | "created_at" | "updated_at", ExtArgs["result"]["tournament_team_registrations"]>;
+export type tournament_team_registrationsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"tournament_id" | "association_id" | "team_id" | "requested_by" | "request_status" | "reviewed_by" | "review_notes" | "reviewed_at" | "payment_status" | "amount_paid" | "payment_notes" | "payment_updated_by" | "payment_updated_at" | "group_name" | "seed" | "points" | "lineup" | "created_at" | "updated_at", ExtArgs["result"]["tournament_team_registrations"]>;
 export type tournament_team_registrationsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     matches_matches_tournament_id_away_team_idTotournament_team_registrations?: boolean | Prisma.tournament_team_registrations$matches_matches_tournament_id_away_team_idTotournament_team_registrationsArgs<ExtArgs>;
     matches_matches_tournament_id_home_team_idTotournament_team_registrations?: boolean | Prisma.tournament_team_registrations$matches_matches_tournament_id_home_team_idTotournament_team_registrationsArgs<ExtArgs>;
@@ -2216,6 +2283,7 @@ export type $tournament_team_registrationsPayload<ExtArgs extends runtime.Types.
         group_name: string | null;
         seed: number | null;
         points: number;
+        lineup: runtime.JsonValue | null;
         created_at: Date;
         updated_at: Date;
     }, ExtArgs["result"]["tournament_team_registrations"]>;
@@ -2300,6 +2368,7 @@ export interface tournament_team_registrationsFieldRefs {
     readonly group_name: Prisma.FieldRef<"tournament_team_registrations", 'String'>;
     readonly seed: Prisma.FieldRef<"tournament_team_registrations", 'Int'>;
     readonly points: Prisma.FieldRef<"tournament_team_registrations", 'Int'>;
+    readonly lineup: Prisma.FieldRef<"tournament_team_registrations", 'Json'>;
     readonly created_at: Prisma.FieldRef<"tournament_team_registrations", 'DateTime'>;
     readonly updated_at: Prisma.FieldRef<"tournament_team_registrations", 'DateTime'>;
 }

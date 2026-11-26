@@ -17,7 +17,45 @@ const common_1 = require("@nestjs/common");
 const client_1 = require("../../generated/prisma/client");
 const competition_access_service_1 = require("../authorization/competition-access.service");
 const prisma_service_1 = require("../prisma/prisma.service");
+const competition_dto_1 = require("./competition.dto");
 const competition_engine_1 = require("./competition.engine");
+const competition_pipeline_1 = require("./competition.pipeline");
+function planLabel(plan) {
+    if (plan.version === 3 && plan.blueprints?.length) {
+        return (0, competition_pipeline_1.describeBlueprints)(plan.blueprints, plan.organizationMode);
+    }
+    return competition_engine_1.FORMAT_LABELS[plan.config.format];
+}
+function fallbackConfigFromBlueprints(blueprints) {
+    const first = blueprints[0];
+    if (!first || first.kind === 'knockout') {
+        return { format: 'knockout', legs: 1, groups: 1, qualifiers: 1, finalLegs: 1 };
+    }
+    const second = blueprints[1];
+    const isGroups = first.groups > 1;
+    const format = !second
+        ? 'league'
+        : second.kind === 'knockout'
+            ? isGroups
+                ? 'groups_knockout'
+                : 'league_knockout'
+            : isGroups
+                ? 'groups_final'
+                : 'league_final';
+    return {
+        format,
+        legs: first.legs,
+        groups: first.groups,
+        qualifiers: first.qualifiersPerGroup ?? 1,
+        finalLegs: second?.kind === 'points' ? Math.min(2, second.legs) : 1,
+        ...(first.extraQualifiers
+            ? {
+                extraQualifiers: first.extraQualifiers,
+                extraQualifierMode: first.extraQualifierMode ?? 'direct',
+            }
+            : {}),
+    };
+}
 function scheduleFixtures(stage, schedule) {
     const fixtures = [...stage.fixtures].sort((a, b) => a.round - b.round ||
         a.group.localeCompare(b.group) ||
@@ -82,7 +120,7 @@ async function assignApprovedTeamToCompetition(tx, tournamentId, teamId) {
         select: { competition_plan: true, phase: true },
     });
     const plan = (0, competition_engine_1.readPlan)(tournament.competition_plan);
-    if (!plan || plan.version !== 2 || !plan.slots)
+    if (!plan || plan.version === 1 || !plan.slots)
         return;
     if (!['registration', 'scheduled'].includes(tournament.phase))
         throw new common_1.BadRequestException('Los lugares del sorteo ya están cerrados para nuevos equipos.');
@@ -179,8 +217,14 @@ let CompetitionService = class CompetitionService {
             playedMatches,
             playedPairings,
             currentConfig: plan?.config ?? null,
+            currentBlueprints: plan
+                ? plan.version === 3 && plan.blueprints?.length
+                    ? plan.blueprints
+                    : (0, competition_pipeline_1.configToBlueprints)(plan.config)
+                : null,
+            currentOrganizationMode: plan?.organizationMode ?? 'planned',
             currentSeed: plan?.seed ?? null,
-            currentLabel: plan ? competition_engine_1.FORMAT_LABELS[plan.config.format] : null,
+            currentLabel: plan ? planLabel(plan) : null,
             planTeamIds: plan?.slots?.flatMap((slot) => slot.teamId ?? []) ?? [],
             capacity: tournament.max_teams,
             pendingSlots: tournament.max_teams - teams.length,
@@ -190,6 +234,7 @@ let CompetitionService = class CompetitionService {
             venue: tournament.location_name,
             blockers,
             suggestions: (0, competition_engine_1.suggestions)(tournament.max_teams),
+            templates: await this.findTemplatesForAssociation(tournament.association_id),
         };
     }
     async prepare(client, id, actor, dto) {
@@ -210,7 +255,20 @@ let CompetitionService = class CompetitionService {
             throw new common_1.ConflictException('Los equipos aprobados cambiaron. Actualiza las sugerencias y vuelve a sortear.');
         if (ids.length > tournament.max_teams)
             throw new common_1.BadRequestException('Los equipos aprobados exceden el cupo.');
-        (0, competition_engine_1.validateConfig)(dto.config, tournament.max_teams);
+        const usePipeline = Boolean(dto.blueprints && dto.blueprints.length > 0);
+        if (!usePipeline && !dto.config) {
+            throw new common_1.BadRequestException('Debes indicar una configuración o al menos una etapa para organizar el torneo.');
+        }
+        const blueprints = usePipeline
+            ? dto.blueprints.map(competition_dto_1.toStageBlueprint)
+            : null;
+        const organizationMode = dto.organizationMode ?? 'planned';
+        const pipelineSummary = blueprints
+            ? (0, competition_pipeline_1.validatePipeline)(blueprints, tournament.max_teams, organizationMode)
+            : null;
+        if (!blueprints) {
+            (0, competition_engine_1.validateConfig)(dto.config, tournament.max_teams);
+        }
         const shuffledApproved = (0, competition_engine_1.shuffled)(ids, dto.seed);
         const slots = Array.from({ length: tournament.max_teams }, (_, index) => ({
             id: `slot-${index + 1}`,
@@ -218,32 +276,50 @@ let CompetitionService = class CompetitionService {
             teamId: shuffledApproved[index] ?? null,
         }));
         const ordered = (0, competition_engine_1.shuffled)(slots.map(({ id: slotId }) => slotId), dto.seed);
-        const stage = (0, competition_engine_1.firstStage)(dto.config, ordered);
+        const stage = blueprints
+            ? (0, competition_pipeline_1.buildStageFromBlueprint)(blueprints[0], ordered, 1, 0, dto.seed, blueprints.length)
+            : (0, competition_engine_1.firstStage)(dto.config, ordered);
         stage.fixtures = scheduleFixtures(stage, dto.schedule).map((fixture) => ({
             ...fixture,
             venue: dto.schedule.venue || null,
             durationMinutes: dto.schedule.durationMinutes,
         }));
-        const plan = {
-            version: 2,
-            config: dto.config,
-            seed: dto.seed,
-            teamIds: ordered,
-            slots,
-            stages: [stage],
-            champion: null,
-            createdBy: actor.toString(),
-            createdAt: new Date().toISOString(),
-            originalType: tournament.tournament_types.name,
-            changeReason: dto.changeReason?.trim() || null,
-        };
+        const plan = blueprints
+            ? {
+                version: 3,
+                config: fallbackConfigFromBlueprints(blueprints),
+                organizationMode,
+                blueprints,
+                seed: dto.seed,
+                teamIds: ordered,
+                slots,
+                stages: [stage],
+                champion: null,
+                createdBy: actor.toString(),
+                createdAt: new Date().toISOString(),
+                originalType: tournament.tournament_types.name,
+                changeReason: dto.changeReason?.trim() || null,
+            }
+            : {
+                version: 2,
+                config: dto.config,
+                seed: dto.seed,
+                teamIds: ordered,
+                slots,
+                stages: [stage],
+                champion: null,
+                createdBy: actor.toString(),
+                createdAt: new Date().toISOString(),
+                originalType: tournament.tournament_types.name,
+                changeReason: dto.changeReason?.trim() || null,
+            };
         const fixtures = stage.fixtures;
         this.checkDates(fixtures, tournament.start_date, tournament.end_date);
         return {
             plan,
             fixtures,
-            summary: (0, competition_engine_1.estimate)(dto.config, tournament.max_teams),
-            label: competition_engine_1.FORMAT_LABELS[dto.config.format],
+            summary: pipelineSummary ?? (0, competition_engine_1.estimate)(dto.config, tournament.max_teams),
+            label: planLabel(plan),
         };
     }
     static PLAYED_STATUSES = ['played', 'in_progress'];
@@ -400,7 +476,7 @@ let CompetitionService = class CompetitionService {
             if (['archived', 'cancelled'].includes(tournament.phase))
                 throw new common_1.BadRequestException('Un torneo archivado o cancelado ya no se puede reacomodar.');
             const plan = (0, competition_engine_1.readPlan)(tournament.competition_plan);
-            if (!plan || plan.version !== 2 || !plan.slots)
+            if (!plan || plan.version === 1 || !plan.slots)
                 throw new common_1.BadRequestException('Este torneo todavía no tiene un sorteo que se pueda reacomodar.');
             const approved = tournament.tournament_team_registrations
                 .filter((row) => row.request_status === 'approved')
@@ -573,6 +649,31 @@ let CompetitionService = class CompetitionService {
         const scores = this.scores(matches);
         const matchesByKey = new Map(matches.map((match) => [match.competition_key, match]));
         let advanceBlocker = null;
+        let needsNextStageConfig = false;
+        let canFinishHere = false;
+        const currentStage = plan.stages.at(-1);
+        if (plan.version === 3 && currentStage) {
+            const bpIdx = currentStage.blueprintIndex ?? 0;
+            const hasPlannedNext = Boolean(plan.blueprints?.[bpIdx + 1]);
+            if (currentStage.kind === 'points') {
+                canFinishHere = currentStage.groups.length === 1;
+                needsNextStageConfig = !hasPlannedNext && currentStage.groups.length > 1;
+            }
+            else {
+                const finalMatch = currentStage.fixtures.some(({ group }) => group === 'Final');
+                const remainingCount = currentStage.fixtures.length + currentStage.byes.length;
+                canFinishHere = finalMatch || remainingCount === 1;
+                const bp = plan.blueprints?.[bpIdx];
+                const isSingleRound = bp?.kind === 'knockout' && Boolean(bp.singleRound);
+                const stopAt = bp?.kind === 'knockout' ? (bp.stopAtTeams ?? 1) : 1;
+                if ((currentStage.isPlayIn ||
+                    isSingleRound ||
+                    (stopAt > 1 && remainingCount <= stopAt)) &&
+                    !hasPlannedNext) {
+                    needsNextStageConfig = true;
+                }
+            }
+        }
         if (tournament.phase !== 'in_progress')
             advanceBlocker = 'El torneo debe estar En curso para resolver etapas.';
         else if (plan.champion)
@@ -580,6 +681,33 @@ let CompetitionService = class CompetitionService {
         else if ((0, competition_engine_1.hasUnfilledSlots)(plan))
             advanceBlocker =
                 'Completa todos los lugares del sorteo antes de resolver etapas.';
+        else if (plan.version === 3 && currentStage) {
+            const scoreMap = new Map(scores.map((s) => [s.key, s]));
+            const unfinished = currentStage.fixtures.some((f) => {
+                const s = scoreMap.get(f.key);
+                return (!s ||
+                    s.status !== 'played' ||
+                    s.homeScore === null ||
+                    s.awayScore === null);
+            });
+            if (unfinished) {
+                advanceBlocker =
+                    'Finaliza todos los partidos de la etapa antes de avanzar. Los cancelados deben reprogramarse.';
+            }
+            else if (currentStage.kind === 'knockout') {
+                const unresolvedTie = currentStage.fixtures.some((f) => {
+                    const s = scoreMap.get(f.key);
+                    return (s.homeScore === s.awayScore &&
+                        (s.homePenalties === null ||
+                            s.awayPenalties === null ||
+                            s.homePenalties === s.awayPenalties));
+                });
+                if (unresolvedTie) {
+                    advanceBlocker =
+                        'Resuelve los empates de eliminación directa mediante penaltis.';
+                }
+            }
+        }
         else {
             try {
                 (0, competition_engine_1.resolveStage)(plan, scores);
@@ -593,7 +721,7 @@ let CompetitionService = class CompetitionService {
         }
         return {
             plan,
-            label: competition_engine_1.FORMAT_LABELS[plan.config.format],
+            label: planLabel(plan),
             teams: this.competitors(plan, tournament.tournament_team_registrations),
             stages: plan.stages.map((stage) => ({
                 ...stage,
@@ -625,6 +753,8 @@ let CompetitionService = class CompetitionService {
             })),
             canAdvance: advanceBlocker === null,
             advanceBlocker,
+            needsNextStageConfig,
+            canFinishHere,
         };
     }
     async advance(id, actor, dto) {
@@ -642,7 +772,22 @@ let CompetitionService = class CompetitionService {
             });
             if ((0, competition_engine_1.hasUnfilledSlots)(plan))
                 throw new common_1.BadRequestException('Completa todos los lugares del sorteo antes de resolver etapas.');
-            const { next, champion } = (0, competition_engine_1.resolveStage)(plan, this.scores(matches));
+            const resolution = plan.version === 3
+                ? (0, competition_pipeline_1.resolvePipelineStage)(plan, this.scores(matches), {
+                    finishTournament: dto.finishTournament,
+                    qualifiersPerGroup: dto.qualifiersPerGroup,
+                    extraQualifiers: dto.extraQualifiers,
+                    extraQualifierMode: dto.extraQualifierMode,
+                    nextStage: dto.nextStage
+                        ? (0, competition_dto_1.toStageBlueprint)(dto.nextStage)
+                        : undefined,
+                })
+                : { ...(0, competition_engine_1.resolveStage)(plan, this.scores(matches)), updatedBlueprints: undefined };
+            const { next, champion, updatedBlueprints } = resolution;
+            if (updatedBlueprints) {
+                plan.blueprints = updatedBlueprints;
+                plan.config = fallbackConfigFromBlueprints(updatedBlueprints);
+            }
             if (next) {
                 const fixtures = scheduleFixtures(next, dto.schedule).map((fixture) => ({
                     ...fixture,
@@ -655,6 +800,24 @@ let CompetitionService = class CompetitionService {
                 plan.stages.at(-1).resolved = true;
                 plan.stages.push(next);
                 await materializeCompetitionFixtures(tx, id, plan);
+                if (next.kind === 'points') {
+                    for (const group of next.groups) {
+                        for (const competitorId of group.teams) {
+                            const team = (0, competition_engine_1.competitorTeamId)(plan, competitorId);
+                            if (!team)
+                                continue;
+                            await tx.tournament_team_registrations.update({
+                                where: {
+                                    tournament_id_team_id: {
+                                        tournament_id: id,
+                                        team_id: BigInt(team),
+                                    },
+                                },
+                                data: { group_name: group.name, updated_at: new Date() },
+                            });
+                        }
+                    }
+                }
             }
             if (!next)
                 plan.stages.at(-1).resolved = true;
@@ -671,6 +834,106 @@ let CompetitionService = class CompetitionService {
             timeout: 30000,
         });
         return this.get(id, actor);
+    }
+    async findTemplatesForAssociation(associationId) {
+        if (!this.prisma.competition_templates)
+            return [];
+        const rows = await this.prisma.competition_templates.findMany({
+            where: {
+                OR: [{ association_id: associationId }, { association_id: null }],
+            },
+            orderBy: [{ created_at: 'desc' }, { id: 'desc' }],
+        });
+        return rows.map((row) => {
+            const blueprints = Array.isArray(row.blueprints)
+                ? row.blueprints
+                : [];
+            const mode = row.mode === 'on_the_fly' ? 'on_the_fly' : 'planned';
+            return {
+                id: row.id.toString(),
+                name: row.name,
+                description: row.description,
+                mode,
+                blueprints,
+                label: (0, competition_pipeline_1.describeBlueprints)(blueprints, mode),
+                isGlobal: row.association_id === null,
+                createdAt: row.created_at.toISOString(),
+            };
+        });
+    }
+    async listTemplates(tournamentId, actor) {
+        await this.access.assertCanManageTournament(actor, tournamentId);
+        const tournament = await this.prisma.tournaments.findUnique({
+            where: { id: tournamentId },
+            select: { association_id: true },
+        });
+        if (!tournament)
+            throw new common_1.NotFoundException('El torneo no existe.');
+        return this.findTemplatesForAssociation(tournament.association_id);
+    }
+    async createTemplate(tournamentId, actor, dto) {
+        await this.access.assertCanManageTournament(actor, tournamentId);
+        const tournament = await this.prisma.tournaments.findUnique({
+            where: { id: tournamentId },
+            select: { association_id: true, competition_plan: true },
+        });
+        if (!tournament)
+            throw new common_1.NotFoundException('El torneo no existe.');
+        let blueprints;
+        let mode = dto.mode ?? 'planned';
+        if (dto.blueprints && dto.blueprints.length > 0) {
+            blueprints = dto.blueprints.map(competition_dto_1.toStageBlueprint);
+        }
+        else {
+            const plan = (0, competition_engine_1.readPlan)(tournament.competition_plan);
+            if (!plan) {
+                throw new common_1.BadRequestException('Este torneo aún no tiene un formato configurado para guardar como plantilla.');
+            }
+            blueprints =
+                plan.version === 3 && plan.blueprints?.length
+                    ? plan.blueprints
+                    : (0, competition_pipeline_1.configToBlueprints)(plan.config);
+            mode = dto.mode ?? plan.organizationMode ?? 'planned';
+        }
+        const created = await this.prisma.competition_templates.create({
+            data: {
+                association_id: tournament.association_id,
+                name: dto.name.trim(),
+                description: dto.description?.trim() || null,
+                mode,
+                blueprints: JSON.parse(JSON.stringify(blueprints)),
+                created_by: actor,
+            },
+        });
+        return {
+            id: created.id.toString(),
+            name: created.name,
+            description: created.description,
+            mode,
+            blueprints,
+            label: (0, competition_pipeline_1.describeBlueprints)(blueprints, mode),
+            isGlobal: false,
+            createdAt: created.created_at.toISOString(),
+        };
+    }
+    async deleteTemplate(tournamentId, templateId, actor) {
+        await this.access.assertCanManageTournament(actor, tournamentId);
+        const tournament = await this.prisma.tournaments.findUnique({
+            where: { id: tournamentId },
+            select: { association_id: true },
+        });
+        if (!tournament)
+            throw new common_1.NotFoundException('El torneo no existe.');
+        const template = await this.prisma.competition_templates.findUnique({
+            where: { id: templateId },
+        });
+        if (!template || template.association_id !== tournament.association_id) {
+            throw new common_1.NotFoundException('La plantilla no existe en esta organización.');
+        }
+        await this.prisma.competition_templates.delete({
+            where: { id: templateId },
+        });
+        return { deleted: true, id: templateId.toString() };
     }
     scores(matches) {
         return matches.map((m) => ({

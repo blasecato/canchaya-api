@@ -15,6 +15,7 @@ const tournament_catalog_controller_1 = require("./tournament-catalog.controller
 const public_tournaments_controller_1 = require("./public-tournaments.controller");
 const tournaments_controller_1 = require("./tournaments.controller");
 const tournament_lifecycle_service_1 = require("./tournament-lifecycle.service");
+const team_lineup_service_1 = require("./team-lineup.service");
 const tournaments_service_1 = require("./tournaments.service");
 let TournamentsModule = class TournamentsModule {
 };
@@ -27,7 +28,7 @@ exports.TournamentsModule = TournamentsModule = __decorate([
             tournament_catalog_controller_1.TournamentCatalogController,
             tournaments_controller_1.TournamentsController,
         ],
-        providers: [tournaments_service_1.TournamentsService, tournament_lifecycle_service_1.TournamentLifecycleService],
+        providers: [tournaments_service_1.TournamentsService, tournament_lifecycle_service_1.TournamentLifecycleService, team_lineup_service_1.TeamLineupService],
         exports: [tournaments_service_1.TournamentsService],
     })
 ], TournamentsModule);

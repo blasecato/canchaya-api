@@ -29,6 +29,8 @@ const transition_tournament_dto_1 = require("./dto/transition-tournament.dto");
 const tournament_catalog_response_dto_1 = require("./dto/tournament-catalog-response.dto");
 const tournaments_service_1 = require("./tournaments.service");
 const tournament_lifecycle_service_1 = require("./tournament-lifecycle.service");
+const team_lineup_service_1 = require("./team-lineup.service");
+const team_lineup_dto_1 = require("./dto/team-lineup.dto");
 const update_tournament_rules_dto_1 = require("./dto/update-tournament-rules.dto");
 const tournament_sponsor_input_dto_1 = require("./dto/tournament-sponsor-input.dto");
 const review_team_registration_dto_1 = require("./dto/review-team-registration.dto");
@@ -49,9 +51,11 @@ const sponsorLogoUploadOptions = {
 let TournamentCatalogController = class TournamentCatalogController {
     tournamentsService;
     tournamentLifecycleService;
-    constructor(tournamentsService, tournamentLifecycleService) {
+    teamLineupService;
+    constructor(tournamentsService, tournamentLifecycleService, teamLineupService) {
         this.tournamentsService = tournamentsService;
         this.tournamentLifecycleService = tournamentLifecycleService;
+        this.teamLineupService = teamLineupService;
     }
     findFilterOptions() {
         return this.tournamentsService.findCatalogFilterOptions();
@@ -115,6 +119,12 @@ let TournamentCatalogController = class TournamentCatalogController {
     }
     updateRules(tournamentId, request, updateTournamentRulesDto) {
         return this.tournamentsService.updateRules(tournamentId, request.auth.userId, updateTournamentRulesDto);
+    }
+    getMyLineup(tournamentId, request) {
+        return this.teamLineupService.getMyLineup(tournamentId, request.auth.userId);
+    }
+    updateMyLineup(tournamentId, request, dto) {
+        return this.teamLineupService.updateMyLineup(tournamentId, request.auth.userId, dto);
     }
 };
 exports.TournamentCatalogController = TournamentCatalogController;
@@ -397,6 +407,35 @@ __decorate([
     __metadata("design:paramtypes", [BigInt, Object, update_tournament_rules_dto_1.UpdateTournamentRulesDto]),
     __metadata("design:returntype", Promise)
 ], TournamentCatalogController.prototype, "updateRules", null);
+__decorate([
+    (0, common_1.Get)(':tournamentId/my-lineup'),
+    (0, require_roles_decorator_1.RequireRoles)('PLAYER'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Consultar la alineación táctica del equipo del jugador autenticado en este torneo',
+    }),
+    (0, swagger_1.ApiParam)({ name: 'tournamentId', example: '12', type: String }),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('tournamentId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object]),
+    __metadata("design:returntype", void 0)
+], TournamentCatalogController.prototype, "getMyLineup", null);
+__decorate([
+    (0, common_1.Patch)(':tournamentId/my-lineup'),
+    (0, require_roles_decorator_1.RequireRoles)('PLAYER'),
+    (0, swagger_1.ApiOperation)({
+        summary: 'Guardar la alineación táctica del equipo (exclusivo para el capitán)',
+    }),
+    (0, swagger_1.ApiParam)({ name: 'tournamentId', example: '12', type: String }),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('tournamentId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object, team_lineup_dto_1.UpdateTeamLineupDto]),
+    __metadata("design:returntype", void 0)
+], TournamentCatalogController.prototype, "updateMyLineup", null);
 exports.TournamentCatalogController = TournamentCatalogController = __decorate([
     (0, swagger_1.ApiTags)('Tournament catalog'),
     (0, swagger_1.ApiExtraModels)(tournament_sponsor_input_dto_1.TournamentSponsorInputDto),
@@ -408,6 +447,7 @@ exports.TournamentCatalogController = TournamentCatalogController = __decorate([
     (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN', 'REFEREE', 'PLAYER'),
     (0, common_1.Controller)('tournaments'),
     __metadata("design:paramtypes", [tournaments_service_1.TournamentsService,
-        tournament_lifecycle_service_1.TournamentLifecycleService])
+        tournament_lifecycle_service_1.TournamentLifecycleService,
+        team_lineup_service_1.TeamLineupService])
 ], TournamentCatalogController);
 //# sourceMappingURL=tournament-catalog.controller.js.map

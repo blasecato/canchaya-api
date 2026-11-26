@@ -64,7 +64,7 @@ export function toAssociationResponse(
     owner: {
       id: association.users.id.toString(),
       fullName: association.users.full_name,
-      email: association.users.email,
+      email: association.users.email ?? '',
       phone: association.users.phone,
     },
     tournamentCount: association._count.tournaments,

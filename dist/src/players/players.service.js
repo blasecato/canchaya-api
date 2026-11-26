@@ -283,7 +283,9 @@ let PlayersService = class PlayersService {
                 select: { id_number: true, email: true },
             });
             const takenDocuments = new Set(existing.map(({ id_number }) => id_number));
-            const takenEmails = new Set(existing.map(({ email }) => email.toLowerCase()));
+            const takenEmails = new Set(existing
+                .map(({ email }) => email?.toLowerCase())
+                .filter((value) => Boolean(value)));
             for (let index = pending.length - 1; index >= 0; index -= 1) {
                 const player = pending[index];
                 const documentTaken = takenDocuments.has(player.idNumber);

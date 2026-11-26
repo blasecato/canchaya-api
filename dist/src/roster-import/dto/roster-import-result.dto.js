@@ -30,13 +30,14 @@ class RosterImportPlayerResultDto {
     documentType;
     idNumber;
     email;
+    phone;
     position;
     jerseyNumber;
     isCaptain;
     outcome;
     detail;
     static _OPENAPI_METADATA_FACTORY() {
-        return { row: { required: true, type: () => Number }, fullName: { required: true, type: () => String }, documentType: { required: true, type: () => String }, idNumber: { required: true, type: () => String }, email: { required: true, type: () => String }, position: { required: true, type: () => String, nullable: true }, jerseyNumber: { required: true, type: () => Number, nullable: true }, isCaptain: { required: true, type: () => Boolean }, outcome: { required: true, enum: ["created", "linked", "already_in_team", "rejected"] }, detail: { required: true, type: () => String } };
+        return { row: { required: true, type: () => Number }, fullName: { required: true, type: () => String }, documentType: { required: true, type: () => String }, idNumber: { required: true, type: () => String }, email: { required: true, type: () => String, nullable: true }, phone: { required: false, type: () => String, nullable: true }, position: { required: true, type: () => String, nullable: true }, jerseyNumber: { required: true, type: () => Number, nullable: true }, isCaptain: { required: true, type: () => Boolean }, outcome: { required: true, enum: ["created", "linked", "already_in_team", "rejected"] }, detail: { required: true, type: () => String } };
     }
 }
 exports.RosterImportPlayerResultDto = RosterImportPlayerResultDto;
@@ -57,9 +58,13 @@ __decorate([
     __metadata("design:type", String)
 ], RosterImportPlayerResultDto.prototype, "idNumber", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'maria.perez@correo.com' }),
-    __metadata("design:type", String)
+    (0, swagger_1.ApiProperty)({ example: 'maria.perez@correo.com', nullable: true }),
+    __metadata("design:type", Object)
 ], RosterImportPlayerResultDto.prototype, "email", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: '3001234567', nullable: true }),
+    __metadata("design:type", Object)
+], RosterImportPlayerResultDto.prototype, "phone", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Delantero', nullable: true }),
     __metadata("design:type", Object)

@@ -7,6 +7,8 @@ import { TransitionTournamentDto } from './dto/transition-tournament.dto';
 import { TournamentCatalogFiltersResponseDto, TournamentCatalogItemResponseDto, TournamentDetailResponseDto, TournamentRulesResponseDto, TournamentCatalogPageResponseDto } from './dto/tournament-catalog-response.dto';
 import { TournamentsService } from './tournaments.service';
 import { TournamentLifecycleService } from './tournament-lifecycle.service';
+import { TeamLineupService } from './team-lineup.service';
+import { UpdateTeamLineupDto } from './dto/team-lineup.dto';
 import { UpdateTournamentRulesDto } from './dto/update-tournament-rules.dto';
 import { TournamentSponsorInputDto } from './dto/tournament-sponsor-input.dto';
 import { ReviewTeamRegistrationDto } from './dto/review-team-registration.dto';
@@ -17,7 +19,8 @@ import { CaptainTeamOptionResponseDto, RegisterTeamDto, TeamRegistrationResponse
 export declare class TournamentCatalogController {
     private readonly tournamentsService;
     private readonly tournamentLifecycleService;
-    constructor(tournamentsService: TournamentsService, tournamentLifecycleService: TournamentLifecycleService);
+    private readonly teamLineupService;
+    constructor(tournamentsService: TournamentsService, tournamentLifecycleService: TournamentLifecycleService, teamLineupService: TeamLineupService);
     findFilterOptions(): Promise<TournamentCatalogFiltersResponseDto>;
     findMine(request: AuthenticatedRequest): Promise<TournamentCatalogItemResponseDto[]>;
     findCatalog(query: ListTournamentsQueryDto, request: AuthenticatedRequest): Promise<TournamentCatalogPageResponseDto>;
@@ -69,4 +72,84 @@ export declare class TournamentCatalogController {
         status: string;
     }>;
     updateRules(tournamentId: bigint, request: AuthenticatedRequest, updateTournamentRulesDto: UpdateTournamentRulesDto): Promise<TournamentRulesResponseDto>;
+    getMyLineup(tournamentId: bigint, request: AuthenticatedRequest): Promise<{
+        tournamentId: string;
+        tournamentName: string;
+        association: {
+            id: string;
+            name: string;
+            logoUrl: string | null;
+        } | null;
+        modality: string;
+        playersOnPitch: number;
+        team: {
+            id: string;
+            name: string;
+            photoUrl: string | null;
+            primaryColor: string;
+            secondaryColor: string;
+            captainUserId: string;
+            captainName: string;
+        };
+        canEdit: boolean;
+        availableFormations: string[];
+        formation: string;
+        slots: ({
+            slotKey: string;
+            playerId: string;
+        } | {
+            slotKey: string;
+            playerId: null;
+        })[];
+        roster: {
+            playerId: string;
+            fullName: string;
+            firstName: string;
+            jerseyNumber: number;
+            isAssignedNumberRandom: boolean;
+            position: string | null;
+            isCaptain: boolean;
+        }[];
+        updatedAt: string | null;
+    }>;
+    updateMyLineup(tournamentId: bigint, request: AuthenticatedRequest, dto: UpdateTeamLineupDto): Promise<{
+        tournamentId: string;
+        tournamentName: string;
+        association: {
+            id: string;
+            name: string;
+            logoUrl: string | null;
+        } | null;
+        modality: string;
+        playersOnPitch: number;
+        team: {
+            id: string;
+            name: string;
+            photoUrl: string | null;
+            primaryColor: string;
+            secondaryColor: string;
+            captainUserId: string;
+            captainName: string;
+        };
+        canEdit: boolean;
+        availableFormations: string[];
+        formation: string;
+        slots: ({
+            slotKey: string;
+            playerId: string;
+        } | {
+            slotKey: string;
+            playerId: null;
+        })[];
+        roster: {
+            playerId: string;
+            fullName: string;
+            firstName: string;
+            jerseyNumber: number;
+            isAssignedNumberRandom: boolean;
+            position: string | null;
+            isCaptain: boolean;
+        }[];
+        updatedAt: string | null;
+    }>;
 }

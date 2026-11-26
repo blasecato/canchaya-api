@@ -33,10 +33,14 @@ export interface CompetitionStage {
     fixtures: Fixture[];
     byes: string[];
     resolved: boolean;
+    blueprintIndex?: number;
+    isPlayIn?: boolean;
 }
 export interface CompetitionPlan {
-    version: 1 | 2;
+    version: 1 | 2 | 3;
     config: CompetitionConfig;
+    organizationMode?: 'planned' | 'on_the_fly';
+    blueprints?: import('./competition.pipeline').StageBlueprint[];
     seed: string;
     teamIds: string[];
     slots?: CompetitionSlot[];

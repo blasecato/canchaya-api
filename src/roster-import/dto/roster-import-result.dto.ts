@@ -37,8 +37,11 @@ export class RosterImportPlayerResultDto {
   @ApiProperty({ example: '1020304050' })
   idNumber!: string;
 
-  @ApiProperty({ example: 'maria.perez@correo.com' })
-  email!: string;
+  @ApiProperty({ example: 'maria.perez@correo.com', nullable: true })
+  email!: string | null;
+
+  @ApiPropertyOptional({ example: '3001234567', nullable: true })
+  phone?: string | null;
 
   @ApiProperty({ example: 'Delantero', nullable: true })
   position!: string | null;

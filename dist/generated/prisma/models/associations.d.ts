@@ -210,6 +210,7 @@ export type associationsWhereInput = {
     updated_at?: Prisma.DateTimeFilter<"associations"> | Date | string;
     association_administrators?: Prisma.Association_administratorsListRelationFilter;
     association_announcements?: Prisma.Association_announcementsListRelationFilter;
+    competition_templates?: Prisma.Competition_templatesListRelationFilter;
     users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
     tournaments?: Prisma.TournamentsListRelationFilter;
 };
@@ -232,6 +233,7 @@ export type associationsOrderByWithRelationInput = {
     updated_at?: Prisma.SortOrder;
     association_administrators?: Prisma.association_administratorsOrderByRelationAggregateInput;
     association_announcements?: Prisma.association_announcementsOrderByRelationAggregateInput;
+    competition_templates?: Prisma.competition_templatesOrderByRelationAggregateInput;
     users?: Prisma.usersOrderByWithRelationInput;
     tournaments?: Prisma.tournamentsOrderByRelationAggregateInput;
 };
@@ -257,6 +259,7 @@ export type associationsWhereUniqueInput = Prisma.AtLeast<{
     updated_at?: Prisma.DateTimeFilter<"associations"> | Date | string;
     association_administrators?: Prisma.Association_administratorsListRelationFilter;
     association_announcements?: Prisma.Association_announcementsListRelationFilter;
+    competition_templates?: Prisma.Competition_templatesListRelationFilter;
     users?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.usersWhereInput>;
     tournaments?: Prisma.TournamentsListRelationFilter;
 }, "id" | "tax_id" | "owner_user_id">;
@@ -322,6 +325,7 @@ export type associationsCreateInput = {
     updated_at?: Date | string;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutAssociationsInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutAssociationsInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutAssociationsInput;
     users: Prisma.usersCreateNestedOneWithoutAssociationsInput;
     tournaments?: Prisma.tournamentsCreateNestedManyWithoutAssociationsInput;
 };
@@ -344,6 +348,7 @@ export type associationsUncheckedCreateInput = {
     updated_at?: Date | string;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutAssociationsInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutAssociationsInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutAssociationsInput;
     tournaments?: Prisma.tournamentsUncheckedCreateNestedManyWithoutAssociationsInput;
 };
 export type associationsUpdateInput = {
@@ -364,6 +369,7 @@ export type associationsUpdateInput = {
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutAssociationsNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutAssociationsNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutAssociationsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutAssociationsNestedInput;
     tournaments?: Prisma.tournamentsUpdateManyWithoutAssociationsNestedInput;
 };
@@ -386,6 +392,7 @@ export type associationsUncheckedUpdateInput = {
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutAssociationsNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutAssociationsNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutAssociationsNestedInput;
     tournaments?: Prisma.tournamentsUncheckedUpdateManyWithoutAssociationsNestedInput;
 };
 export type associationsCreateManyInput = {
@@ -526,6 +533,20 @@ export type associationsUpdateOneRequiredWithoutAssociation_administratorsNested
 export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null;
 };
+export type associationsCreateNestedOneWithoutCompetition_templatesInput = {
+    create?: Prisma.XOR<Prisma.associationsCreateWithoutCompetition_templatesInput, Prisma.associationsUncheckedCreateWithoutCompetition_templatesInput>;
+    connectOrCreate?: Prisma.associationsCreateOrConnectWithoutCompetition_templatesInput;
+    connect?: Prisma.associationsWhereUniqueInput;
+};
+export type associationsUpdateOneWithoutCompetition_templatesNestedInput = {
+    create?: Prisma.XOR<Prisma.associationsCreateWithoutCompetition_templatesInput, Prisma.associationsUncheckedCreateWithoutCompetition_templatesInput>;
+    connectOrCreate?: Prisma.associationsCreateOrConnectWithoutCompetition_templatesInput;
+    upsert?: Prisma.associationsUpsertWithoutCompetition_templatesInput;
+    disconnect?: Prisma.associationsWhereInput | boolean;
+    delete?: Prisma.associationsWhereInput | boolean;
+    connect?: Prisma.associationsWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.associationsUpdateToOneWithWhereWithoutCompetition_templatesInput, Prisma.associationsUpdateWithoutCompetition_templatesInput>, Prisma.associationsUncheckedUpdateWithoutCompetition_templatesInput>;
+};
 export type associationsCreateNestedOneWithoutAssociation_announcementsInput = {
     create?: Prisma.XOR<Prisma.associationsCreateWithoutAssociation_announcementsInput, Prisma.associationsUncheckedCreateWithoutAssociation_announcementsInput>;
     connectOrCreate?: Prisma.associationsCreateOrConnectWithoutAssociation_announcementsInput;
@@ -595,6 +616,7 @@ export type associationsCreateWithoutAssociation_administratorsInput = {
     created_at?: Date | string;
     updated_at?: Date | string;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutAssociationsInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutAssociationsInput;
     users: Prisma.usersCreateNestedOneWithoutAssociationsInput;
     tournaments?: Prisma.tournamentsCreateNestedManyWithoutAssociationsInput;
 };
@@ -616,6 +638,7 @@ export type associationsUncheckedCreateWithoutAssociation_administratorsInput = 
     created_at?: Date | string;
     updated_at?: Date | string;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutAssociationsInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutAssociationsInput;
     tournaments?: Prisma.tournamentsUncheckedCreateNestedManyWithoutAssociationsInput;
 };
 export type associationsCreateOrConnectWithoutAssociation_administratorsInput = {
@@ -648,6 +671,7 @@ export type associationsUpdateWithoutAssociation_administratorsInput = {
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutAssociationsNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutAssociationsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutAssociationsNestedInput;
     tournaments?: Prisma.tournamentsUpdateManyWithoutAssociationsNestedInput;
 };
@@ -669,6 +693,104 @@ export type associationsUncheckedUpdateWithoutAssociation_administratorsInput = 
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutAssociationsNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutAssociationsNestedInput;
+    tournaments?: Prisma.tournamentsUncheckedUpdateManyWithoutAssociationsNestedInput;
+};
+export type associationsCreateWithoutCompetition_templatesInput = {
+    id?: bigint | number;
+    name: string;
+    description?: string | null;
+    city: string;
+    address?: string | null;
+    tax_id?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    logo_url?: string | null;
+    logo_public_id?: string | null;
+    cover_url: string;
+    cover_public_id?: string | null;
+    status?: string;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutAssociationsInput;
+    association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutAssociationsInput;
+    users: Prisma.usersCreateNestedOneWithoutAssociationsInput;
+    tournaments?: Prisma.tournamentsCreateNestedManyWithoutAssociationsInput;
+};
+export type associationsUncheckedCreateWithoutCompetition_templatesInput = {
+    id?: bigint | number;
+    name: string;
+    description?: string | null;
+    city: string;
+    address?: string | null;
+    tax_id?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    logo_url?: string | null;
+    logo_public_id?: string | null;
+    cover_url: string;
+    cover_public_id?: string | null;
+    owner_user_id: bigint | number;
+    status?: string;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutAssociationsInput;
+    association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutAssociationsInput;
+    tournaments?: Prisma.tournamentsUncheckedCreateNestedManyWithoutAssociationsInput;
+};
+export type associationsCreateOrConnectWithoutCompetition_templatesInput = {
+    where: Prisma.associationsWhereUniqueInput;
+    create: Prisma.XOR<Prisma.associationsCreateWithoutCompetition_templatesInput, Prisma.associationsUncheckedCreateWithoutCompetition_templatesInput>;
+};
+export type associationsUpsertWithoutCompetition_templatesInput = {
+    update: Prisma.XOR<Prisma.associationsUpdateWithoutCompetition_templatesInput, Prisma.associationsUncheckedUpdateWithoutCompetition_templatesInput>;
+    create: Prisma.XOR<Prisma.associationsCreateWithoutCompetition_templatesInput, Prisma.associationsUncheckedCreateWithoutCompetition_templatesInput>;
+    where?: Prisma.associationsWhereInput;
+};
+export type associationsUpdateToOneWithWhereWithoutCompetition_templatesInput = {
+    where?: Prisma.associationsWhereInput;
+    data: Prisma.XOR<Prisma.associationsUpdateWithoutCompetition_templatesInput, Prisma.associationsUncheckedUpdateWithoutCompetition_templatesInput>;
+};
+export type associationsUpdateWithoutCompetition_templatesInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    city?: Prisma.StringFieldUpdateOperationsInput | string;
+    address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    tax_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    logo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    logo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    cover_url?: Prisma.StringFieldUpdateOperationsInput | string;
+    cover_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    association_administrators?: Prisma.association_administratorsUpdateManyWithoutAssociationsNestedInput;
+    association_announcements?: Prisma.association_announcementsUpdateManyWithoutAssociationsNestedInput;
+    users?: Prisma.usersUpdateOneRequiredWithoutAssociationsNestedInput;
+    tournaments?: Prisma.tournamentsUpdateManyWithoutAssociationsNestedInput;
+};
+export type associationsUncheckedUpdateWithoutCompetition_templatesInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    city?: Prisma.StringFieldUpdateOperationsInput | string;
+    address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    tax_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    logo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    logo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    cover_url?: Prisma.StringFieldUpdateOperationsInput | string;
+    cover_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    owner_user_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutAssociationsNestedInput;
+    association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutAssociationsNestedInput;
     tournaments?: Prisma.tournamentsUncheckedUpdateManyWithoutAssociationsNestedInput;
 };
 export type associationsCreateWithoutAssociation_announcementsInput = {
@@ -688,6 +810,7 @@ export type associationsCreateWithoutAssociation_announcementsInput = {
     created_at?: Date | string;
     updated_at?: Date | string;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutAssociationsInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutAssociationsInput;
     users: Prisma.usersCreateNestedOneWithoutAssociationsInput;
     tournaments?: Prisma.tournamentsCreateNestedManyWithoutAssociationsInput;
 };
@@ -709,6 +832,7 @@ export type associationsUncheckedCreateWithoutAssociation_announcementsInput = {
     created_at?: Date | string;
     updated_at?: Date | string;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutAssociationsInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutAssociationsInput;
     tournaments?: Prisma.tournamentsUncheckedCreateNestedManyWithoutAssociationsInput;
 };
 export type associationsCreateOrConnectWithoutAssociation_announcementsInput = {
@@ -741,6 +865,7 @@ export type associationsUpdateWithoutAssociation_announcementsInput = {
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutAssociationsNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutAssociationsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutAssociationsNestedInput;
     tournaments?: Prisma.tournamentsUpdateManyWithoutAssociationsNestedInput;
 };
@@ -762,6 +887,7 @@ export type associationsUncheckedUpdateWithoutAssociation_announcementsInput = {
     created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutAssociationsNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutAssociationsNestedInput;
     tournaments?: Prisma.tournamentsUncheckedUpdateManyWithoutAssociationsNestedInput;
 };
 export type associationsCreateWithoutTournamentsInput = {
@@ -782,6 +908,7 @@ export type associationsCreateWithoutTournamentsInput = {
     updated_at?: Date | string;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutAssociationsInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutAssociationsInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutAssociationsInput;
     users: Prisma.usersCreateNestedOneWithoutAssociationsInput;
 };
 export type associationsUncheckedCreateWithoutTournamentsInput = {
@@ -803,6 +930,7 @@ export type associationsUncheckedCreateWithoutTournamentsInput = {
     updated_at?: Date | string;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutAssociationsInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutAssociationsInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutAssociationsInput;
 };
 export type associationsCreateOrConnectWithoutTournamentsInput = {
     where: Prisma.associationsWhereUniqueInput;
@@ -835,6 +963,7 @@ export type associationsUpdateWithoutTournamentsInput = {
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutAssociationsNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutAssociationsNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutAssociationsNestedInput;
     users?: Prisma.usersUpdateOneRequiredWithoutAssociationsNestedInput;
 };
 export type associationsUncheckedUpdateWithoutTournamentsInput = {
@@ -856,6 +985,7 @@ export type associationsUncheckedUpdateWithoutTournamentsInput = {
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutAssociationsNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutAssociationsNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutAssociationsNestedInput;
 };
 export type associationsCreateWithoutUsersInput = {
     id?: bigint | number;
@@ -875,6 +1005,7 @@ export type associationsCreateWithoutUsersInput = {
     updated_at?: Date | string;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutAssociationsInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutAssociationsInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutAssociationsInput;
     tournaments?: Prisma.tournamentsCreateNestedManyWithoutAssociationsInput;
 };
 export type associationsUncheckedCreateWithoutUsersInput = {
@@ -895,6 +1026,7 @@ export type associationsUncheckedCreateWithoutUsersInput = {
     updated_at?: Date | string;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutAssociationsInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutAssociationsInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutAssociationsInput;
     tournaments?: Prisma.tournamentsUncheckedCreateNestedManyWithoutAssociationsInput;
 };
 export type associationsCreateOrConnectWithoutUsersInput = {
@@ -928,6 +1060,7 @@ export type associationsUpdateWithoutUsersInput = {
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutAssociationsNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutAssociationsNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutAssociationsNestedInput;
     tournaments?: Prisma.tournamentsUpdateManyWithoutAssociationsNestedInput;
 };
 export type associationsUncheckedUpdateWithoutUsersInput = {
@@ -948,16 +1081,19 @@ export type associationsUncheckedUpdateWithoutUsersInput = {
     updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutAssociationsNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutAssociationsNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutAssociationsNestedInput;
     tournaments?: Prisma.tournamentsUncheckedUpdateManyWithoutAssociationsNestedInput;
 };
 export type AssociationsCountOutputType = {
     association_administrators: number;
     association_announcements: number;
+    competition_templates: number;
     tournaments: number;
 };
 export type AssociationsCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     association_administrators?: boolean | AssociationsCountOutputTypeCountAssociation_administratorsArgs;
     association_announcements?: boolean | AssociationsCountOutputTypeCountAssociation_announcementsArgs;
+    competition_templates?: boolean | AssociationsCountOutputTypeCountCompetition_templatesArgs;
     tournaments?: boolean | AssociationsCountOutputTypeCountTournamentsArgs;
 };
 export type AssociationsCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -968,6 +1104,9 @@ export type AssociationsCountOutputTypeCountAssociation_administratorsArgs<ExtAr
 };
 export type AssociationsCountOutputTypeCountAssociation_announcementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.association_announcementsWhereInput;
+};
+export type AssociationsCountOutputTypeCountCompetition_templatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.competition_templatesWhereInput;
 };
 export type AssociationsCountOutputTypeCountTournamentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.tournamentsWhereInput;
@@ -991,6 +1130,7 @@ export type associationsSelect<ExtArgs extends runtime.Types.Extensions.Internal
     updated_at?: boolean;
     association_administrators?: boolean | Prisma.associations$association_administratorsArgs<ExtArgs>;
     association_announcements?: boolean | Prisma.associations$association_announcementsArgs<ExtArgs>;
+    competition_templates?: boolean | Prisma.associations$competition_templatesArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
     tournaments?: boolean | Prisma.associations$tournamentsArgs<ExtArgs>;
     _count?: boolean | Prisma.AssociationsCountOutputTypeDefaultArgs<ExtArgs>;
@@ -1055,6 +1195,7 @@ export type associationsOmit<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type associationsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     association_administrators?: boolean | Prisma.associations$association_administratorsArgs<ExtArgs>;
     association_announcements?: boolean | Prisma.associations$association_announcementsArgs<ExtArgs>;
+    competition_templates?: boolean | Prisma.associations$competition_templatesArgs<ExtArgs>;
     users?: boolean | Prisma.usersDefaultArgs<ExtArgs>;
     tournaments?: boolean | Prisma.associations$tournamentsArgs<ExtArgs>;
     _count?: boolean | Prisma.AssociationsCountOutputTypeDefaultArgs<ExtArgs>;
@@ -1070,6 +1211,7 @@ export type $associationsPayload<ExtArgs extends runtime.Types.Extensions.Intern
     objects: {
         association_administrators: Prisma.$association_administratorsPayload<ExtArgs>[];
         association_announcements: Prisma.$association_announcementsPayload<ExtArgs>[];
+        competition_templates: Prisma.$competition_templatesPayload<ExtArgs>[];
         users: Prisma.$usersPayload<ExtArgs>;
         tournaments: Prisma.$tournamentsPayload<ExtArgs>[];
     };
@@ -1144,6 +1286,7 @@ export interface Prisma__associationsClient<T, Null = never, ExtArgs extends run
     readonly [Symbol.toStringTag]: "PrismaPromise";
     association_administrators<T extends Prisma.associations$association_administratorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.associations$association_administratorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$association_administratorsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     association_announcements<T extends Prisma.associations$association_announcementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.associations$association_announcementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$association_announcementsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    competition_templates<T extends Prisma.associations$competition_templatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.associations$competition_templatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$competition_templatesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     users<T extends Prisma.usersDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.usersDefaultArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     tournaments<T extends Prisma.associations$tournamentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.associations$tournamentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$tournamentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
@@ -1289,6 +1432,17 @@ export type associations$association_announcementsArgs<ExtArgs extends runtime.T
     take?: number;
     skip?: number;
     distinct?: Prisma.Association_announcementsScalarFieldEnum | Prisma.Association_announcementsScalarFieldEnum[];
+};
+export type associations$competition_templatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.competition_templatesSelect<ExtArgs> | null;
+    omit?: Prisma.competition_templatesOmit<ExtArgs> | null;
+    include?: Prisma.competition_templatesInclude<ExtArgs> | null;
+    where?: Prisma.competition_templatesWhereInput;
+    orderBy?: Prisma.competition_templatesOrderByWithRelationInput | Prisma.competition_templatesOrderByWithRelationInput[];
+    cursor?: Prisma.competition_templatesWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Competition_templatesScalarFieldEnum | Prisma.Competition_templatesScalarFieldEnum[];
 };
 export type associations$tournamentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.tournamentsSelect<ExtArgs> | null;

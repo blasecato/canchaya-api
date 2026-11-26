@@ -34,7 +34,7 @@ export declare class DisciplinaryActionsController {
         player: {
             id: string;
             name: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
             status: string;
             jerseyNumber: number | null;
@@ -140,7 +140,7 @@ export declare class DisciplinaryActionsController {
             player: {
                 id: string;
                 name: string;
-                email: string;
+                email: string | null;
                 photoUrl: string | null;
                 status: string;
                 jerseyNumber: number | null;
@@ -276,7 +276,7 @@ export declare class DisciplinaryActionsController {
         player: {
             id: string;
             name: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
             status: string;
             jerseyNumber: number | null;
@@ -381,7 +381,7 @@ export declare class DisciplinaryActionsController {
         player: {
             id: string;
             name: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
             status: string;
             jerseyNumber: number | null;
@@ -486,7 +486,7 @@ export declare class DisciplinaryActionsController {
         player: {
             id: string;
             name: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
             status: string;
             jerseyNumber: number | null;
@@ -591,7 +591,7 @@ export declare class DisciplinaryActionsController {
         player: {
             id: string;
             name: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
             status: string;
             jerseyNumber: number | null;
@@ -696,7 +696,7 @@ export declare class DisciplinaryActionsController {
         player: {
             id: string;
             name: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
             status: string;
             jerseyNumber: number | null;
@@ -801,7 +801,7 @@ export declare class DisciplinaryActionsController {
         player: {
             id: string;
             name: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
             status: string;
             jerseyNumber: number | null;
@@ -906,7 +906,7 @@ export declare class DisciplinaryActionsController {
         player: {
             id: string;
             name: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
             status: string;
             jerseyNumber: number | null;

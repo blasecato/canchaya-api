@@ -40,7 +40,7 @@ export declare class RefereeAssignmentsService {
         referee: {
             id: string;
             fullName: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
         };
         match: {
@@ -77,7 +77,7 @@ export declare class RefereeAssignmentsService {
         referee: {
             id: string;
             fullName: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
         };
         match: {
@@ -114,7 +114,7 @@ export declare class RefereeAssignmentsService {
         referee: {
             id: string;
             fullName: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
         };
         match: {
@@ -151,7 +151,7 @@ export declare class RefereeAssignmentsService {
         referee: {
             id: string;
             fullName: string;
-            email: string;
+            email: string | null;
             photoUrl: string | null;
         };
         match: {

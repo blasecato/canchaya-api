@@ -1,6 +1,7 @@
 export type * from './models/auth_sessions';
 export type * from './models/association_administrators';
 export type * from './models/associations';
+export type * from './models/competition_templates';
 export type * from './models/association_announcements';
 export type * from './models/home_hero_slides';
 export type * from './models/password_reset_codes';

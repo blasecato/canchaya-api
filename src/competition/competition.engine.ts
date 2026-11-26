@@ -56,10 +56,18 @@ export interface CompetitionStage {
   fixtures: Fixture[];
   byes: string[];
   resolved: boolean;
+  /** Índice del StageBlueprint al que pertenece esta etapa (planes v3). */
+  blueprintIndex?: number;
+  /** Marca la ronda de repechaje previa a la siguiente etapa (planes v3). */
+  isPlayIn?: boolean;
 }
 export interface CompetitionPlan {
-  version: 1 | 2;
+  version: 1 | 2 | 3;
   config: CompetitionConfig;
+  /** Modo de organización (planes v3): planificado o sobre la marcha. */
+  organizationMode?: 'planned' | 'on_the_fly';
+  /** Definición de etapas encadenadas (planes v3). */
+  blueprints?: import('./competition.pipeline').StageBlueprint[];
   seed: string;
   teamIds: string[];
   slots?: CompetitionSlot[];
@@ -774,7 +782,7 @@ export function readPlan(value: unknown): CompetitionPlan | null {
   return value &&
     typeof value === 'object' &&
     'version' in value &&
-    (value.version === 1 || value.version === 2)
+    (value.version === 1 || value.version === 2 || value.version === 3)
     ? (value as CompetitionPlan)
     : null;
 }
@@ -795,6 +803,6 @@ export function assignedTeamIds(plan: CompetitionPlan): string[] {
 
 export function hasUnfilledSlots(plan: CompetitionPlan): boolean {
   return (
-    plan.version === 2 && Boolean(plan.slots?.some(({ teamId }) => !teamId))
+    plan.version >= 2 && Boolean(plan.slots?.some(({ teamId }) => !teamId))
   );
 }

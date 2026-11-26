@@ -45,6 +45,15 @@ let CompetitionController = class CompetitionController {
     advance(id, req, dto) {
         return this.service.advance(id, req.auth.userId, dto);
     }
+    listTemplates(id, req) {
+        return this.service.listTemplates(id, req.auth.userId);
+    }
+    createTemplate(id, req, dto) {
+        return this.service.createTemplate(id, req.auth.userId, dto);
+    }
+    deleteTemplate(id, templateId, req) {
+        return this.service.deleteTemplate(id, templateId, req.auth.userId);
+    }
 };
 exports.CompetitionController = CompetitionController;
 __decorate([
@@ -114,6 +123,41 @@ __decorate([
     __metadata("design:paramtypes", [BigInt, Object, competition_dto_1.AdvanceCompetitionDto]),
     __metadata("design:returntype", void 0)
 ], CompetitionController.prototype, "advance", null);
+__decorate([
+    (0, common_1.Get)('templates'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
+    (0, swagger_1.ApiOperation)({ summary: 'Listar plantillas de formato guardadas' }),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object]),
+    __metadata("design:returntype", void 0)
+], CompetitionController.prototype, "listTemplates", null);
+__decorate([
+    (0, common_1.Post)('templates'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
+    (0, swagger_1.ApiOperation)({ summary: 'Guardar formato como plantilla reutilizable' }),
+    openapi.ApiResponse({ status: 201 }),
+    __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, Object, competition_dto_1.CreateCompetitionTemplateDto]),
+    __metadata("design:returntype", void 0)
+], CompetitionController.prototype, "createTemplate", null);
+__decorate([
+    (0, common_1.Delete)('templates/:templateId'),
+    (0, require_roles_decorator_1.RequireRoles)('SUPER_ADMIN', 'ASSOCIATION_ADMIN'),
+    (0, swagger_1.ApiOperation)({ summary: 'Eliminar una plantilla guardada' }),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(1, (0, common_1.Param)('templateId', parse_big_int_pipe_1.ParseBigIntPipe)),
+    __param(2, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [BigInt, BigInt, Object]),
+    __metadata("design:returntype", void 0)
+], CompetitionController.prototype, "deleteTemplate", null);
 exports.CompetitionController = CompetitionController = __decorate([
     (0, swagger_1.ApiTags)('Competition planning'),
     (0, swagger_1.ApiBearerAuth)('access-token'),

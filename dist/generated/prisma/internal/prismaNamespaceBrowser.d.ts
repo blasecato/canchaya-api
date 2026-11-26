@@ -14,6 +14,7 @@ export declare const ModelName: {
     readonly auth_sessions: "auth_sessions";
     readonly association_administrators: "association_administrators";
     readonly associations: "associations";
+    readonly competition_templates: "competition_templates";
     readonly association_announcements: "association_announcements";
     readonly home_hero_slides: "home_hero_slides";
     readonly password_reset_codes: "password_reset_codes";
@@ -90,6 +91,18 @@ export declare const AssociationsScalarFieldEnum: {
     readonly updated_at: "updated_at";
 };
 export type AssociationsScalarFieldEnum = (typeof AssociationsScalarFieldEnum)[keyof typeof AssociationsScalarFieldEnum];
+export declare const Competition_templatesScalarFieldEnum: {
+    readonly id: "id";
+    readonly association_id: "association_id";
+    readonly name: "name";
+    readonly description: "description";
+    readonly mode: "mode";
+    readonly blueprints: "blueprints";
+    readonly created_by: "created_by";
+    readonly created_at: "created_at";
+    readonly updated_at: "updated_at";
+};
+export type Competition_templatesScalarFieldEnum = (typeof Competition_templatesScalarFieldEnum)[keyof typeof Competition_templatesScalarFieldEnum];
 export declare const Association_announcementsScalarFieldEnum: {
     readonly id: "id";
     readonly association_id: "association_id";
@@ -391,6 +404,7 @@ export declare const Tournament_team_registrationsScalarFieldEnum: {
     readonly group_name: "group_name";
     readonly seed: "seed";
     readonly points: "points";
+    readonly lineup: "lineup";
     readonly created_at: "created_at";
     readonly updated_at: "updated_at";
 };
@@ -556,6 +570,10 @@ export declare const SortOrder: {
     readonly desc: "desc";
 };
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
+export declare const JsonNullValueInput: {
+    readonly JsonNull: import("@prisma/client-runtime-utils").JsonNullClass;
+};
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
 export declare const NullableJsonNullValueInput: {
     readonly DbNull: import("@prisma/client-runtime-utils").DbNullClass;
     readonly JsonNull: import("@prisma/client-runtime-utils").JsonNullClass;

@@ -14,7 +14,7 @@ export declare class UsersController {
         id: bigint;
         created_at: Date;
         status: string;
-        email: string;
+        email: string | null;
         phone: string | null;
         updated_at: Date;
         photo_url: string | null;
@@ -40,7 +40,7 @@ export declare class UsersController {
         blocked_by: bigint | null;
         block_source_action_id: bigint | null;
     }>;
-    register(dto: RegisterPlayerDto, uploadedFiles: {
+    register(dto: RegisterPlayerDto, uploadedFiles?: {
         photo?: UploadedImageFile[];
         documentFront?: UploadedImageFile[];
         documentBack?: UploadedImageFile[];
@@ -55,7 +55,7 @@ export declare class UsersController {
             fullName: string;
             birthDate: string;
             birthCity: string | null;
-            email: string;
+            email: string | null;
             phone: string | null;
             photoUrl: string | null;
             status: string;
@@ -91,7 +91,7 @@ export declare class UsersController {
         id: bigint;
         created_at: Date;
         status: string;
-        email: string;
+        email: string | null;
         phone: string | null;
         updated_at: Date;
         photo_url: string | null;

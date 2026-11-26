@@ -52,6 +52,8 @@ import {
 } from './dto/tournament-catalog-response.dto';
 import { TournamentsService } from './tournaments.service';
 import { TournamentLifecycleService } from './tournament-lifecycle.service';
+import { TeamLineupService } from './team-lineup.service';
+import { UpdateTeamLineupDto } from './dto/team-lineup.dto';
 import { UpdateTournamentRulesDto } from './dto/update-tournament-rules.dto';
 import { TournamentSponsorInputDto } from './dto/tournament-sponsor-input.dto';
 import { ReviewTeamRegistrationDto } from './dto/review-team-registration.dto';
@@ -110,6 +112,7 @@ export class TournamentCatalogController {
   constructor(
     private readonly tournamentsService: TournamentsService,
     private readonly tournamentLifecycleService: TournamentLifecycleService,
+    private readonly teamLineupService: TeamLineupService,
   ) {}
 
   @Get('filters')
@@ -462,6 +465,42 @@ export class TournamentCatalogController {
       tournamentId,
       request.auth.userId,
       updateTournamentRulesDto,
+    );
+  }
+
+  @Get(':tournamentId/my-lineup')
+  @RequireRoles('PLAYER')
+  @ApiOperation({
+    summary:
+      'Consultar la alineación táctica del equipo del jugador autenticado en este torneo',
+  })
+  @ApiParam({ name: 'tournamentId', example: '12', type: String })
+  getMyLineup(
+    @Param('tournamentId', ParseBigIntPipe) tournamentId: bigint,
+    @Req() request: AuthenticatedRequest,
+  ) {
+    return this.teamLineupService.getMyLineup(
+      tournamentId,
+      request.auth.userId,
+    );
+  }
+
+  @Patch(':tournamentId/my-lineup')
+  @RequireRoles('PLAYER')
+  @ApiOperation({
+    summary:
+      'Guardar la alineación táctica del equipo (exclusivo para el capitán)',
+  })
+  @ApiParam({ name: 'tournamentId', example: '12', type: String })
+  updateMyLineup(
+    @Param('tournamentId', ParseBigIntPipe) tournamentId: bigint,
+    @Req() request: AuthenticatedRequest,
+    @Body() dto: UpdateTeamLineupDto,
+  ) {
+    return this.teamLineupService.updateMyLineup(
+      tournamentId,
+      request.auth.userId,
+      dto,
     );
   }
 }

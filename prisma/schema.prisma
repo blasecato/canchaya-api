@@ -61,8 +61,26 @@ model associations {
   updated_at                 DateTime                     @default(now()) @db.Timestamptz(6)
   association_administrators association_administrators[]
   association_announcements  association_announcements[]
+  competition_templates      competition_templates[]
   users                      users                        @relation(fields: [owner_user_id], references: [id], onUpdate: NoAction, map: "associations_owner_fkey")
   tournaments                tournaments[]
+}
+
+model competition_templates {
+  id             BigInt        @id @default(autoincrement())
+  association_id BigInt?
+  name           String        @db.VarChar(120)
+  description    String?       @db.Text
+  mode           String        @default("planned")
+  blueprints     Json
+  created_by     BigInt
+  created_at     DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime      @default(now()) @db.Timestamptz(6)
+  associations   associations? @relation(fields: [association_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "competition_templates_association_fkey")
+  users          users         @relation(fields: [created_by], references: [id], onDelete: Restrict, onUpdate: NoAction, map: "competition_templates_created_by_fkey")
+
+  @@index([association_id, created_at(sort: Desc)], map: "competition_templates_association_idx")
+  @@index([created_by], map: "competition_templates_created_by_idx")
 }
 
 model association_announcements {
@@ -514,6 +532,7 @@ model tournament_team_registrations {
   group_name                                                                String?
   seed                                                                      Int?
   points                                                                    Int                              @default(0)
+  lineup                                                                    Json?
   created_at                                                                DateTime                         @default(now()) @db.Timestamptz(6)
   updated_at                                                                DateTime                         @default(now()) @db.Timestamptz(6)
   matches_matches_tournament_id_away_team_idTotournament_team_registrations matches[]                        @relation("matches_tournament_id_away_team_idTotournament_team_registrations")
@@ -709,7 +728,7 @@ model users {
   birth_date                                                                            DateTime                         @db.Date
   birth_city                                                                            String?
   gender                                                                                String?
-  email                                                                                 String
+  email                                                                                 String?
   phone                                                                                 String?
   photo_url                                                                             String?
   photo_public_id                                                                       String?
@@ -749,6 +768,7 @@ model users {
   match_referees_replaced_referee                                                       match_referees[]                 @relation("match_referees_replaced_referee")
   association_administrators                                                            association_administrators[]
   association_announcements                                                             association_announcements[]
+  competition_templates                                                                 competition_templates[]
   associations                                                                          associations?
   disciplinary_actions_disciplinary_actions_decided_byTousers                           disciplinary_actions[]           @relation("disciplinary_actions_decided_byTousers")
   disciplinary_actions_disciplinary_actions_reported_byTousers                          disciplinary_actions[]           @relation("disciplinary_actions_reported_byTousers")

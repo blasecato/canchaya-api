@@ -174,7 +174,11 @@ describe('AuthService', () => {
         email: 'user@example.com',
         password: 'incorrect-password',
       }),
-    ).rejects.toThrow(new UnauthorizedException('El correo o la contraseña no son correctos.'));
+    ).rejects.toThrow(
+      new UnauthorizedException(
+        'El teléfono, correo o contraseña no son correctos.',
+      ),
+    );
     expect(sessionsCreate).not.toHaveBeenCalled();
   });
 

@@ -102,7 +102,7 @@ class TeamCarnetPlayerResponseDto {
     jerseyNumber;
     position;
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => String }, fullName: { required: true, type: () => String }, idNumber: { required: true, type: () => String }, documentType: { required: true, type: () => String }, birthDate: { required: true, type: () => String }, phone: { required: true, type: () => String, nullable: true }, email: { required: true, type: () => String }, photoUrl: { required: true, type: () => String, nullable: true }, jerseyNumber: { required: true, type: () => Number, nullable: true }, position: { required: true, type: () => String, nullable: true } };
+        return { id: { required: true, type: () => String }, fullName: { required: true, type: () => String }, idNumber: { required: true, type: () => String }, documentType: { required: true, type: () => String }, birthDate: { required: true, type: () => String }, phone: { required: true, type: () => String, nullable: true }, email: { required: true, type: () => String, nullable: true }, photoUrl: { required: true, type: () => String, nullable: true }, jerseyNumber: { required: true, type: () => Number, nullable: true }, position: { required: true, type: () => String, nullable: true } };
     }
 }
 exports.TeamCarnetPlayerResponseDto = TeamCarnetPlayerResponseDto;
@@ -131,8 +131,8 @@ __decorate([
     __metadata("design:type", Object)
 ], TeamCarnetPlayerResponseDto.prototype, "phone", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'jugador@canchaya.test' }),
-    __metadata("design:type", String)
+    (0, swagger_1.ApiProperty)({ example: 'jugador@canchaya.test', nullable: true }),
+    __metadata("design:type", Object)
 ], TeamCarnetPlayerResponseDto.prototype, "email", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: '/uploads/users/player.webp', nullable: true }),

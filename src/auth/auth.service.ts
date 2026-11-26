@@ -5,6 +5,10 @@ import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
 import {
+  isValidColombianMobile,
+  normalizeColombianPhone,
+} from '../common/utils/phone.util';
+import {
   publicUserSelect,
   toPublicUserResponse,
 } from '../users/public-user.mapper';
@@ -16,7 +20,7 @@ import type { AccessTokenPayload } from './interfaces/access-token-payload.inter
 import type { AuthenticatedSession } from './interfaces/authenticated-request.interface';
 
 const INVALID_CREDENTIALS_MESSAGE =
-  'El correo o la contraseña no son correctos.';
+  'El teléfono, correo o contraseña no son correctos.';
 const INVALID_TOKEN_MESSAGE =
   'Tu sesión expiró. Vuelve a iniciar sesión para continuar.';
 const DUMMY_PASSWORD_HASH =
@@ -35,33 +39,59 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto): Promise<LoginResponseDto> {
-    const email = loginDto.email.trim().toLowerCase();
+    const rawIdentifier = (loginDto.identifier ?? loginDto.email ?? '').trim();
+    const isEmail = rawIdentifier.includes('@');
+    const normalizedEmail = isEmail ? rawIdentifier.toLowerCase() : null;
+    const normalizedPhone = !isEmail
+      ? normalizeColombianPhone(rawIdentifier)
+      : null;
+
+    const phoneVariants =
+      normalizedPhone && isValidColombianMobile(normalizedPhone)
+        ? [
+            normalizedPhone,
+            `+57${normalizedPhone}`,
+            `+57 ${normalizedPhone}`,
+            `57${normalizedPhone}`,
+            `+57 ${normalizedPhone.slice(0, 3)} ${normalizedPhone.slice(3, 6)} ${normalizedPhone.slice(6)}`,
+            `${normalizedPhone.slice(0, 3)} ${normalizedPhone.slice(3, 6)} ${normalizedPhone.slice(6)}`,
+          ]
+        : null;
+
+    const userWhere = normalizedEmail
+      ? { email: { equals: normalizedEmail, mode: 'insensitive' as const } }
+      : phoneVariants
+        ? { phone: { in: phoneVariants } }
+        : null;
+
     const now = new Date();
-    await this.prisma.users.updateMany({
-      where: {
-        email: { equals: email, mode: 'insensitive' },
-        status: 'inactive',
-        block_reason: { not: null },
-        blocked_until: { lte: now },
-      },
-      data: {
-        status: 'active',
-        blocked_until: null,
-        block_reason: null,
-        blocked_by: null,
-        block_source_action_id: null,
-        updated_at: now,
-      },
-    });
-    const user = await this.prisma.users.findFirst({
-      where: {
-        email: { equals: email, mode: 'insensitive' },
-      },
-      select: {
-        ...publicUserSelect,
-        password_hash: true,
-      },
-    });
+    if (userWhere) {
+      await this.prisma.users.updateMany({
+        where: {
+          ...userWhere,
+          status: 'inactive',
+          block_reason: { not: null },
+          blocked_until: { lte: now },
+        },
+        data: {
+          status: 'active',
+          blocked_until: null,
+          block_reason: null,
+          blocked_by: null,
+          block_source_action_id: null,
+          updated_at: now,
+        },
+      });
+    }
+    const user = userWhere
+      ? await this.prisma.users.findFirst({
+          where: userWhere,
+          select: {
+            ...publicUserSelect,
+            password_hash: true,
+          },
+        })
+      : null;
 
     const passwordIsValid = await compare(
       loginDto.password,

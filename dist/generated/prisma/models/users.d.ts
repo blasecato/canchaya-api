@@ -248,7 +248,7 @@ export type UsersGroupByOutputType = {
     birth_date: Date;
     birth_city: string | null;
     gender: string | null;
-    email: string;
+    email: string | null;
     phone: string | null;
     photo_url: string | null;
     photo_public_id: string | null;
@@ -290,7 +290,7 @@ export type usersWhereInput = {
     birth_date?: Prisma.DateTimeFilter<"users"> | Date | string;
     birth_city?: Prisma.StringNullableFilter<"users"> | string | null;
     gender?: Prisma.StringNullableFilter<"users"> | string | null;
-    email?: Prisma.StringFilter<"users"> | string;
+    email?: Prisma.StringNullableFilter<"users"> | string | null;
     phone?: Prisma.StringNullableFilter<"users"> | string | null;
     photo_url?: Prisma.StringNullableFilter<"users"> | string | null;
     photo_public_id?: Prisma.StringNullableFilter<"users"> | string | null;
@@ -330,6 +330,7 @@ export type usersWhereInput = {
     match_referees_replaced_referee?: Prisma.Match_refereesListRelationFilter;
     association_administrators?: Prisma.Association_administratorsListRelationFilter;
     association_announcements?: Prisma.Association_announcementsListRelationFilter;
+    competition_templates?: Prisma.Competition_templatesListRelationFilter;
     associations?: Prisma.XOR<Prisma.AssociationsNullableScalarRelationFilter, Prisma.associationsWhereInput> | null;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.Disciplinary_actionsListRelationFilter;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.Disciplinary_actionsListRelationFilter;
@@ -355,7 +356,7 @@ export type usersOrderByWithRelationInput = {
     birth_date?: Prisma.SortOrder;
     birth_city?: Prisma.SortOrderInput | Prisma.SortOrder;
     gender?: Prisma.SortOrderInput | Prisma.SortOrder;
-    email?: Prisma.SortOrder;
+    email?: Prisma.SortOrderInput | Prisma.SortOrder;
     phone?: Prisma.SortOrderInput | Prisma.SortOrder;
     photo_url?: Prisma.SortOrderInput | Prisma.SortOrder;
     photo_public_id?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -395,6 +396,7 @@ export type usersOrderByWithRelationInput = {
     match_referees_replaced_referee?: Prisma.match_refereesOrderByRelationAggregateInput;
     association_administrators?: Prisma.association_administratorsOrderByRelationAggregateInput;
     association_announcements?: Prisma.association_announcementsOrderByRelationAggregateInput;
+    competition_templates?: Prisma.competition_templatesOrderByRelationAggregateInput;
     associations?: Prisma.associationsOrderByWithRelationInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsOrderByRelationAggregateInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsOrderByRelationAggregateInput;
@@ -423,7 +425,7 @@ export type usersWhereUniqueInput = Prisma.AtLeast<{
     birth_date?: Prisma.DateTimeFilter<"users"> | Date | string;
     birth_city?: Prisma.StringNullableFilter<"users"> | string | null;
     gender?: Prisma.StringNullableFilter<"users"> | string | null;
-    email?: Prisma.StringFilter<"users"> | string;
+    email?: Prisma.StringNullableFilter<"users"> | string | null;
     phone?: Prisma.StringNullableFilter<"users"> | string | null;
     photo_url?: Prisma.StringNullableFilter<"users"> | string | null;
     photo_public_id?: Prisma.StringNullableFilter<"users"> | string | null;
@@ -463,6 +465,7 @@ export type usersWhereUniqueInput = Prisma.AtLeast<{
     match_referees_replaced_referee?: Prisma.Match_refereesListRelationFilter;
     association_administrators?: Prisma.Association_administratorsListRelationFilter;
     association_announcements?: Prisma.Association_announcementsListRelationFilter;
+    competition_templates?: Prisma.Competition_templatesListRelationFilter;
     associations?: Prisma.XOR<Prisma.AssociationsNullableScalarRelationFilter, Prisma.associationsWhereInput> | null;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.Disciplinary_actionsListRelationFilter;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.Disciplinary_actionsListRelationFilter;
@@ -488,7 +491,7 @@ export type usersOrderByWithAggregationInput = {
     birth_date?: Prisma.SortOrder;
     birth_city?: Prisma.SortOrderInput | Prisma.SortOrder;
     gender?: Prisma.SortOrderInput | Prisma.SortOrder;
-    email?: Prisma.SortOrder;
+    email?: Prisma.SortOrderInput | Prisma.SortOrder;
     phone?: Prisma.SortOrderInput | Prisma.SortOrder;
     photo_url?: Prisma.SortOrderInput | Prisma.SortOrder;
     photo_public_id?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -527,7 +530,7 @@ export type usersScalarWhereWithAggregatesInput = {
     birth_date?: Prisma.DateTimeWithAggregatesFilter<"users"> | Date | string;
     birth_city?: Prisma.StringNullableWithAggregatesFilter<"users"> | string | null;
     gender?: Prisma.StringNullableWithAggregatesFilter<"users"> | string | null;
-    email?: Prisma.StringWithAggregatesFilter<"users"> | string;
+    email?: Prisma.StringNullableWithAggregatesFilter<"users"> | string | null;
     phone?: Prisma.StringNullableWithAggregatesFilter<"users"> | string | null;
     photo_url?: Prisma.StringNullableWithAggregatesFilter<"users"> | string | null;
     photo_public_id?: Prisma.StringNullableWithAggregatesFilter<"users"> | string | null;
@@ -558,7 +561,7 @@ export type usersCreateInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -597,6 +600,7 @@ export type usersCreateInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -622,7 +626,7 @@ export type usersUncheckedCreateInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -661,6 +665,7 @@ export type usersUncheckedCreateInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -686,7 +691,7 @@ export type usersUpdateInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -725,6 +730,7 @@ export type usersUpdateInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -750,7 +756,7 @@ export type usersUncheckedUpdateInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -789,6 +795,7 @@ export type usersUncheckedUpdateInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -814,7 +821,7 @@ export type usersCreateManyInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -845,7 +852,7 @@ export type usersUpdateManyMutationInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -875,7 +882,7 @@ export type usersUncheckedUpdateManyInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1050,6 +1057,18 @@ export type usersUpdateOneRequiredWithoutAssociationsNestedInput = {
     upsert?: Prisma.usersUpsertWithoutAssociationsInput;
     connect?: Prisma.usersWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutAssociationsInput, Prisma.usersUpdateWithoutAssociationsInput>, Prisma.usersUncheckedUpdateWithoutAssociationsInput>;
+};
+export type usersCreateNestedOneWithoutCompetition_templatesInput = {
+    create?: Prisma.XOR<Prisma.usersCreateWithoutCompetition_templatesInput, Prisma.usersUncheckedCreateWithoutCompetition_templatesInput>;
+    connectOrCreate?: Prisma.usersCreateOrConnectWithoutCompetition_templatesInput;
+    connect?: Prisma.usersWhereUniqueInput;
+};
+export type usersUpdateOneRequiredWithoutCompetition_templatesNestedInput = {
+    create?: Prisma.XOR<Prisma.usersCreateWithoutCompetition_templatesInput, Prisma.usersUncheckedCreateWithoutCompetition_templatesInput>;
+    connectOrCreate?: Prisma.usersCreateOrConnectWithoutCompetition_templatesInput;
+    upsert?: Prisma.usersUpsertWithoutCompetition_templatesInput;
+    connect?: Prisma.usersWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutCompetition_templatesInput, Prisma.usersUpdateWithoutCompetition_templatesInput>, Prisma.usersUncheckedUpdateWithoutCompetition_templatesInput>;
 };
 export type usersCreateNestedOneWithoutAssociation_announcementsInput = {
     create?: Prisma.XOR<Prisma.usersCreateWithoutAssociation_announcementsInput, Prisma.usersUncheckedCreateWithoutAssociation_announcementsInput>;
@@ -1475,7 +1494,7 @@ export type usersCreateWithoutAuth_sessionsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -1513,6 +1532,7 @@ export type usersCreateWithoutAuth_sessionsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -1538,7 +1558,7 @@ export type usersUncheckedCreateWithoutAuth_sessionsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -1576,6 +1596,7 @@ export type usersUncheckedCreateWithoutAuth_sessionsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -1614,7 +1635,7 @@ export type usersUpdateWithoutAuth_sessionsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1652,6 +1673,7 @@ export type usersUpdateWithoutAuth_sessionsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -1677,7 +1699,7 @@ export type usersUncheckedUpdateWithoutAuth_sessionsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1715,6 +1737,7 @@ export type usersUncheckedUpdateWithoutAuth_sessionsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -1740,7 +1763,7 @@ export type usersCreateWithoutAssociation_administratorsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -1778,6 +1801,7 @@ export type usersCreateWithoutAssociation_administratorsInput = {
     match_referees_assigned_by?: Prisma.match_refereesCreateNestedManyWithoutAssigned_by_userInput;
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -1803,7 +1827,7 @@ export type usersUncheckedCreateWithoutAssociation_administratorsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -1841,6 +1865,7 @@ export type usersUncheckedCreateWithoutAssociation_administratorsInput = {
     match_referees_assigned_by?: Prisma.match_refereesUncheckedCreateNestedManyWithoutAssigned_by_userInput;
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -1879,7 +1904,7 @@ export type usersUpdateWithoutAssociation_administratorsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1917,6 +1942,7 @@ export type usersUpdateWithoutAssociation_administratorsInput = {
     match_referees_assigned_by?: Prisma.match_refereesUpdateManyWithoutAssigned_by_userNestedInput;
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -1942,7 +1968,7 @@ export type usersUncheckedUpdateWithoutAssociation_administratorsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -1980,6 +2006,7 @@ export type usersUncheckedUpdateWithoutAssociation_administratorsInput = {
     match_referees_assigned_by?: Prisma.match_refereesUncheckedUpdateManyWithoutAssigned_by_userNestedInput;
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -2005,7 +2032,7 @@ export type usersCreateWithoutAssociationsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -2044,6 +2071,7 @@ export type usersCreateWithoutAssociationsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
     fines?: Prisma.finesCreateNestedManyWithoutUsersInput;
@@ -2068,7 +2096,7 @@ export type usersUncheckedCreateWithoutAssociationsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -2107,6 +2135,7 @@ export type usersUncheckedCreateWithoutAssociationsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
     fines?: Prisma.finesUncheckedCreateNestedManyWithoutUsersInput;
@@ -2144,7 +2173,7 @@ export type usersUpdateWithoutAssociationsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2183,6 +2212,7 @@ export type usersUpdateWithoutAssociationsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
     fines?: Prisma.finesUpdateManyWithoutUsersNestedInput;
@@ -2207,7 +2237,7 @@ export type usersUncheckedUpdateWithoutAssociationsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2246,6 +2276,7 @@ export type usersUncheckedUpdateWithoutAssociationsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
     fines?: Prisma.finesUncheckedUpdateManyWithoutUsersNestedInput;
@@ -2262,7 +2293,7 @@ export type usersUncheckedUpdateWithoutAssociationsInput = {
     user_roles?: Prisma.user_rolesUncheckedUpdateManyWithoutUsersNestedInput;
     tournament_card_charges?: Prisma.tournament_card_chargesUncheckedUpdateManyWithoutUsersNestedInput;
 };
-export type usersCreateWithoutAssociation_announcementsInput = {
+export type usersCreateWithoutCompetition_templatesInput = {
     id?: bigint | number;
     id_number: string;
     document_type: string;
@@ -2270,7 +2301,7 @@ export type usersCreateWithoutAssociation_announcementsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -2308,6 +2339,7 @@ export type usersCreateWithoutAssociation_announcementsInput = {
     match_referees_assigned_by?: Prisma.match_refereesCreateNestedManyWithoutAssigned_by_userInput;
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
+    association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -2325,7 +2357,7 @@ export type usersCreateWithoutAssociation_announcementsInput = {
     user_roles?: Prisma.user_rolesCreateNestedManyWithoutUsersInput;
     tournament_card_charges?: Prisma.tournament_card_chargesCreateNestedManyWithoutUsersInput;
 };
-export type usersUncheckedCreateWithoutAssociation_announcementsInput = {
+export type usersUncheckedCreateWithoutCompetition_templatesInput = {
     id?: bigint | number;
     id_number: string;
     document_type: string;
@@ -2333,7 +2365,7 @@ export type usersUncheckedCreateWithoutAssociation_announcementsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -2371,6 +2403,276 @@ export type usersUncheckedCreateWithoutAssociation_announcementsInput = {
     match_referees_assigned_by?: Prisma.match_refereesUncheckedCreateNestedManyWithoutAssigned_by_userInput;
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
+    association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
+    disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
+    disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
+    fines?: Prisma.finesUncheckedCreateNestedManyWithoutUsersInput;
+    suspensions?: Prisma.suspensionsUncheckedCreateNestedManyWithoutUsersInput;
+    team_members?: Prisma.team_membersUncheckedCreateNestedManyWithoutUsersInput;
+    teams_teams_captain_user_idTousers?: Prisma.teamsUncheckedCreateNestedManyWithoutUsers_teams_captain_user_idTousersInput;
+    teams_teams_created_byTousers?: Prisma.teamsUncheckedCreateNestedManyWithoutUsers_teams_created_byTousersInput;
+    tournament_administrators?: Prisma.tournament_administratorsUncheckedCreateNestedManyWithoutUsersInput;
+    tournament_referees?: Prisma.tournament_refereesUncheckedCreateNestedManyWithoutUsersInput;
+    tournament_team_registrations_tournament_team_registrations_requested_byTousers?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutUsers_tournament_team_registrations_requested_byTousersInput;
+    tournament_team_registrations_tournament_team_registrations_reviewed_byTousers?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutUsers_tournament_team_registrations_reviewed_byTousersInput;
+    tournament_team_registrations_tournament_team_registrations_payment_updated_byTousers?: Prisma.tournament_team_registrationsUncheckedCreateNestedManyWithoutUsers_tournament_team_registrations_payment_updated_byTousersInput;
+    tournaments?: Prisma.tournamentsUncheckedCreateNestedManyWithoutUsersInput;
+    user_roles?: Prisma.user_rolesUncheckedCreateNestedManyWithoutUsersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedCreateNestedManyWithoutUsersInput;
+};
+export type usersCreateOrConnectWithoutCompetition_templatesInput = {
+    where: Prisma.usersWhereUniqueInput;
+    create: Prisma.XOR<Prisma.usersCreateWithoutCompetition_templatesInput, Prisma.usersUncheckedCreateWithoutCompetition_templatesInput>;
+};
+export type usersUpsertWithoutCompetition_templatesInput = {
+    update: Prisma.XOR<Prisma.usersUpdateWithoutCompetition_templatesInput, Prisma.usersUncheckedUpdateWithoutCompetition_templatesInput>;
+    create: Prisma.XOR<Prisma.usersCreateWithoutCompetition_templatesInput, Prisma.usersUncheckedCreateWithoutCompetition_templatesInput>;
+    where?: Prisma.usersWhereInput;
+};
+export type usersUpdateToOneWithWhereWithoutCompetition_templatesInput = {
+    where?: Prisma.usersWhereInput;
+    data: Prisma.XOR<Prisma.usersUpdateWithoutCompetition_templatesInput, Prisma.usersUncheckedUpdateWithoutCompetition_templatesInput>;
+};
+export type usersUpdateWithoutCompetition_templatesInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    id_number?: Prisma.StringFieldUpdateOperationsInput | string;
+    document_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    full_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
+    blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    block_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    home_hero_slides?: Prisma.home_hero_slidesUpdateManyWithoutUsersNestedInput;
+    password_reset_codes?: Prisma.password_reset_codesUpdateManyWithoutUsersNestedInput;
+    auth_sessions?: Prisma.auth_sessionsUpdateManyWithoutUsersNestedInput;
+    notifications?: Prisma.notificationsUpdateManyWithoutUsersNestedInput;
+    notification_preferences?: Prisma.notification_preferencesUpdateOneWithoutUsersNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUpdateManyWithoutActorNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUpdateManyWithoutActorNestedInput;
+    disciplinary_appeals_player?: Prisma.disciplinary_appealsUpdateManyWithoutPlayerNestedInput;
+    disciplinary_appeals_reviewer?: Prisma.disciplinary_appealsUpdateManyWithoutReviewerNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUpdateManyWithoutActorNestedInput;
+    disciplinary_actions_reviewed?: Prisma.disciplinary_actionsUpdateManyWithoutReviewerNestedInput;
+    block_source_action?: Prisma.disciplinary_actionsUpdateOneWithoutUsers_blocked_by_actionNestedInput;
+    referee_availability?: Prisma.referee_availabilityUpdateManyWithoutRefereeNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUpdateManyWithoutActorNestedInput;
+    match_referees_assigned_by?: Prisma.match_refereesUpdateManyWithoutAssigned_by_userNestedInput;
+    match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
+    association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
+    association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
+    disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
+    disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
+    fines?: Prisma.finesUpdateManyWithoutUsersNestedInput;
+    suspensions?: Prisma.suspensionsUpdateManyWithoutUsersNestedInput;
+    team_members?: Prisma.team_membersUpdateManyWithoutUsersNestedInput;
+    teams_teams_captain_user_idTousers?: Prisma.teamsUpdateManyWithoutUsers_teams_captain_user_idTousersNestedInput;
+    teams_teams_created_byTousers?: Prisma.teamsUpdateManyWithoutUsers_teams_created_byTousersNestedInput;
+    tournament_administrators?: Prisma.tournament_administratorsUpdateManyWithoutUsersNestedInput;
+    tournament_referees?: Prisma.tournament_refereesUpdateManyWithoutUsersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_requested_byTousers?: Prisma.tournament_team_registrationsUpdateManyWithoutUsers_tournament_team_registrations_requested_byTousersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_reviewed_byTousers?: Prisma.tournament_team_registrationsUpdateManyWithoutUsers_tournament_team_registrations_reviewed_byTousersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_payment_updated_byTousers?: Prisma.tournament_team_registrationsUpdateManyWithoutUsers_tournament_team_registrations_payment_updated_byTousersNestedInput;
+    tournaments?: Prisma.tournamentsUpdateManyWithoutUsersNestedInput;
+    user_roles?: Prisma.user_rolesUpdateManyWithoutUsersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUpdateManyWithoutUsersNestedInput;
+};
+export type usersUncheckedUpdateWithoutCompetition_templatesInput = {
+    id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number;
+    id_number?: Prisma.StringFieldUpdateOperationsInput | string;
+    document_type?: Prisma.StringFieldUpdateOperationsInput | string;
+    full_name?: Prisma.StringFieldUpdateOperationsInput | string;
+    birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_front_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    document_back_format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    identity_verified_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    identity_verification_status?: Prisma.StringFieldUpdateOperationsInput | string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    password_hash?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.StringFieldUpdateOperationsInput | string;
+    blocked_until?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    block_reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    blocked_by?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    block_source_action_id?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null;
+    created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    home_hero_slides?: Prisma.home_hero_slidesUncheckedUpdateManyWithoutUsersNestedInput;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedUpdateManyWithoutUsersNestedInput;
+    auth_sessions?: Prisma.auth_sessionsUncheckedUpdateManyWithoutUsersNestedInput;
+    notifications?: Prisma.notificationsUncheckedUpdateManyWithoutUsersNestedInput;
+    notification_preferences?: Prisma.notification_preferencesUncheckedUpdateOneWithoutUsersNestedInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedUpdateManyWithoutActorNestedInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedUpdateManyWithoutActorNestedInput;
+    disciplinary_appeals_player?: Prisma.disciplinary_appealsUncheckedUpdateManyWithoutPlayerNestedInput;
+    disciplinary_appeals_reviewer?: Prisma.disciplinary_appealsUncheckedUpdateManyWithoutReviewerNestedInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedUpdateManyWithoutActorNestedInput;
+    disciplinary_actions_reviewed?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutReviewerNestedInput;
+    referee_availability?: Prisma.referee_availabilityUncheckedUpdateManyWithoutRefereeNestedInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedUpdateManyWithoutActorNestedInput;
+    match_referees_assigned_by?: Prisma.match_refereesUncheckedUpdateManyWithoutAssigned_by_userNestedInput;
+    match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
+    association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
+    association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
+    disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
+    disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
+    fines?: Prisma.finesUncheckedUpdateManyWithoutUsersNestedInput;
+    suspensions?: Prisma.suspensionsUncheckedUpdateManyWithoutUsersNestedInput;
+    team_members?: Prisma.team_membersUncheckedUpdateManyWithoutUsersNestedInput;
+    teams_teams_captain_user_idTousers?: Prisma.teamsUncheckedUpdateManyWithoutUsers_teams_captain_user_idTousersNestedInput;
+    teams_teams_created_byTousers?: Prisma.teamsUncheckedUpdateManyWithoutUsers_teams_created_byTousersNestedInput;
+    tournament_administrators?: Prisma.tournament_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
+    tournament_referees?: Prisma.tournament_refereesUncheckedUpdateManyWithoutUsersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_requested_byTousers?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_requested_byTousersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_reviewed_byTousers?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_reviewed_byTousersNestedInput;
+    tournament_team_registrations_tournament_team_registrations_payment_updated_byTousers?: Prisma.tournament_team_registrationsUncheckedUpdateManyWithoutUsers_tournament_team_registrations_payment_updated_byTousersNestedInput;
+    tournaments?: Prisma.tournamentsUncheckedUpdateManyWithoutUsersNestedInput;
+    user_roles?: Prisma.user_rolesUncheckedUpdateManyWithoutUsersNestedInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesUncheckedUpdateManyWithoutUsersNestedInput;
+};
+export type usersCreateWithoutAssociation_announcementsInput = {
+    id?: bigint | number;
+    id_number: string;
+    document_type: string;
+    full_name: string;
+    birth_date: Date | string;
+    birth_city?: string | null;
+    gender?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    photo_url?: string | null;
+    photo_public_id?: string | null;
+    document_front_url?: string | null;
+    document_front_public_id?: string | null;
+    document_front_format?: string | null;
+    document_back_url?: string | null;
+    document_back_public_id?: string | null;
+    document_back_format?: string | null;
+    identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
+    password_hash: string;
+    status?: string;
+    blocked_until?: Date | string | null;
+    block_reason?: string | null;
+    blocked_by?: bigint | number | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    home_hero_slides?: Prisma.home_hero_slidesCreateNestedManyWithoutUsersInput;
+    password_reset_codes?: Prisma.password_reset_codesCreateNestedManyWithoutUsersInput;
+    auth_sessions?: Prisma.auth_sessionsCreateNestedManyWithoutUsersInput;
+    notifications?: Prisma.notificationsCreateNestedManyWithoutUsersInput;
+    notification_preferences?: Prisma.notification_preferencesCreateNestedOneWithoutUsersInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsCreateNestedManyWithoutActorInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsCreateNestedManyWithoutActorInput;
+    disciplinary_appeals_player?: Prisma.disciplinary_appealsCreateNestedManyWithoutPlayerInput;
+    disciplinary_appeals_reviewer?: Prisma.disciplinary_appealsCreateNestedManyWithoutReviewerInput;
+    disciplinary_events?: Prisma.disciplinary_eventsCreateNestedManyWithoutActorInput;
+    disciplinary_actions_reviewed?: Prisma.disciplinary_actionsCreateNestedManyWithoutReviewerInput;
+    block_source_action?: Prisma.disciplinary_actionsCreateNestedOneWithoutUsers_blocked_by_actionInput;
+    referee_availability?: Prisma.referee_availabilityCreateNestedManyWithoutRefereeInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsCreateNestedManyWithoutActorInput;
+    match_referees_assigned_by?: Prisma.match_refereesCreateNestedManyWithoutAssigned_by_userInput;
+    match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
+    association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
+    associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
+    disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
+    disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
+    fines?: Prisma.finesCreateNestedManyWithoutUsersInput;
+    suspensions?: Prisma.suspensionsCreateNestedManyWithoutUsersInput;
+    team_members?: Prisma.team_membersCreateNestedManyWithoutUsersInput;
+    teams_teams_captain_user_idTousers?: Prisma.teamsCreateNestedManyWithoutUsers_teams_captain_user_idTousersInput;
+    teams_teams_created_byTousers?: Prisma.teamsCreateNestedManyWithoutUsers_teams_created_byTousersInput;
+    tournament_administrators?: Prisma.tournament_administratorsCreateNestedManyWithoutUsersInput;
+    tournament_referees?: Prisma.tournament_refereesCreateNestedManyWithoutUsersInput;
+    tournament_team_registrations_tournament_team_registrations_requested_byTousers?: Prisma.tournament_team_registrationsCreateNestedManyWithoutUsers_tournament_team_registrations_requested_byTousersInput;
+    tournament_team_registrations_tournament_team_registrations_reviewed_byTousers?: Prisma.tournament_team_registrationsCreateNestedManyWithoutUsers_tournament_team_registrations_reviewed_byTousersInput;
+    tournament_team_registrations_tournament_team_registrations_payment_updated_byTousers?: Prisma.tournament_team_registrationsCreateNestedManyWithoutUsers_tournament_team_registrations_payment_updated_byTousersInput;
+    tournaments?: Prisma.tournamentsCreateNestedManyWithoutUsersInput;
+    user_roles?: Prisma.user_rolesCreateNestedManyWithoutUsersInput;
+    tournament_card_charges?: Prisma.tournament_card_chargesCreateNestedManyWithoutUsersInput;
+};
+export type usersUncheckedCreateWithoutAssociation_announcementsInput = {
+    id?: bigint | number;
+    id_number: string;
+    document_type: string;
+    full_name: string;
+    birth_date: Date | string;
+    birth_city?: string | null;
+    gender?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    photo_url?: string | null;
+    photo_public_id?: string | null;
+    document_front_url?: string | null;
+    document_front_public_id?: string | null;
+    document_front_format?: string | null;
+    document_back_url?: string | null;
+    document_back_public_id?: string | null;
+    document_back_format?: string | null;
+    identity_verified_at?: Date | string | null;
+    identity_verification_status?: string;
+    identity_verification_details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    identity_verification_checked_at?: Date | string | null;
+    password_hash: string;
+    status?: string;
+    blocked_until?: Date | string | null;
+    block_reason?: string | null;
+    blocked_by?: bigint | number | null;
+    block_source_action_id?: bigint | number | null;
+    created_at?: Date | string;
+    updated_at?: Date | string;
+    home_hero_slides?: Prisma.home_hero_slidesUncheckedCreateNestedManyWithoutUsersInput;
+    password_reset_codes?: Prisma.password_reset_codesUncheckedCreateNestedManyWithoutUsersInput;
+    auth_sessions?: Prisma.auth_sessionsUncheckedCreateNestedManyWithoutUsersInput;
+    notifications?: Prisma.notificationsUncheckedCreateNestedManyWithoutUsersInput;
+    notification_preferences?: Prisma.notification_preferencesUncheckedCreateNestedOneWithoutUsersInput;
+    tournament_registration_events?: Prisma.tournament_registration_eventsUncheckedCreateNestedManyWithoutActorInput;
+    tournament_lifecycle_events?: Prisma.tournament_lifecycle_eventsUncheckedCreateNestedManyWithoutActorInput;
+    disciplinary_appeals_player?: Prisma.disciplinary_appealsUncheckedCreateNestedManyWithoutPlayerInput;
+    disciplinary_appeals_reviewer?: Prisma.disciplinary_appealsUncheckedCreateNestedManyWithoutReviewerInput;
+    disciplinary_events?: Prisma.disciplinary_eventsUncheckedCreateNestedManyWithoutActorInput;
+    disciplinary_actions_reviewed?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutReviewerInput;
+    referee_availability?: Prisma.referee_availabilityUncheckedCreateNestedManyWithoutRefereeInput;
+    referee_assignment_events?: Prisma.referee_assignment_eventsUncheckedCreateNestedManyWithoutActorInput;
+    match_referees_assigned_by?: Prisma.match_refereesUncheckedCreateNestedManyWithoutAssigned_by_userInput;
+    match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
+    association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -2409,7 +2711,7 @@ export type usersUpdateWithoutAssociation_announcementsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2447,6 +2749,7 @@ export type usersUpdateWithoutAssociation_announcementsInput = {
     match_referees_assigned_by?: Prisma.match_refereesUpdateManyWithoutAssigned_by_userNestedInput;
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -2472,7 +2775,7 @@ export type usersUncheckedUpdateWithoutAssociation_announcementsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2510,6 +2813,7 @@ export type usersUncheckedUpdateWithoutAssociation_announcementsInput = {
     match_referees_assigned_by?: Prisma.match_refereesUncheckedUpdateManyWithoutAssigned_by_userNestedInput;
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -2535,7 +2839,7 @@ export type usersCreateWithoutHome_hero_slidesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -2573,6 +2877,7 @@ export type usersCreateWithoutHome_hero_slidesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -2598,7 +2903,7 @@ export type usersUncheckedCreateWithoutHome_hero_slidesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -2636,6 +2941,7 @@ export type usersUncheckedCreateWithoutHome_hero_slidesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -2674,7 +2980,7 @@ export type usersUpdateWithoutHome_hero_slidesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2712,6 +3018,7 @@ export type usersUpdateWithoutHome_hero_slidesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -2737,7 +3044,7 @@ export type usersUncheckedUpdateWithoutHome_hero_slidesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2775,6 +3082,7 @@ export type usersUncheckedUpdateWithoutHome_hero_slidesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -2800,7 +3108,7 @@ export type usersCreateWithoutPassword_reset_codesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -2838,6 +3146,7 @@ export type usersCreateWithoutPassword_reset_codesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -2863,7 +3172,7 @@ export type usersUncheckedCreateWithoutPassword_reset_codesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -2901,6 +3210,7 @@ export type usersUncheckedCreateWithoutPassword_reset_codesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -2939,7 +3249,7 @@ export type usersUpdateWithoutPassword_reset_codesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -2977,6 +3287,7 @@ export type usersUpdateWithoutPassword_reset_codesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -3002,7 +3313,7 @@ export type usersUncheckedUpdateWithoutPassword_reset_codesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -3040,6 +3351,7 @@ export type usersUncheckedUpdateWithoutPassword_reset_codesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -3065,7 +3377,7 @@ export type usersCreateWithoutDisciplinary_actions_disciplinary_actions_decided_
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -3104,6 +3416,7 @@ export type usersCreateWithoutDisciplinary_actions_disciplinary_actions_decided_
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
     fines?: Prisma.finesCreateNestedManyWithoutUsersInput;
@@ -3128,7 +3441,7 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_disciplinary_actions
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -3167,6 +3480,7 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_disciplinary_actions
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
     fines?: Prisma.finesUncheckedCreateNestedManyWithoutUsersInput;
@@ -3195,7 +3509,7 @@ export type usersCreateWithoutDisciplinary_actions_reviewedInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -3233,6 +3547,7 @@ export type usersCreateWithoutDisciplinary_actions_reviewedInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -3258,7 +3573,7 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_reviewedInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -3296,6 +3611,7 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_reviewedInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -3325,7 +3641,7 @@ export type usersCreateWithoutDisciplinary_actions_disciplinary_actions_reported
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -3364,6 +3680,7 @@ export type usersCreateWithoutDisciplinary_actions_disciplinary_actions_reported
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     fines?: Prisma.finesCreateNestedManyWithoutUsersInput;
@@ -3388,7 +3705,7 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_disciplinary_actions
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -3427,6 +3744,7 @@ export type usersUncheckedCreateWithoutDisciplinary_actions_disciplinary_actions
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     fines?: Prisma.finesUncheckedCreateNestedManyWithoutUsersInput;
@@ -3455,7 +3773,7 @@ export type usersCreateWithoutBlock_source_actionInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -3493,6 +3811,7 @@ export type usersCreateWithoutBlock_source_actionInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -3518,7 +3837,7 @@ export type usersUncheckedCreateWithoutBlock_source_actionInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -3556,6 +3875,7 @@ export type usersUncheckedCreateWithoutBlock_source_actionInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -3598,7 +3918,7 @@ export type usersUpdateWithoutDisciplinary_actions_disciplinary_actions_decided_
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -3637,6 +3957,7 @@ export type usersUpdateWithoutDisciplinary_actions_disciplinary_actions_decided_
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
     fines?: Prisma.finesUpdateManyWithoutUsersNestedInput;
@@ -3661,7 +3982,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_disciplinary_actions
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -3700,6 +4021,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_disciplinary_actions
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
     fines?: Prisma.finesUncheckedUpdateManyWithoutUsersNestedInput;
@@ -3733,7 +4055,7 @@ export type usersUpdateWithoutDisciplinary_actions_reviewedInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -3771,6 +4093,7 @@ export type usersUpdateWithoutDisciplinary_actions_reviewedInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -3796,7 +4119,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_reviewedInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -3834,6 +4157,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_reviewedInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -3868,7 +4192,7 @@ export type usersUpdateWithoutDisciplinary_actions_disciplinary_actions_reported
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -3907,6 +4231,7 @@ export type usersUpdateWithoutDisciplinary_actions_disciplinary_actions_reported
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     fines?: Prisma.finesUpdateManyWithoutUsersNestedInput;
@@ -3931,7 +4256,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_disciplinary_actions
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -3970,6 +4295,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_actions_disciplinary_actions
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     fines?: Prisma.finesUncheckedUpdateManyWithoutUsersNestedInput;
@@ -4010,7 +4336,7 @@ export type usersScalarWhereInput = {
     birth_date?: Prisma.DateTimeFilter<"users"> | Date | string;
     birth_city?: Prisma.StringNullableFilter<"users"> | string | null;
     gender?: Prisma.StringNullableFilter<"users"> | string | null;
-    email?: Prisma.StringFilter<"users"> | string;
+    email?: Prisma.StringNullableFilter<"users"> | string | null;
     phone?: Prisma.StringNullableFilter<"users"> | string | null;
     photo_url?: Prisma.StringNullableFilter<"users"> | string | null;
     photo_public_id?: Prisma.StringNullableFilter<"users"> | string | null;
@@ -4041,7 +4367,7 @@ export type usersCreateWithoutFinesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -4080,6 +4406,7 @@ export type usersCreateWithoutFinesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -4104,7 +4431,7 @@ export type usersUncheckedCreateWithoutFinesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -4143,6 +4470,7 @@ export type usersUncheckedCreateWithoutFinesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -4180,7 +4508,7 @@ export type usersUpdateWithoutFinesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -4219,6 +4547,7 @@ export type usersUpdateWithoutFinesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -4243,7 +4572,7 @@ export type usersUncheckedUpdateWithoutFinesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -4282,6 +4611,7 @@ export type usersUncheckedUpdateWithoutFinesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -4306,7 +4636,7 @@ export type usersCreateWithoutMatch_referees_assigned_byInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -4344,6 +4674,7 @@ export type usersCreateWithoutMatch_referees_assigned_byInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -4369,7 +4700,7 @@ export type usersUncheckedCreateWithoutMatch_referees_assigned_byInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -4407,6 +4738,7 @@ export type usersUncheckedCreateWithoutMatch_referees_assigned_byInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -4436,7 +4768,7 @@ export type usersCreateWithoutMatch_referees_replaced_refereeInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -4474,6 +4806,7 @@ export type usersCreateWithoutMatch_referees_replaced_refereeInput = {
     match_referees_assigned_by?: Prisma.match_refereesCreateNestedManyWithoutAssigned_by_userInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -4499,7 +4832,7 @@ export type usersUncheckedCreateWithoutMatch_referees_replaced_refereeInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -4537,6 +4870,7 @@ export type usersUncheckedCreateWithoutMatch_referees_replaced_refereeInput = {
     match_referees_assigned_by?: Prisma.match_refereesUncheckedCreateNestedManyWithoutAssigned_by_userInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -4575,7 +4909,7 @@ export type usersUpdateWithoutMatch_referees_assigned_byInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -4613,6 +4947,7 @@ export type usersUpdateWithoutMatch_referees_assigned_byInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -4638,7 +4973,7 @@ export type usersUncheckedUpdateWithoutMatch_referees_assigned_byInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -4676,6 +5011,7 @@ export type usersUncheckedUpdateWithoutMatch_referees_assigned_byInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -4710,7 +5046,7 @@ export type usersUpdateWithoutMatch_referees_replaced_refereeInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -4748,6 +5084,7 @@ export type usersUpdateWithoutMatch_referees_replaced_refereeInput = {
     match_referees_assigned_by?: Prisma.match_refereesUpdateManyWithoutAssigned_by_userNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -4773,7 +5110,7 @@ export type usersUncheckedUpdateWithoutMatch_referees_replaced_refereeInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -4811,6 +5148,7 @@ export type usersUncheckedUpdateWithoutMatch_referees_replaced_refereeInput = {
     match_referees_assigned_by?: Prisma.match_refereesUncheckedUpdateManyWithoutAssigned_by_userNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -4836,7 +5174,7 @@ export type usersCreateWithoutReferee_availabilityInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -4874,6 +5212,7 @@ export type usersCreateWithoutReferee_availabilityInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -4899,7 +5238,7 @@ export type usersUncheckedCreateWithoutReferee_availabilityInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -4937,6 +5276,7 @@ export type usersUncheckedCreateWithoutReferee_availabilityInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -4975,7 +5315,7 @@ export type usersUpdateWithoutReferee_availabilityInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -5013,6 +5353,7 @@ export type usersUpdateWithoutReferee_availabilityInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -5038,7 +5379,7 @@ export type usersUncheckedUpdateWithoutReferee_availabilityInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -5076,6 +5417,7 @@ export type usersUncheckedUpdateWithoutReferee_availabilityInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -5101,7 +5443,7 @@ export type usersCreateWithoutReferee_assignment_eventsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -5139,6 +5481,7 @@ export type usersCreateWithoutReferee_assignment_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -5164,7 +5507,7 @@ export type usersUncheckedCreateWithoutReferee_assignment_eventsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -5202,6 +5545,7 @@ export type usersUncheckedCreateWithoutReferee_assignment_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -5240,7 +5584,7 @@ export type usersUpdateWithoutReferee_assignment_eventsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -5278,6 +5622,7 @@ export type usersUpdateWithoutReferee_assignment_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -5303,7 +5648,7 @@ export type usersUncheckedUpdateWithoutReferee_assignment_eventsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -5341,6 +5686,7 @@ export type usersUncheckedUpdateWithoutReferee_assignment_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -5366,7 +5712,7 @@ export type usersCreateWithoutSuspensionsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -5405,6 +5751,7 @@ export type usersCreateWithoutSuspensionsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -5429,7 +5776,7 @@ export type usersUncheckedCreateWithoutSuspensionsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -5468,6 +5815,7 @@ export type usersUncheckedCreateWithoutSuspensionsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -5505,7 +5853,7 @@ export type usersUpdateWithoutSuspensionsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -5544,6 +5892,7 @@ export type usersUpdateWithoutSuspensionsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -5568,7 +5917,7 @@ export type usersUncheckedUpdateWithoutSuspensionsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -5607,6 +5956,7 @@ export type usersUncheckedUpdateWithoutSuspensionsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -5631,7 +5981,7 @@ export type usersCreateWithoutDisciplinary_appeals_playerInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -5669,6 +6019,7 @@ export type usersCreateWithoutDisciplinary_appeals_playerInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -5694,7 +6045,7 @@ export type usersUncheckedCreateWithoutDisciplinary_appeals_playerInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -5732,6 +6083,7 @@ export type usersUncheckedCreateWithoutDisciplinary_appeals_playerInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -5761,7 +6113,7 @@ export type usersCreateWithoutDisciplinary_appeals_reviewerInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -5799,6 +6151,7 @@ export type usersCreateWithoutDisciplinary_appeals_reviewerInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -5824,7 +6177,7 @@ export type usersUncheckedCreateWithoutDisciplinary_appeals_reviewerInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -5862,6 +6215,7 @@ export type usersUncheckedCreateWithoutDisciplinary_appeals_reviewerInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -5900,7 +6254,7 @@ export type usersUpdateWithoutDisciplinary_appeals_playerInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -5938,6 +6292,7 @@ export type usersUpdateWithoutDisciplinary_appeals_playerInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -5963,7 +6318,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_appeals_playerInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -6001,6 +6356,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_appeals_playerInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -6035,7 +6391,7 @@ export type usersUpdateWithoutDisciplinary_appeals_reviewerInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -6073,6 +6429,7 @@ export type usersUpdateWithoutDisciplinary_appeals_reviewerInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -6098,7 +6455,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_appeals_reviewerInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -6136,6 +6493,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_appeals_reviewerInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -6161,7 +6519,7 @@ export type usersCreateWithoutDisciplinary_eventsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -6199,6 +6557,7 @@ export type usersCreateWithoutDisciplinary_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -6224,7 +6583,7 @@ export type usersUncheckedCreateWithoutDisciplinary_eventsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -6262,6 +6621,7 @@ export type usersUncheckedCreateWithoutDisciplinary_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -6300,7 +6660,7 @@ export type usersUpdateWithoutDisciplinary_eventsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -6338,6 +6698,7 @@ export type usersUpdateWithoutDisciplinary_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -6363,7 +6724,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_eventsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -6401,6 +6762,7 @@ export type usersUncheckedUpdateWithoutDisciplinary_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -6426,7 +6788,7 @@ export type usersCreateWithoutTeam_membersInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -6465,6 +6827,7 @@ export type usersCreateWithoutTeam_membersInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -6489,7 +6852,7 @@ export type usersUncheckedCreateWithoutTeam_membersInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -6528,6 +6891,7 @@ export type usersUncheckedCreateWithoutTeam_membersInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -6565,7 +6929,7 @@ export type usersUpdateWithoutTeam_membersInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -6604,6 +6968,7 @@ export type usersUpdateWithoutTeam_membersInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -6628,7 +6993,7 @@ export type usersUncheckedUpdateWithoutTeam_membersInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -6667,6 +7032,7 @@ export type usersUncheckedUpdateWithoutTeam_membersInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -6691,7 +7057,7 @@ export type usersCreateWithoutTeams_teams_captain_user_idTousersInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -6730,6 +7096,7 @@ export type usersCreateWithoutTeams_teams_captain_user_idTousersInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -6754,7 +7121,7 @@ export type usersUncheckedCreateWithoutTeams_teams_captain_user_idTousersInput =
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -6793,6 +7160,7 @@ export type usersUncheckedCreateWithoutTeams_teams_captain_user_idTousersInput =
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -6821,7 +7189,7 @@ export type usersCreateWithoutTeams_teams_created_byTousersInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -6860,6 +7228,7 @@ export type usersCreateWithoutTeams_teams_created_byTousersInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -6884,7 +7253,7 @@ export type usersUncheckedCreateWithoutTeams_teams_created_byTousersInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -6923,6 +7292,7 @@ export type usersUncheckedCreateWithoutTeams_teams_created_byTousersInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -6960,7 +7330,7 @@ export type usersUpdateWithoutTeams_teams_captain_user_idTousersInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -6999,6 +7369,7 @@ export type usersUpdateWithoutTeams_teams_captain_user_idTousersInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -7023,7 +7394,7 @@ export type usersUncheckedUpdateWithoutTeams_teams_captain_user_idTousersInput =
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -7062,6 +7433,7 @@ export type usersUncheckedUpdateWithoutTeams_teams_captain_user_idTousersInput =
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -7095,7 +7467,7 @@ export type usersUpdateWithoutTeams_teams_created_byTousersInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -7134,6 +7506,7 @@ export type usersUpdateWithoutTeams_teams_created_byTousersInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -7158,7 +7531,7 @@ export type usersUncheckedUpdateWithoutTeams_teams_created_byTousersInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -7197,6 +7570,7 @@ export type usersUncheckedUpdateWithoutTeams_teams_created_byTousersInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -7221,7 +7595,7 @@ export type usersCreateWithoutTournament_administratorsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -7260,6 +7634,7 @@ export type usersCreateWithoutTournament_administratorsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -7284,7 +7659,7 @@ export type usersUncheckedCreateWithoutTournament_administratorsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -7323,6 +7698,7 @@ export type usersUncheckedCreateWithoutTournament_administratorsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -7360,7 +7736,7 @@ export type usersUpdateWithoutTournament_administratorsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -7399,6 +7775,7 @@ export type usersUpdateWithoutTournament_administratorsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -7423,7 +7800,7 @@ export type usersUncheckedUpdateWithoutTournament_administratorsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -7462,6 +7839,7 @@ export type usersUncheckedUpdateWithoutTournament_administratorsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -7486,7 +7864,7 @@ export type usersCreateWithoutTournament_refereesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -7525,6 +7903,7 @@ export type usersCreateWithoutTournament_refereesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -7549,7 +7928,7 @@ export type usersUncheckedCreateWithoutTournament_refereesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -7588,6 +7967,7 @@ export type usersUncheckedCreateWithoutTournament_refereesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -7625,7 +8005,7 @@ export type usersUpdateWithoutTournament_refereesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -7664,6 +8044,7 @@ export type usersUpdateWithoutTournament_refereesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -7688,7 +8069,7 @@ export type usersUncheckedUpdateWithoutTournament_refereesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -7727,6 +8108,7 @@ export type usersUncheckedUpdateWithoutTournament_refereesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -7751,7 +8133,7 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -7790,6 +8172,7 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -7814,7 +8197,7 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -7853,6 +8236,7 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -7881,7 +8265,7 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -7920,6 +8304,7 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -7944,7 +8329,7 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -7983,6 +8368,7 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -8011,7 +8397,7 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -8050,6 +8436,7 @@ export type usersCreateWithoutTournament_team_registrations_tournament_team_regi
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -8074,7 +8461,7 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -8113,6 +8500,7 @@ export type usersUncheckedCreateWithoutTournament_team_registrations_tournament_
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -8150,7 +8538,7 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -8189,6 +8577,7 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -8213,7 +8602,7 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -8252,6 +8641,7 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -8285,7 +8675,7 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -8324,6 +8714,7 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -8348,7 +8739,7 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -8387,6 +8778,7 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -8420,7 +8812,7 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -8459,6 +8851,7 @@ export type usersUpdateWithoutTournament_team_registrations_tournament_team_regi
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -8483,7 +8876,7 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -8522,6 +8915,7 @@ export type usersUncheckedUpdateWithoutTournament_team_registrations_tournament_
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -8546,7 +8940,7 @@ export type usersCreateWithoutNotificationsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -8584,6 +8978,7 @@ export type usersCreateWithoutNotificationsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -8609,7 +9004,7 @@ export type usersUncheckedCreateWithoutNotificationsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -8647,6 +9042,7 @@ export type usersUncheckedCreateWithoutNotificationsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -8685,7 +9081,7 @@ export type usersUpdateWithoutNotificationsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -8723,6 +9119,7 @@ export type usersUpdateWithoutNotificationsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -8748,7 +9145,7 @@ export type usersUncheckedUpdateWithoutNotificationsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -8786,6 +9183,7 @@ export type usersUncheckedUpdateWithoutNotificationsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -8811,7 +9209,7 @@ export type usersCreateWithoutNotification_preferencesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -8849,6 +9247,7 @@ export type usersCreateWithoutNotification_preferencesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -8874,7 +9273,7 @@ export type usersUncheckedCreateWithoutNotification_preferencesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -8912,6 +9311,7 @@ export type usersUncheckedCreateWithoutNotification_preferencesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -8950,7 +9350,7 @@ export type usersUpdateWithoutNotification_preferencesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -8988,6 +9388,7 @@ export type usersUpdateWithoutNotification_preferencesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -9013,7 +9414,7 @@ export type usersUncheckedUpdateWithoutNotification_preferencesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -9051,6 +9452,7 @@ export type usersUncheckedUpdateWithoutNotification_preferencesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -9076,7 +9478,7 @@ export type usersCreateWithoutTournament_registration_eventsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -9114,6 +9516,7 @@ export type usersCreateWithoutTournament_registration_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -9139,7 +9542,7 @@ export type usersUncheckedCreateWithoutTournament_registration_eventsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -9177,6 +9580,7 @@ export type usersUncheckedCreateWithoutTournament_registration_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -9215,7 +9619,7 @@ export type usersUpdateWithoutTournament_registration_eventsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -9253,6 +9657,7 @@ export type usersUpdateWithoutTournament_registration_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -9278,7 +9683,7 @@ export type usersUncheckedUpdateWithoutTournament_registration_eventsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -9316,6 +9721,7 @@ export type usersUncheckedUpdateWithoutTournament_registration_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -9341,7 +9747,7 @@ export type usersCreateWithoutTournament_card_chargesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -9380,6 +9786,7 @@ export type usersCreateWithoutTournament_card_chargesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -9404,7 +9811,7 @@ export type usersUncheckedCreateWithoutTournament_card_chargesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -9443,6 +9850,7 @@ export type usersUncheckedCreateWithoutTournament_card_chargesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -9480,7 +9888,7 @@ export type usersUpdateWithoutTournament_card_chargesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -9519,6 +9927,7 @@ export type usersUpdateWithoutTournament_card_chargesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -9543,7 +9952,7 @@ export type usersUncheckedUpdateWithoutTournament_card_chargesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -9582,6 +9991,7 @@ export type usersUncheckedUpdateWithoutTournament_card_chargesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -9606,7 +10016,7 @@ export type usersCreateWithoutTournament_lifecycle_eventsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -9644,6 +10054,7 @@ export type usersCreateWithoutTournament_lifecycle_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -9669,7 +10080,7 @@ export type usersUncheckedCreateWithoutTournament_lifecycle_eventsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -9707,6 +10118,7 @@ export type usersUncheckedCreateWithoutTournament_lifecycle_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -9745,7 +10157,7 @@ export type usersUpdateWithoutTournament_lifecycle_eventsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -9783,6 +10195,7 @@ export type usersUpdateWithoutTournament_lifecycle_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -9808,7 +10221,7 @@ export type usersUncheckedUpdateWithoutTournament_lifecycle_eventsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -9846,6 +10259,7 @@ export type usersUncheckedUpdateWithoutTournament_lifecycle_eventsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -9871,7 +10285,7 @@ export type usersCreateWithoutTournamentsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -9910,6 +10324,7 @@ export type usersCreateWithoutTournamentsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -9934,7 +10349,7 @@ export type usersUncheckedCreateWithoutTournamentsInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -9973,6 +10388,7 @@ export type usersUncheckedCreateWithoutTournamentsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -10010,7 +10426,7 @@ export type usersUpdateWithoutTournamentsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -10049,6 +10465,7 @@ export type usersUpdateWithoutTournamentsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -10073,7 +10490,7 @@ export type usersUncheckedUpdateWithoutTournamentsInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -10112,6 +10529,7 @@ export type usersUncheckedUpdateWithoutTournamentsInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -10136,7 +10554,7 @@ export type usersCreateWithoutUser_rolesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -10175,6 +10593,7 @@ export type usersCreateWithoutUser_rolesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -10199,7 +10618,7 @@ export type usersUncheckedCreateWithoutUser_rolesInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -10238,6 +10657,7 @@ export type usersUncheckedCreateWithoutUser_rolesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedCreateNestedManyWithoutReplaced_refereeInput;
     association_administrators?: Prisma.association_administratorsUncheckedCreateNestedManyWithoutUsersInput;
     association_announcements?: Prisma.association_announcementsUncheckedCreateNestedManyWithoutUsersInput;
+    competition_templates?: Prisma.competition_templatesUncheckedCreateNestedManyWithoutUsersInput;
     associations?: Prisma.associationsUncheckedCreateNestedOneWithoutUsersInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_decided_byTousersInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedCreateNestedManyWithoutUsers_disciplinary_actions_reported_byTousersInput;
@@ -10275,7 +10695,7 @@ export type usersUpdateWithoutUser_rolesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -10314,6 +10734,7 @@ export type usersUpdateWithoutUser_rolesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -10338,7 +10759,7 @@ export type usersUncheckedUpdateWithoutUser_rolesInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -10377,6 +10798,7 @@ export type usersUncheckedUpdateWithoutUser_rolesInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -10401,7 +10823,7 @@ export type usersCreateManyBlock_source_actionInput = {
     birth_date: Date | string;
     birth_city?: string | null;
     gender?: string | null;
-    email: string;
+    email?: string | null;
     phone?: string | null;
     photo_url?: string | null;
     photo_public_id?: string | null;
@@ -10431,7 +10853,7 @@ export type usersUpdateWithoutBlock_source_actionInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -10469,6 +10891,7 @@ export type usersUpdateWithoutBlock_source_actionInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -10494,7 +10917,7 @@ export type usersUncheckedUpdateWithoutBlock_source_actionInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -10532,6 +10955,7 @@ export type usersUncheckedUpdateWithoutBlock_source_actionInput = {
     match_referees_replaced_referee?: Prisma.match_refereesUncheckedUpdateManyWithoutReplaced_refereeNestedInput;
     association_administrators?: Prisma.association_administratorsUncheckedUpdateManyWithoutUsersNestedInput;
     association_announcements?: Prisma.association_announcementsUncheckedUpdateManyWithoutUsersNestedInput;
+    competition_templates?: Prisma.competition_templatesUncheckedUpdateManyWithoutUsersNestedInput;
     associations?: Prisma.associationsUncheckedUpdateOneWithoutUsersNestedInput;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_decided_byTousersNestedInput;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: Prisma.disciplinary_actionsUncheckedUpdateManyWithoutUsers_disciplinary_actions_reported_byTousersNestedInput;
@@ -10557,7 +10981,7 @@ export type usersUncheckedUpdateManyWithoutBlock_source_actionInput = {
     birth_date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
-    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     photo_public_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
@@ -10596,6 +11020,7 @@ export type UsersCountOutputType = {
     match_referees_replaced_referee: number;
     association_administrators: number;
     association_announcements: number;
+    competition_templates: number;
     disciplinary_actions_disciplinary_actions_decided_byTousers: number;
     disciplinary_actions_disciplinary_actions_reported_byTousers: number;
     fines: number;
@@ -10629,6 +11054,7 @@ export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
     match_referees_replaced_referee?: boolean | UsersCountOutputTypeCountMatch_referees_replaced_refereeArgs;
     association_administrators?: boolean | UsersCountOutputTypeCountAssociation_administratorsArgs;
     association_announcements?: boolean | UsersCountOutputTypeCountAssociation_announcementsArgs;
+    competition_templates?: boolean | UsersCountOutputTypeCountCompetition_templatesArgs;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: boolean | UsersCountOutputTypeCountDisciplinary_actions_disciplinary_actions_decided_byTousersArgs;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: boolean | UsersCountOutputTypeCountDisciplinary_actions_disciplinary_actions_reported_byTousersArgs;
     fines?: boolean | UsersCountOutputTypeCountFinesArgs;
@@ -10695,6 +11121,9 @@ export type UsersCountOutputTypeCountAssociation_administratorsArgs<ExtArgs exte
 };
 export type UsersCountOutputTypeCountAssociation_announcementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.association_announcementsWhereInput;
+};
+export type UsersCountOutputTypeCountCompetition_templatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.competition_templatesWhereInput;
 };
 export type UsersCountOutputTypeCountDisciplinary_actions_disciplinary_actions_decided_byTousersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.disciplinary_actionsWhereInput;
@@ -10789,6 +11218,7 @@ export type usersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     match_referees_replaced_referee?: boolean | Prisma.users$match_referees_replaced_refereeArgs<ExtArgs>;
     association_administrators?: boolean | Prisma.users$association_administratorsArgs<ExtArgs>;
     association_announcements?: boolean | Prisma.users$association_announcementsArgs<ExtArgs>;
+    competition_templates?: boolean | Prisma.users$competition_templatesArgs<ExtArgs>;
     associations?: boolean | Prisma.users$associationsArgs<ExtArgs>;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: boolean | Prisma.users$disciplinary_actions_disciplinary_actions_decided_byTousersArgs<ExtArgs>;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: boolean | Prisma.users$disciplinary_actions_disciplinary_actions_reported_byTousersArgs<ExtArgs>;
@@ -10922,6 +11352,7 @@ export type usersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     match_referees_replaced_referee?: boolean | Prisma.users$match_referees_replaced_refereeArgs<ExtArgs>;
     association_administrators?: boolean | Prisma.users$association_administratorsArgs<ExtArgs>;
     association_announcements?: boolean | Prisma.users$association_announcementsArgs<ExtArgs>;
+    competition_templates?: boolean | Prisma.users$competition_templatesArgs<ExtArgs>;
     associations?: boolean | Prisma.users$associationsArgs<ExtArgs>;
     disciplinary_actions_disciplinary_actions_decided_byTousers?: boolean | Prisma.users$disciplinary_actions_disciplinary_actions_decided_byTousersArgs<ExtArgs>;
     disciplinary_actions_disciplinary_actions_reported_byTousers?: boolean | Prisma.users$disciplinary_actions_disciplinary_actions_reported_byTousersArgs<ExtArgs>;
@@ -10967,6 +11398,7 @@ export type $usersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
         match_referees_replaced_referee: Prisma.$match_refereesPayload<ExtArgs>[];
         association_administrators: Prisma.$association_administratorsPayload<ExtArgs>[];
         association_announcements: Prisma.$association_announcementsPayload<ExtArgs>[];
+        competition_templates: Prisma.$competition_templatesPayload<ExtArgs>[];
         associations: Prisma.$associationsPayload<ExtArgs> | null;
         disciplinary_actions_disciplinary_actions_decided_byTousers: Prisma.$disciplinary_actionsPayload<ExtArgs>[];
         disciplinary_actions_disciplinary_actions_reported_byTousers: Prisma.$disciplinary_actionsPayload<ExtArgs>[];
@@ -10992,7 +11424,7 @@ export type $usersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
         birth_date: Date;
         birth_city: string | null;
         gender: string | null;
-        email: string;
+        email: string | null;
         phone: string | null;
         photo_url: string | null;
         photo_public_id: string | null;
@@ -11084,6 +11516,7 @@ export interface Prisma__usersClient<T, Null = never, ExtArgs extends runtime.Ty
     match_referees_replaced_referee<T extends Prisma.users$match_referees_replaced_refereeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$match_referees_replaced_refereeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$match_refereesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     association_administrators<T extends Prisma.users$association_administratorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$association_administratorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$association_administratorsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     association_announcements<T extends Prisma.users$association_announcementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$association_announcementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$association_announcementsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    competition_templates<T extends Prisma.users$competition_templatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$competition_templatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$competition_templatesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     associations<T extends Prisma.users$associationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$associationsArgs<ExtArgs>>): Prisma.Prisma__associationsClient<runtime.Types.Result.GetResult<Prisma.$associationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     disciplinary_actions_disciplinary_actions_decided_byTousers<T extends Prisma.users$disciplinary_actions_disciplinary_actions_decided_byTousersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$disciplinary_actions_disciplinary_actions_decided_byTousersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$disciplinary_actionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     disciplinary_actions_disciplinary_actions_reported_byTousers<T extends Prisma.users$disciplinary_actions_disciplinary_actions_reported_byTousersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$disciplinary_actions_disciplinary_actions_reported_byTousersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$disciplinary_actionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
@@ -11422,6 +11855,17 @@ export type users$association_announcementsArgs<ExtArgs extends runtime.Types.Ex
     take?: number;
     skip?: number;
     distinct?: Prisma.Association_announcementsScalarFieldEnum | Prisma.Association_announcementsScalarFieldEnum[];
+};
+export type users$competition_templatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.competition_templatesSelect<ExtArgs> | null;
+    omit?: Prisma.competition_templatesOmit<ExtArgs> | null;
+    include?: Prisma.competition_templatesInclude<ExtArgs> | null;
+    where?: Prisma.competition_templatesWhereInput;
+    orderBy?: Prisma.competition_templatesOrderByWithRelationInput | Prisma.competition_templatesOrderByWithRelationInput[];
+    cursor?: Prisma.competition_templatesWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.Competition_templatesScalarFieldEnum | Prisma.Competition_templatesScalarFieldEnum[];
 };
 export type users$associationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.associationsSelect<ExtArgs> | null;

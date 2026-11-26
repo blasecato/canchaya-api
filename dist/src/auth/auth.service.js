@@ -16,9 +16,10 @@ const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
 const bcryptjs_1 = require("bcryptjs");
 const prisma_service_1 = require("../prisma/prisma.service");
+const phone_util_1 = require("../common/utils/phone.util");
 const public_user_mapper_1 = require("../users/public-user.mapper");
 const auth_config_1 = require("./auth.config");
-const INVALID_CREDENTIALS_MESSAGE = 'El correo o la contraseña no son correctos.';
+const INVALID_CREDENTIALS_MESSAGE = 'El teléfono, correo o contraseña no son correctos.';
 const INVALID_TOKEN_MESSAGE = 'Tu sesión expiró. Vuelve a iniciar sesión para continuar.';
 const DUMMY_PASSWORD_HASH = '$2b$12$586Ds5J7mmi.nFhCw7LzzuvQ60P5JZcppz9zEJ/fWt8gjK.BaZzVO';
 let AuthService = class AuthService {
@@ -31,33 +32,55 @@ let AuthService = class AuthService {
         this.settings = (0, auth_config_1.getAuthSettings)(configService);
     }
     async login(loginDto) {
-        const email = loginDto.email.trim().toLowerCase();
+        const rawIdentifier = (loginDto.identifier ?? loginDto.email ?? '').trim();
+        const isEmail = rawIdentifier.includes('@');
+        const normalizedEmail = isEmail ? rawIdentifier.toLowerCase() : null;
+        const normalizedPhone = !isEmail
+            ? (0, phone_util_1.normalizeColombianPhone)(rawIdentifier)
+            : null;
+        const phoneVariants = normalizedPhone && (0, phone_util_1.isValidColombianMobile)(normalizedPhone)
+            ? [
+                normalizedPhone,
+                `+57${normalizedPhone}`,
+                `+57 ${normalizedPhone}`,
+                `57${normalizedPhone}`,
+                `+57 ${normalizedPhone.slice(0, 3)} ${normalizedPhone.slice(3, 6)} ${normalizedPhone.slice(6)}`,
+                `${normalizedPhone.slice(0, 3)} ${normalizedPhone.slice(3, 6)} ${normalizedPhone.slice(6)}`,
+            ]
+            : null;
+        const userWhere = normalizedEmail
+            ? { email: { equals: normalizedEmail, mode: 'insensitive' } }
+            : phoneVariants
+                ? { phone: { in: phoneVariants } }
+                : null;
         const now = new Date();
-        await this.prisma.users.updateMany({
-            where: {
-                email: { equals: email, mode: 'insensitive' },
-                status: 'inactive',
-                block_reason: { not: null },
-                blocked_until: { lte: now },
-            },
-            data: {
-                status: 'active',
-                blocked_until: null,
-                block_reason: null,
-                blocked_by: null,
-                block_source_action_id: null,
-                updated_at: now,
-            },
-        });
-        const user = await this.prisma.users.findFirst({
-            where: {
-                email: { equals: email, mode: 'insensitive' },
-            },
-            select: {
-                ...public_user_mapper_1.publicUserSelect,
-                password_hash: true,
-            },
-        });
+        if (userWhere) {
+            await this.prisma.users.updateMany({
+                where: {
+                    ...userWhere,
+                    status: 'inactive',
+                    block_reason: { not: null },
+                    blocked_until: { lte: now },
+                },
+                data: {
+                    status: 'active',
+                    blocked_until: null,
+                    block_reason: null,
+                    blocked_by: null,
+                    block_source_action_id: null,
+                    updated_at: now,
+                },
+            });
+        }
+        const user = userWhere
+            ? await this.prisma.users.findFirst({
+                where: userWhere,
+                select: {
+                    ...public_user_mapper_1.publicUserSelect,
+                    password_hash: true,
+                },
+            })
+            : null;
         const passwordIsValid = await (0, bcryptjs_1.compare)(loginDto.password, user?.password_hash ?? DUMMY_PASSWORD_HASH);
         const hasActiveBlock = Boolean(user &&
             user.status === 'inactive' &&

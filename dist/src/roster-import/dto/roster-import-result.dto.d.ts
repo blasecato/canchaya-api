@@ -7,7 +7,8 @@ export declare class RosterImportPlayerResultDto {
     fullName: string;
     documentType: string;
     idNumber: string;
-    email: string;
+    email: string | null;
+    phone?: string | null;
     position: string | null;
     jerseyNumber: number | null;
     isCaptain: boolean;

@@ -13,12 +13,22 @@ exports.RosterImportService = void 0;
 const common_1 = require("@nestjs/common");
 const bcryptjs_1 = require("bcryptjs");
 const competition_access_service_1 = require("../authorization/competition-access.service");
+const phone_util_1 = require("../common/utils/phone.util");
 const competition_service_1 = require("../competition/competition.service");
-const players_constants_1 = require("../players/players.constants");
 const prisma_service_1 = require("../prisma/prisma.service");
 const tournament_eligibility_1 = require("../tournaments/tournament-eligibility");
 const roster_positions_constants_1 = require("./roster-positions.constants");
 const CLOSED_PHASES = ['archived', 'cancelled'];
+function phoneVariantsFor(phone) {
+    return [
+        phone,
+        `+57${phone}`,
+        `+57 ${phone}`,
+        `57${phone}`,
+        `+57 ${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6)}`,
+        `${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6)}`,
+    ];
+}
 let RosterImportService = class RosterImportService {
     prisma;
     access;
@@ -36,7 +46,6 @@ let RosterImportService = class RosterImportService {
             throw new common_1.BadRequestException('Activa el torneo antes de cargar equipos y jugadores.');
         }
         const duplicatedSheets = this.findDuplicatedSheets(dto.teams);
-        const passwordHash = await (0, bcryptjs_1.hash)((0, players_constants_1.getTemporaryPlayerPassword)(), 12);
         let createdAnyAccount = false;
         let occupiedSlots = await this.prisma.tournament_team_registrations.count({
             where: {
@@ -45,6 +54,7 @@ let RosterImportService = class RosterImportService {
             },
         });
         const documentsInFile = new Map();
+        const phonesInFile = new Map();
         const results = [];
         for (const sheet of dto.teams) {
             const teamName = sheet.teamName.trim();
@@ -59,8 +69,8 @@ let RosterImportService = class RosterImportService {
                     teamName,
                     tournament,
                     actorId,
-                    passwordHash,
                     documentsInFile,
+                    phonesInFile,
                     occupiedSlots,
                 });
                 if (result.outcome === 'team_created' || result.outcome === 'team_registered')
@@ -86,7 +96,9 @@ let RosterImportService = class RosterImportService {
             playersLinked: results.reduce((sum, t) => sum + t.playersLinked, 0),
             playersRejected: results.reduce((sum, t) => sum + t.playersRejected, 0),
             availableSlots: Math.max(0, tournament.max_teams - occupiedSlots),
-            temporaryPassword: createdAnyAccount ? (0, players_constants_1.getTemporaryPlayerPassword)() : null,
+            temporaryPassword: createdAnyAccount
+                ? 'Número de documento de cada jugador'
+                : null,
             teams: results,
         };
     }
@@ -160,8 +172,9 @@ let RosterImportService = class RosterImportService {
             fullName: player.fullName.trim(),
             documentType: player.documentType.trim().toUpperCase(),
             idNumber: player.idNumber.trim(),
-            email: player.email.trim().toLowerCase(),
-            position: (0, roster_positions_constants_1.resolveRosterPosition)(player.position),
+            email: player.email?.trim().toLowerCase() || null,
+            phone: (0, phone_util_1.normalizeColombianPhone)(player.phone),
+            position: player.position ? (0, roster_positions_constants_1.resolveRosterPosition)(player.position) : null,
             jerseyNumber: player.jerseyNumber ?? null,
             isCaptain: Boolean(player.isCaptain),
             outcome,
@@ -169,7 +182,7 @@ let RosterImportService = class RosterImportService {
         };
     }
     async importSheet(input) {
-        const { sheet, teamName, tournament, documentsInFile } = input;
+        const { sheet, teamName, tournament, documentsInFile, phonesInFile } = input;
         const team = await this.resolveTeam(teamName);
         if (team === 'ambiguous') {
             return this.rejectSheet(sheet, `Hay más de un equipo llamado «${teamName}». Agrégalo con el botón «Agregar equipos» para elegir el correcto.`);
@@ -198,6 +211,7 @@ let RosterImportService = class RosterImportService {
             tournament,
             team,
             documentsInFile,
+            phonesInFile,
         });
         const existingRosterSize = team
             ? await this.prisma.tournament_team_players.count({
@@ -263,28 +277,38 @@ let RosterImportService = class RosterImportService {
         return candidates[0] ?? null;
     }
     async preparePlayers(input) {
-        const { sheet, tournament, team, documentsInFile } = input;
+        const { sheet, tournament, team, documentsInFile, phonesInFile } = input;
         const prepared = [];
         const rejected = [];
         const reject = (player, detail) => rejected.push(this.toPlayerResult(player, 'rejected', detail));
         const documentsInSheet = new Set();
+        const phonesInSheet = new Set();
         const emailsInSheet = new Set();
         const jerseysInSheet = new Set();
         let captainsInSheet = 0;
         const documents = sheet.players.map(({ idNumber }) => idNumber.trim());
-        const emails = sheet.players.map(({ email }) => email.trim().toLowerCase());
+        const normalizedPhones = sheet.players.map(({ phone }) => (0, phone_util_1.normalizeColombianPhone)(phone));
+        const allPhoneVariants = normalizedPhones.flatMap(phoneVariantsFor);
+        const emails = sheet.players
+            .map(({ email }) => email?.trim().toLowerCase())
+            .filter((value) => Boolean(value));
+        const userOrFilters = [
+            { id_number: { in: documents } },
+            ...(allPhoneVariants.length > 0
+                ? [{ phone: { in: allPhoneVariants } }]
+                : []),
+            ...(emails.length > 0
+                ? [{ email: { in: emails, mode: 'insensitive' } }]
+                : []),
+        ];
         const [existingUsers, rosterRows, teamJerseys] = await Promise.all([
             this.prisma.users.findMany({
-                where: {
-                    OR: [
-                        { id_number: { in: documents } },
-                        { email: { in: emails, mode: 'insensitive' } },
-                    ],
-                },
+                where: { OR: userOrFilters },
                 select: {
                     id: true,
                     id_number: true,
                     email: true,
+                    phone: true,
                     full_name: true,
                     status: true,
                     block_reason: true,
@@ -312,39 +336,63 @@ let RosterImportService = class RosterImportService {
                 : Promise.resolve([]),
         ]);
         const userByDocument = new Map(existingUsers.map((user) => [user.id_number, user]));
-        const userByEmail = new Map(existingUsers.map((user) => [user.email.toLowerCase(), user]));
+        const userByPhone = new Map();
+        for (const user of existingUsers) {
+            if (user.phone) {
+                const norm = (0, phone_util_1.normalizeColombianPhone)(user.phone);
+                if (norm)
+                    userByPhone.set(norm, user);
+            }
+        }
+        const userByEmail = new Map(existingUsers
+            .filter((user) => Boolean(user.email))
+            .map((user) => [user.email.toLowerCase(), user]));
         const rosterByPlayer = new Map(rosterRows.map((row) => [row.player_id.toString(), row]));
         const jerseyOwners = new Map(teamJerseys.flatMap(({ jersey_number, player_id }) => jersey_number === null ? [] : [[jersey_number, player_id.toString()]]));
         for (const player of sheet.players) {
             const fullName = player.fullName.trim();
             const idNumber = player.idNumber.trim();
-            const email = player.email.trim().toLowerCase();
-            const position = (0, roster_positions_constants_1.resolveRosterPosition)(player.position);
-            if (!position) {
-                reject(player, `${fullName}: la posición «${player.position}» no es válida. Usa una de estas: ${roster_positions_constants_1.ROSTER_POSITIONS_LABEL}.`);
-                continue;
+            const phone = (0, phone_util_1.normalizeColombianPhone)(player.phone);
+            const email = player.email?.trim().toLowerCase() || null;
+            let position = null;
+            if (player.position?.trim()) {
+                const resolvedPosition = (0, roster_positions_constants_1.resolveRosterPosition)(player.position);
+                if (!resolvedPosition) {
+                    reject(player, `${fullName}: la posición «${player.position}» no es válida. Usa una de estas: ${roster_positions_constants_1.ROSTER_POSITIONS_LABEL}.`);
+                    continue;
+                }
+                position = resolvedPosition;
             }
             if (documentsInSheet.has(idNumber)) {
                 reject(player, `${fullName}: esta hoja repite el documento ${idNumber}.`);
                 continue;
             }
-            if (emailsInSheet.has(email)) {
+            if (phonesInSheet.has(phone)) {
+                reject(player, `${fullName}: esta hoja repite el teléfono ${phone}.`);
+                continue;
+            }
+            if (email && emailsInSheet.has(email)) {
                 reject(player, `${fullName}: esta hoja repite el correo ${email}.`);
                 continue;
             }
-            const otherSheet = documentsInFile.get(idNumber);
-            if (otherSheet) {
-                reject(player, `${fullName}: ya aparece en la hoja «${otherSheet}». Un jugador solo puede estar en un equipo del torneo.`);
+            const otherSheetByDoc = documentsInFile.get(idNumber);
+            if (otherSheetByDoc) {
+                reject(player, `${fullName}: ya aparece en la hoja «${otherSheetByDoc}». Un jugador solo puede estar en un equipo del torneo.`);
                 continue;
             }
-            const byDocumentForJersey = userByDocument.get(idNumber);
+            const otherSheetByPhone = phonesInFile.get(phone);
+            if (otherSheetByPhone) {
+                reject(player, `${fullName}: el teléfono ${phone} ya aparece en la hoja «${otherSheetByPhone}».`);
+                continue;
+            }
+            const existingAccount = userByDocument.get(idNumber) ?? userByPhone.get(phone) ?? null;
             if (player.jerseyNumber !== undefined && player.jerseyNumber !== null) {
                 if (jerseysInSheet.has(player.jerseyNumber)) {
                     reject(player, `${fullName}: el número ${player.jerseyNumber} ya lo lleva otro jugador de esta hoja.`);
                     continue;
                 }
                 const owner = jerseyOwners.get(player.jerseyNumber);
-                if (owner && owner !== byDocumentForJersey?.id.toString()) {
+                if (owner && owner !== existingAccount?.id.toString()) {
                     reject(player, `${fullName}: el número ${player.jerseyNumber} ya está asignado a otro jugador de la plantilla.`);
                     continue;
                 }
@@ -366,19 +414,18 @@ let RosterImportService = class RosterImportService {
                 reject(player, eligibilityIssues.join(' '));
                 continue;
             }
-            const byDocument = userByDocument.get(idNumber);
-            const byEmail = userByEmail.get(email);
-            if (!byDocument && byEmail) {
+            const byEmail = email ? userByEmail.get(email) : undefined;
+            if (!existingAccount && byEmail) {
                 reject(player, `${fullName}: el correo ${email} ya pertenece a la cuenta de ${byEmail.full_name} (documento ${byEmail.id_number}).`);
                 continue;
             }
-            if (byDocument && byDocument.status !== 'active') {
-                reject(player, `${fullName}: su cuenta está bloqueada${byDocument.block_reason ? ` (${byDocument.block_reason})` : ''}.`);
+            if (existingAccount && existingAccount.status !== 'active') {
+                reject(player, `${fullName}: su cuenta está bloqueada${existingAccount.block_reason ? ` (${existingAccount.block_reason})` : ''}.`);
                 continue;
             }
             let alreadyInRoster = false;
-            if (byDocument) {
-                const roster = rosterByPlayer.get(byDocument.id.toString());
+            if (existingAccount) {
+                const roster = rosterByPlayer.get(existingAccount.id.toString());
                 if (roster) {
                     if (!team || roster.team_id !== team.id) {
                         reject(player, `${fullName}: ya está inscrito en este torneo con ${roster.tournament_team_registrations.teams.name}.`);
@@ -395,27 +442,37 @@ let RosterImportService = class RosterImportService {
                 }
             }
             documentsInSheet.add(idNumber);
-            emailsInSheet.add(email);
+            phonesInSheet.add(phone);
+            if (email)
+                emailsInSheet.add(email);
             documentsInFile.set(idNumber, sheet.sheetName);
+            phonesInFile.set(phone, sheet.sheetName);
             if (player.jerseyNumber !== undefined && player.jerseyNumber !== null)
                 jerseysInSheet.add(player.jerseyNumber);
             prepared.push({
                 source: player,
                 idNumber,
+                phone,
                 email,
                 position,
                 jerseyNumber: player.jerseyNumber ?? null,
                 isCaptain: Boolean(player.isCaptain),
-                userId: byDocument?.id ?? null,
+                userId: existingAccount?.id ?? null,
                 alreadyInRoster,
             });
         }
         return { prepared, rejected };
     }
     async persistSheet(input) {
-        const { tournament, actorId, passwordHash, prepared, captain, markedCaptain, teamName, isRegistered, rosterSize, } = input;
+        const { tournament, actorId, prepared, captain, markedCaptain, teamName, isRegistered, rosterSize, } = input;
         const created = [];
         const linked = [];
+        const passwordHashes = new Map();
+        for (const player of prepared) {
+            if (!player.userId) {
+                passwordHashes.set(player.idNumber, await (0, bcryptjs_1.hash)(player.idNumber, 12));
+            }
+        }
         return this.prisma.$transaction(async (tx) => {
             for (const player of prepared) {
                 if (player.userId) {
@@ -431,8 +488,10 @@ let RosterImportService = class RosterImportService {
                         birth_date: new Date(`${player.source.birthDate}T00:00:00.000Z`),
                         gender: player.source.gender,
                         email: player.email,
-                        phone: player.source.phone?.trim() || null,
-                        password_hash: passwordHash,
+                        phone: player.phone,
+                        password_hash: passwordHashes.get(player.idNumber),
+                        identity_verified_at: new Date(),
+                        identity_verification_status: 'verified',
                         status: 'active',
                     },
                     select: { id: true },

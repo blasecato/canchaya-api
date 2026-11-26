@@ -3,6 +3,10 @@ export declare class TournamentCatalogAssociationDto {
     id: string;
     name: string;
     logoUrl: string | null;
+    city: string | null;
+    address: string | null;
+    phone: string | null;
+    email: string | null;
     ownerName: string;
 }
 export declare class TournamentCatalogItemResponseDto extends AssociationTournamentResponseDto {

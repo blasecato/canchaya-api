@@ -7,7 +7,7 @@ export declare class PublicUserResponseDto {
     birthDate: string;
     birthCity: string | null;
     gender: UserGender | null;
-    email: string;
+    email: string | null;
     phone: string | null;
     photoUrl: string | null;
     hasIdentityDocuments: boolean;

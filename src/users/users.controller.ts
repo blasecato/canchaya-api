@@ -153,7 +153,6 @@ export class UsersController {
         { $ref: getSchemaPath(RegisterPlayerDto) },
         {
           type: 'object',
-          required: ['photo', 'documentFront', 'documentBack'],
           properties: {
             photo: { type: 'string', format: 'binary' },
             documentFront: { type: 'string', format: 'binary' },
@@ -164,32 +163,27 @@ export class UsersController {
     },
   })
   @ApiOperation({
-    summary: 'Registrar públicamente una cuenta de jugador verificada',
+    summary: 'Registrar públicamente una cuenta de jugador',
   })
   @ApiCreatedResponse({
-    description: 'Cuenta de jugador verificada y registrada.',
+    description: 'Cuenta de jugador registrada correctamente.',
     type: PublicUserResponseDto,
   })
   async register(
     @Body() dto: RegisterPlayerDto,
     @UploadedFiles()
-    uploadedFiles: {
+    uploadedFiles?: {
       photo?: UploadedImageFile[];
       documentFront?: UploadedImageFile[];
       documentBack?: UploadedImageFile[];
     },
   ): Promise<PublicUserResponseDto> {
-    const files = {
-      photo: uploadedFiles.photo?.[0],
-      documentFront: uploadedFiles.documentFront?.[0],
-      documentBack: uploadedFiles.documentBack?.[0],
+    const files: RegisterPlayerFiles = {
+      photo: uploadedFiles?.photo?.[0],
+      documentFront: uploadedFiles?.documentFront?.[0],
+      documentBack: uploadedFiles?.documentBack?.[0],
     };
-    if (!files.photo || !files.documentFront || !files.documentBack) {
-      throw new BadRequestException(
-        'La foto de perfil y las dos caras del documento son obligatorias.',
-      );
-    }
-    return this.usersService.registerPlayer(dto, files as RegisterPlayerFiles);
+    return this.usersService.registerPlayer(dto, files);
   }
 
   @Get()

@@ -2,11 +2,11 @@ import { type UserGender } from '../user-gender.constants';
 export declare class RegisterPlayerDto {
     idNumber: string;
     fullName: string;
-    email: string;
-    age: number;
-    phone?: string;
+    phone: string;
+    email?: string;
+    age?: number;
     birthDate: string;
-    birthCity: string;
+    birthCity?: string;
     gender: UserGender;
     password: string;
 }

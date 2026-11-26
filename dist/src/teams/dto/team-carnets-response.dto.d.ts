@@ -23,7 +23,7 @@ export declare class TeamCarnetPlayerResponseDto {
     documentType: string;
     birthDate: string;
     phone: string | null;
-    email: string;
+    email: string | null;
     photoUrl: string | null;
     jerseyNumber: number | null;
     position: string | null;

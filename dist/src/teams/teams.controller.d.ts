@@ -22,7 +22,8 @@ export declare class TeamsController {
         items: {
             id: string;
             fullName: string;
-            email: string;
+            email: string | null;
+            phone: string | null;
         }[];
         page: number;
         pageSize: number;

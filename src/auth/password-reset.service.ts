@@ -96,6 +96,12 @@ export class PasswordResetService {
       }),
     ]);
 
+    if (!user.email) {
+      return {
+        message: GENERIC_REQUEST_MESSAGE,
+        expiresInMinutes: CODE_TTL_MINUTES,
+      };
+    }
     try {
       await this.mailService.sendPasswordResetCode({
         to: user.email,

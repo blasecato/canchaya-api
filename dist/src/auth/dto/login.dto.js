@@ -16,21 +16,41 @@ const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 const is_bcrypt_password_decorator_1 = require("../../common/decorators/is-bcrypt-password.decorator");
 const is_optional_non_nullable_decorator_1 = require("../../common/decorators/is-optional-non-nullable.decorator");
+const trimInput = ({ value }) => typeof value === 'string' ? value.trim() : value;
 class LoginDto {
+    identifier;
     email;
     password;
     rememberMe;
     static _OPENAPI_METADATA_FACTORY() {
-        return { email: { required: true, type: () => String, format: "email" }, password: { required: true, type: () => String }, rememberMe: { required: false, type: () => Boolean } };
+        return { identifier: { required: false, type: () => String, maxLength: 254 }, email: { required: false, type: () => String, format: "email" }, password: { required: true, type: () => String }, rememberMe: { required: false, type: () => Boolean } };
     }
 }
 exports.LoginDto = LoginDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'usuario@example.com', format: 'email' }),
+    (0, swagger_1.ApiPropertyOptional)({
+        description: 'Número celular colombiano (10 dígitos sin +57) o correo electrónico.',
+        example: '3001234567',
+    }),
+    (0, class_validator_1.ValidateIf)((dto) => !dto.email),
+    (0, class_transformer_1.Transform)(trimInput),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Ingresa tu número celular o correo electrónico.' }),
+    (0, class_validator_1.MaxLength)(254),
+    __metadata("design:type", String)
+], LoginDto.prototype, "identifier", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: 'usuario@example.com',
+        format: 'email',
+        description: 'Campo legado compatible con clientes anteriores.',
+    }),
+    (0, class_validator_1.ValidateIf)((dto) => !dto.identifier),
     (0, class_transformer_1.Transform)(({ value }) => {
         const input = value;
         return typeof input === 'string' ? input.trim().toLowerCase() : input;
     }),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], LoginDto.prototype, "email", void 0);

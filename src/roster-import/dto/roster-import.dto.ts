@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type, type TransformFnParams } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayNotEmpty,
@@ -11,17 +11,34 @@ import {
   IsISO8601,
   IsOptional,
   IsString,
+  Matches,
   Max,
   MaxLength,
   Min,
   MinLength,
   ValidateNested,
 } from 'class-validator';
+import { normalizeColombianPhone } from '../../common/utils/phone.util';
 import { USER_GENDERS } from '../../users/user-gender.constants';
 
 export const MAX_SHEETS_PER_IMPORT = 40;
 export const MAX_PLAYERS_PER_SHEET = 60;
 export const DOCUMENT_TYPES = ['CC', 'TI', 'CE', 'PA'] as const;
+
+const trimOptional = ({ value }: TransformFnParams): unknown => {
+  if (typeof value !== 'string') return value;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+};
+
+const normalizeOptionalEmail = ({ value }: TransformFnParams): unknown => {
+  if (typeof value !== 'string') return value;
+  const trimmed = value.trim().toLowerCase();
+  return trimmed.length > 0 ? trimmed : undefined;
+};
+
+const transformPhone = ({ value }: TransformFnParams): unknown =>
+  typeof value === 'string' ? normalizeColombianPhone(value) : value;
 
 export class RosterImportPlayerDto {
   @ApiProperty({ example: 4, description: 'Fila del Excel, para ubicar el error.' })
@@ -36,22 +53,33 @@ export class RosterImportPlayerDto {
   @MaxLength(150)
   fullName!: string;
 
-  @ApiProperty({ example: 'maria.perez@correo.com' })
+  @ApiPropertyOptional({ example: 'maria.perez@correo.com' })
+  @Transform(normalizeOptionalEmail)
+  @IsOptional()
   @IsEmail({}, { message: 'El correo electrónico no es válido.' })
   @MaxLength(180)
-  email!: string;
+  email?: string;
 
-  @ApiPropertyOptional({ example: '3001234567' })
-  @IsOptional()
+  @ApiProperty({ example: '3001234567' })
+  @Transform(transformPhone)
   @IsString()
-  @MaxLength(40)
-  phone?: string;
+  @Matches(/^3\d{9}$/, {
+    message:
+      'El teléfono debe ser un celular colombiano de 10 dígitos iniciando en 3 (sin +57).',
+  })
+  phone!: string;
 
-  @ApiProperty({ enum: DOCUMENT_TYPES })
+  @ApiPropertyOptional({ enum: DOCUMENT_TYPES, default: 'CC' })
+  @Transform(({ value }: { value: unknown }) => {
+    if (typeof value !== 'string') return 'CC';
+    const normalized = value.trim().toUpperCase();
+    return normalized.length > 0 ? normalized : 'CC';
+  })
+  @IsOptional()
   @IsIn(DOCUMENT_TYPES, {
     message: `El tipo de documento debe ser ${DOCUMENT_TYPES.join(', ')}.`,
   })
-  documentType!: string;
+  documentType: string = 'CC';
 
   @ApiProperty({ example: '1020304050' })
   @IsString()
@@ -70,10 +98,12 @@ export class RosterImportPlayerDto {
   @IsIn(USER_GENDERS, { message: 'El género registrado no es válido.' })
   gender!: string;
 
-  @ApiProperty({ example: 'Delantero' })
+  @ApiPropertyOptional({ example: 'Delantero' })
+  @Transform(trimOptional)
+  @IsOptional()
   @IsString()
   @MaxLength(60)
-  position!: string;
+  position?: string;
 
   @ApiPropertyOptional({ example: 10 })
   @IsOptional()
@@ -89,13 +119,13 @@ export class RosterImportPlayerDto {
 }
 
 export class RosterImportTeamDto {
-  @ApiProperty({ example: 'Deportivo Pitalito', description: 'Nombre de la hoja.' })
+  @ApiProperty({ example: 'Nombre equipo 1', description: 'Nombre de la hoja.' })
   @IsString()
   @MinLength(1)
   @MaxLength(120)
   sheetName!: string;
 
-  @ApiProperty({ example: 'Deportivo Pitalito' })
+  @ApiProperty({ example: 'Nombre equipo 1' })
   @IsString()
   @MinLength(2)
   @MaxLength(120)

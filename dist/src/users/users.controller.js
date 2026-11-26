@@ -67,13 +67,10 @@ let UsersController = class UsersController {
     }
     async register(dto, uploadedFiles) {
         const files = {
-            photo: uploadedFiles.photo?.[0],
-            documentFront: uploadedFiles.documentFront?.[0],
-            documentBack: uploadedFiles.documentBack?.[0],
+            photo: uploadedFiles?.photo?.[0],
+            documentFront: uploadedFiles?.documentFront?.[0],
+            documentBack: uploadedFiles?.documentBack?.[0],
         };
-        if (!files.photo || !files.documentFront || !files.documentBack) {
-            throw new common_1.BadRequestException('La foto de perfil y las dos caras del documento son obligatorias.');
-        }
         return this.usersService.registerPlayer(dto, files);
     }
     findAll() {
@@ -147,7 +144,6 @@ __decorate([
                 { $ref: (0, swagger_1.getSchemaPath)(register_player_dto_1.RegisterPlayerDto) },
                 {
                     type: 'object',
-                    required: ['photo', 'documentFront', 'documentBack'],
                     properties: {
                         photo: { type: 'string', format: 'binary' },
                         documentFront: { type: 'string', format: 'binary' },
@@ -158,10 +154,10 @@ __decorate([
         },
     }),
     (0, swagger_1.ApiOperation)({
-        summary: 'Registrar públicamente una cuenta de jugador verificada',
+        summary: 'Registrar públicamente una cuenta de jugador',
     }),
     (0, swagger_1.ApiCreatedResponse)({
-        description: 'Cuenta de jugador verificada y registrada.',
+        description: 'Cuenta de jugador registrada correctamente.',
         type: public_user_response_dto_1.PublicUserResponseDto,
     }),
     __param(0, (0, common_1.Body)()),

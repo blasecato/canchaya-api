@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcryptjs';
 import { Prisma } from '../../generated/prisma/client';
 import { CompetitionAccessService } from '../authorization/competition-access.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -9,24 +10,25 @@ const player = (
   row: number,
   overrides: Partial<{
     fullName: string;
-    email: string;
+    email: string | undefined;
+    phone: string;
     idNumber: string;
     birthDate: string;
     gender: string;
-    position: string;
+    position: string | undefined;
     jerseyNumber: number;
     isCaptain: boolean;
   }> = {},
 ) => ({
   row,
   fullName: overrides.fullName ?? `Jugador ${row}`,
-  email: overrides.email ?? `jugador${row}@correo.com`,
-  phone: '3001234567',
+  email: 'email' in overrides ? overrides.email : `jugador${row}@correo.com`,
+  phone: overrides.phone ?? String(3001234500 + row),
   documentType: 'CC',
   idNumber: overrides.idNumber ?? `100${row}`,
   birthDate: overrides.birthDate ?? '2000-05-10',
   gender: overrides.gender ?? 'male',
-  position: overrides.position ?? 'Delantero',
+  position: 'position' in overrides ? overrides.position : 'Delantero',
   jerseyNumber: overrides.jerseyNumber,
   isCaptain: overrides.isCaptain ?? row === 1,
 });
@@ -62,7 +64,8 @@ const setup = (
     users?: {
       id: bigint;
       id_number: string;
-      email: string;
+      email: string | null;
+      phone?: string | null;
       full_name: string;
       status: string;
       block_reason: string | null;
@@ -375,5 +378,77 @@ describe('RosterImportService', () => {
     await expect(
       service.import(7n, { teams: [sheet('Equipo A', [player(1)])] }, 9n),
     ).rejects.toThrow('archivado o cancelado');
+  });
+
+  it('vincula un jugador existente encontrado por teléfono sin duplicar su cuenta', async () => {
+    const { service, tx } = setup({
+      users: [
+        {
+          id: 77n,
+          id_number: '999999',
+          email: null,
+          phone: '+57 3001234501',
+          full_name: 'Jugador Existente',
+          status: 'active',
+          block_reason: null,
+        },
+      ],
+    });
+    const result = await service.import(
+      7n,
+      {
+        teams: [
+          sheet('Nombre equipo 1', [
+            player(1, { idNumber: '1001', phone: '3001234501', email: undefined }),
+            player(2, { idNumber: '1002', phone: '3001234502', email: undefined }),
+          ]),
+        ],
+      },
+      9n,
+    );
+
+    expect(result.teams[0].outcome).toBe('team_created');
+    expect(result.playersLinked).toBe(1);
+    expect(result.playersCreated).toBe(1);
+    expect(tx.users.create).toHaveBeenCalledTimes(1);
+  });
+
+  it('crea cuentas sin correo ni posición y usa el número de documento como contraseña inicial', async () => {
+    (bcrypt.hash as jest.Mock).mockClear();
+    const { service, tx } = setup();
+    const result = await service.import(
+      7n,
+      {
+        teams: [
+          sheet('Nombre equipo 1', [
+            player(1, {
+              idNumber: '1083900111',
+              email: undefined,
+              position: undefined,
+              jerseyNumber: 1,
+            }),
+            player(2, {
+              idNumber: '1083900222',
+              email: undefined,
+              position: undefined,
+              jerseyNumber: 2,
+            }),
+          ]),
+        ],
+      },
+      9n,
+    );
+
+    expect(result.teams[0].outcome).toBe('team_created');
+    expect(result.playersCreated).toBe(2);
+    expect(bcrypt.hash).toHaveBeenCalledWith('1083900111', 12);
+    expect(bcrypt.hash).toHaveBeenCalledWith('1083900222', 12);
+    expect(tx.users.create.mock.calls[0][0].data).toEqual(
+      expect.objectContaining({
+        email: null,
+        phone: '3001234501',
+        id_number: '1083900111',
+      }),
+    );
   });
 });

@@ -27,9 +27,9 @@ import { ROLE_LABELS } from './user-role.constants';
 import { publicUserSelect, toPublicUserResponse } from './public-user.mapper';
 
 export type RegisterPlayerFiles = {
-  photo: UploadedImageFile;
-  documentFront: UploadedImageFile;
-  documentBack: UploadedImageFile;
+  photo?: UploadedImageFile;
+  documentFront?: UploadedImageFile;
+  documentBack?: UploadedImageFile;
 };
 
 export type AdministratorExportItem = {
@@ -37,7 +37,7 @@ export type AdministratorExportItem = {
   documentType: string;
   idNumber: string;
   phone: string | null;
-  email: string;
+  email: string | null;
   status: string;
   roles: string[];
   associations: Array<{ name: string; permissionLevel: string }>;
@@ -56,22 +56,30 @@ export class UsersService {
 
   async registerPlayer(
     dto: RegisterPlayerDto,
-    files: RegisterPlayerFiles,
+    files: RegisterPlayerFiles = {},
   ): Promise<PublicUserResponseDto> {
     this.assertValidBirthDate(dto.birthDate);
-    this.assertDeclaredAgeMatchesBirthDate(dto.birthDate, dto.age);
-    await this.assertUserIdentifiersAreAvailable(dto.idNumber, dto.email);
-
-    const identityCheck = await this.identityVerification.verify(
-      files.documentFront,
-      files.documentBack,
+    if (dto.age !== undefined) {
+      this.assertDeclaredAgeMatchesBirthDate(dto.birthDate, dto.age);
+    }
+    await this.assertUserIdentifiersAreAvailable(
       dto.idNumber,
-      dto.birthDate,
-      dto.fullName,
+      dto.phone,
+      dto.email,
     );
-    // El OCR informa, no bloquea: una foto difícil no puede impedir el registro.
-    // Lo que no queda confirmado se guarda como pendiente de revisión.
-    if (!identityCheck.verified) {
+
+    const hasDocumentPhotos = Boolean(files.documentFront && files.documentBack);
+    const identityCheck = hasDocumentPhotos
+      ? await this.identityVerification.verify(
+          files.documentFront!,
+          files.documentBack!,
+          dto.idNumber,
+          dto.birthDate,
+          dto.fullName,
+        )
+      : null;
+
+    if (identityCheck && !identityCheck.verified) {
       this.logger.warn(
         `Documento sin confirmar para la cédula ${dto.idNumber}: ` +
           `${identityCheck.outcome} (${JSON.stringify(identityCheck.details)})`,
@@ -82,18 +90,19 @@ export class UsersService {
     let documentFrontAsset: StoredImageAsset | null = null;
     let documentBackAsset: StoredImageAsset | null = null;
     try {
-      photoAsset = await this.imageStorage.saveUserPhoto(files.photo);
-      documentFrontAsset = await this.imageStorage.saveIdentityDocument(
-        files.documentFront,
-        'front',
-      );
-      documentBackAsset = await this.imageStorage.saveIdentityDocument(
-        files.documentBack,
-        'back',
-      );
-      const persistedPhoto = photoAsset;
-      const persistedDocumentFront = documentFrontAsset;
-      const persistedDocumentBack = documentBackAsset;
+      if (files.photo) {
+        photoAsset = await this.imageStorage.saveUserPhoto(files.photo);
+      }
+      if (files.documentFront && files.documentBack) {
+        documentFrontAsset = await this.imageStorage.saveIdentityDocument(
+          files.documentFront,
+          'front',
+        );
+        documentBackAsset = await this.imageStorage.saveIdentityDocument(
+          files.documentBack,
+          'back',
+        );
+      }
 
       const user = await this.prisma.$transaction(async (transaction) => {
         const created = await transaction.users.create({
@@ -102,25 +111,30 @@ export class UsersService {
             document_type: 'CC',
             full_name: dto.fullName,
             birth_date: new Date(dto.birthDate),
-            birth_city: dto.birthCity,
+            birth_city: dto.birthCity ?? null,
             gender: dto.gender,
-            email: dto.email,
-            phone: dto.phone || null,
-            photo_url: persistedPhoto.url,
-            photo_public_id: persistedPhoto.publicId,
-            document_front_url: persistedDocumentFront.url,
-            document_front_public_id: persistedDocumentFront.publicId,
-            document_front_format: persistedDocumentFront.format,
-            document_back_url: persistedDocumentBack.url,
-            document_back_public_id: persistedDocumentBack.publicId,
-            document_back_format: persistedDocumentBack.format,
-            identity_verified_at: identityCheck.verified ? new Date() : null,
-            identity_verification_status: identityCheck.verified
-              ? 'verified'
-              : 'pending_review',
-            identity_verification_details:
-              identityCheck.details as unknown as Prisma.InputJsonValue,
-            identity_verification_checked_at: new Date(),
+            email: dto.email ?? null,
+            phone: dto.phone,
+            photo_url: photoAsset?.url ?? null,
+            photo_public_id: photoAsset?.publicId ?? null,
+            document_front_url: documentFrontAsset?.url ?? null,
+            document_front_public_id: documentFrontAsset?.publicId ?? null,
+            document_front_format: documentFrontAsset?.format ?? null,
+            document_back_url: documentBackAsset?.url ?? null,
+            document_back_public_id: documentBackAsset?.publicId ?? null,
+            document_back_format: documentBackAsset?.format ?? null,
+            identity_verified_at:
+              identityCheck === null || identityCheck.verified
+                ? new Date()
+                : null,
+            identity_verification_status:
+              identityCheck === null || identityCheck.verified
+                ? 'verified'
+                : 'pending_review',
+            identity_verification_details: identityCheck
+              ? (identityCheck.details as unknown as Prisma.InputJsonValue)
+              : Prisma.JsonNull,
+            identity_verification_checked_at: identityCheck ? new Date() : null,
             password_hash: await hash(dto.password, 12),
             status: 'active',
           },
@@ -133,7 +147,9 @@ export class UsersService {
       });
 
       const response = toPublicUserResponse(user);
-      await this.sendWelcomeEmail(response.email, response.fullName);
+      if (response.email) {
+        await this.sendWelcomeEmail(response.email, response.fullName);
+      }
       return response;
     } catch (error) {
       await Promise.all([
@@ -145,9 +161,13 @@ export class UsersService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        await this.assertUserIdentifiersAreAvailable(dto.idNumber, dto.email);
+        await this.assertUserIdentifiersAreAvailable(
+          dto.idNumber,
+          dto.phone,
+          dto.email,
+        );
         throw new ConflictException(
-          'Ya existe una cuenta con ese documento o correo electrónico.',
+          'Ya existe una cuenta con ese documento, teléfono o correo electrónico.',
         );
       }
       throw error;
@@ -192,17 +212,32 @@ export class UsersService {
 
   private async assertUserIdentifiersAreAvailable(
     idNumber: string,
-    email: string,
+    phone: string,
+    email?: string,
   ): Promise<void> {
-    const [documentOwner, emailOwner] = await Promise.all([
+    const phoneVariants = [
+      phone,
+      `+57${phone}`,
+      `+57 ${phone}`,
+      `57${phone}`,
+      `+57 ${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6)}`,
+      `${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6)}`,
+    ];
+    const [documentOwner, phoneOwner, emailOwner] = await Promise.all([
       this.prisma.users.findUnique({
         where: { id_number: idNumber },
         select: { id: true },
       }),
       this.prisma.users.findFirst({
-        where: { email: { equals: email, mode: 'insensitive' } },
+        where: { phone: { in: phoneVariants } },
         select: { id: true },
       }),
+      email
+        ? this.prisma.users.findFirst({
+            where: { email: { equals: email, mode: 'insensitive' } },
+            select: { id: true },
+          })
+        : Promise.resolve(null),
     ]);
 
     if (documentOwner && emailOwner) {
@@ -213,6 +248,11 @@ export class UsersService {
     if (documentOwner) {
       throw new ConflictException(
         'Ya existe una cuenta con ese número de identidad.',
+      );
+    }
+    if (phoneOwner) {
+      throw new ConflictException(
+        'Ya existe una cuenta registrada con ese número de teléfono celular.',
       );
     }
     if (emailOwner) {
